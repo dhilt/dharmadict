@@ -1,0 +1,36 @@
+$wrapper-padding: 16px;
+
+.wrapper {
+	max-width: calc($max-width + $wrapper-padding * 2);
+	margin: 0 auto;
+	display: flex;
+	height: 100%;
+	padding: 0 $wrapper-padding;
+}
+
+#app {
+	height: 100%;
+}
+
+.text-section {
+	margin: 3em auto;
+}
+
+.search-input {
+  padding: 0.5em 1.5em;
+	border: 1px solid #6CC0E5;
+  border-radius: 3px;
+  text-decoration: none;
+}
+
+.search-button {
+  padding: 0.5em 1.5em;
+  border: 1px solid #6CC0E5;
+  border-radius: 3px;
+  text-decoration: none;
+	margin-left: 0.5em;
+}
+
+.search-button:hover {
+	background-color: $brand-color;
+}
