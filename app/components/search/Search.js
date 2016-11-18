@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import SearchInput from './SearchInput'
+import Results from './Results'
 
 import {doSearchRequest} from '../../actions'
 
@@ -15,7 +16,8 @@ class Search extends Component {
     return (
       <div>
         <p>Lets search!!</p>
-        <SearchInput searchString={searchString} onSubmit={this._search} />
+        <SearchInput onSubmit={this._search} />
+        <Results />
       </div>
     )
   }

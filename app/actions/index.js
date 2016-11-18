@@ -106,7 +106,7 @@ export function searchRequestEnd (searchString, result, error) {
 export function doSearchRequest (searchString) {
   return dispatch =>  {
     dispatch(searchRequestStart(searchString))
-    return fetch(`http://localhost:3001/api/search?searchString=${searchString}`)
+    return fetch(`api/search?pattern=${searchString}`)
       .then(response => response.json())
       .then(json => dispatch(searchRequestEnd(searchString, json)))
       .catch(error => {
