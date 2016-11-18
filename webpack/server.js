@@ -7,7 +7,10 @@ new WebpackDevServer(webpack(config), {
   hot: true,
   inline: false,
   historyApiFallback: true,
-  quiet: true
+  quiet: true,
+  proxy: {
+    '/api': 'http://localhost:3000'
+  }
 }).listen(5000, 'localhost', function (error, result) {
   if (error) {
     console.log(error)
