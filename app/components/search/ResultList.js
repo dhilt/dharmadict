@@ -1,7 +1,9 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 
-class Results extends Component {
+import ResultItem from './ResultItem'
+
+class ResultList extends Component {
   constructor (props) {
     super(props)
   }
@@ -9,13 +11,13 @@ class Results extends Component {
   render () {
     return (this.props.data.result || this.props.data.pending) ? (
       this.props.data.pending ? (
-        <div>pending...</div>
+        <div> pending... </div>
       ) : (
         this.props.data.result.length > 0 ? (
           <ul>
             {
               this.props.data.result.map(function(item, i){
-                return <li key={i}> {item._source.wylie} </li>
+                return <ResultItem key={i} item={item} />
               })
             }
           </ul>
@@ -35,8 +37,8 @@ function select (state) {
   }
 }
 
-Results.propTypes = {
+ResultList.propTypes = {
   data: React.PropTypes.object
 }
 
-export default connect(select)(Results)
+export default connect(select)(ResultList)
