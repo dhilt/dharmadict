@@ -16,7 +16,7 @@ import './styles/main.css'
 
 import App from './components/App'
 import Home from './components/Home'
-import Search from './components/search/Search'
+import Search from './components/Search'
 import SearchInput from './components/search/SearchInput'
 import ResultList from './components/search/ResultList'
 import ResultItem from './components/search/ResultItem'

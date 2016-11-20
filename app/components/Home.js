@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import Search from './search/Search'
+import Search from './Search'
 
 class Home extends Component {
   render () {

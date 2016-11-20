@@ -1,9 +1,9 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import SearchInput from './SearchInput'
-import ResultList from './ResultList'
+import SearchInput from './search/SearchInput'
+import ResultList from './search/ResultList'
 
-import {doSearchRequest} from '../../actions'
+import {doSearchRequest} from '../actions'
 
 class Search extends Component {
   constructor (props) {

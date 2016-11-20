@@ -14,9 +14,8 @@ class ResultList extends Component {
         <div> pending... </div>
       ) : (
         this.props.data.result.length > 0 ? (
-          <ul>
-            {
-              this.props.data.result.map(function(item, i){
+          <ul> {
+              this.props.data.result.map((item, i) => {
                 return <ResultItem key={i} item={item} />
               })
             }
@@ -26,7 +25,11 @@ class ResultList extends Component {
         )
       )
     ) : (
-      null
+      this.props.data.error ? (
+        <div> { this.props.data.error.message } </div>
+      ) : (
+        null
+      )
     )
   }
 }
