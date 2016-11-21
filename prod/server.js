@@ -1,16 +1,75 @@
-var app, elasticClient, elasticsearch, express, port;
+var express = require('express');
+var passwordHash = require('password-hash');
+var bodyParser = require('body-parser');
+var elasticsearch = require('elasticsearch');
+var jwt = require('jsonwebtoken');
+var Cookies = require('cookies');
 
-express = require('express');
+var app = express();
+var port = 3000;
+var secretKey = 'supersecret';
+var accessTokenExpiration = 60 * 60 * 24 * 31; // 1 month
 
-app = express();
+app.use(bodyParser.json());
 
-port = 3000;
-
-elasticsearch = require('elasticsearch');
-
-elasticClient = new elasticsearch.Client({
+var elasticClient = new elasticsearch.Client({
     host: 'localhost:9200',
     log: 'info'
+});
+
+var Users = [{
+    login: 'admin',
+    hash: passwordHash.generate('pass')
+}, {
+    login: 'admin2',
+    hash: passwordHash.generate('pass2')
+}];
+
+var responseError = function(res, message, status) {
+    console.log(message);
+    //res.status(status);
+    res.send({
+        error: true,
+        message: message
+    });
+}
+
+app.post('/api/login', function(req, res) {
+    var login = req.body.login;
+    var password = req.body.password;
+
+    // search user by login
+    for (var i = 0; i < Users.length; i++) {
+    console.log(login)
+        if (Users[i].login === login) {
+            if (passwordHash.verify(password, Users[i].hash)) {
+                var user = Users[i];
+                console.log('Log in user ' + user.login + '.');
+
+                // generate token
+                var token = jwt.sign({
+                    id: user.id,
+                    login: user.login
+                }, secretKey, {
+                    expiresIn: accessTokenExpiration
+                });
+
+                // store the token via cookie
+                new Cookies(req, res).set('access_token', token, {
+                    httpOnly: true
+                });
+
+                res.send(user);
+                return;
+            }
+            else {
+                return responseError(res, 'Can not authenticate.', 401);
+            }
+        }
+    }
+    if (!user) {
+        return responseError(res, 'Can not find user.', 404);
+    }
 });
 
 app.get('/api/test', function(req, res) {
