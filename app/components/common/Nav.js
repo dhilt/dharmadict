@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import LoadingButton from './LoadingButton'
 import {Link} from 'react-router'
+import LoginModal from './LoginModal'
 
 import {logout, clearError} from '../../actions'
 
@@ -23,7 +24,7 @@ class Nav extends Component {
       </div>
     ) : (
       <div>
-        <Link to='/login' className='btn btn--login btn--nav' onClick={this._clearError}>Login</Link>
+        <LoginModal dispatch={this.props.dispatch}/>
       </div>
     )
 

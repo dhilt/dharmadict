@@ -6,6 +6,12 @@ import fetch from 'isomorphic-fetch'
 
 // We import constants to name our actions' type
 import {
+  OPEN_LOGIN_MODAL,
+  CLOSE_LOGIN_MODAL,
+  CHANGE_LOGIN_STRING,
+  CHANGE_PASSWORD_STRING,
+  LOGIN_REQUEST_START,
+  LOGIN_REQUEST_END,
   CHANGE_FORM,
   SET_AUTH,
   SENDING_REQUEST,
@@ -18,6 +24,50 @@ import {
   SEARCH_REQUEST_START,
   SEARCH_REQUEST_END
 } from './constants'
+
+export function openLoginModal () {
+  return {type: OPEN_LOGIN_MODAL}
+}
+
+export function closeLoginModal () {
+  return {type: CLOSE_LOGIN_MODAL}
+}
+
+export function changeLoginString (login) {
+  return {type: CHANGE_LOGIN_STRING, login: login}
+}
+
+export function changePasswordString (password) {
+  return {type: CHANGE_PASSWORD_STRING, password: password}
+}
+
+let myFetch = (url, payload) => payload ? fetch(url, {
+    method: 'post',
+    body: JSON.stringify(payload),
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    }
+}) : fetch('api/' + path)
+
+let asyncRequest = (path, payload, cb) =>
+  myFetch('api/' + path, payload)
+    .then(response => {
+      if(!response.ok) {
+        throw({ message: response.statusText + ' (' + response.status + ')' })
+      }
+      return response.json()
+    })
+    .then(json => cb(json.error ? null : json, json.error ? json : null))
+    .catch(error => cb(null, error))
+
+export function doLogin (login, password) {
+  return (dispatch) =>  {
+    dispatch({type: LOGIN_REQUEST_START})
+    return asyncRequest('login', { login: login, password: password }, (data, error) =>
+      dispatch({type: LOGIN_REQUEST_END, result: data, error: error}))
+    }
+}
 
 /**
  * Sets the form state
@@ -95,7 +145,7 @@ export function changeSearchString (newSearchString) {
  return {type: CHANGE_SEARCH_STRING, newSearchString}
 }
 
-export function searchRequestStart (searchString) {
+export function searchRequestStart () {
   return {type: SEARCH_REQUEST_START}
 }
 
@@ -105,10 +155,10 @@ export function searchRequestEnd (searchString, result, error) {
 
 export function doSearchRequest (searchString) {
   return dispatch =>  {
-    dispatch(searchRequestStart(searchString))
+    dispatch(searchRequestStart())
     return fetch(`api/search?pattern=${searchString}`)
       .then(response => response.json())
-      .then(json => dispatch(searchRequestEnd(searchString, json)))
+      .then(json => dispatch(searchRequestEnd(searchString, json, null)))
       .catch(error => {
         dispatch(searchRequestEnd(searchString, null, error))
       })
