@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import Modal from 'react-modal'
 
-import {openLoginModal, closeLoginModal, changeLoginString, changePasswordString, doLogin} from '../../actions'
+import {openLoginModal, closeLoginModal, changeLoginString, changePasswordString, doLoginAsync} from '../../actions'
 
 const customStyles = {
   content : {
@@ -37,21 +37,19 @@ class LoginModal extends Component {
           onRequestClose={this.closeModal}
           style={customStyles}>
           <h1>Please Log In</h1>
-          <div>
+          <div className="login-modal-content">
             <div>
-              <input type="text" name="login"
-                placeholder="login"
+              <input type="text" name="login" placeholder="login"
                 value={this.props.data.login}
                 onChange={this.onLoginChange} />
             </div>
             <div>
-              <input type="password" name="password"
-                placeholder="password"
+              <input type="password" name="password" placeholder="password"
                 value={this.props.data.password}
                 onChange={this.onPasswordChange} />
             </div>
           </div>
-          <button onClick={this.doLogin}>Log in!</button>
+          <button onClick={this.doLogin} disabled={!this.props.data.login || !this.props.data.password}>Log in!</button>
           <button onClick={this.closeModal}>Cancel</button>
         </Modal>
       </div>
@@ -76,7 +74,7 @@ class LoginModal extends Component {
 
   doLogin (event) {
     event.preventDefault()
-    this.props.dispatch(doLogin(this.props.data.login, this.props.data.password))
+    this.props.dispatch(doLoginAsync(this.props.data.login, this.props.data.password))
   }
 }
 

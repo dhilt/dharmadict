@@ -4,13 +4,11 @@ import React, {Component} from 'react'
 import ReactDOM from 'react-dom'
 import {Router, Route, browserHistory} from 'react-router'
 import {createStore, applyMiddleware} from 'redux'
-import createSagaMiddleware from 'redux-saga'
 import {Provider} from 'react-redux'
 import thunkMiddleware from 'redux-thunk'
 import createLogger from 'redux-logger'
 import reducer from './reducers'
-import rootSaga from './sagas'
-import {clearError} from './actions'
+import {getUserInfoAsync} from './actions'
 
 import './styles/main.css'
 
@@ -20,56 +18,28 @@ import Search from './components/Search'
 import SearchInput from './components/search/SearchInput'
 import ResultList from './components/search/ResultList'
 import ResultItem from './components/search/ResultItem'
-import Login from './components/Login'
 import Dashboard from './components/Dashboard'
 import NotFound from './components/NotFound'
 
 let logger = createLogger({
-  // Ignore `CHANGE_FORM` actions in the logger, since they fire after every keystroke
-  predicate: (getState, action) => action.type !== 'CHANGE_FORM'
+  // Ignore `CHANGE...` actions in the logger, since they fire after every keystroke
+  predicate: (getState, action) => action.type && action.type.indexOf('CHANGE_') !== 0
 })
 
-let sagaMiddleware = createSagaMiddleware()
+let store = createStore(reducer, applyMiddleware(logger, thunkMiddleware))
+let userInfoPromise = store.dispatch(getUserInfoAsync())
 
-// Creates the Redux store using our reducer and the logger and saga middlewares
-let store = createStore(reducer, applyMiddleware(logger, sagaMiddleware, thunkMiddleware))
-// We run the root saga automatically
-sagaMiddleware.run(rootSaga)
-
-/**
-* Checks authentication status on route change
-* @param  {object}   nextState The state we want to change into when we change routes
-* @param  {function} replace Function provided by React Router to replace the location
-*/
-function checkAuth (nextState, replace) {
-  let {loggedIn} = store.getState()
-
-  store.dispatch(clearError())
-
-  // Check if the path isn't dashboard. That way we can apply specific logic to
-  // display/render the path we want to
-  if (nextState.location.pathname !== '/dashboard') {
-    if (loggedIn) {
-      if (nextState.location.state && nextState.location.pathname) {
-        replace(nextState.location.pathname)
-      } else {
-        replace('/')
-      }
+function checkAuth (nextState, replace, callback) {
+  let {auth} = store.getState()
+  userInfoPromise.then(() => {
+    if (!auth.loggedIn) {
+      replace('/not_authorized')
+      browserHistory.replace('/not_authorized')
     }
-  } else {
-    // If the user is already logged in, forward them to the homepage
-    if (!loggedIn) {
-      if (nextState.location.state && nextState.location.pathname) {
-        replace(nextState.location.pathname)
-      } else {
-        replace('/')
-      }
-    }
-  }
+    callback();
+  })
 }
 
-// Mostly boilerplate, except for the routes. These are the pages you can go to,
-// which are all wrapped in the App component, which contains the navigation etc
 class LoginFlow extends Component {
   render () {
     return (
@@ -77,10 +47,10 @@ class LoginFlow extends Component {
         <Router history={browserHistory}>
           <Route component={App}>
             <Route path='/' component={Home} />
-            <Route onEnter={checkAuth}>
-              <Route path='/login' component={Login} />
-              <Route path='/dashboard' component={Dashboard} />
+            <Route>
+              <Route path='/edit' component={Dashboard} onEnter={checkAuth}/>
             </Route>
+            <Route path='/not_authorized' component={NotFound} />
             <Route path='*' component={NotFound} />
           </Route>
         </Router>

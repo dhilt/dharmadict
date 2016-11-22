@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import SearchInput from './search/SearchInput'
 import ResultList from './search/ResultList'
 
-import {doSearchRequest} from '../actions'
+import {doSearchRequestAsync} from '../actions'
 
 class Search extends Component {
   constructor (props) {
@@ -24,7 +24,7 @@ class Search extends Component {
 
   _search (searchString) {
     console.log('Let\'s start an async request to db! searchString is "' + searchString + '"')
-    this.props.dispatch(doSearchRequest(searchString))
+    this.props.dispatch(doSearchRequestAsync(searchString))
   }
 }
 
