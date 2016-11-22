@@ -4,12 +4,14 @@ var bodyParser = require('body-parser');
 var elasticsearch = require('elasticsearch');
 var jwt = require('jsonwebtoken');
 var Cookies = require('cookies');
+var path = require('path');
 
 var app = express();
 var port = 3000;
 var secretKey = 'supersecret';
 var accessTokenExpiration = 60 * 60 * 24 * 31; // 1 month
 
+app.use(express.static(path.join(__dirname + '/client')));
 app.use(bodyParser.json());
 
 var elasticClient = new elasticsearch.Client({
@@ -18,12 +20,21 @@ var elasticClient = new elasticsearch.Client({
 });
 
 var Users = [{
+    id: 1,
     login: 'admin',
     hash: passwordHash.generate('pass')
 }, {
-    login: 'admin2',
-    hash: passwordHash.generate('pass2')
+    id: 2,
+    login: 'user',
+    hash: passwordHash.generate('password')
 }];
+
+var getUserInfo = function(user) {
+  return {
+    id: user.id,
+    login: user.login
+  }
+}
 
 var responseError = function(res, message, status) {
     console.log(message);
@@ -34,6 +45,23 @@ var responseError = function(res, message, status) {
     });
 }
 
+app.get('/api/userInfo', function(req, res) {
+  var token = new Cookies(req, res).get('access_token');
+  jwt.verify(token, secretKey, function(err, decoded) {
+    if (!err) {
+      userId = decoded.id;
+      for (var i = 0; i < Users.length; i++) {
+        if (Users[i].id == userId) {
+          return res.send(getUserInfo(user));
+        }
+      }
+      return responseError(res, 'Can not find user.', 404);
+    } else {
+      responseError(res, 'Missed token.', 500);
+    }
+  })
+});
+
 app.post('/api/login', function(req, res) {
     var login = req.body.login;
     var password = req.body.password;
@@ -43,14 +71,11 @@ app.post('/api/login', function(req, res) {
     console.log(login)
         if (Users[i].login === login) {
             if (passwordHash.verify(password, Users[i].hash)) {
-                var user = Users[i];
+                var user = getUserInfo(Users[i]);
                 console.log('Log in user ' + user.login + '.');
 
                 // generate token
-                var token = jwt.sign({
-                    id: user.id,
-                    login: user.login
-                }, secretKey, {
+                var token = jwt.sign(user, secretKey, {
                     expiresIn: accessTokenExpiration
                 });
 
@@ -116,38 +141,8 @@ app.get('/api/search', function(req, res) {
     });
 });
 
-app.configure(function() {
-    app.use(express["static"](__dirname + '/client'));
-    app.get('/api/terms', function(req, res) {
-        return elasticClient.search({
-            index: "dharmadict",
-            type: "terms",
-            body: {
-                query: {
-                    multi_match: {
-                        query: req.query.searchPattern,
-                        type: "most_fields",
-                        operator: "and",
-                        fields: ["wylie", "sanskrit_rus_lower", "sanskrit_eng_lower", "translations.meanings.versions_lower"]
-                    }
-                }
-            }
-        }).then(function(result) {
-            var hit;
-
-            return res.json((function() {
-                var _i, _len, _ref, _results;
-
-                _ref = result.hits.hits;
-                _results = [];
-                for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-                    hit = _ref[_i];
-                    _results.push(hit._source);
-                }
-                return _results;
-            })());
-        });
-    });
+app.get('*', function(req, res) {
+    res.sendFile(path.join(__dirname + '/client/index.html'));
 });
 
 app.listen(port);
