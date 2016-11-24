@@ -27,17 +27,34 @@ let logger = createLogger({
 })
 
 let store = createStore(reducer, applyMiddleware(logger, thunkMiddleware))
-let userInfoPromise = store.dispatch(getUserInfoAsync())
+if(store.getState().auth.token) {
+  store.dispatch(getUserInfoAsync())
+}
 
 function checkAuth (nextState, replace, callback) {
   let {auth} = store.getState()
-  userInfoPromise.then(() => {
-    if (!auth.loggedIn) {
-      replace('/not_authorized')
-      browserHistory.replace('/not_authorized')
-    }
-    callback();
-  })
+
+  if(auth.loggedIn) {
+    callback()
+    return
+  }
+
+  let unauthorizedAccess = () => {
+    replace('/not_authorized')
+    browserHistory.replace('/not_authorized')
+  }
+
+  if(auth.userInfo.promise) {
+    auth.userInfo.promise.then(() => {
+      if (!auth.loggedIn) {
+        unauthorizedAccess()
+      }
+      callback()
+    })
+  }
+  else {
+    unauthorizedAccess()
+  }
 }
 
 class LoginFlow extends Component {

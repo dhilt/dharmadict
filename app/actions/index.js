@@ -1,4 +1,5 @@
-import fetch from 'isomorphic-fetch'
+import auth from '../helpers/auth'
+import asyncRequest from '../helpers/remote'
 
 import {
   USERINFO_REQUEST_START,
@@ -14,71 +15,104 @@ import {
   SEARCH_REQUEST_END
 } from './constants'
 
-
-let asyncRequest = (path, payload, cb) =>
-  fetch('api/' + path, payload ? {
-      method: 'post',
-      body: JSON.stringify(payload),
-      headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-      }
-    }: undefined)
-    .then(response => {
-      if(!response.ok) {
-        throw({ message: response.statusText + ' (' + response.status + ')' })
-      }
-      return response.json()
-    })
-    .then(json => cb(json.error ? null : json, json.error ? json : null))
-    .catch(error => cb(null, error))
-
 // userInfo
 
-export function getUserInfoAsync () {
-  return (dispatch) =>  {
-    dispatch({type: USERINFO_REQUEST_START})
-    return asyncRequest('userInfo', false, (data, error) =>
-      dispatch({type: USERINFO_REQUEST_END, result: data, error: error}))
-    }
+export function getUserInfoAsync() {
+  return (dispatch) => {
+    let promise = asyncRequest('userInfo', false, (data, error) =>
+      dispatch({
+        type: USERINFO_REQUEST_END,
+        result: data,
+        error: error
+      }))
+    dispatch({
+      type: USERINFO_REQUEST_START,
+      promise: promise
+    })
+    return promise
+  }
 }
 
 // login
 
-export function openLoginModal () {
-  return {type: OPEN_LOGIN_MODAL}
+export function openLoginModal() {
+  return {
+    type: OPEN_LOGIN_MODAL
+  }
 }
 
-export function closeLoginModal () {
-  return {type: CLOSE_LOGIN_MODAL}
+export function closeLoginModal() {
+  return {
+    type: CLOSE_LOGIN_MODAL
+  }
 }
 
-export function changeLoginString (login) {
-  return {type: CHANGE_LOGIN_STRING, login: login}
+export function changeLoginString(login) {
+  return {
+    type: CHANGE_LOGIN_STRING,
+    login: login
+  }
 }
 
-export function changePasswordString (password) {
-  return {type: CHANGE_PASSWORD_STRING, password: password}
+export function changePasswordString(password) {
+  return {
+    type: CHANGE_PASSWORD_STRING,
+    password: password
+  }
 }
 
-export function doLoginAsync (login, password) {
-  return (dispatch) =>  {
-    dispatch({type: LOGIN_REQUEST_START})
-    return asyncRequest('login', { login: login, password: password }, (data, error) =>
-      dispatch({type: LOGIN_REQUEST_END, result: data, error: error}))
-    }
+export function doLoginAsync(login, password) {
+  return (dispatch) => {
+    let promise = asyncRequest('login', {
+      login: login,
+      password: password
+    }, (data, error) => {
+      if (!error && data.token) {
+        auth.setToken(data.token)
+      }
+      dispatch({
+        type: LOGIN_REQUEST_END,
+        token: data ? data.token : null,
+        error: error
+      })
+      dispatch({
+        type: USERINFO_REQUEST_END,
+        result: data ? data.user : null,
+        error: error
+      })
+    })
+
+    dispatch({
+      type: LOGIN_REQUEST_START
+    })
+    dispatch({
+      type: USERINFO_REQUEST_START,
+      promise: promise
+    })
+
+    return promise
+  }
 }
 
 // search
 
-export function changeSearchString (newSearchString) {
- return {type: CHANGE_SEARCH_STRING, newSearchString}
+export function changeSearchString(newSearchString) {
+  return {
+    type: CHANGE_SEARCH_STRING,
+    newSearchString
+  }
 }
 
-export function doSearchRequestAsync (searchString) {
-  return (dispatch) =>  {
-    dispatch({type: SEARCH_REQUEST_START})
+export function doSearchRequestAsync(searchString) {
+  return (dispatch) => {
+    dispatch({
+      type: SEARCH_REQUEST_START
+    })
     return asyncRequest(`search?pattern=${searchString}`, null, (data, error) =>
-      dispatch({type: SEARCH_REQUEST_END, result: data, error: error}))
-    }
+      dispatch({
+        type: SEARCH_REQUEST_END,
+        result: data,
+        error: error
+      }))
+  }
 }

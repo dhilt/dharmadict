@@ -12,14 +12,16 @@ import {
   SEARCH_REQUEST_END
 } from '../actions/constants'
 
-import auth from '../auth'
+import auth from '../helpers/auth'
 
 let initialState = {
   auth: {
-    loggedIn: false,
+    loggedIn: auth.loggedIn(),
+    token: auth.getToken(),
     userInfo: {
       requested: false,
       pending: false,
+      promise: null,
       data: null,
       error: null
     },
@@ -37,32 +39,95 @@ let initialState = {
   }
 }
 
-function reducer (state = initialState, action) {
+function reducer(state = initialState, action) {
   switch (action.type) {
     case USERINFO_REQUEST_START:
-      return {...state, auth: { ...state.auth, userInfo: { ...state.auth.userInfo, requested: true, pending: true, error: null }}}
+      return {...state,
+        auth: {...state.auth,
+          userInfo: {...state.auth.userInfo,
+            requested: true,
+            pending: true,
+            promise: action.promise,
+            error: null
+          }
+        }
+      }
     case USERINFO_REQUEST_END:
-      return {...state, auth: { ...state.auth, loggedIn: !action.error, userInfo: { ...state.auth.userInfo, pending: false, data: action.result, error: action.error }}}
-
+      return {...state,
+        auth: {...state.auth,
+          loggedIn: !action.error,
+          userInfo: {...state.auth.userInfo,
+            pending: false,
+            promise: !action.error ? state.auth.userInfo.promise : null,
+            data: action.result,
+            error: action.error
+          }
+        }
+      }
     case OPEN_LOGIN_MODAL:
-      return {...state, auth: { ...state.auth, modalIsOpen: true }}
+      return {...state,
+        auth: {...state.auth,
+          modalIsOpen: true
+        }
+      }
     case CLOSE_LOGIN_MODAL:
-      return {...state, auth: { ...state.auth, modalIsOpen: false, password: '', error: null }}
+      return {...state,
+        auth: {...state.auth,
+          modalIsOpen: false,
+          password: '',
+          error: null
+        }
+      }
     case CHANGE_LOGIN_STRING:
-      return {...state, auth: { ...state.auth, login: action.login }}
+      return {...state,
+        auth: {...state.auth,
+          login: action.login
+        }
+      }
     case CHANGE_PASSWORD_STRING:
-      return {...state, auth: { ...state.auth, password: action.password }}
+      return {...state,
+        auth: {...state.auth,
+          password: action.password
+        }
+      }
     case LOGIN_REQUEST_START:
-      return {...state, auth: { ...state.auth, pending: true, error: null }}
+      return {...state,
+        auth: {...state.auth,
+          pending: true,
+          error: null
+        }
+      }
     case LOGIN_REQUEST_END:
-      return {...state, auth: { ...state.auth, pending: false, error: action.error, loggedIn: !action.error, userInfo: { ...state.auth.userInfo, data: action.result }}}
-
+      return {...state,
+        auth: {...state.auth,
+          pending: false,
+          token: action.token,
+          error: action.error,
+          loggedIn: !action.error,
+          password: ''
+        }
+      }
     case CHANGE_SEARCH_STRING:
-      return {...state, searchState: { ...state.searchState, searchString: action.newSearchString }}
+      return {...state,
+        searchState: {...state.searchState,
+          searchString: action.newSearchString
+        }
+      }
     case SEARCH_REQUEST_START:
-      return {...state, searchState: { ...state.searchState, pending: true, error: null }}
+      return {...state,
+        searchState: {...state.searchState,
+          pending: true,
+          error: null
+        }
+      }
     case SEARCH_REQUEST_END:
-      return {...state, searchState: { ...state.searchState, pending: false, result: action.result, error: action.error }}
+      return {...state,
+        searchState: {...state.searchState,
+          pending: false,
+          result: action.result,
+          error: action.error
+        }
+      }
     default:
       return state
   }
