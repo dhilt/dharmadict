@@ -7,6 +7,7 @@ import {
   CHANGE_PASSWORD_STRING,
   LOGIN_REQUEST_START,
   LOGIN_REQUEST_END,
+  LOGOUT,
   CHANGE_SEARCH_STRING,
   SEARCH_REQUEST_START,
   SEARCH_REQUEST_END
@@ -105,6 +106,11 @@ function reducer(state = initialState, action) {
           error: action.error,
           loggedIn: !action.error,
           password: ''
+        }
+      }
+    case LOGOUT:
+      return {...state,
+        auth: {...initialState.auth
         }
       }
     case CHANGE_SEARCH_STRING:

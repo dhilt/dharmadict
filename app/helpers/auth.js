@@ -17,6 +17,10 @@ let auth = {
     localStorage.token = token
   },
 
+  removeToken() {
+    delete localStorage.token
+  },
+
   loggedIn() {
     return !!localStorage.token
   }

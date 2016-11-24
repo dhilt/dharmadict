@@ -1,3 +1,4 @@
+import { browserHistory } from 'react-router'
 import auth from '../helpers/auth'
 import asyncRequest from '../helpers/remote'
 
@@ -10,6 +11,7 @@ import {
   CHANGE_PASSWORD_STRING,
   LOGIN_REQUEST_START,
   LOGIN_REQUEST_END,
+  LOGOUT,
   CHANGE_SEARCH_STRING,
   SEARCH_REQUEST_START,
   SEARCH_REQUEST_END
@@ -69,6 +71,7 @@ export function doLoginAsync(login, password) {
     }, (data, error) => {
       if (!error && data.token) {
         auth.setToken(data.token)
+        dispatch(closeLoginModal())
       }
       dispatch({
         type: LOGIN_REQUEST_END,
@@ -91,6 +94,14 @@ export function doLoginAsync(login, password) {
     })
 
     return promise
+  }
+}
+
+export function doLogout() {
+  auth.removeToken()
+  browserHistory.push('/')
+  return {
+    type: LOGOUT
   }
 }
 

@@ -15,7 +15,7 @@ const customStyles = {
   }
 };
 
-class LoginModal extends Component {
+class Login extends Component {
   constructor (props) {
     super(props)
     this.openModal = this.openModal.bind(this)
@@ -27,10 +27,8 @@ class LoginModal extends Component {
 
   render () {
     return (
-      <div>
-        <div>
-          <button onClick={this.openModal}>LOGIN</button>
-        </div>
+      <span>
+        <button onClick={this.openModal}>LOGIN</button>
         <Modal
           isOpen={this.props.data.modalIsOpen}
           onAfterOpen={this.afterOpenModal}
@@ -52,7 +50,7 @@ class LoginModal extends Component {
           <button onClick={this.doLogin} disabled={!this.props.data.login || !this.props.data.password}>Log in!</button>
           <button onClick={this.closeModal}>Cancel</button>
         </Modal>
-      </div>
+      </span>
     )
   }
 
@@ -78,7 +76,7 @@ class LoginModal extends Component {
   }
 }
 
-LoginModal.propTypes = {
+Login.propTypes = {
   data: React.PropTypes.object,
   dispatch: React.PropTypes.func
 }
@@ -89,4 +87,4 @@ function select (state) {
   }
 }
 
-export default connect(select)(LoginModal)
+export default connect(select)(Login)
