@@ -1,6 +1,6 @@
 .nav {
   position: fixed;
-  top: 0;
+  top: 1.2em;
   left: 0;
   right: 0;
   height: $nav-height;
@@ -8,7 +8,7 @@
   padding: 1em;
   display: flex;
   align-items: center;
-  background-color: #fff;
+  background-color: #37b893;
   z-index: 1;
 }
 
@@ -40,6 +40,19 @@
 
 .btn--nav + .btn--nav {
   margin-left: 1em;
+}
+
+.nav a {
+  color: #fff;
+  margin-left: 10px;
+}
+
+.nav a:hover {
+  color: #aff;
+}
+
+.nav a:active {
+  color: #fff;
 }
 
 @media screen and (max-width: 400px) {

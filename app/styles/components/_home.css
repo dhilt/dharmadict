@@ -34,3 +34,8 @@ button, .search-button {
 button:hover, .search-button:hover {
 	background-color: $brand-color;
 }
+
+.logo {
+	width: 100px;
+	height: 100px;
+}

@@ -25,7 +25,7 @@ class Nav extends Component {
       <div>
         {this.props.data.loggedIn ? (
           <span>
-            <Link to='/edit'> Edit </Link>
+            <Link to='/edit'>Edit</Link>
             <Logout dispatch={this.props.dispatch}/>
           </span>
         ) : (

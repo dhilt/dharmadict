@@ -28,7 +28,7 @@ class Login extends Component {
   render () {
     return (
       <span>
-        <button onClick={this.openModal}>LOGIN</button>
+        <a href="/login" onClick={this.openModal}>Login</a>
         <Modal
           isOpen={this.props.data.modalIsOpen}
           onAfterOpen={this.afterOpenModal}
@@ -54,7 +54,8 @@ class Login extends Component {
     )
   }
 
-  openModal () {
+  openModal (event) {
+    event.preventDefault()
     this.props.dispatch(openLoginModal())
   }
 
