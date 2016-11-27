@@ -17,8 +17,8 @@ import auth from '../helpers/auth'
 
 let initialState = {
   auth: {
-    loggedIn: auth.loggedIn(),
-    token: auth.getToken(),
+    loggedIn: false,
+    token: null,
     userInfo: {
       requested: false,
       pending: false,
@@ -39,6 +39,8 @@ let initialState = {
     error: null
   }
 }
+
+auth.initialize(initialState.auth)
 
 function reducer(state = initialState, action) {
   switch (action.type) {

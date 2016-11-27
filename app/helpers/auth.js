@@ -9,20 +9,34 @@ if (global.process && process.env.NODE_ENV === 'test') {
 }
 
 let auth = {
+  initialState: null,
+
+  initialize(initialState) {
+    this.initialState = initialState
+    this.setInitialStateParams()
+  },
+
   getToken() {
-    return localStorage.token
-  },
-
-  setToken(token) {
-    localStorage.token = token
-  },
-
-  removeToken() {
-    delete localStorage.token
+    return localStorage.token || null
   },
 
   loggedIn() {
     return !!localStorage.token
+  },
+
+  setToken(token) {
+    localStorage.token = token
+    this.setInitialStateParams()
+  },
+
+  removeToken() {
+    delete localStorage.token
+    this.setInitialStateParams()
+  },
+
+  setInitialStateParams() {
+    this.initialState['loggedIn'] = this.loggedIn()
+    this.initialState['token'] = this.getToken()
   }
 }
 
