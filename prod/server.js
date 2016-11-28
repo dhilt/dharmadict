@@ -128,6 +128,12 @@ app.get('/api/test', function(req, res) {
   });
 });
 
+var mockData = require('./mock.json');
+
+app.get('/api/search_test', function(req, res) {
+  res.send(mockData.results);
+});
+
 app.get('/api/search', function(req, res) {
   console.log('Searching by "' + req.query.pattern + '" pattern.')
   return elasticClient.search({

@@ -1,0 +1,466 @@
+{
+    "results": [{
+        "wylie": "chos mngon",
+        "sanskrit_rus": "Абхидхарма",
+        "sanskrit_rus_lower": "абхидхарма",
+        "sanskrit_eng": "abhidharma",
+        "sanskrit_eng_lower": "abhidharma",
+        "translations": [{
+            "translatorId": "DON",
+            "language": "rus",
+            "meanings": [{
+                "versions": [
+                    "Абхидхарма"
+                ],
+                "comment": "название одной из трех питак – разделов Писания",
+                "versions_lower": [
+                    "абхидхарма"
+                ]
+            }]
+        }, {
+            "translatorId": "MK",
+            "language": "rus",
+            "meanings": [{
+                "versions": [
+                    "теория элементов бытия (Абхидхарма)"
+                ],
+                "comment": "",
+                "versions_lower": [
+                    "теория элементов бытия (абхидхарма)"
+                ]
+            }]
+        }, {
+            "translatorId": "AKT",
+            "language": "rus",
+            "meanings": [{
+                "versions": [
+                    "Абхидхарма"
+                ],
+                "comment": "раздел буддийского канона и постканонической литературы, излагающий учение о дхармах как явлениях, фактах, элементах бытия. В тибетском буддизме изучение Абхидхармы обычно опирается на трактаты Васубандху \"Сокровищница Абхидхармы\"  и Асанги \"Антология Абхидхармы\"",
+                "versions_lower": [
+                    "абхидхарма"
+                ]
+            }]
+        }, {
+            "translatorId": "HOP",
+            "language": "eng",
+            "meanings": [{
+                "versions": [
+                    "knowledge",
+                    "higher knowledge",
+                    "higher doctrine"
+                ],
+                "comment": "",
+                "versions_lower": [
+                    "knowledge",
+                    "higher knowledge",
+                    "higher doctrine"
+                ]
+            }]
+        }]
+    }, {
+        "wylie": "chos",
+        "sanskrit_rus": "дхамма, дхарма",
+        "sanskrit_rus_lower": "дхамма, дхарма",
+        "sanskrit_eng": "Dharma",
+        "sanskrit_eng_lower": "dharma",
+        "translations": [{
+            "translatorId": "DON",
+            "language": "rus",
+            "meanings": [{
+                "versions": [
+                    "Учение",
+                    "элемент",
+                    "закон",
+                    "справедливость",
+                    "предмет мысли",
+                    "качество"
+                ],
+                "comment": "",
+                "versions_lower": [
+                    "учение",
+                    "элемент",
+                    "закон",
+                    "справедливость",
+                    "предмет мысли",
+                    "качество"
+                ]
+            }]
+        }, {
+            "translatorId": "ZAG",
+            "language": "rus",
+            "meanings": [{
+                "versions": [
+                    "Учение Будды",
+                    "буддизм"
+                ],
+                "comment": "",
+                "versions_lower": [
+                    "учение будды",
+                    "буддизм"
+                ]
+            }, {
+                "versions": [
+                    "явления"
+                ],
+                "comment": null,
+                "versions_lower": [
+                    "явления"
+                ]
+            }, {
+                "versions": [
+                    "элементы бытия"
+                ],
+                "comment": null,
+                "versions_lower": [
+                    "элементы бытия"
+                ]
+            }, {
+                "versions": [
+                    "психические свойства"
+                ],
+                "comment": null,
+                "versions_lower": [
+                    "психические свойства"
+                ]
+            }]
+        }, {
+            "translatorId": "MK",
+            "language": "rus",
+            "meanings": [{
+                "versions": [
+                    "Дхарма",
+                    "Учение",
+                    "духовное учение",
+                    "духовность"
+                ],
+                "comment": "",
+                "versions_lower": [
+                    "дхарма",
+                    "учение",
+                    "духовное учение",
+                    "духовность"
+                ]
+            }, {
+                "versions": [
+                    "дхарма",
+                    "элементы бытия",
+                    "феномены",
+                    "явления"
+                ],
+                "comment": null,
+                "versions_lower": [
+                    "дхарма",
+                    "элементы бытия",
+                    "феномены",
+                    "явления"
+                ]
+            }]
+        }, {
+            "translatorId": "AKT",
+            "language": "rus",
+            "meanings": [{
+                "versions": [
+                    "Учение",
+                    "Дхарма"
+                ],
+                "comment": "",
+                "versions_lower": [
+                    "учение",
+                    "дхарма"
+                ]
+            }, {
+                "versions": [
+                    "элемент",
+                    "дхарма",
+                    "явление"
+                ],
+                "comment": null,
+                "versions_lower": [
+                    "элемент",
+                    "дхарма",
+                    "явление"
+                ]
+            }]
+        }, {
+            "translatorId": "HOP",
+            "language": "eng",
+            "meanings": [{
+                "versions": [
+                    "doctrine",
+                    "religion",
+                    "practice",
+                    "way"
+                ],
+                "comment": "",
+                "versions_lower": [
+                    "doctrine",
+                    "religion",
+                    "practice",
+                    "way"
+                ]
+            }, {
+                "versions": [
+                    "phenomenon",
+                    "phenomena",
+                    "topic"
+                ],
+                "comment": null,
+                "versions_lower": [
+                    "phenomenon",
+                    "phenomena",
+                    "topic"
+                ]
+            }, {
+                "versions": [
+                    "quality",
+                    "attribute"
+                ],
+                "comment": null,
+                "versions_lower": [
+                    "quality",
+                    "attribute"
+                ]
+            }]
+        }, {
+            "translatorId": "BRZ",
+            "language": "eng",
+            "meanings": [{
+                "versions": [
+                    "dharma"
+                ],
+                "comment": "(1) Preventive measures which, if one puts into practice or achieves, prevent the experience of future suffering. (2) Buddha's teachings. (3) Any phenomenon or \"thing.\"",
+                "versions_lower": [
+                    "dharma"
+                ]
+            }, {
+                "versions": [
+                    "phenomenon"
+                ],
+                "comment": "A validly knowable object that holds its own individual self-nature.",
+                "versions_lower": [
+                    "phenomenon"
+                ]
+            }]
+        }]
+    }, {
+        "wylie": "chos nyid",
+        "sanskrit_rus": "дхармата",
+        "sanskrit_rus_lower": "дхармата",
+        "sanskrit_eng": "dharmata",
+        "sanskrit_eng_lower": "dharmata",
+        "translations": [{
+            "translatorId": "DON",
+            "language": "rus",
+            "meanings": [{
+                "versions": [
+                    "истинная природа (сущего)"
+                ],
+                "comment": "",
+                "versions_lower": [
+                    "истинная природа (сущего)"
+                ]
+            }]
+        }, {
+            "translatorId": "ZAG",
+            "language": "rus",
+            "meanings": [{
+                "versions": [
+                    "дхармата",
+                    "Высшая Реальность"
+                ],
+                "comment": "сущность реальности, совершенно чистая природа всех вещей",
+                "versions_lower": [
+                    "дхармата",
+                    "высшая реальность"
+                ]
+            }]
+        }, {
+            "translatorId": "MK",
+            "language": "rus",
+            "meanings": [{
+                "versions": [
+                    "подлинное-бытие"
+                ],
+                "comment": "",
+                "versions_lower": [
+                    "подлинное-бытие"
+                ]
+            }]
+        }, {
+            "translatorId": "AKT",
+            "language": "rus",
+            "meanings": [{
+                "versions": [
+                    "сущность",
+                    "подлинная сущность",
+                    "дхармата",
+                    "абсолютная истина",
+                    "природа"
+                ],
+                "comment": "",
+                "versions_lower": [
+                    "сущность",
+                    "подлинная сущность",
+                    "дхармата",
+                    "абсолютная истина",
+                    "природа"
+                ]
+            }]
+        }, {
+            "translatorId": "HOP",
+            "language": "eng",
+            "meanings": [{
+                "versions": [
+                    "reality",
+                    "noumenon",
+                    "real nature",
+                    "actuality",
+                    "final reality"
+                ],
+                "comment": "",
+                "versions_lower": [
+                    "reality",
+                    "noumenon",
+                    "real nature",
+                    "actuality",
+                    "final reality"
+                ]
+            }, {
+                "versions": [
+                    "quality"
+                ],
+                "comment": null,
+                "versions_lower": [
+                    "quality"
+                ]
+            }]
+        }, {
+            "translatorId": "BRZ",
+            "language": "eng",
+            "meanings": [{
+                "versions": [
+                    "actual nature"
+                ],
+                "comment": "A synonym for voidness (emptiness) or, in some mahamudra and dzogchen systems, the nature of everything as the play of inseparable awareness and voidness.",
+                "versions_lower": [
+                    "actual nature"
+                ]
+            }]
+        }]
+    }, {
+        "wylie": "chos sku",
+        "sanskrit_rus": "Дхармакая",
+        "sanskrit_rus_lower": "дхармакая",
+        "sanskrit_eng": "dharmakaya",
+        "sanskrit_eng_lower": "dharmakaya",
+        "translations": [{
+            "translatorId": "ZAG",
+            "language": "rus",
+            "meanings": [{
+                "versions": [
+                    "Дхармакая (\"тело Истины\")"
+                ],
+                "comment": "одно из трех тел будды. Это вневременное, неизменное, лишенное характеристик недвойственное состояние, духовное тело будд, их подлинная природа. В Ваджраяне под дхармакаей понимается Пустота, всепроникающая Высшая Реальность, само Пробуждение.",
+                "versions_lower": [
+                    "дхармакая (\"тело истины\")"
+                ]
+            }]
+        }, {
+            "translatorId": "MK",
+            "language": "rus",
+            "meanings": [{
+                "versions": [
+                    "Тело учения",
+                    "Тело истины"
+                ],
+                "comment": "",
+                "versions_lower": [
+                    "тело учения",
+                    "тело истины"
+                ]
+            }]
+        }, {
+            "translatorId": "AKT",
+            "language": "rus",
+            "meanings": [{
+                "versions": [
+                    "Дхармакая"
+                ],
+                "comment": "",
+                "versions_lower": [
+                    "дхармакая"
+                ]
+            }]
+        }, {
+            "translatorId": "BRZ",
+            "language": "eng",
+            "meanings": [{
+                "versions": [
+                    "Corpus Encompassing Everything"
+                ],
+                "comment": "The omniscient mind of a Buddha",
+                "versions_lower": [
+                    "corpus encompassing everything"
+                ]
+            }]
+        }]
+    }, {
+        "wylie": "chos [kyi] dbyings",
+        "sanskrit_rus": "дхармадхату",
+        "sanskrit_rus_lower": "дхармадхату",
+        "sanskrit_eng": "dharmadhatu",
+        "sanskrit_eng_lower": "dharmadhatu",
+        "translations": [{
+            "translatorId": "ZAG",
+            "language": "rus",
+            "meanings": [{
+                "versions": [
+                    "Высшая Реальность"
+                ],
+                "comment": "",
+                "versions_lower": [
+                    "высшая реальность"
+                ]
+            }]
+        }, {
+            "translatorId": "AKT",
+            "language": "rus",
+            "meanings": [{
+                "versions": [
+                    "дхармадхату"
+                ],
+                "comment": "",
+                "versions_lower": [
+                    "дхармадхату"
+                ]
+            }]
+        }, {
+            "translatorId": "HOP",
+            "language": "eng",
+            "meanings": [{
+                "versions": [
+                    "sphere of reality",
+                    "noumenal expanse",
+                    "nature of phenomena"
+                ],
+                "comment": "An equivalent of ultimate truth so called because meditation within observing it acts as a cause of the qualities of Superiors. Emptiness, being uncaused, is not itself a cause (element), but meditation on it causes the development of marvelous qualities; thus, emptiness comes to be called a cause, an element producing those qualities.",
+                "versions_lower": [
+                    "sphere of reality",
+                    "noumenal expanse",
+                    "nature of phenomena"
+                ]
+            }, {
+                "versions": [
+                    "element of [a Superior's] qualities",
+                    "basic element of phenomena"
+                ],
+                "comment": null,
+                "versions_lower": [
+                    "element of [a superior's] qualities",
+                    "basic element of phenomena"
+                ]
+            }]
+        }]
+    }]
+}
