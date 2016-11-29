@@ -7,17 +7,23 @@ import logoPath from '../styles/images/manjushri.jpg'
 class Home extends Component {
   render () {
     return (
-      <article>
-        <div>
-          <section className="logo">
-            <img src={logoPath}/>
-          </section>
-          <section className='text-section'>
-            <h1>Welcome to Dharmadict!</h1>
-            <Search/>
-          </section>
+      <div className="row">
+        <div className="col-md-2">
+          <img src={logoPath} className="logo" />
         </div>
-      </article>
+        <div className="col-md-10">
+    			<div className="row header-row">
+    					<div className="col-md-12">
+    						<h1><em>Буддийская терминология</em> в русских переводах</h1>
+    					</div>
+    			</div>
+          <div className="row search-row" >
+            <div className="col-md-12">
+              <Search/>
+            </div>
+          </div>
+        </div>
+      </div>
     )
   }
 }

@@ -1,12 +1,8 @@
 .nav {
-  position: fixed;
-  top: 1.2em;
-  left: 0;
-  right: 0;
+  margin-top: 1.2em;
   height: $nav-height;
   box-shadow: 0 0 2px rgba(0,0,0,.5);
   padding: 1em;
-  display: flex;
   align-items: center;
   background-color: #37b893;
   z-index: 1;

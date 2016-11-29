@@ -15,7 +15,6 @@ class Search extends Component {
     let searchString = this.props.data.searchString
     return (
       <div>
-        <p>Lets search!!</p>
         <SearchInput onSubmit={this._search} />
         <ResultList />
       </div>

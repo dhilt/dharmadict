@@ -8,7 +8,7 @@ class ResultItem extends Component {
 
   render () {
     return (
-      <li> {this.props.item._source.wylie} </li>
+      <li> {this.props.item.wylie} </li>
     )
   }
 }

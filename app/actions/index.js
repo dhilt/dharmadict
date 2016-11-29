@@ -119,7 +119,7 @@ export function doSearchRequestAsync(searchString) {
     dispatch({
       type: SEARCH_REQUEST_START
     })
-    return asyncRequest(`search?pattern=${searchString}`, null, (data, error) =>
+    return asyncRequest(`search_test?pattern=${searchString}`, null, (data, error) =>
       dispatch({
         type: SEARCH_REQUEST_END,
         result: data,

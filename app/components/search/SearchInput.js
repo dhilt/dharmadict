@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
+import { Button } from 'react-bootstrap';
 
 import {changeSearchString} from '../../actions'
 
@@ -12,15 +13,29 @@ class SearchInput extends Component {
 
   render () {
     return (
-        <div>
-          <input className='search-input' name='search' type='text'
-            value={this.props.data.searchString}
-            onChange={this._onSearchStringChange}/>
-          <button
-            className='search-button'
-            disabled={!this.props.data.searchString}
-            onClick={this._onSubmit}>search</button>
-        </div>
+      <div className='row'>
+        <form>
+          <div className='form-group'>
+            <div className='col-md-6'>
+              <input className='form-control col-md-7'
+                name='search' type='search'
+                value={this.props.data.searchString}
+                onChange={this._onSearchStringChange}/>
+            </div>
+          </div>
+          <div className='col-md-2'>
+            <div className='form-group'>
+              <Button
+                bsStyle='default'
+                type='submit'
+                disabled={!this.props.data.searchString}
+                onClick={this._onSubmit}>
+                Найти
+              </Button>
+            </div>
+          </div>
+        </form>
+      </div>
     )
   }
 

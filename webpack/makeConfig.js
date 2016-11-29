@@ -61,7 +61,7 @@ function makeWebpackConfig (options) {
     entry: entry,
     output: {
       path: path.resolve(__dirname, '../', 'prod', 'client'),
-      filename: 'js/bundle.js'
+      filename: 'bundle.js'
     },
     module: {
       loaders: [
@@ -74,7 +74,10 @@ function makeWebpackConfig (options) {
           loaders: ['style-loader', 'css-loader', 'postcss-loader'] // ...with PostCSS
         }, {
           test: /\.(png|jpg|)$/,
-          loader: 'url-loader?limit=200000'
+          loader: 'url-loader?limit=200000&context=./assets'
+        }, {
+          test: /\.ttf$/,
+          loader: 'file?name=[name].[ext]'
         }
       ]
     },
