@@ -14,7 +14,8 @@ import {
   LOGOUT,
   CHANGE_SEARCH_STRING,
   SEARCH_REQUEST_START,
-  SEARCH_REQUEST_END
+  SEARCH_REQUEST_END,
+  SELECT_TERM
 } from './constants'
 
 // userInfo
@@ -125,5 +126,12 @@ export function doSearchRequestAsync(searchString) {
         result: data,
         error: error
       }))
+  }
+}
+
+export function selectTerm(term) {
+  return {
+    type: SELECT_TERM,
+    term
   }
 }

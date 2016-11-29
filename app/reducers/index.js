@@ -10,7 +10,8 @@ import {
   LOGOUT,
   CHANGE_SEARCH_STRING,
   SEARCH_REQUEST_START,
-  SEARCH_REQUEST_END
+  SEARCH_REQUEST_END,
+  SELECT_TERM
 } from '../actions/constants'
 
 import auth from '../helpers/auth'
@@ -37,6 +38,9 @@ let initialState = {
     pending: false,
     result: null,
     error: null
+  },
+  selected: {
+    term: null
   }
 }
 
@@ -134,6 +138,12 @@ function reducer(state = initialState, action) {
           pending: false,
           result: action.result,
           error: action.error
+        }
+      }
+    case SELECT_TERM:
+      return {...state,
+        selected: {...state.selected,
+          term: action.term
         }
       }
     default:
