@@ -15,12 +15,8 @@ import './styles/images/favicon.ico';
 
 import App from './components/App'
 import Home from './components/Home'
-import Search from './components/Search'
-import SearchInput from './components/search/SearchInput'
-import ResultList from './components/search/ResultList'
-import ResultItem from './components/search/ResultItem'
-import Dashboard from './components/Dashboard'
 import NotFound from './components/NotFound'
+import Test from './components/Test'
 
 let logger = createLogger({
   // Ignore `CHANGE...` actions in the logger, since they fire after every keystroke
@@ -66,7 +62,7 @@ class LoginFlow extends Component {
           <Route component={App}>
             <Route path='/' component={Home} />
             <Route>
-              <Route path='/edit' component={Dashboard} onEnter={checkAuth}/>
+              <Route path='/edit' component={Test} onEnter={checkAuth}/>
             </Route>
             <Route path='/not_authorized' component={NotFound} />
             <Route path='*' component={NotFound} />

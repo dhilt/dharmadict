@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import Search from './Search'
+import SearchInput from './search/SearchInput'
+import SearchResults from './search/SearchResults'
 
 import logoPath from '../styles/images/manjushri.jpg'
 
@@ -19,7 +20,8 @@ class Home extends Component {
     			</div>
           <div className="row search-row" >
             <div className="col-md-12">
-              <Search/>
+              <SearchInput />
+              <SearchResults />
             </div>
           </div>
         </div>

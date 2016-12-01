@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import { Button } from 'react-bootstrap';
 
-import {changeSearchString} from '../../actions'
+import {changeSearchString, doSearchRequestAsync} from '../../actions'
 
 class SearchInput extends Component {
   constructor (props) {
@@ -45,7 +45,7 @@ class SearchInput extends Component {
 
   _onSubmit (event) {
     event.preventDefault()
-    this.props.onSubmit(this.props.data.searchString)
+    this.props.dispatch(doSearchRequestAsync())
   }
 }
 
