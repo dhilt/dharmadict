@@ -11,6 +11,7 @@ import reducer from './reducers'
 import {getUserInfoAsync} from './actions'
 
 import './styles/main.css'
+import './styles/images/favicon.ico';
 
 import App from './components/App'
 import Home from './components/Home'

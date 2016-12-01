@@ -51,7 +51,8 @@ function makeWebpackConfig (options) {
     plugins = [
       new webpack.HotModuleReplacementPlugin(),
       new HtmlWebpackPlugin({
-        template: './app/index.html'
+        template: './app/index.html',
+        favicon: './app/styles/images/favicon.ico'
       })
     ]
   }
@@ -76,7 +77,7 @@ function makeWebpackConfig (options) {
           test: /\.(png|jpg|)$/,
           loader: 'url-loader?limit=200000&context=./assets'
         }, {
-          test: /\.ttf$/,
+          test: /\.(ttf|ico)$/,
           loader: 'file?name=[name].[ext]'
         }
       ]
