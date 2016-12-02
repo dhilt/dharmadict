@@ -9,9 +9,18 @@ class Term extends Component {
   }
 
   render () {
+    let term = this.props.data.term
+    console.log(term)
     return (
       <div>
-        {this.props.data.term.wylie}!
+        <div className="term-header">
+          <div className="wylie">{term.wylie}</div>
+          {
+            term.sanskrit_rus ? (
+              <div className="sanskrit">Санскрит: {term.sanskrit_rus}</div>
+            ) : ( null )
+          }
+        </div>
       </div>
     )
   }

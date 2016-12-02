@@ -39,3 +39,23 @@
 .terms .selected {
 	background-color: #e1ffed;
 }
+
+.term .term-header {
+    color: #fff;
+    background-color: #37b893;
+    padding: 5px 0;
+}
+
+.term .wylie {
+    font-size: 20px;
+    font-weight: 700;
+    margin-top: 0;
+    text-align: center;
+}
+
+.term .sanskrit {
+    font-size: 14px;
+    font-weight: 400;
+    margin-top: 0;
+    text-align: center;
+}
