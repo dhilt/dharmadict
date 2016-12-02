@@ -1,43 +1,42 @@
-
 .container {
-  font-family: Calibri;
+    font-family: Calibri;
 }
 
 .header-row {
-	margin-top: 20px;
-  text-align: left;
-  color: $green;
+    margin-top: 20px;
+    text-align: left;
+    color: $green;
 }
 
 .header-row h1 {
-	font-family: PentaLight;
+    font-family: PentaLight;
 }
 
 .header-row h1 em {
-	font-family: PentaBold;
-	font-style: normal;
+    font-family: PentaBold;
+    font-style: normal;
 }
 
 .search-row {
-  margin-bottom: 20px;
+    margin-bottom: 20px;
 }
 
 .logo {
-	margin-top: 20px;
-  max-width: 100%;
-  max-height: 100%;
+    margin-top: 20px;
+    max-width: 100%;
+    max-height: 100%;
 }
 
 .terms {
-	cursor: pointer;
+    cursor: pointer;
 }
 
 .terms .list-group-item:hover {
-	background-color: #e1ffed;
+    background-color: #e1ffed;
 }
 
 .terms .selected {
-	background-color: #e1ffed;
+    background-color: #e1ffed;
 }
 
 .term .term-header {
@@ -58,4 +57,12 @@
     font-weight: 400;
     margin-top: 0;
     text-align: center;
+}
+
+.loader {
+    background: url('images/loader2.gif') no-repeat center #ececec;
+}
+
+.invisible {
+  opacity: 0;
 }

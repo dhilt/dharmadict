@@ -74,7 +74,7 @@ function makeWebpackConfig (options) {
           test: /\.css$/, // Transform all .css files required somewhere within an entry point...
           loaders: ['style-loader', 'css-loader', 'postcss-loader'] // ...with PostCSS
         }, {
-          test: /\.(png|jpg|)$/,
+          test: /\.(png|jpg|gif)$/,
           loader: 'url-loader?limit=200000&context=./assets'
         }, {
           test: /\.(ttf|ico)$/,

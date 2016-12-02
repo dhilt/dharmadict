@@ -35,6 +35,7 @@ let initialState = {
   },
   searchState: {
     searchString: '',
+    started: false,
     pending: false,
     result: null,
     error: null
@@ -135,9 +136,13 @@ function reducer(state = initialState, action) {
     case SEARCH_REQUEST_END:
       return {...state,
         searchState: {...state.searchState,
+          started: true,
           pending: false,
           result: action.result,
           error: action.error
+        },
+        selected: {...state.selected,
+          term: null
         }
       }
     case SELECT_TERM:
