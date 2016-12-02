@@ -59,8 +59,55 @@
     text-align: center;
 }
 
+.term ul {
+    list-style-type: none;
+    margin-top: 10px;
+}
+
+.translations-list {
+    padding-left: 0;
+}
+
+.translations-list .translation {
+    border-bottom: 1px #bfbfbf solid;
+    border-radius: 0;
+    font-size: 14px;
+    padding: 0 0 15px;
+    margin-top: 5px;
+}
+
+.translations-list .translation .wrap-translator-ref {
+    text-align: right;
+    padding-bottom: 5px;
+}
+
+.translations-list .translation .wrap-translator-ref a {
+    color: #37b893;
+}
+
+.translations-list .translation .meanings {
+    padding-left: 20px;
+    list-style-position: inside;
+}
+
+.single-item {
+    list-style-type: none;
+    margin-left: 0;
+    padding-left: 0;
+}
+
+.term ol li {
+    font-weight: 700;
+}
+
+.translations-list .translation .commentLink {
+    color: #37b893;
+    margin-left: 5px;
+}
+
 .loader {
     background: url('images/loader2.gif') no-repeat center #ececec;
+    background-size: 30px;
 }
 
 .invisible {
