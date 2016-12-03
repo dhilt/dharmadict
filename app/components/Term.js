@@ -2,11 +2,12 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 
 import translators from '../helpers/translators'
-import {doSearchRequestAsync} from '../actions'
+import {toggleComment} from '../actions'
 
 class Term extends Component {
   constructor (props) {
     super(props)
+    this.toggleComment = this.toggleComment.bind(this)
   }
 
   render () {
@@ -24,30 +25,32 @@ class Term extends Component {
         </div>
         <ul className="translations-list">
         {
-          term.translations.map((item, i) =>
-          <li key={i} className="translation">
+          term.translations.map((translation, translationIndex) =>
+          <li key={translationIndex} className="translation">
             <div className="wrap-translator-ref">
-              <a href="" className="translator-ref">{translators.getTranslator(item.translatorId)}</a>
+              <a href="" className="translator-ref">{translators.getTranslator(translation.translatorId)}</a>
             </div>
-            <ol className={"meanings" + (item.meanings.length === 1 ? " single-item" : "")}>
+            <ol className={"meanings" + (translation.meanings.length === 1 ? " single-item" : "")}>
             {
-              item.meanings.map((meaning, i) =>
-              <li key={i} className="meaning">
+              translation.meanings.map((meaning, meaningIndex) =>
+              <li key={meaningIndex} className="meaning">
                 {
-                  meaning.versions.map((version, i) =>
-                    <span key={i}>
-                      {version + (i < meaning.versions.length - 1 ? '; ' : '')}
+                  meaning.versions.map((version, versionIndex) =>
+                    <span key={versionIndex}>
+                      {version + (versionIndex < meaning.versions.length - 1 ? '; ' : '')}
                     </span>
                   )
                 }
                 {
                   meaning.comment ?
-                  (<a className="commentLink">&gt;&gt;&gt;</a>) :
+                  (<a className="commentLink" onClick={()=>this.toggleComment(translationIndex, meaningIndex)}>&gt;&gt;&gt;</a>) :
                   ( null )
                 }
-                <span id="{{'comment-'+translatorIndex+'-'+$index}}" className="translation-comment hidden">
-                  {meaning.comment}
-                </span>
+                {
+                  meaning.openComment ?
+                  (<span className="translation-comment"> {meaning.comment} </span>) :
+                  ( null )
+                }
               </li>
               )
             }
@@ -58,6 +61,9 @@ class Term extends Component {
         </ul>
       </div>
     )
+  }
+  toggleComment(translationIndex, meaningIndex) {
+    this.props.dispatch(toggleComment(translationIndex, meaningIndex))
   }
 }
 

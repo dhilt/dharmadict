@@ -15,7 +15,8 @@ import {
   CHANGE_SEARCH_STRING,
   SEARCH_REQUEST_START,
   SEARCH_REQUEST_END,
-  SELECT_TERM
+  SELECT_TERM,
+  TOGGLE_COMMENT
 } from './constants'
 
 // userInfo
@@ -135,5 +136,13 @@ export function selectTerm(term) {
   return {
     type: SELECT_TERM,
     term
+  }
+}
+
+export function toggleComment(translationIndex, meaningIndex) {
+  return {
+    type: TOGGLE_COMMENT,
+    translationIndex,
+    meaningIndex
   }
 }

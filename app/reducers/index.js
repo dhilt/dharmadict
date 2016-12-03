@@ -11,7 +11,8 @@ import {
   CHANGE_SEARCH_STRING,
   SEARCH_REQUEST_START,
   SEARCH_REQUEST_END,
-  SELECT_TERM
+  SELECT_TERM,
+  TOGGLE_COMMENT
 } from '../actions/constants'
 
 import auth from '../helpers/auth'
@@ -149,6 +150,15 @@ function reducer(state = initialState, action) {
       return {...state,
         selected: {...state.selected,
           term: action.term
+        }
+      }
+    case TOGGLE_COMMENT:
+      let term = state.selected.term
+      let meaning = term.translations[action.translationIndex].meanings[action.meaningIndex]
+      meaning.openComment = !meaning.openComment
+      return {...state,
+        selected: {...state.selected,
+          term: term
         }
       }
     default:

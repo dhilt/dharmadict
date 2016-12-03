@@ -103,6 +103,13 @@
 .translations-list .translation .commentLink {
     color: #37b893;
     margin-left: 5px;
+    cursor: pointer;
+}
+
+.translations-list .translation .translation-comment {
+    font-size: 12px;
+    font-weight: 400;
+    font-style: italic;
 }
 
 .loader {
