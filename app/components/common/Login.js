@@ -36,19 +36,30 @@ class Login extends Component {
           style={customStyles}>
           <h1>Please Log In</h1>
           <div className="login-modal-content">
-            <div>
-              <input type="text" name="login" placeholder="login"
-                value={this.props.data.login}
-                onChange={this.onLoginChange} />
-            </div>
-            <div>
-              <input type="password" name="password" placeholder="password"
-                value={this.props.data.password}
-                onChange={this.onPasswordChange} />
-            </div>
+            <form>
+              <div className="form-group">
+                <input type="text" name="login" placeholder="login"
+                  className="form-control"
+                  value={this.props.data.login}
+                  onChange={this.onLoginChange} />
+              </div>
+              <div className="form-group">
+                <input type="password" name="password" placeholder="password"
+                  className="form-control"
+                  value={this.props.data.password}
+                  onChange={this.onPasswordChange} />
+              </div>
+              <button className="btn btn-primary" type="submit"
+                onClick={this.doLogin}
+                disabled={!this.props.data.login || !this.props.data.password}>
+                  Log in!
+              </button>
+              <button  className="btn btn-default"
+                onClick={this.closeModal}>
+                  Cancel
+              </button>
+            </form>
           </div>
-          <button onClick={this.doLogin} disabled={!this.props.data.login || !this.props.data.password}>Log in!</button>
-          <button onClick={this.closeModal}>Cancel</button>
         </Modal>
       </span>
     )
@@ -73,7 +84,7 @@ class Login extends Component {
 
   doLogin (event) {
     event.preventDefault()
-    this.props.dispatch(doLoginAsync(this.props.data.login, this.props.data.password))
+    this.props.dispatch(doLoginAsync())
   }
 }
 

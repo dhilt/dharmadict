@@ -65,11 +65,12 @@ export function changePasswordString(password) {
   }
 }
 
-export function doLoginAsync(login, password) {
-  return (dispatch) => {
+export function doLoginAsync() {
+  return (dispatch, getState) => {
+    let authState = getState().auth
     let promise = asyncRequest('login', {
-      login: login,
-      password: password
+      login: authState.login,
+      password: authState.password
     }, (data, error) => {
       if (!error && data.token) {
         auth.setToken(data.token)
