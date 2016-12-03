@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 
+import translators from '../helpers/translators'
 import {doSearchRequestAsync} from '../actions'
 
 class Term extends Component {
@@ -26,7 +27,7 @@ class Term extends Component {
           term.translations.map((item, i) =>
           <li key={i} className="translation">
             <div className="wrap-translator-ref">
-              <a href="" className="translator-ref">{item.translatorId}</a>
+              <a href="" className="translator-ref">{translators.getTranslator(item.translatorId)}</a>
             </div>
             <ol className={"meanings" + (item.meanings.length === 1 ? " single-item" : "")}>
             {
