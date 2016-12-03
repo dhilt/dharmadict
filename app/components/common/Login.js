@@ -49,12 +49,14 @@ class Login extends Component {
                   value={this.props.data.password}
                   onChange={this.onPasswordChange} />
               </div>
-              <button className="btn btn-primary" type="submit"
-                onClick={this.doLogin}
-                disabled={!this.props.data.login || !this.props.data.password}>
+              <button className={"btn btn-primary" + (this.props.data.pending ? " loader" : "")}
+                onClick={this.doLogin} type="submit"
+                disabled={!this.props.data.login || !this.props.data.password || this.props.data.pending}>
+                <span className={this.props.data.pending ? "invisible" : ""}>
                   Log in!
+                </span>
               </button>
-              <button  className="btn btn-default"
+              <button className="btn btn-default"
                 onClick={this.closeModal}>
                   Cancel
               </button>
