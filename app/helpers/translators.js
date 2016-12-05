@@ -8,15 +8,9 @@ let translators = {
     "BRZ": "A. Berzin"
   },
 
-  initialize(initialState) {
-    this.initialState = initialState
-    this.setInitialStateParams()
-  },
-
   getTranslator(token) {
     return this.data[token] || "unknown"
   }
-
 }
 
 export default translators

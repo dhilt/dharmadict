@@ -19,20 +19,18 @@ var elasticClient = new elasticsearch.Client({
   log: 'info'
 });
 
-var Users = [{
-  id: 1,
-  login: 'admin',
-  hash: passwordHash.generate('pass')
-}, {
-  id: 2,
-  login: 'user',
-  hash: passwordHash.generate('password')
-}];
+var users = require('./users.js');
+var Users = users.Users;
+var Roles = users.Roles;
 
 var getUserInfo = function(user) {
   return {
     id: user.id,
-    login: user.login
+    code: user.code,
+    login: user.login,
+    role: user.role,
+    roleId: user.roleId,
+    name: user.name
   }
 }
 
