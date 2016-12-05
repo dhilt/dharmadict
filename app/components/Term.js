@@ -1,8 +1,11 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
+import {Link} from 'react-router'
 
 import translators from '../helpers/translators'
 import {toggleComment} from '../actions'
+
+import editIcon from '../styles/images/edit2.png'
 
 class Term extends Component {
   constructor (props) {
@@ -12,7 +15,6 @@ class Term extends Component {
 
   render () {
     let term = this.props.data.term
-    console.log(term)
     return (
       <div className="term">
         <div className="term-header">
@@ -29,6 +31,14 @@ class Term extends Component {
           <li key={translationIndex} className="translation">
             <div className="wrap-translator-ref">
               <a href="" className="translator-ref">{translators.getTranslator(translation.translatorId)}</a>
+              {
+                this.props.getUserCode() === translation.translatorId ?
+                (
+                  <Link to={'/edit?wylie=' + encodeURIComponent(term.wylie) + '&translatorId=' + encodeURIComponent(translation.translatorId) }>
+                    <img src={editIcon} className="edit-icon" />
+                  </Link>
+                ) : ( null )
+              }
             </div>
             <ol className={"meanings" + (translation.meanings.length === 1 ? " single-item" : "")}>
             {
@@ -62,6 +72,7 @@ class Term extends Component {
       </div>
     )
   }
+
   toggleComment(translationIndex, meaningIndex) {
     this.props.dispatch(toggleComment(translationIndex, meaningIndex))
   }
@@ -74,7 +85,8 @@ Term.propTypes = {
 
 function select (state) {
   return {
-    data: state.selected
+    data: state.selected,
+    getUserCode: () => state.auth.userInfo.data ? state.auth.userInfo.data.code : null
   }
 }
 

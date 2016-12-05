@@ -112,11 +112,18 @@
     font-style: italic;
 }
 
+.edit-icon {
+    position: absolute;
+    margin-left: -20px;
+    margin-top: 22px;
+    cursor: pointer;
+}
+
 .loader {
     background: url('images/loader2.gif') no-repeat center #ececec;
     background-size: 30px;
 }
 
 .invisible {
-  opacity: 0;
+    opacity: 0;
 }
