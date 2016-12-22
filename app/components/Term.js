@@ -15,6 +15,12 @@ class Term extends Component {
 
   render () {
     let term = this.props.data.term
+    let canEdit = (translatorId) => {
+      if(!this.props.userInfo) {
+        return false;
+      }
+      return this.props.userInfo.code === translatorId || this.props.userInfo.code === 'ADMIN'
+    }
     return (
       <div className="term">
         <div className="term-header">
@@ -32,7 +38,7 @@ class Term extends Component {
             <div className="wrap-translator-ref">
               <a href="" className="translator-ref">{translators.getTranslator(translation.translatorId)}</a>
               {
-                this.props.getUserCode() === translation.translatorId ?
+                canEdit(translation.translatorId) ?
                 (
                   <Link to={'/edit?wylie=' + encodeURIComponent(term.wylie) + '&translatorId=' + encodeURIComponent(translation.translatorId) }>
                     <img src={editIcon} className="edit-icon" />
@@ -86,7 +92,7 @@ Term.propTypes = {
 function select (state) {
   return {
     data: state.selected,
-    getUserCode: () => state.auth.userInfo.data ? state.auth.userInfo.data.code : null
+    userInfo: state.auth.userInfo ? state.auth.userInfo.data : null
   }
 }
 
