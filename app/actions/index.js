@@ -16,7 +16,9 @@ import {
   SEARCH_REQUEST_START,
   SEARCH_REQUEST_END,
   SELECT_TERM,
-  TOGGLE_COMMENT
+  TOGGLE_COMMENT,
+  TERM_REQUEST_START,
+  TERM_REQUEST_END
 } from './constants'
 
 // userInfo
@@ -145,5 +147,20 @@ export function toggleComment(translationIndex, meaningIndex) {
     type: TOGGLE_COMMENT,
     translationIndex,
     meaningIndex
+  }
+}
+
+export function requestTermAsync(translatorId, wylie) {
+  return (dispatch, getState) => {
+    dispatch({
+      type: TERM_REQUEST_START
+    })
+    console.log('Let\'s start an async term request to db! The term is "' + wylie + '".')
+    return asyncRequest(`term?translatorId=${translatorId}&wylie=${wylie}`, null, (data, error) =>
+      dispatch({
+        type: TERM_REQUEST_END,
+        result: data,
+        error: error
+      }))
   }
 }

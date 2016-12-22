@@ -12,7 +12,9 @@ import {
   SEARCH_REQUEST_START,
   SEARCH_REQUEST_END,
   SELECT_TERM,
-  TOGGLE_COMMENT
+  TOGGLE_COMMENT,
+  TERM_REQUEST_START,
+  TERM_REQUEST_END
 } from '../actions/constants'
 
 import auth from '../helpers/auth'
@@ -43,6 +45,12 @@ let initialState = {
   },
   selected: {
     term: null
+  },
+  edit: {
+    termSource: null,
+    termChange: null,
+    pending: false,
+    error: null
   }
 }
 
@@ -159,6 +167,21 @@ function reducer(state = initialState, action) {
       return {...state,
         selected: {...state.selected,
           term: term
+        }
+      }
+    case TERM_REQUEST_START:
+      return {...state,
+        edit: {...state.edit,
+          pending: true,
+          error: null
+        }
+      }
+    case TERM_REQUEST_END:
+      return {...state,
+        edit: {...state.edit,
+          pending: false,
+          termSource: action.result,
+          error: action.error
         }
       }
     default:
