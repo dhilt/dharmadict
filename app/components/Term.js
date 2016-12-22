@@ -42,7 +42,7 @@ class Term extends Component {
                 (
                   <Link to={{
                     pathname: '/edit',
-                    query: { wylie: term.id, translatorId: translation.translatorId }
+                    query: { termId: term.id, translatorId: translation.translatorId }
                   }}>
                       <img src={editIcon} className="edit-icon" />
                   </Link>

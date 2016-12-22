@@ -13,8 +13,8 @@ import {
   SEARCH_REQUEST_END,
   SELECT_TERM,
   TOGGLE_COMMENT,
-  TERM_REQUEST_START,
-  TERM_REQUEST_END
+  TRANSLATION_REQUEST_START,
+  TRANSLATION_REQUEST_END
 } from '../actions/constants'
 
 import auth from '../helpers/auth'
@@ -47,8 +47,10 @@ let initialState = {
     term: null
   },
   edit: {
-    termSource: null,
-    termChange: null,
+    termId: '',
+    termName: '',
+    source: null,
+    change: null,
     pending: false,
     error: null
   }
@@ -161,6 +163,7 @@ function reducer(state = initialState, action) {
         }
       }
     case TOGGLE_COMMENT:
+      // todo dhilt : move logic to action creator
       let term = state.selected.term
       let meaning = term.translations[action.translationIndex].meanings[action.meaningIndex]
       meaning.openComment = !meaning.openComment
@@ -169,18 +172,21 @@ function reducer(state = initialState, action) {
           term: term
         }
       }
-    case TERM_REQUEST_START:
+    case TRANSLATION_REQUEST_START:
       return {...state,
         edit: {...state.edit,
           pending: true,
           error: null
         }
       }
-    case TERM_REQUEST_END:
+    case TRANSLATION_REQUEST_END:
       return {...state,
         edit: {...state.edit,
           pending: false,
-          termSource: action.result,
+          change: null,
+          termId: action.result.termId,
+          termName: action.result.termName,
+          source: action.result.translation,
           error: action.error
         }
       }

@@ -1,37 +1,61 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
+import {Link} from 'react-router'
 
-import {requestTermAsync} from '../actions'
+import {selectTranslation} from '../actions'
 
 class Edit extends Component {
   constructor (props) {
     super(props)
-    let translatorId = this.props.query.translatorId
-    let wylie = this.props.query.wylie
+  }
 
-    if(!translatorId || !wylie) {
+  componentWillMount () {
+    let translatorId = this.props.query.translatorId
+    let termId = this.props.query.termId
+    if(!translatorId || !termId) {
       this.blockMessage = 'You should select a term to edit.'
       return
     }
-
-    if(!this.props.term) {
-      this.props.dispatch(requestTermAsync(translatorId, wylie))
-    }
-    console.log(translatorId)
-    console.log(wylie)
+    this.props.dispatch(selectTranslation(translatorId, termId))
   }
 
   render () {
-    if(this.blockMessage) {
-      return (
-        <div className="blocker">
-          {this.blockMessage}
-        </div>
-      )
-    }
+    let allOk = !this.blockMessage && !this.props.data.pending && !this.props.data.error
     return (
       <div>
-        Edit a term
+        <Link to='/'>
+          Назад
+        </Link>
+        {
+          this.blockMessage ? (
+            <div>
+              {this.blockMessage}
+            </div>
+          ) : ( null )
+        }
+        {
+          this.props.data.pending ? (
+            <div>
+              Запрос выполняется. Пожалуйста, подождите...
+            </div>
+          ) : ( null )
+        }
+        {
+          this.props.data.error ? (
+            <div>
+              Ошибка запроса. 
+              <div className="error">{this.props.data.error.message}</div>
+            </div>
+          ) : ( null ) 
+        }
+        {
+          allOk ? (
+            <div>
+              <h2>{this.props.data.termName}</h2>
+              
+            </div>
+          ) : ( null )
+        }
       </div>
     )
   }
@@ -39,7 +63,7 @@ class Edit extends Component {
 
 function select (state, ownProps) {
   return {
-    term: state.selected.term,
+    data: state.edit,
     query: ownProps.location.query
   }
 }

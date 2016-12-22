@@ -169,10 +169,10 @@ app.get('/api/search', function(req, res) {
 });
 
 app.get('/api/term', function(req, res) {
-  if(!req.query.wylie || !req.query.translatorId) {
+  if(!req.query.termId || !req.query.translatorId) {
     return responseError(res, 'Incorrect request params.', 500);
   }
-  console.log('Requesting term "' + req.query.wylie + '" (' + req.query.translatorId + ') data.');
+  console.log('Requesting term "' + req.query.termId + '" (' + req.query.translatorId + ') data.');
 
   authorize(req, res, function(user) {
     elasticClient.search({
@@ -181,7 +181,7 @@ app.get('/api/term', function(req, res) {
       body: {
         query: {
           ids: {
-              values: [req.query.wylie]
+              values: [req.query.termId]
           }
         }
       }
@@ -189,12 +189,18 @@ app.get('/api/term', function(req, res) {
       if (error) {
         console.log("Search error: " + error);
       } else {
-        var result = null, ts;
-        if(response.hits.hits[0] && (ts = response.hits.hits[0]._source.translations)) {
+        var result = null, hit = response.hits.hits[0];
+        var term = hit ? response.hits.hits[0]._source : null;
+        var ts = term ? term.translations : null;
+        if(ts && ts.length) {
           for(var i = 0; i < ts.length; i++) {
             if(ts[i].translatorId === req.query.translatorId) {
               if(user.code === ts[i].translatorId || user.role === 'admin') {
-                result = ts[i];
+                result = {
+                  termId: hit._id,
+                  termName: term.wylie,
+                  translation: ts[i]
+                };
                 break;
               }
               else {

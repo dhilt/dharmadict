@@ -17,8 +17,8 @@ import {
   SEARCH_REQUEST_END,
   SELECT_TERM,
   TOGGLE_COMMENT,
-  TERM_REQUEST_START,
-  TERM_REQUEST_END
+  TRANSLATION_REQUEST_START,
+  TRANSLATION_REQUEST_END
 } from './constants'
 
 // userInfo
@@ -150,17 +150,34 @@ export function toggleComment(translationIndex, meaningIndex) {
   }
 }
 
-export function requestTermAsync(translatorId, wylie) {
+export function selectTranslation(translatorId, termId) {
   return (dispatch, getState) => {
-    dispatch({
-      type: TERM_REQUEST_START
-    })
-    console.log('Let\'s start an async term request to db! The term is "' + wylie + '".')
-    return asyncRequest(`term?translatorId=${translatorId}&wylie=${wylie}`, null, (data, error) =>
-      dispatch({
-        type: TERM_REQUEST_END,
-        result: data,
+    let term = getState().selected.term;
+    if(term) { // sync translation select
+      let error = term.id !== termId ? { message: 'Invalid term.' } : null;
+      let translation = !error ? term.translations.find(t => t.translatorId === translatorId) : null
+      return dispatch({
+        type: TRANSLATION_REQUEST_END,
+        result: {
+          termId: termId,
+          termName: term.wylie,
+          translation
+        },
         error: error
-      }))
+      })      
+    }
+    else { // async translation request
+      dispatch({
+        type: TRANSLATION_REQUEST_START
+      })
+      console.log('Let\'s start an async term request to db! The term is "' + termId + '".')
+      return asyncRequest(`term?translatorId=${translatorId}&termId=${termId}`, null, (data, error) => {
+        return dispatch({
+          type: TRANSLATION_REQUEST_END,
+          result: data,
+          error: error
+        })})
+    }
   }
 }
+
