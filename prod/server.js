@@ -60,7 +60,7 @@ var getTokenFromRequest = function(req) {
   return bearer;
 };
 
-app.get('/api/userInfo', function(req, res) {
+var authorize = function (req, res, onSuccess) {
   var token;
   if (!(token = getTokenFromRequest(req))) {
     return redirect302(res);
@@ -70,8 +70,7 @@ app.get('/api/userInfo', function(req, res) {
       userId = decoded.id;
       for (var i = 0; i < Users.length; i++) {
         if (Users[i].id == userId) {
-          console.log('Authenticated as ' + Users[i].login);
-          return res.send(getUserInfo(Users[i]));
+          return onSuccess(Users[i]);
         }
       }
       return responseError(res, 'Can not find user.', 404);
@@ -79,6 +78,13 @@ app.get('/api/userInfo', function(req, res) {
       return responseError(res, 'Missed token.', 500);
     }
   })
+};
+
+app.get('/api/userInfo', function(req, res) {
+  authorize(req, res, function(user) {
+    console.log('Authenticated as ' + user.login);
+    return res.send(getUserInfo(user));
+  });
 });
 
 app.post('/api/login', function(req, res) {
@@ -133,7 +139,7 @@ app.get('/api/search_test', function(req, res) {
 });
 
 app.get('/api/search', function(req, res) {
-  console.log('Searching by "' + req.query.pattern + '" pattern.')
+  console.log('Searching terms by "' + req.query.pattern + '" pattern.')
   return elasticClient.search({
     index: "dharmadict",
     type: "terms",
@@ -153,11 +159,59 @@ app.get('/api/search', function(req, res) {
     } else {
       var result = [];
       response.hits.hits.forEach(function(hit) {
+        hit._source.id = hit._id
         result.push(hit._source);
       });
       console.log("Found items: " + result.length + ".");
       return res.json(result);
     }
+  });
+});
+
+app.get('/api/term', function(req, res) {
+  if(!req.query.wylie || !req.query.translatorId) {
+    return responseError(res, 'Incorrect request params.', 500);
+  }
+  console.log('Requesting term "' + req.query.wylie + '" (' + req.query.translatorId + ') data.');
+
+  authorize(req, res, function(user) {
+    elasticClient.search({
+      index: "dharmadict",
+      type: "terms",
+      body: {
+        query: {
+          ids: {
+              values: [req.query.wylie]
+          }
+        }
+      }
+    }, function(error, response, status) {
+      if (error) {
+        console.log("Search error: " + error);
+      } else {
+        var result = null, ts;
+        if(response.hits.hits[0] && (ts = response.hits.hits[0]._source.translations)) {
+          for(var i = 0; i < ts.length; i++) {
+            if(ts[i].translatorId === req.query.translatorId) {
+              if(user.code === ts[i].translatorId || user.role === 'admin') {
+                result = ts[i];
+                break;
+              }
+              else {
+                return responseError(res, 'Unpermitted access.', 500);
+              }
+            }
+          }
+        }
+        if(!result) {
+          return responseError(res, 'Can not find term.', 404);
+        }
+        else {
+          console.log("Term was successfully found.");
+          return res.json(result);
+        }
+      }
+    });
   });
 });
 
