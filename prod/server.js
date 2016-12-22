@@ -141,6 +141,8 @@ app.get('/api/search', function(req, res) {
       query: {
         multi_match: {
           query: req.query.pattern,
+          type: "most_fields",
+          operator: "and",
           fields: ["wylie", "sanskrit_rus_lower", "sanskrit_eng_lower", "translation.meanings.versions_lower"]
         }
       }
@@ -151,7 +153,7 @@ app.get('/api/search', function(req, res) {
     } else {
       var result = [];
       response.hits.hits.forEach(function(hit) {
-        result.push(hit);
+        result.push(hit._source);
       });
       console.log("Found items: " + result.length + ".");
       return res.json(result);

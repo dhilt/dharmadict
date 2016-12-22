@@ -124,7 +124,7 @@ export function doSearchRequestAsync() {
       type: SEARCH_REQUEST_START
     })
     console.log('Let\'s start an async request to db! searchString is "' + searchString + '"')
-    return asyncRequest(`search_test?pattern=${searchString}`, null, (data, error) =>
+    return asyncRequest(`search?pattern=${searchString}`, null, (data, error) =>
       dispatch({
         type: SEARCH_REQUEST_END,
         result: data,
