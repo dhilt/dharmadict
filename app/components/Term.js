@@ -40,8 +40,11 @@ class Term extends Component {
               {
                 canEdit(translation.translatorId) ?
                 (
-                  <Link to={'/edit?wylie=' + encodeURIComponent(term.wylie) + '&translatorId=' + encodeURIComponent(translation.translatorId) }>
-                    <img src={editIcon} className="edit-icon" />
+                  <Link to={{
+                    pathname: '/edit',
+                    query: { wylie: term.id, translatorId: translation.translatorId }
+                  }}>
+                      <img src={editIcon} className="edit-icon" />
                   </Link>
                 ) : ( null )
               }

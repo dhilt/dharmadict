@@ -16,7 +16,7 @@ import './styles/images/favicon.ico';
 import App from './components/App'
 import Home from './components/Home'
 import NotFound from './components/NotFound'
-import Test from './components/Test'
+import Edit from './components/Edit'
 
 let logger = createLogger({
   // Ignore `CHANGE...` actions in the logger, since they fire after every keystroke
@@ -28,29 +28,27 @@ if(store.getState().auth.token) {
   store.dispatch(getUserInfoAsync())
 }
 
+function unauthorizedAccess (replace) {
+  replace('/not_authorized')
+  browserHistory.replace('/not_authorized')
+}
+
 function checkAuth (nextState, replace, callback) {
   let {auth} = store.getState()
-
   if(auth.loggedIn) {
     callback()
     return
   }
-
-  let unauthorizedAccess = () => {
-    replace('/not_authorized')
-    browserHistory.replace('/not_authorized')
-  }
-
   if(auth.userInfo.promise) {
     auth.userInfo.promise.then(() => {
       if (!auth.loggedIn) {
-        unauthorizedAccess()
+        unauthorizedAccess(replace)
       }
       callback()
     })
   }
   else {
-    unauthorizedAccess()
+    unauthorizedAccess(replace)
   }
 }
 
@@ -62,7 +60,7 @@ class LoginFlow extends Component {
           <Route component={App}>
             <Route path='/' component={Home} />
             <Route>
-              <Route path='/edit' component={Test} onEnter={checkAuth}/>
+              <Route path='/edit' component={Edit} onEnter={checkAuth}/>
             </Route>
             <Route path='/not_authorized' component={NotFound} />
             <Route path='*' component={NotFound} />
