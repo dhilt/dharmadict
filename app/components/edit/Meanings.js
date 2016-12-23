@@ -1,12 +1,12 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 
-import {selectTranslation} from '../../actions/edit'
+import {selectTranslation, onVersionChanged} from '../../actions/edit'
 
 class Meanings extends Component {
   constructor (props) {
     super(props)
-    this.onVersionChanged = this.onVersionChanged.bind(this)
+    this._onVersionChanged = this._onVersionChanged.bind(this)
   }
 
   render () {
@@ -25,7 +25,7 @@ class Meanings extends Component {
                   <input className="form-control"
                     name="search" type="text"
                     value={version}
-                    onChange={(event) => this.onVersionChanged(event, versionIndex)}/>
+                    onChange={(event) => this._onVersionChanged(event, meaningIndex, versionIndex)}/>
                     <button type="button" className="btn btn-link btn-sm remove-btn">X</button>
                 </li>
               )
@@ -33,7 +33,7 @@ class Meanings extends Component {
               <li className="form-group form-inline">
                 <input className="form-control"
                   name="search" type="text"
-                  onChange={this.onVersionChanged}/>
+                  onChange={this._onVersionChanged}/>
               </li>
             </ul>
             <div className="_col-md-8">
@@ -52,10 +52,8 @@ class Meanings extends Component {
     )
   }
 
-  onVersionChanged (event, versionIndex) {
-    console.log(versionIndex)
-    console.log(event.target.value)
-    //this.props.dispatch(changeVersion(event.target.value))
+  _onVersionChanged (event, meaningIndex, versionIndex) {
+    this.props.dispatch(onVersionChanged(meaningIndex, versionIndex, event.target.value))
   }
 }
 

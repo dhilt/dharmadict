@@ -14,7 +14,8 @@ import {
   SELECT_TERM,
   TOGGLE_COMMENT,
   TRANSLATION_REQUEST_START,
-  TRANSLATION_REQUEST_END
+  TRANSLATION_REQUEST_END,
+  CHANGE_TRANSLATION_LOCAL
 } from '../actions/_constants'
 
 import auth from '../helpers/auth'
@@ -186,11 +187,17 @@ function reducer(state = initialState, action) {
           started: true,
           pending: false,
           change: null,
-          termId: action.result ? action.result.termId : '',
-          termName: action.result ? action.result.termName : '',
-          source: action.result ? action.result.translation : null,
-          change: action.result ? action.result.translation : null,
+          termId: action.termId,
+          termName: action.termName,
+          source: action.translation,
+          change: action.translationCopy,
           error: action.error
+        }
+      }
+    case CHANGE_TRANSLATION_LOCAL:
+      return {...state,
+        edit: {...state.edit,
+          change: action.change
         }
       }
     default:
