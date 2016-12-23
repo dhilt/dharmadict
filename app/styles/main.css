@@ -21,6 +21,7 @@
 /* 5. Components */
 @import 'components/_buttons.css';
 @import 'components/_home.css';
+@import 'components/_edit.css';
 @import 'components/_form-page.css';
 @import 'components/_form.css';
 @import 'components/_nav.css';
