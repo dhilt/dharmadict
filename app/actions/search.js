@@ -6,7 +6,7 @@ import {
   SEARCH_REQUEST_END,
   SELECT_TERM,
   TOGGLE_COMMENT
-} from './constants'
+} from './_constants'
 
 export function changeSearchString(newSearchString) {
   return {

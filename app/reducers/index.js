@@ -15,7 +15,7 @@ import {
   TOGGLE_COMMENT,
   TRANSLATION_REQUEST_START,
   TRANSLATION_REQUEST_END
-} from '../actions/constants'
+} from '../actions/_constants'
 
 import auth from '../helpers/auth'
 

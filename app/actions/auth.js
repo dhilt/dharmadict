@@ -12,7 +12,7 @@ import {
   LOGIN_REQUEST_START,
   LOGIN_REQUEST_END,
   LOGOUT
-} from './constants'
+} from './_constants'
 
 export function getUserInfoAsync() {
   return (dispatch) => {

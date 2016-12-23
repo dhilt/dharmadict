@@ -3,7 +3,7 @@ import asyncRequest from '../helpers/remote'
 import {
   TRANSLATION_REQUEST_START,
   TRANSLATION_REQUEST_END
-} from './constants'
+} from './_constants'
 
 export function selectTranslation(translatorId, termId) {
   return (dispatch, getState) => {
