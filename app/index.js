@@ -8,7 +8,7 @@ import {Provider} from 'react-redux'
 import thunkMiddleware from 'redux-thunk'
 import createLogger from 'redux-logger'
 import reducer from './reducers'
-import {getUserInfoAsync} from './actions'
+import {getUserInfoAsync} from './actions/auth'
 
 import './styles/main.css'
 import './styles/images/favicon.ico';

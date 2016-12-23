@@ -1,23 +1,23 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 
-import {doLogout} from '../../actions'
+import {doLogout} from '../../actions/auth'
 
 class Logout extends Component {
   constructor (props) {
     super(props)
-    this.doLogout = this.doLogout.bind(this)
+    this._doLogout = this._doLogout.bind(this)
   }
 
   render () {
     return (
       <span>
-        <a href="/logout" onClick={this.doLogout}>Logout</a>
+        <a href="/logout" onClick={this._doLogout}>Logout</a>
       </span>
     )
   }
 
-  doLogout (event) {
+  _doLogout (event) {
     event.preventDefault()
     this.props.dispatch(doLogout())
   }

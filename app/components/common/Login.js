@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import Modal from 'react-modal'
 
-import {openLoginModal, closeLoginModal, changeLoginString, changePasswordString, doLoginAsync} from '../../actions'
+import {openLoginModal, closeLoginModal, changeLoginString, changePasswordString, doLoginAsync} from '../../actions/auth'
 
 const customStyles = {
   content : {
