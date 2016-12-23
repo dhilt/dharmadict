@@ -1,40 +1,38 @@
-var express = require('express');
-var passwordHash = require('password-hash');
-var bodyParser = require('body-parser');
-var elasticsearch = require('elasticsearch');
-var jwt = require('jsonwebtoken');
-var Cookies = require('cookies');
-var path = require('path');
+let express = require('express');
+let passwordHash = require('password-hash');
+let bodyParser = require('body-parser');
+let elasticsearch = require('elasticsearch');
+let jwt = require('jsonwebtoken');
+let Cookies = require('cookies');
+let path = require('path');
 
-var app = express();
-var port = 3000;
-var secretKey = 'supersecret';
-var accessTokenExpiration = 60 * 60 * 24 * 31; // 1 month
+let app = express();
+let port = 3000;
+let secretKey = 'supersecret';
+let accessTokenExpiration = 60 * 60 * 24 * 31; // 1 month
 
 app.use(express.static(path.join(__dirname + '/client')));
 app.use(bodyParser.json());
 
-var elasticClient = new elasticsearch.Client({
+let elasticClient = new elasticsearch.Client({
   host: 'localhost:9200',
   log: 'info'
 });
 
-var users = require('./users.js');
-var Users = users.Users;
-var Roles = users.Roles;
+let users = require('./users.js');
+let Users = users.Users;
+let Roles = users.Roles;
 
-var getUserInfo = function(user) {
-  return {
-    id: user.id,
-    code: user.code,
-    login: user.login,
-    role: user.role,
-    roleId: user.roleId,
-    name: user.name
-  }
-}
+let getUserInfo = (user) => ({
+  id: user.id,
+  code: user.code,
+  login: user.login,
+  role: user.role,
+  roleId: user.roleId,
+  name: user.name
+})
 
-var responseError = function(res, message, status) {
+let responseError = (res, message, status) => {
   console.log(message);
   //res.status(status);
   res.send({
@@ -43,32 +41,32 @@ var responseError = function(res, message, status) {
   });
 };
 
-var redirect302 = function(res) {
+let redirect302 = (res) => {
   res.statusCode = 302;
   res.send('Authorization is needed.');
 };
 
-var getTokenFromRequest = function(req) {
-  var authHeader = req.headers.authorization;
+let getTokenFromRequest = (req) => {
+  let authHeader = req.headers.authorization;
   if (!authHeader) {
     return;
   }
-  var bearer = authHeader.substr(7);
+  let bearer = authHeader.substr(7);
   if (!bearer || bearer.length < 10) {
     return;
   }
   return bearer;
 };
 
-var authorize = function (req, res, onSuccess) {
-  var token;
+let authorize = (req, res, onSuccess) => {
+  let token;
   if (!(token = getTokenFromRequest(req))) {
     return redirect302(res);
   }
-  jwt.verify(token, secretKey, function(err, decoded) {
+  jwt.verify(token, secretKey, (err, decoded) => {
     if (!err) {
       userId = decoded.id;
-      for (var i = 0; i < Users.length; i++) {
+      for (let i = 0; i < Users.length; i++) {
         if (Users[i].id == userId) {
           return onSuccess(Users[i]);
         }
@@ -81,23 +79,23 @@ var authorize = function (req, res, onSuccess) {
 };
 
 app.get('/api/userInfo', function(req, res) {
-  authorize(req, res, function(user) {
+  authorize(req, res, (user) => {
     console.log('Authenticated as ' + user.login);
     return res.send(getUserInfo(user));
   });
 });
 
 app.post('/api/login', function(req, res) {
-  var login = req.body.login;
-  var password = req.body.password;
+  let login = req.body.login;
+  let password = req.body.password;
 
   // search user by login
-  for (var i = 0; i < Users.length; i++) {
+  for (let i = 0; i < Users.length; i++) {
     if (Users[i].login === login) {
       if (passwordHash.verify(password, Users[i].hash)) {
-        var user = getUserInfo(Users[i]);
+        let user = getUserInfo(Users[i]);
         console.log('Logged in as ' + user.login + '.');
-        var token = jwt.sign(user, secretKey, {
+        let token = jwt.sign(user, secretKey, {
           expiresIn: accessTokenExpiration
         });
         res.send({
@@ -132,7 +130,7 @@ app.get('/api/test', function(req, res) {
   });
 });
 
-var mockData = require('./mock.json');
+let mockData = require('./mock.json');
 
 app.get('/api/search_test', function(req, res) {
   res.send(mockData.results);
@@ -153,13 +151,14 @@ app.get('/api/search', function(req, res) {
         }
       }
     }
-  }, function(error, response, status) {
+  }, (error, response, status) => {
     if (error) {
-      console.log("Search error: " + error)
+      console.log("Search error.");
+      return responseError(res, error.message, 500);
     } else {
-      var result = [];
-      response.hits.hits.forEach(function(hit) {
-        hit._source.id = hit._id
+      let result = [];
+      response.hits.hits.forEach((hit) => {
+        hit._source.id = hit._id;
         result.push(hit._source);
       });
       console.log("Found items: " + result.length + ".");
@@ -185,15 +184,16 @@ app.get('/api/term', function(req, res) {
           }
         }
       }
-    }, function(error, response, status) {
+    }, (error, response, status) => {
       if (error) {
-        console.log("Search error: " + error);
+        console.log("Search error.");
+        return responseError(res, error.message, 500);
       } else {
-        var result = null, hit = response.hits.hits[0];
-        var term = hit ? response.hits.hits[0]._source : null;
-        var ts = term ? term.translations : null;
+        let result = null, hit = response.hits.hits[0];
+        let term = hit ? response.hits.hits[0]._source : null;
+        let ts = term ? term.translations : null;
         if(ts && ts.length) {
-          for(var i = 0; i < ts.length; i++) {
+          for(let i = 0; i < ts.length; i++) {
             if(ts[i].translatorId === req.query.translatorId) {
               if(user.code === ts[i].translatorId || user.role === 'admin') {
                 result = {
