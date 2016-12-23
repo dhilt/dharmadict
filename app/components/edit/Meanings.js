@@ -15,7 +15,7 @@ class Meanings extends Component {
         <h2>{this.props.data.termName}</h2>
         <ul className="meaningList">
         {
-          this.props.data.source.meanings.map((meaning, meaningIndex) =>
+          this.props.data.change.meanings.map((meaning, meaningIndex) =>
           <li key={meaningIndex}>
             <div className="title">Значение {meaningIndex + 1}</div>
             <ul className="versionList">
@@ -25,7 +25,7 @@ class Meanings extends Component {
                   <input className="form-control"
                     name="search" type="text"
                     value={version}
-                    onChange={this.onVersionChanged}/>
+                    onChange={(event) => this.onVersionChanged(event, versionIndex)}/>
                     <button type="button" className="btn btn-link btn-sm remove-btn">X</button>
                 </li>
               )
@@ -52,7 +52,8 @@ class Meanings extends Component {
     )
   }
 
-  onVersionChanged (event) {
+  onVersionChanged (event, versionIndex) {
+    console.log(versionIndex)
     console.log(event.target.value)
     //this.props.dispatch(changeVersion(event.target.value))
   }

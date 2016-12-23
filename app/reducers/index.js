@@ -189,6 +189,7 @@ function reducer(state = initialState, action) {
           termId: action.result ? action.result.termId : '',
           termName: action.result ? action.result.termName : '',
           source: action.result ? action.result.translation : null,
+          change: action.result ? action.result.translation : null,
           error: action.error
         }
       }
