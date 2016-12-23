@@ -39,9 +39,13 @@ export function selectTerm(term) {
 }
 
 export function toggleComment(translationIndex, meaningIndex) {
-  return {
-    type: TOGGLE_COMMENT,
-    translationIndex,
-    meaningIndex
+  return (dispatch, getState) => {
+    let term = getState().selected.term
+    let meaning = term.translations[translationIndex].meanings[meaningIndex]
+    meaning.openComment = !meaning.openComment
+    return dispatch({
+      type: TOGGLE_COMMENT,
+      term
+    })
   }
 }

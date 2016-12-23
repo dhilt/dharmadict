@@ -165,13 +165,9 @@ function reducer(state = initialState, action) {
         }
       }
     case TOGGLE_COMMENT:
-      // todo dhilt : move logic to action creator
-      let term = state.selected.term
-      let meaning = term.translations[action.translationIndex].meanings[action.meaningIndex]
-      meaning.openComment = !meaning.openComment
       return {...state,
         selected: {...state.selected,
-          term: term
+          term: action.term
         }
       }
     case TRANSLATION_REQUEST_START:
