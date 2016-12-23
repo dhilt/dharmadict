@@ -2,12 +2,11 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Link} from 'react-router'
 
+import Meanings from './edit/Meanings'
+
 import {selectTranslation} from '../actions'
 
 class Edit extends Component {
-  constructor (props) {
-    super(props)
-  }
 
   componentWillMount () {
     let translatorId = this.props.query.translatorId
@@ -20,7 +19,7 @@ class Edit extends Component {
   }
 
   render () {
-    let allOk = !this.blockMessage && !this.props.data.pending && !this.props.data.error
+    let allOk = this.props.data.started && !this.blockMessage && !this.props.data.pending && !this.props.data.error
     return (
       <div>
         <Link to='/'>
@@ -43,17 +42,14 @@ class Edit extends Component {
         {
           this.props.data.error ? (
             <div>
-              Ошибка запроса. 
+              Ошибка запроса.
               <div className="error">{this.props.data.error.message}</div>
             </div>
-          ) : ( null ) 
+          ) : ( null )
         }
         {
           allOk ? (
-            <div>
-              <h2>{this.props.data.termName}</h2>
-              
-            </div>
+            <Meanings />
           ) : ( null )
         }
       </div>

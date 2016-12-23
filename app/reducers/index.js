@@ -47,6 +47,7 @@ let initialState = {
     term: null
   },
   edit: {
+    started: false,
     termId: '',
     termName: '',
     source: null,
@@ -182,11 +183,12 @@ function reducer(state = initialState, action) {
     case TRANSLATION_REQUEST_END:
       return {...state,
         edit: {...state.edit,
+          started: true,
           pending: false,
           change: null,
-          termId: action.result.termId,
-          termName: action.result.termName,
-          source: action.result.translation,
+          termId: action.result ? action.result.termId : '',
+          termName: action.result ? action.result.termName : '',
+          source: action.result ? action.result.translation : null,
           error: action.error
         }
       }

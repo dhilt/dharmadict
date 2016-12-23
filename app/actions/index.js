@@ -164,7 +164,7 @@ export function selectTranslation(translatorId, termId) {
           translation
         },
         error: error
-      })      
+      })
     }
     else { // async translation request
       dispatch({
@@ -180,4 +180,3 @@ export function selectTranslation(translatorId, termId) {
     }
   }
 }
-
