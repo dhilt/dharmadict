@@ -4,7 +4,7 @@ import {Link} from 'react-router'
 
 import Meanings from './edit/Meanings'
 
-import {selectTranslation} from '../actions'
+import {selectTranslation} from '../actions/edit'
 
 class Edit extends Component {
 

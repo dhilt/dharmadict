@@ -3,14 +3,14 @@ import {connect} from 'react-redux'
 import {Link} from 'react-router'
 
 import translators from '../helpers/translators'
-import {toggleComment} from '../actions'
+import {toggleComment} from '../actions/search'
 
 import editIcon from '../styles/images/edit2.png'
 
 class Term extends Component {
   constructor (props) {
     super(props)
-    this.toggleComment = this.toggleComment.bind(this)
+    this._toggleComment = this._toggleComment.bind(this)
   }
 
   render () {
@@ -62,7 +62,7 @@ class Term extends Component {
                 }
                 {
                   meaning.comment ?
-                  (<a className="commentLink" onClick={()=>this.toggleComment(translationIndex, meaningIndex)}>&gt;&gt;&gt;</a>) :
+                  (<a className="commentLink" onClick={()=>this._toggleComment(translationIndex, meaningIndex)}>&gt;&gt;&gt;</a>) :
                   ( null )
                 }
                 {
@@ -82,7 +82,7 @@ class Term extends Component {
     )
   }
 
-  toggleComment(translationIndex, meaningIndex) {
+  _toggleComment(translationIndex, meaningIndex) {
     this.props.dispatch(toggleComment(translationIndex, meaningIndex))
   }
 }

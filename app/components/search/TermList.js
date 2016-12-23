@@ -1,12 +1,12 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 
-import {selectTerm} from '../../actions'
+import {selectTerm} from '../../actions/search'
 
 class TermList extends Component {
   constructor(props) {
     super(props)
-    this.selectTerm = this.selectTerm.bind(this)
+    this._selectTerm = this._selectTerm.bind(this)
   }
 
   render() {
@@ -15,7 +15,7 @@ class TermList extends Component {
         this.props.termList.map((item, i) =>
           <div
             className={'list-group-item' + (this.props.isTermSelected(item) ? ' selected' : '') }
-            key={i} onClick={()=>this.selectTerm(item)}>
+            key={i} onClick={()=>this._selectTerm(item)}>
             {item.wylie}
           </div>
         )
@@ -24,7 +24,7 @@ class TermList extends Component {
     )
   }
 
-  selectTerm(term) {
+  _selectTerm(term) {
     if (this.props.isTermSelected(term)) {
       return
     }

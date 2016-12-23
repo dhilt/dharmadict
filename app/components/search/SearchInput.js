@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import { Button } from 'react-bootstrap';
 
-import {changeSearchString, doSearchRequestAsync} from '../../actions'
+import {changeSearchString, doSearchRequestAsync} from '../../actions/search'
 
 class SearchInput extends Component {
   constructor (props) {

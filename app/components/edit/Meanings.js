@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 
-import {selectTranslation} from '../../actions'
+import {selectTranslation} from '../../actions/edit'
 
 class Meanings extends Component {
   constructor (props) {
