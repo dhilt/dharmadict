@@ -168,7 +168,7 @@ app.get('/api/search', function(req, res) {
 });
 
 app.get('/api/term', function(req, res) {
-  if(!req.query.termId || !req.query.translatorId) {
+  if (!req.query.termId || !req.query.translatorId) {
     return responseError(res, 'Incorrect request params.', 500);
   }
   console.log('Requesting term "' + req.query.termId + '" (' + req.query.translatorId + ') data.');
@@ -180,7 +180,7 @@ app.get('/api/term', function(req, res) {
       body: {
         query: {
           ids: {
-              values: [req.query.termId]
+            values: [req.query.termId]
           }
         }
       }
@@ -189,30 +189,29 @@ app.get('/api/term', function(req, res) {
         console.log("Search error.");
         return responseError(res, error.message, 500);
       } else {
-        let result = null, hit = response.hits.hits[0];
+        let result = null,
+          hit = response.hits.hits[0];
         let term = hit ? response.hits.hits[0]._source : null;
         let ts = term ? term.translations : null;
-        if(ts && ts.length) {
-          for(let i = 0; i < ts.length; i++) {
-            if(ts[i].translatorId === req.query.translatorId) {
-              if(user.code === ts[i].translatorId || user.role === 'admin') {
+        if (ts && ts.length) {
+          for (let i = 0; i < ts.length; i++) {
+            if (ts[i].translatorId === req.query.translatorId) {
+              if (user.code === ts[i].translatorId || user.role === 'admin') {
                 result = {
                   termId: hit._id,
                   termName: term.wylie,
                   translation: ts[i]
                 };
                 break;
-              }
-              else {
+              } else {
                 return responseError(res, 'Unpermitted access.', 500);
               }
             }
           }
         }
-        if(!result) {
+        if (!result) {
           return responseError(res, 'Can not find term.', 404);
-        }
-        else {
+        } else {
           console.log("Term was successfully found.");
           return res.json(result);
         }
