@@ -8,6 +8,7 @@ import {
 
 function dispatchTranslationRequestEnd(dispatch, translation, termId, termName, error) {
   let translationCopy = translation ? JSON.parse(JSON.stringify(translation)) : null
+  translationCopy.meanings.forEach(m => m.versions.push(''))
   return dispatch({
     type: TRANSLATION_REQUEST_END,
     termId: termId,
@@ -45,6 +46,21 @@ export function onVersionChanged(meaningIndex, versionIndex, value) {
     let translation = getState().edit.change
     let meaning = translation.meanings[meaningIndex]
     meaning.versions[versionIndex] = value
+    if(versionIndex === meaning.versions.length - 1) {
+      meaning.versions.push('')
+    }
+    return dispatch({
+      type: CHANGE_TRANSLATION_LOCAL,
+      change: translation
+    })
+  }
+}
+
+export function onVersionRemoved(meaningIndex, versionIndex) {
+  return (dispatch, getState) => {
+    let translation = getState().edit.change
+    let meaning = translation.meanings[meaningIndex]
+    meaning.versions.splice(versionIndex, 1)
     return dispatch({
       type: CHANGE_TRANSLATION_LOCAL,
       change: translation

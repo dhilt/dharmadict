@@ -1,12 +1,13 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 
-import {selectTranslation, onVersionChanged} from '../../actions/edit'
+import {selectTranslation, onVersionChanged, onVersionRemoved} from '../../actions/edit'
 
 class Meanings extends Component {
   constructor (props) {
     super(props)
     this._onVersionChanged = this._onVersionChanged.bind(this)
+    this._onVersionRemoved = this._onVersionRemoved.bind(this)
   }
 
   render () {
@@ -22,21 +23,18 @@ class Meanings extends Component {
             {
               meaning.versions.map((version, versionIndex) =>
                 <li key={versionIndex} className="form-group form-inline">
-                  <input className="form-control"
-                    name="search" type="text"
+                  <input className="form-control" name="search" type="text"
                     value={version}
                     onChange={(event) => this._onVersionChanged(event, meaningIndex, versionIndex)}/>
-                    <button type="button" className="btn btn-link btn-sm remove-btn">X</button>
+                    <button className="btn btn-link btn-sm remove-btn" type="button"
+                      disabled={versionIndex === meaning.versions.length - 1 ? "disabled" : ""}
+                      onClick={() => this._onVersionRemoved(meaningIndex, versionIndex)}>X
+                    </button>
                 </li>
               )
             }
-              <li className="form-group form-inline">
-                <input className="form-control"
-                  name="search" type="text"
-                  onChange={this._onVersionChanged}/>
-              </li>
             </ul>
-            <div className="_col-md-8">
+            <div>
               <span> Комментарий: </span>
               <span> {meaning.comment} </span>
               <span>[X]</span>
@@ -54,6 +52,10 @@ class Meanings extends Component {
 
   _onVersionChanged (event, meaningIndex, versionIndex) {
     this.props.dispatch(onVersionChanged(meaningIndex, versionIndex, event.target.value))
+  }
+
+  _onVersionRemoved (meaningIndex, versionIndex) {
+    this.props.dispatch(onVersionRemoved(meaningIndex, versionIndex))
   }
 }
 
