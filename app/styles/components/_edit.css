@@ -3,23 +3,33 @@
     padding: 0;
 }
 
-.meaningList .title {
-    font-style: italic;;
+.meaningList li {
+    padding-left: 10px;
+    margin-bottom: 20px;
+    clear: both;
 }
 
-.meaningList li {
-  padding-left: 10px;
-  margin-bottom: 20px;
-  border: 0 #b8c3b8 dotted;
-  border-bottom-width: 1px;
+.meaningList .meaning {
+    margin-right: 20px;
+    margin-bottom: 20px;
+    float: left;
+}
+
+.meaningList .meaning .title {
+    font-style: italic;
+}
+
+.meaningList .comment {}
+
+.meaningList .comment .title {
+    font-style: italic;
 }
 
 .versionList li {
-  padding-left: 10px;
-  margin-bottom: 0px;
-  border: 0;
+    padding-left: 10px;
+    margin-bottom: 0px;
 }
 
 .remove-btn {
-  background: url('images/remove2.gif') no-repeat center #ececec;
+    background: url('images/remove2.gif') no-repeat center #ececec;
 }

@@ -67,3 +67,15 @@ export function onVersionRemoved(meaningIndex, versionIndex) {
     })
   }
 }
+
+export function onCommentChanged(meaningIndex, value) {
+  return (dispatch, getState) => {
+    let translation = getState().edit.change
+    let meaning = translation.meanings[meaningIndex]
+    meaning.comment = value
+    return dispatch({
+      type: CHANGE_TRANSLATION_LOCAL,
+      change: translation
+    })
+  }
+}
