@@ -19,7 +19,8 @@ class Edit extends Component {
   }
 
   render () {
-    let allOk = this.props.data.started && !this.blockMessage && !this.props.data.pending && !this.props.data.error
+    let editState = this.props.editState
+    let allOk = editState.started && !this.blockMessage && !editState.pending && !editState.error
     return (
       <div>
         <Link to='/'>
@@ -33,17 +34,17 @@ class Edit extends Component {
           ) : ( null )
         }
         {
-          this.props.data.pending ? (
+          editState.pending ? (
             <div>
               Запрос выполняется. Пожалуйста, подождите...
             </div>
           ) : ( null )
         }
         {
-          this.props.data.error ? (
+          editState.error ? (
             <div>
               Ошибка запроса.
-              <div className="error">{this.props.data.error.message}</div>
+              <div className="error">{editState.error.message}</div>
             </div>
           ) : ( null )
         }
@@ -59,7 +60,7 @@ class Edit extends Component {
 
 function select (state, ownProps) {
   return {
-    data: state.edit,
+    editState: state.edit,
     query: ownProps.location.query
   }
 }
