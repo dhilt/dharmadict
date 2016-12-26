@@ -79,3 +79,28 @@ export function onCommentChanged(meaningIndex, value) {
     })
   }
 }
+
+export function addNewMeaning() {
+  return (dispatch, getState) => {
+    let translation = getState().edit.change
+    translation.meanings.push({
+      comment: null,
+      versions: [""]
+    })
+    return dispatch({
+      type: CHANGE_TRANSLATION_LOCAL,
+      change: translation
+    })
+  }
+}
+
+export function onMeaningRemoved(meaningIndex) {
+  return (dispatch, getState) => {
+    let translation = getState().edit.change
+    translation.meanings.splice(meaningIndex, 1)
+    return dispatch({
+      type: CHANGE_TRANSLATION_LOCAL,
+      change: translation
+    })
+  }
+}

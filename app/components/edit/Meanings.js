@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 
-import {selectTranslation, onVersionChanged, onVersionRemoved, onCommentChanged} from '../../actions/edit'
+import {selectTranslation, onVersionChanged, onVersionRemoved, onCommentChanged, onMeaningRemoved, addNewMeaning} from '../../actions/edit'
 
 class Meanings extends Component {
   constructor (props) {
@@ -9,6 +9,8 @@ class Meanings extends Component {
     this._onVersionChanged = this._onVersionChanged.bind(this)
     this._onVersionRemoved = this._onVersionRemoved.bind(this)
     this._onCommentChanged = this._onCommentChanged.bind(this)
+    this._onMeaningRemoved = this._onMeaningRemoved.bind(this)
+    this._addNewMeaning = this._addNewMeaning.bind(this)
   }
 
   render () {
@@ -20,7 +22,13 @@ class Meanings extends Component {
           this.props.data.change.meanings.map((meaning, meaningIndex) =>
           <li key={meaningIndex}>
             <div className="meaning">
-              <div className="title">Значение {meaningIndex + 1}</div>
+              <div className="title">
+                Значение {meaningIndex + 1}
+                <a className="remove-link"
+                  onClick={(event) => this._onMeaningRemoved(event, meaningIndex)}>
+                  удалить
+                </a>
+              </div>
               <ul className="versionList">
               {
                 meaning.versions.map((version, versionIndex) =>
@@ -49,7 +57,9 @@ class Meanings extends Component {
           )
         }
         <li>
-          [новое значение]
+          <a className="add-new-meaning" onClick={this._addNewMeaning}>
+            Добавить новое значение...
+          </a>
         </li>
         </ul>
       </div>
@@ -66,6 +76,16 @@ class Meanings extends Component {
 
   _onCommentChanged (event, meaningIndex) {
     this.props.dispatch(onCommentChanged(meaningIndex, event.target.value))
+  }
+
+  _onMeaningRemoved (event, meaningIndex) {
+    event.preventDefault()
+    this.props.dispatch(onMeaningRemoved(meaningIndex))
+  }
+
+  _addNewMeaning (event) {
+    event.preventDefault()
+    this.props.dispatch(addNewMeaning())
   }
 }
 

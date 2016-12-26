@@ -10,7 +10,7 @@
 }
 
 .meaningList .meaning {
-    margin-right: 20px;
+    margin-right: 15px;
     margin-bottom: 20px;
     float: left;
 }
@@ -19,10 +19,19 @@
     font-style: italic;
 }
 
-.meaningList .comment {}
+.meaningList .meaning .remove-link {
+  cursor: pointer;
+  font-style: normal;
+  font-size: smaller;
+  float: right;
+}
 
 .meaningList .comment .title {
     font-style: italic;
+}
+
+.meaningList .add-new-meaning {
+  cursor: pointer;
 }
 
 .versionList li {
