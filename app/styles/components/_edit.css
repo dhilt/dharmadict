@@ -42,3 +42,8 @@
 .remove-btn {
     background: url('images/remove2.gif') no-repeat center #ececec;
 }
+
+.cancel-link {
+  cursor: pointer;
+  margin-left: 15px;
+}
