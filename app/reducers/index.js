@@ -15,7 +15,9 @@ import {
   TOGGLE_COMMENT,
   TRANSLATION_REQUEST_START,
   TRANSLATION_REQUEST_END,
-  CHANGE_TRANSLATION_LOCAL
+  CHANGE_TRANSLATION_LOCAL,
+  TRANSLATION_UPDATE_START,
+  TRANSLATION_UPDATE_END
 } from '../actions/_constants'
 
 import auth from '../helpers/auth'
@@ -54,7 +56,11 @@ let initialState = {
     source: null,
     change: null,
     pending: false,
-    error: null
+    error: null,
+    update: {
+      pending: false,
+      error: null
+    }
   }
 }
 
@@ -194,6 +200,23 @@ function reducer(state = initialState, action) {
       return {...state,
         edit: {...state.edit,
           change: action.change
+        }
+      }
+    case TRANSLATION_UPDATE_START:
+      return {...state,
+        edit: {...state.edit,
+          update: {
+            pending: true
+          }
+        }
+      }
+    case TRANSLATION_UPDATE_END:
+      return {...state,
+        edit: {...state.edit,
+          update: {
+            pending: false,
+            error: action.error
+          }
         }
       }
     default:

@@ -3,7 +3,9 @@ import asyncRequest from '../helpers/remote'
 import {
   TRANSLATION_REQUEST_START,
   TRANSLATION_REQUEST_END,
-  CHANGE_TRANSLATION_LOCAL
+  CHANGE_TRANSLATION_LOCAL,
+  TRANSLATION_UPDATE_START,
+  TRANSLATION_UPDATE_END
 } from './_constants'
 
 function getTranslationCopy(translation) {
@@ -38,8 +40,8 @@ export function selectTranslation(translatorId, termId) {
       dispatch({
         type: TRANSLATION_REQUEST_START
       })
-      console.log('Let\'s start an async term request to db! The term is "' + termId + '".')
-      return asyncRequest(`term?translatorId=${translatorId}&termId=${termId}`, null, (data, error) => {
+      console.log('Let\'s start an async translation request to db! The term is "' + termId + '".')
+      return asyncRequest(`translation?translatorId=${translatorId}&termId=${termId}`, null, (data, error) => {
         let translation = data ? data.translation : null
         dispatchTranslationRequestEnd(dispatch, translation, data ? data.termId : '', data ? data.termName : '', error)
       })
@@ -123,14 +125,20 @@ export function resetTranslation() {
 
 export function saveTranslation() {
   return (dispatch, getState) => {
-    let translation = getState().edit.change
-    let lastMeaning = translation.meanings[translation.meanings.length - 1]
+    let termId = getState().edit.termId
+    let translation = getTranslationCopy(getState().edit.change)
     translation.meanings.forEach(m => m.versions = m.versions.filter(v => v))
     translation.meanings = translation.meanings.filter(m => m.versions.length)
     console.log(translation)
-      /*return dispatch({
-        type: CHANGE_TRANSLATION_LOCAL,
-        change: translation
-      })*/
+    dispatch({
+      type: TRANSLATION_UPDATE_START
+    })
+    console.log('Let\'s start an async update translation request to db! The term is "' + termId + '".')
+    return asyncRequest(`update?termId=${termId}`, { translation }, (data, error) => {
+      return dispatch({
+        type: TRANSLATION_UPDATE_END,
+        error: error
+      })
+    })
   }
 }

@@ -167,11 +167,11 @@ app.get('/api/search', function(req, res) {
   });
 });
 
-app.get('/api/term', function(req, res) {
+app.get('/api/translation', function(req, res) {
   if (!req.query.termId || !req.query.translatorId) {
-    return responseError(res, 'Incorrect request params.', 500);
+    return responseError(res, 'Incorrect "/api/term" request params.', 500);
   }
-  console.log('Requesting term "' + req.query.termId + '" (' + req.query.translatorId + ') data.');
+  console.log('Requesting translation "' + req.query.termId + '" (' + req.query.translatorId + ') data.');
 
   authorize(req, res, function(user) {
     elasticClient.search({
@@ -218,6 +218,20 @@ app.get('/api/term', function(req, res) {
       }
     });
   });
+});
+
+app.post('/api/update', function(req, res) {
+  let translation = req.body.translation;
+  console.log(req.query.termId)
+  console.log(translation)
+  if (!req.query.termId || !translation) {
+    return responseError(res, 'Incorrect "/api/update" request params.', 500);
+  }
+  console.log('Updating translation. Term id = "' + req.query.termId + '", translator id = "' + req.query.translatorId + '".');
+
+  return res.json({ done: true });
+
+  
 });
 
 app.get('*', function(req, res) {
