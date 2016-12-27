@@ -6,15 +6,21 @@ import {
   CHANGE_TRANSLATION_LOCAL
 } from './_constants'
 
-function dispatchTranslationRequestEnd(dispatch, translation, termId, termName, error) {
+function getTranslationCopy(translation) {
   let translationCopy = translation ? JSON.parse(JSON.stringify(translation)) : null
-  translationCopy.meanings.forEach(m => m.versions.push(''))
+  if (translationCopy) {
+    translationCopy.meanings.forEach(m => m.versions.push(''))
+  }
+  return translationCopy
+}
+
+function dispatchTranslationRequestEnd(dispatch, translation, termId, termName, error) {
   return dispatch({
     type: TRANSLATION_REQUEST_END,
     termId: termId,
     termName: termName,
     translation,
-    translationCopy,
+    translationCopy: getTranslationCopy(translation),
     error: error
   })
 }
@@ -46,7 +52,7 @@ export function onVersionChanged(meaningIndex, versionIndex, value) {
     let translation = getState().edit.change
     let meaning = translation.meanings[meaningIndex]
     meaning.versions[versionIndex] = value
-    if(versionIndex === meaning.versions.length - 1) {
+    if (versionIndex === meaning.versions.length - 1) {
       meaning.versions.push('')
     }
     return dispatch({
@@ -108,10 +114,9 @@ export function addNewMeaning() {
 export function resetTranslation() {
   return (dispatch, getState) => {
     let editState = getState().edit
-    let translation = editState.source ? JSON.parse(JSON.stringify(editState.source)) : null
     return dispatch({
       type: CHANGE_TRANSLATION_LOCAL,
-      change: translation
+      change: getTranslationCopy(editState.source)
     })
   }
 }
@@ -119,10 +124,13 @@ export function resetTranslation() {
 export function saveTranslation() {
   return (dispatch, getState) => {
     let translation = getState().edit.change
-
-    /*return dispatch({
-      type: CHANGE_TRANSLATION_LOCAL,
-      change: translation
-    })*/
+    let lastMeaning = translation.meanings[translation.meanings.length - 1]
+    translation.meanings.forEach(m => m.versions = m.versions.filter(v => v))
+    translation.meanings = translation.meanings.filter(m => m.versions.length)
+    console.log(translation)
+      /*return dispatch({
+        type: CHANGE_TRANSLATION_LOCAL,
+        change: translation
+      })*/
   }
 }
