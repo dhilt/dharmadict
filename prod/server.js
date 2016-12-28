@@ -167,71 +167,128 @@ app.get('/api/search', function(req, res) {
   });
 });
 
+function getTermById(res, termId, successCallback) {
+  elasticClient.search({
+    index: "dharmadict",
+    type: "terms",
+    body: {
+      query: {
+        ids: {
+          values: [termId]
+        }
+      }
+    }
+  }, (error, response, status) => {
+    if (error) {
+      console.log("Get term by id error.");
+      responseError(res, error.message, 500);
+    } else {
+      successCallback(response.hits.hits[0]);
+    }
+  });
+}
+
 app.get('/api/translation', function(req, res) {
   if (!req.query.termId || !req.query.translatorId) {
     return responseError(res, 'Incorrect "/api/term" request params.', 500);
   }
   console.log('Requesting translation "' + req.query.termId + '" (' + req.query.translatorId + ') data.');
 
-  authorize(req, res, function(user) {
-    elasticClient.search({
-      index: "dharmadict",
-      type: "terms",
-      body: {
-        query: {
-          ids: {
-            values: [req.query.termId]
-          }
-        }
-      }
-    }, (error, response, status) => {
-      if (error) {
-        console.log("Search error.");
-        return responseError(res, error.message, 500);
-      } else {
-        let result = null,
-          hit = response.hits.hits[0];
-        let term = hit ? response.hits.hits[0]._source : null;
-        let ts = term ? term.translations : null;
-        if (ts && ts.length) {
-          for (let i = 0; i < ts.length; i++) {
-            if (ts[i].translatorId === req.query.translatorId) {
-              if (user.code === ts[i].translatorId || user.role === 'admin') {
-                result = {
-                  termId: hit._id,
-                  termName: term.wylie,
-                  translation: ts[i]
-                };
-                break;
-              } else {
-                return responseError(res, 'Unpermitted access.', 500);
-              }
+  authorize(req, res, (user) => {
+    getTermById(res, req.query.termId, (hit) => {
+      let term = hit ? hit._source : null;
+      let ts = term ? term.translations : null;
+      if (ts && ts.length) {
+        for (let i = 0; i < ts.length; i++) {
+          if (ts[i].translatorId === req.query.translatorId) {
+            if (user.code === ts[i].translatorId || user.role === 'admin') {
+              result = {
+                termId: hit._id,
+                termName: term.wylie,
+                translation: ts[i]
+              };
+              break;
+            } else {
+              return responseError(res, 'Unpermitted access.', 500);
             }
           }
         }
-        if (!result) {
-          return responseError(res, 'Can not find term.', 404);
-        } else {
-          console.log("Term was successfully found.");
-          return res.json(result);
-        }
+      }
+      if (!result) {
+        responseError(res, 'Can not find term.', 404);
+      } else {
+        console.log('Term was successfully found.');
+        res.json(result);
       }
     });
   });
 });
 
 app.post('/api/update', function(req, res) {
+  let termId = req.body.termId;
   let translation = req.body.translation;
-  console.log(req.query.termId)
-  console.log(translation)
-  if (!req.query.termId || !translation) {
+  let translatorId = req.body.translation.translatorId;
+  if (!termId || !translation) {
     return responseError(res, 'Incorrect "/api/update" request params.', 500);
   }
-  console.log('Updating translation. Term id = "' + req.query.termId + '", translator id = "' + req.query.translatorId + '".');
+  console.log('Updating translation. Term id = "' + termId + '", translator id = "' + translation.translatorId + '".');
 
-  return res.json({ done: true });
+  authorize(req, res, function(user) {
+    getTermById(res, termId, (hit) => {
+      let term = hit ? hit._source : null;
+      let ts = term ? term.translations : null;
+      let foundT = ts ? ts.find(t => t.translatorId === translatorId) : null;
+      if (foundT) {
+        console.log(JSON.stringify(foundT));
+        console.log(JSON.stringify(translation));
+      }
 
-  
+      return res.json({
+        done: true
+      });
+
+      /*elasticClient.index({
+        index: "dharmadict",
+        type: "terms",
+        id: termId,
+        body: {
+
+        }
+      }, (error, response, status) => {
+        if (error) {
+          console.log("Search error.");
+          return responseError(res, error.message, 500);
+        } else {
+          let result = null,
+            hit = response.hits.hits[0];
+          let term = hit ? hitresponse.hits.hits[0]._source : null;
+          let ts = term ? term.translations : null;
+          if (ts && ts.length) {
+            for (let i = 0; i < ts.length; i++) {
+              if (ts[i].translatorId === req.query.translatorId) {
+                if (user.code === ts[i].translatorId || user.role === 'admin') {
+                  result = {
+                    termId: hit._id,
+                    termName: term.wylie,
+                    translation: ts[i]
+                  };
+                  break;
+                } else {
+                  return responseError(res, 'Unpermitted access.', 500);
+                }
+              }
+            }
+          }
+          if (!result) {
+            return responseError(res, 'Can not find term.', 404);
+          } else {
+            console.log("Term was successfully found.");
+            return res.json(result);
+          }
+        }
+      });*/
+    });
+  });
 });
 
 app.get('*', function(req, res) {
