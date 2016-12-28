@@ -18,12 +18,17 @@ import Home from './components/Home'
 import NotFound from './components/NotFound'
 import Edit from './components/Edit'
 
-let logger = createLogger({
-  // Ignore `CHANGE...` actions in the logger, since they fire after every keystroke
-  predicate: (getState, action) => action.type/* && action.type.indexOf('CHANGE_') !== 0*/
-})
+let middleware = [ thunkMiddleware ]
 
-let store = createStore(reducer, applyMiddleware(logger, thunkMiddleware))
+if(process.env.NODE_ENV !== 'production') {
+  let logger = createLogger({
+    // Ignore `CHANGE...` actions in the logger, since they fire after every keystroke
+    predicate: (getState, action) => action.type && action.type.indexOf('CHANGE_') !== 0
+  })
+  middleware = [ ...middleware, logger ]
+}
+
+let store = createStore(reducer, applyMiddleware(...middleware))
 if(store.getState().auth.token) {
   store.dispatch(getUserInfoAsync())
 }

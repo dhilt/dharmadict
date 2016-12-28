@@ -40,7 +40,7 @@ function makeWebpackConfig (options) {
       })
     ]
   } else {
-    devtool = 'cheap-eval-source-map'
+    devtool = 'eval-source-map'
 
     entry = [
       'webpack-dev-server/client?http://localhost:5000',
