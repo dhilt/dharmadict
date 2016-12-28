@@ -198,6 +198,7 @@ app.get('/api/translation', function(req, res) {
     getTermById(res, req.query.termId, (hit) => {
       let term = hit ? hit._source : null;
       let ts = term ? term.translations : null;
+      let result;
       if (ts && ts.length) {
         for (let i = 0; i < ts.length; i++) {
           if (ts[i].translatorId === req.query.translatorId) {
@@ -215,9 +216,9 @@ app.get('/api/translation', function(req, res) {
         }
       }
       if (!result) {
-        responseError(res, 'Can not find term.', 404);
+        responseError(res, 'Can not find a translation.', 404);
       } else {
-        console.log('Term was successfully found.');
+        console.log('Term\'s translation was successfully found.');
         res.json(result);
       }
     });
@@ -227,10 +228,10 @@ app.get('/api/translation', function(req, res) {
 app.post('/api/update', function(req, res) {
   let termId = req.body.termId;
   let translation = req.body.translation;
-  let translatorId = req.body.translation.translatorId;
   if (!termId || !translation) {
     return responseError(res, 'Incorrect "/api/update" request params.', 500);
   }
+  let translatorId = req.body.translation.translatorId;
   console.log('Updating translation. Term id = "' + termId + '", translator id = "' + translation.translatorId + '".');
 
   authorize(req, res, function(user) {
@@ -239,54 +240,25 @@ app.post('/api/update', function(req, res) {
       let ts = term ? term.translations : null;
       let foundT = ts ? ts.find(t => t.translatorId === translatorId) : null;
       if (foundT) {
-        console.log(JSON.stringify(foundT));
-        console.log(JSON.stringify(translation));
-      }
-
-      return res.json({
-        done: true
-      });
-
-      /*elasticClient.index({
-        index: "dharmadict",
-        type: "terms",
-        id: termId,
-        body: {
-
-        }
-      }, (error, response, status) => {
-        if (error) {
-          console.log("Search error.");
-          return responseError(res, error.message, 500);
-        } else {
-          let result = null,
-            hit = response.hits.hits[0];
-          let term = hit ? hitresponse.hits.hits[0]._source : null;
-          let ts = term ? term.translations : null;
-          if (ts && ts.length) {
-            for (let i = 0; i < ts.length; i++) {
-              if (ts[i].translatorId === req.query.translatorId) {
-                if (user.code === ts[i].translatorId || user.role === 'admin') {
-                  result = {
-                    termId: hit._id,
-                    termName: term.wylie,
-                    translation: ts[i]
-                  };
-                  break;
-                } else {
-                  return responseError(res, 'Unpermitted access.', 500);
-                }
-              }
-            }
-          }
-          if (!result) {
-            return responseError(res, 'Can not find term.', 404);
+        translation.meanings.forEach(m => m.versions_lower = m.versions.map(v => v.toLowerCase()));
+        foundT.meanings = translation.meanings;
+        elasticClient.index({
+          index: "dharmadict",
+          type: "terms",
+          id: termId,
+          body: term
+        }, (error, response, status) => {
+          if (error) {
+            console.log("Update term error.");
+            return responseError(res, error.message, 500);
           } else {
-            console.log("Term was successfully found.");
-            return res.json(result);
+            console.log("Term was successfully updated.");
+            return res.json({
+              success: true
+            });
           }
-        }
-      });*/
+        });
+      }
     });
   });
 });
@@ -297,4 +269,4 @@ app.get('*', function(req, res) {
 
 app.listen(port);
 
-console.log('Listening on port ' + port);
+console.log('Listening on port ' + port + '...');
