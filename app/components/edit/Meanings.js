@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
+import {Button} from 'react-bootstrap'
 
 import {onVersionChanged, onVersionRemoved, onCommentChanged, onMeaningRemoved, addNewMeaning, resetTranslation, saveTranslation} from '../../actions/edit'
 
@@ -11,8 +12,8 @@ class Meanings extends Component {
     this._onCommentChanged = this._onCommentChanged.bind(this)
     this._onMeaningRemoved = this._onMeaningRemoved.bind(this)
     this._addNewMeaning = this._addNewMeaning.bind(this)
-    this._cancel = this._cancel.bind(this)
-    this._save = this._save.bind(this)
+    this._onCancel = this._onCancel.bind(this)
+    this._onSave = this._onSave.bind(this)
   }
 
   render () {
@@ -65,14 +66,17 @@ class Meanings extends Component {
         </li>
         </ul>
         <div className="form-group form-inline">
-          <button
-            className="btn btn-primary btn-sm save-btn" type="button"
-            onClick={(event) => this._save(event)}>
+          <Button
+            bsStyle='primary'
+            type="button"
+            className={this.props.data.update.pending ? 'loader' : ''}
+            disabled={this.props.data.update.pending}
+            onClick={this._onSave}>
             Сохранить
-          </button>
+          </Button>
           <a
             className="cancel-link"
-            onClick={this._cancel}>
+            onClick={this._onCancel}>
             Сбросить
           </a>
         </div>
@@ -102,12 +106,12 @@ class Meanings extends Component {
     this.props.dispatch(addNewMeaning())
   }
 
-  _cancel (event) {
+  _onCancel (event) {
     event.preventDefault()
     this.props.dispatch(resetTranslation())
   }
 
-  _save () {
+  _onSave () {
     this.props.dispatch(saveTranslation())
   }
 }
