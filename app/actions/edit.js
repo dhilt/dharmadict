@@ -11,7 +11,10 @@ import {
 function getTranslationCopy(translation) {
   let translationCopy = translation ? JSON.parse(JSON.stringify(translation)) : null
   if (translationCopy) {
-    translationCopy.meanings.forEach(m => m.versions.push(''))
+    translationCopy.meanings.forEach(m => {
+       m.versions.push('')
+       delete m.versions_lower
+     })
   }
   return translationCopy
 }
@@ -29,7 +32,7 @@ function dispatchTranslationRequestEnd(dispatch, translation, termId, termName, 
 
 export function selectTranslation(translatorId, termId) {
   return (dispatch, getState) => {
-    let term = getState().selected.term;
+    let term = getState().selected.term
     if (term) { // sync translation select
       let error = term.id !== termId ? {
         message: 'Invalid term.'
@@ -134,7 +137,10 @@ export function saveTranslation() {
       type: TRANSLATION_UPDATE_START
     })
     console.log('Let\'s start an async update translation request to db! The term is "' + termId + '".')
-    return asyncRequest(`update?termId=${termId}`, { translation }, (data, error) => {
+    return asyncRequest(`update`, {
+      termId: termId,
+      translation
+    }, (data, error) => {
       return dispatch({
         type: TRANSLATION_UPDATE_END,
         error: error
