@@ -1,8 +1,9 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {Button} from 'react-bootstrap'
 
-import {onVersionChanged, onVersionRemoved, onCommentChanged, onMeaningRemoved, addNewMeaning, resetTranslation, saveTranslation} from '../../actions/edit'
+import EditControls from './EditControls'
+
+import {onVersionChanged, onVersionRemoved, onCommentChanged, onMeaningRemoved, addNewMeaning} from '../../actions/edit'
 
 class Meanings extends Component {
   constructor (props) {
@@ -12,8 +13,6 @@ class Meanings extends Component {
     this._onCommentChanged = this._onCommentChanged.bind(this)
     this._onMeaningRemoved = this._onMeaningRemoved.bind(this)
     this._addNewMeaning = this._addNewMeaning.bind(this)
-    this._onCancel = this._onCancel.bind(this)
-    this._onSave = this._onSave.bind(this)
   }
 
   render () {
@@ -59,27 +58,15 @@ class Meanings extends Component {
           </li>
           )
         }
-        <li>
-          <a className="add-new-meaning" onClick={this._addNewMeaning}>
-            Добавить новое значение...
-          </a>
-        </li>
+          <li>
+            <a className="add-new-meaning" onClick={this._addNewMeaning}>
+              Добавить новое значение...
+            </a>
+          </li>
         </ul>
-        <div className="form-group form-inline">
-          <Button
-            bsStyle='primary'
-            type="button"
-            className={this.props.data.update.pending ? 'loader' : ''}
-            disabled={this.props.data.update.pending}
-            onClick={this._onSave}>
-            Сохранить
-          </Button>
-          <a
-            className="cancel-link"
-            onClick={this._onCancel}>
-            Сбросить
-          </a>
-        </div>
+
+        <EditControls/>
+
       </div>
     )
   }
@@ -104,15 +91,6 @@ class Meanings extends Component {
   _addNewMeaning (event) {
     event.preventDefault()
     this.props.dispatch(addNewMeaning())
-  }
-
-  _onCancel (event) {
-    event.preventDefault()
-    this.props.dispatch(resetTranslation())
-  }
-
-  _onSave () {
-    this.props.dispatch(saveTranslation())
   }
 }
 

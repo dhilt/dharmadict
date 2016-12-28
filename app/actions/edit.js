@@ -126,7 +126,7 @@ export function resetTranslation() {
   }
 }
 
-export function saveTranslation() {
+export function saveTranslationAsync() {
   return (dispatch, getState) => {
     let termId = getState().edit.termId
     let translation = getTranslationCopy(getState().edit.change)
