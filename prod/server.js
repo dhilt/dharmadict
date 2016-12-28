@@ -259,6 +259,9 @@ app.post('/api/update', function(req, res) {
           }
         });
       }
+      else {
+        responseError(res, 'Can not find a translation to update.', 404);
+      }
     });
   });
 });
