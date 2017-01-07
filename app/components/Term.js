@@ -10,17 +10,12 @@ import editIcon from '../styles/images/edit2.png'
 class Term extends Component {
   constructor (props) {
     super(props)
+    this.userInfo = this.props.userInfo
     this._toggleComment = this._toggleComment.bind(this)
   }
 
   render () {
     let term = this.props.data.term
-    let canEdit = (translatorId) => {
-      if(!this.props.userInfo) {
-        return false;
-      }
-      return this.props.userInfo.code === translatorId || this.props.userInfo.code === 'ADMIN'
-    }
     return (
       <div className="term">
         <div className="term-header">
@@ -31,14 +26,14 @@ class Term extends Component {
             ) : ( null )
           }
         </div>
-        <ul className="translations-list">
+        <ul className="translation-list">
         {
           term.translations.map((translation, translationIndex) =>
           <li key={translationIndex} className="translation">
             <div className="wrap-translator-ref">
               <a href="" className="translator-ref">{translators.getTranslator(translation.translatorId)}</a>
               {
-                canEdit(translation.translatorId) ?
+                this.canEdit(translation.translatorId) ?
                 (
                   <Link to={{
                     pathname: '/edit',
@@ -78,8 +73,29 @@ class Term extends Component {
           )
         }
         </ul>
+        {
+          this.canAdd(term) ? (
+            <div className="add-translation">
+              Добавить перевод...
+            </div>
+          ) : ( null )
+        }
       </div>
     )
+  }
+
+  canEdit(translatorId) {
+    if(!this.userInfo) {
+      return false;
+    }
+    return this.userInfo.code === translatorId || this.userInfo.code === 'ADMIN'
+  }
+
+  canAdd(term) {
+    if(!this.userInfo || this.userInfo.role !== "translator") {
+      return false;
+    }
+    return !term.translations.find(t => t.translatorId === this.userInfo.code)
   }
 
   _toggleComment(translationIndex, meaningIndex) {

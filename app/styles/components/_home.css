@@ -64,11 +64,11 @@
     margin-top: 10px;
 }
 
-.translations-list {
+.term .translation-list {
     padding-left: 0;
 }
 
-.translations-list .translation {
+.term .translation-list .translation {
     border-bottom: 1px #bfbfbf solid;
     border-radius: 0;
     font-size: 14px;
@@ -76,21 +76,21 @@
     margin-top: 5px;
 }
 
-.translations-list .translation .wrap-translator-ref {
+.term .translation-list .translation .wrap-translator-ref {
     text-align: right;
     padding-bottom: 5px;
 }
 
-.translations-list .translation .wrap-translator-ref a {
+.term .translation-list .translation .wrap-translator-ref a {
     color: #37b893;
 }
 
-.translations-list .translation .meanings {
-    padding-left: 20px;
+.term .translation-list .translation .meanings {
+    padding-left: 0px;
     list-style-position: inside;
 }
 
-.single-item {
+.term .translation-list .translation .single-item {
     list-style-type: none;
     margin-left: 0;
     padding-left: 0;
@@ -100,16 +100,20 @@
     font-weight: 700;
 }
 
-.translations-list .translation .commentLink {
+.term .translation-list .translation .commentLink {
     color: #37b893;
     margin-left: 5px;
     cursor: pointer;
 }
 
-.translations-list .translation .translation-comment {
+.term .translation-list .translation .translation-comment {
     font-size: 12px;
     font-weight: 400;
     font-style: italic;
+}
+
+.term .add-translation {
+    float: right;
 }
 
 .edit-icon {
