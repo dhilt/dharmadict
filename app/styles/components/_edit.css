@@ -19,15 +19,22 @@
     font-style: italic;
 }
 
-.meaningList .meaning .remove-link {
-  cursor: pointer;
-  font-style: normal;
-  font-size: smaller;
-  float: right;
+.meaningList .comment {
+  float: left;
+  margin-right: 20px;
+}
+
+.meaningList .comment textarea {
+    width: 220px;
 }
 
 .meaningList .comment .title {
     font-style: italic;
+}
+
+.meaningList .remove .remove-link {
+  cursor: pointer;
+  font-style: normal;
 }
 
 .meaningList .add-new-meaning {

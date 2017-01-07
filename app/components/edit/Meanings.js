@@ -26,10 +26,6 @@ class Meanings extends Component {
             <div className="meaning">
               <div className="title">
                 Значение {meaningIndex + 1}
-                <a className="remove-link"
-                  onClick={(event) => this._onMeaningRemoved(event, meaningIndex)}>
-                  удалить
-                </a>
               </div>
               <ul className="versionList">
               {
@@ -48,12 +44,18 @@ class Meanings extends Component {
               </ul>
             </div>
             <div className="comment">
-              <span className="title">Комментарий ({meaningIndex + 1})</span>
+              <span className="title">Комментарий к значению {meaningIndex + 1}</span>
               <div className="form-group form-inline">
                 <textarea className="form-control" name="comment"
                   value={meaning.comment || ''}
                   onChange={(event) => this._onCommentChanged(event, meaningIndex)}/>
               </div>
+            </div>
+            <div className="remove">
+              <a className="remove-link"
+                onClick={(event) => this._onMeaningRemoved(event, meaningIndex)}>
+                Удалить значение {meaningIndex + 1}
+              </a>
             </div>
           </li>
           )
