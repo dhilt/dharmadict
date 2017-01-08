@@ -230,27 +230,18 @@ app.get('/api/translation', function(req, res) {
   });
 });
 
-app.post('/api/update', function(req, res) {
+function updateDBTerm(req, res, processSourceTerm) {
   let termId = req.body.termId;
   let translation = req.body.translation;
   if (!termId || !translation) {
-    return responseError(res, 'Incorrect "/api/update" request params.', 500);
+    return responseError(res, 'Incorrect request params.', 500);
   }
   let translatorId = req.body.translation.translatorId;
-  console.log('Updating translation. Term id = "' + termId + '", translator id = "' + translation.translatorId + '".');
-
+  console.log('Term updating. Term id = "' + termId + '", translator id = "' + translation.translatorId + '".');
   authorize(req, res, function(user) {
     getTermById(res, termId, (hit) => {
       let term = hit ? hit._source : null;
-      let translations = term ? term.translations : null;
-      let foundT = translations ? translations.find(t => t.translatorId === translatorId) : null;
-      if (!foundT) {
-        return responseError(res, 'Can not find a translation to update.', 404);
-      }
-
-      translation.meanings.forEach(m => m.versions_lower = m.versions.map(v => v.toLowerCase()));
-      foundT.meanings = translation.meanings;
-
+      term = processSourceTerm(term, translation, translatorId);
       elasticClient.index({
         index: "dharmadict",
         type: "terms",
@@ -269,6 +260,19 @@ app.post('/api/update', function(req, res) {
       });
     });
   });
+}
+
+app.post('/api/update', function(req, res) {
+  updateDBTerm(req, res, (term, translation, translatorId) => {
+    let translations = term ? term.translations : null;
+    let foundT = translations ? translations.find(t => t.translatorId === translatorId) : null;
+    if (!foundT) {
+      return responseError(res, 'Can not find a translation to update.', 404);
+    }
+    translation.meanings.forEach(m => m.versions_lower = m.versions.map(v => v.toLowerCase()));
+    foundT.meanings = translation.meanings;
+    return term;
+  })
 });
 
 app.get('*', function(req, res) {
