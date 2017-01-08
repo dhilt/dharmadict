@@ -61,8 +61,15 @@ class Meanings extends Component {
           )
         }
           <li>
+            {
+              !this.props.data.change.meanings.length ? (
+                <div className="no-meanings">
+                  Нет ни одного значения
+                </div>
+              ) : ( null )
+            }
             <a className="add-new-meaning" onClick={this._addNewMeaning}>
-              Добавить новое значение...
+              Добавить новое значение
             </a>
           </li>
         </ul>

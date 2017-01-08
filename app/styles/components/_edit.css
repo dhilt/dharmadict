@@ -41,6 +41,10 @@
   cursor: pointer;
 }
 
+.meaningList .no-meanings {
+  margin-bottom: 10px;
+}
+
 .versionList li {
     padding-left: 10px;
     margin-bottom: 0px;
