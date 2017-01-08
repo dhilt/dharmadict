@@ -57,6 +57,7 @@ let initialState = {
     change: null,
     pending: false,
     error: null,
+    isNew: false,
     update: {
       pending: false,
       error: null
@@ -193,7 +194,8 @@ function reducer(state = initialState, action) {
           termName: action.termName,
           source: action.translation,
           change: action.translationCopy,
-          error: action.error
+          error: action.error,
+          isNew: action.isNew
         }
       }
     case CHANGE_TRANSLATION_LOCAL:

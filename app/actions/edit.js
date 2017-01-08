@@ -26,7 +26,8 @@ function dispatchTranslationRequestEnd(dispatch, translation, termId, termName, 
     termName: termName,
     translation,
     translationCopy: getTranslationCopy(translation),
-    error: error
+    error: error,
+    isNew: !(translation.meanings && translation.meanings.length)
   })
 }
 
@@ -128,16 +129,17 @@ export function resetTranslation() {
 
 export function saveTranslationAsync() {
   return (dispatch, getState) => {
-    let termId = getState().edit.termId
-    let translation = getTranslationCopy(getState().edit.change)
+    let editSate = getState().edit
+    let termId = editSate.termId
+    let translation = getTranslationCopy(editSate.change)
     translation.meanings.forEach(m => m.versions = m.versions.filter(v => v))
     translation.meanings = translation.meanings.filter(m => m.versions.length)
-    console.log(translation)
     dispatch({
       type: TRANSLATION_UPDATE_START
     })
     console.log('Let\'s start an async update translation request to db! The term is "' + termId + '".')
-    return asyncRequest(`update`, {
+    console.log(editSate.isNew);
+    return asyncRequest(editSate.isNew ? `create` : `update`, {
       termId: termId,
       translation
     }, (data, error) => {
