@@ -230,7 +230,7 @@ app.get('/api/translation', function(req, res) {
   });
 });
 
-function updateDBTerm(req, res, processSourceTerm) {
+app.post('/api/update', function(req, res) {
   let termId = req.body.termId;
   let translation = req.body.translation;
   if (!termId || !translation) {
@@ -238,54 +238,45 @@ function updateDBTerm(req, res, processSourceTerm) {
   }
   let translatorId = req.body.translation.translatorId;
   console.log('Term updating. Term id = "' + termId + '", translator id = "' + translation.translatorId + '".');
+
   authorize(req, res, function(user) {
     getTermById(res, termId, (hit) => {
       let term = hit ? hit._source : null;
-      let translations = term ? term.translations : null;
-      let foundT = translations ? translations.find(t => t.translatorId === translatorId) : null;
-      if (term = processSourceTerm(term, translation, foundT)) {
-        translation.meanings.forEach(m => m.versions_lower = m.versions.map(v => v.toLowerCase()));
-        elasticClient.index({
-          index: "dharmadict",
-          type: "terms",
-          id: termId,
-          body: term
-        }, (error, response, status) => {
-          if (error) {
-            console.log("Update term error.");
-            return responseError(res, error.message, 500);
-          } else {
-            console.log("Term was successfully updated.");
-            return res.json({
-              success: true
-            });
-          }
-        });
+      if (!term) {
+        return responseError(res, 'Can\'t request term to update.', 500);
       }
+      term.translations = term.translations || [];
+      let foundT = term.translations.find(t => t.translatorId === translatorId);
+      let isEmpty = !(translation.meanings && translation.meanings.length);
+      if (!foundT && !isEmpty) {
+        term.translations.push(translation);
+      } else if (foundT) {
+        if (isEmpty) {
+          term.translations = term.translations.filter(t => t.translatorId !== translatorId);
+        } else {
+          foundT.meanings = translation.meanings;
+        }
+      }
+      translation.meanings.forEach(m => m.versions_lower = m.versions.map(v => v.toLowerCase()));
+      elasticClient.index({
+        index: "dharmadict",
+        type: "terms",
+        id: termId,
+        body: term
+      }, (error, response, status) => {
+        if (error) {
+          console.log("Update term error.");
+          return responseError(res, error.message, 500);
+        } else {
+          console.log("Term was successfully updated.");
+          return res.json({
+            success: true
+          });
+        }
+      });
+
     });
   });
-}
-
-app.post('/api/update', function(req, res) {
-  updateDBTerm(req, res, (term, translation, foundT) => {
-    if (!foundT) {
-      responseError(res, 'Can not find a translation to update.', 404);
-      return false;
-    }
-    foundT.meanings = translation.meanings;
-    return term;
-  })
-});
-
-app.post('/api/create', function(req, res) {
-  updateDBTerm(req, res, (term, translation, foundT) => {
-    if (foundT && foundT.meanings && foundT.meanings.length) {
-      responseError(res, 'Can not add new translation to term.', 500);
-      return false;
-    }
-    term.translations.push(translation);
-    return term;
-  })
 });
 
 app.get('*', function(req, res) {

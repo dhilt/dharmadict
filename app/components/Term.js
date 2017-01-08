@@ -76,7 +76,12 @@ class Term extends Component {
         {
           this.canAdd(term) ? (
             <div className="add-translation">
-              Добавить перевод...
+              <Link to={{
+                pathname: '/edit',
+                query: { termId: term.id, translatorId: this.userInfo.code }
+              }}>
+                Добавить перевод...
+              </Link>
             </div>
           ) : ( null )
         }

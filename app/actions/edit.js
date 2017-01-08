@@ -19,15 +19,20 @@ function getTranslationCopy(translation) {
   return translationCopy
 }
 
-function dispatchTranslationRequestEnd(dispatch, translation, termId, termName, error) {
+function dispatchTranslationRequestEnd(dispatch, translatorId, translation, termId, termName, error) {
+  if(!translation) {
+    translation = {
+      meanings: [],
+      translatorId
+    }
+  }
   return dispatch({
     type: TRANSLATION_REQUEST_END,
     termId: termId,
     termName: termName,
     translation,
     translationCopy: getTranslationCopy(translation),
-    error: error,
-    isNew: !(translation.meanings && translation.meanings.length)
+    error: error
   })
 }
 
@@ -39,7 +44,7 @@ export function selectTranslation(translatorId, termId) {
         message: 'Invalid term.'
       } : null;
       let translation = !error ? term.translations.find(t => t.translatorId === translatorId) : null
-      dispatchTranslationRequestEnd(dispatch, translation, termId, term.wylie, error)
+      dispatchTranslationRequestEnd(dispatch, translatorId, translation, termId, term.wylie, error)
     } else { // async translation request
       dispatch({
         type: TRANSLATION_REQUEST_START
@@ -47,7 +52,7 @@ export function selectTranslation(translatorId, termId) {
       console.log('Let\'s start an async translation request to db! The term is "' + termId + '".')
       return asyncRequest(`translation?translatorId=${translatorId}&termId=${termId}`, null, (data, error) => {
         let translation = data ? data.translation : null
-        dispatchTranslationRequestEnd(dispatch, translation, data ? data.termId : '', data ? data.termName : '', error)
+        dispatchTranslationRequestEnd(dispatch, translatorId, translation, data ? data.termId : '', data ? data.termName : '', error)
       })
     }
   }
@@ -138,15 +143,13 @@ export function saveTranslationAsync() {
       type: TRANSLATION_UPDATE_START
     })
     console.log('Let\'s start an async update translation request to db! The term is "' + termId + '".')
-    console.log(editSate.isNew);
-    return asyncRequest(editSate.isNew ? `create` : `update`, {
+    return asyncRequest(`update`, {
       termId: termId,
       translation
     }, (data, error) => {
       return dispatch({
         type: TRANSLATION_UPDATE_END,
-        error: error,
-        isNew: !!error
+        error: error
       })
     })
   }
