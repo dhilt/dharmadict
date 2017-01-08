@@ -196,31 +196,36 @@ app.get('/api/translation', function(req, res) {
 
   authorize(req, res, (user) => {
     getTermById(res, req.query.termId, (hit) => {
+      let translator = users.getUserByCode(req.query.translatorId);
+      if (!translator) {
+        return responseError(res, 'Can not find a translator.', 500);
+      }
       let term = hit ? hit._source : null;
-      let ts = term ? term.translations : null;
-      let result;
-      if (ts && ts.length) {
-        for (let i = 0; i < ts.length; i++) {
-          if (ts[i].translatorId === req.query.translatorId) {
-            if (user.code === ts[i].translatorId || user.role === 'admin') {
-              result = {
-                termId: hit._id,
-                termName: term.wylie,
-                translation: ts[i]
-              };
-              break;
-            } else {
-              return responseError(res, 'Unpermitted access.', 500);
-            }
+      let translations = term ? term.translations : null;
+      if (!translations) {
+        return responseError(res, 'Can not find a translation.', 500);
+      }
+      let translation = translations.find(t => t.translatorId === translator.code);
+      if (!translation) {
+        return res.json({
+          termId: hit._id,
+          termName: term.wylie,
+          translation: {
+            translatorId: translator.code,
+            language: translator.language,
+            meanings: []
           }
-        }
+        });
       }
-      if (!result) {
-        responseError(res, 'Can not find a translation.', 404);
-      } else {
-        console.log('Term\'s translation was successfully found.');
-        res.json(result);
+      if ((user.code !== translation.translatorId || user.code !== translator.code) && user.role !== 'admin') {
+        return responseError(res, 'Unpermitted access.', 500);
       }
+      console.log('Term\'s translation was successfully found.');
+      res.json({
+        termId: hit._id,
+        termName: term.wylie,
+        translation
+      });
     });
   });
 });
@@ -237,31 +242,31 @@ app.post('/api/update', function(req, res) {
   authorize(req, res, function(user) {
     getTermById(res, termId, (hit) => {
       let term = hit ? hit._source : null;
-      let ts = term ? term.translations : null;
-      let foundT = ts ? ts.find(t => t.translatorId === translatorId) : null;
-      if (foundT) {
-        translation.meanings.forEach(m => m.versions_lower = m.versions.map(v => v.toLowerCase()));
-        foundT.meanings = translation.meanings;
-        elasticClient.index({
-          index: "dharmadict",
-          type: "terms",
-          id: termId,
-          body: term
-        }, (error, response, status) => {
-          if (error) {
-            console.log("Update term error.");
-            return responseError(res, error.message, 500);
-          } else {
-            console.log("Term was successfully updated.");
-            return res.json({
-              success: true
-            });
-          }
-        });
+      let translations = term ? term.translations : null;
+      let foundT = translations ? translations.find(t => t.translatorId === translatorId) : null;
+      if (!foundT) {
+        return responseError(res, 'Can not find a translation to update.', 404);
       }
-      else {
-        responseError(res, 'Can not find a translation to update.', 404);
-      }
+
+      translation.meanings.forEach(m => m.versions_lower = m.versions.map(v => v.toLowerCase()));
+      foundT.meanings = translation.meanings;
+
+      elasticClient.index({
+        index: "dharmadict",
+        type: "terms",
+        id: termId,
+        body: term
+      }, (error, response, status) => {
+        if (error) {
+          console.log("Update term error.");
+          return responseError(res, error.message, 500);
+        } else {
+          console.log("Term was successfully updated.");
+          return res.json({
+            success: true
+          });
+        }
+      });
     });
   });
 });

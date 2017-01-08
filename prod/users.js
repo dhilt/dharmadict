@@ -43,7 +43,8 @@
     code: 'MK',
     login: 'mk',
     name: 'М.Н. Кожевникова',
-    hash: passwordHash.generate('mkpass')
+    hash: passwordHash.generate('mkpass'),
+    language: "rus"
   }, {
     id: 4,
     role: 'translator',
@@ -51,7 +52,8 @@
     code: 'AKT',
     login: 'akt',
     name: 'А. Кугявичус - А.А. Терентьев',
-    hash: passwordHash.generate('aktpass')
+    hash: passwordHash.generate('aktpass'),
+    language: "rus"
   }, {
     id: 5,
     role: 'translator',
@@ -59,7 +61,8 @@
     code: 'ZAG',
     login: 'zag',
     name: 'Б.И. Загуменнов',
-    hash: passwordHash.generate('zagpass')
+    hash: passwordHash.generate('zagpass'),
+    language: "rus"
   }, {
     id: 6,
     role: 'translator',
@@ -67,7 +70,8 @@
     code: 'DON',
     login: 'don',
     name: 'А.М. Донец',
-    hash: passwordHash.generate('donpass')
+    hash: passwordHash.generate('donpass'),
+    language: "rus"
   }, {
     id: 7,
     role: 'translator',
@@ -75,7 +79,8 @@
     code: 'HOP',
     login: 'hop',
     name: 'J. Hopkins',
-    hash: passwordHash.generate('hoppass')
+    hash: passwordHash.generate('hoppass'),
+    language: "eng"
   }, {
     id: 8,
     role: 'translator',
@@ -83,10 +88,12 @@
     code: 'BRZ',
     login: 'brz',
     name: 'A. Berzin',
-    hash: passwordHash.generate('brzpass')
+    hash: passwordHash.generate('brzpass'),
+    language: "eng"
   }];
 
 module.exports = {
   Users: Users,
-  Roles: Roles
+  Roles: Roles,
+  getUserByCode: (code) => Users.find(u => u.code === code)
 }
