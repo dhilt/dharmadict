@@ -241,36 +241,49 @@ function updateDBTerm(req, res, processSourceTerm) {
   authorize(req, res, function(user) {
     getTermById(res, termId, (hit) => {
       let term = hit ? hit._source : null;
-      term = processSourceTerm(term, translation, translatorId);
-      elasticClient.index({
-        index: "dharmadict",
-        type: "terms",
-        id: termId,
-        body: term
-      }, (error, response, status) => {
-        if (error) {
-          console.log("Update term error.");
-          return responseError(res, error.message, 500);
-        } else {
-          console.log("Term was successfully updated.");
-          return res.json({
-            success: true
-          });
-        }
-      });
+      let translations = term ? term.translations : null;
+      let foundT = translations ? translations.find(t => t.translatorId === translatorId) : null;
+      if (term = processSourceTerm(term, translation, foundT)) {
+        translation.meanings.forEach(m => m.versions_lower = m.versions.map(v => v.toLowerCase()));
+        elasticClient.index({
+          index: "dharmadict",
+          type: "terms",
+          id: termId,
+          body: term
+        }, (error, response, status) => {
+          if (error) {
+            console.log("Update term error.");
+            return responseError(res, error.message, 500);
+          } else {
+            console.log("Term was successfully updated.");
+            return res.json({
+              success: true
+            });
+          }
+        });
+      }
     });
   });
 }
 
 app.post('/api/update', function(req, res) {
-  updateDBTerm(req, res, (term, translation, translatorId) => {
-    let translations = term ? term.translations : null;
-    let foundT = translations ? translations.find(t => t.translatorId === translatorId) : null;
+  updateDBTerm(req, res, (term, translation, foundT) => {
     if (!foundT) {
-      return responseError(res, 'Can not find a translation to update.', 404);
+      responseError(res, 'Can not find a translation to update.', 404);
+      return false;
     }
-    translation.meanings.forEach(m => m.versions_lower = m.versions.map(v => v.toLowerCase()));
     foundT.meanings = translation.meanings;
+    return term;
+  })
+});
+
+app.post('/api/create', function(req, res) {
+  updateDBTerm(req, res, (term, translation, foundT) => {
+    if (foundT && foundT.meanings && foundT.meanings.length) {
+      responseError(res, 'Can not add new translation to term.', 500);
+      return false;
+    }
+    term.translations.push(translation);
     return term;
   })
 });

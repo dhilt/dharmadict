@@ -145,7 +145,8 @@ export function saveTranslationAsync() {
     }, (data, error) => {
       return dispatch({
         type: TRANSLATION_UPDATE_END,
-        error: error
+        error: error,
+        isNew: !!error
       })
     })
   }

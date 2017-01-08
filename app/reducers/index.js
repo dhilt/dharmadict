@@ -218,7 +218,8 @@ function reducer(state = initialState, action) {
           update: {
             pending: false,
             error: action.error
-          }
+          },
+          isNew: action.isNew
         }
       }
     default:
