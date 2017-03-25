@@ -7,8 +7,10 @@ import {createStore, applyMiddleware} from 'redux'
 import {Provider} from 'react-redux'
 import thunkMiddleware from 'redux-thunk'
 import createLogger from 'redux-logger'
+
 import reducer from './reducers'
 import {getUserInfoAsync} from './actions/auth'
+import {selectTermAsync} from './actions/search'
 
 import './styles/main.css'
 import './styles/images/favicon.ico';
@@ -31,6 +33,11 @@ if(process.env.NODE_ENV !== 'production') {
 let store = createStore(reducer, applyMiddleware(...middleware))
 if(store.getState().auth.token) {
   store.dispatch(getUserInfoAsync())
+}
+
+let location = browserHistory.getCurrentLocation()
+if(location.query.term) {
+  store.dispatch(selectTermAsync(location.query.term))
 }
 
 function unauthorizedAccess (replace) {
@@ -57,17 +64,15 @@ function checkAuth (nextState, replace, callback) {
   }
 }
 
-class LoginFlow extends Component {
+class Wrapper extends Component {
   render () {
     return (
       <Provider store={store}>
         <Router history={browserHistory}>
           <Route component={App}>
-            <Route path='/' component={Home} />
-            <Route>
-              <Route path='/edit' component={Edit} onEnter={checkAuth}/>
-            </Route>
-            <Route path='/not_authorized' component={NotFound} />
+            <Route exactly path='/' component={Home} />
+            <Route exactly path='/edit' component={Edit} onEnter={checkAuth} />
+            <Route exactly path='/not_authorized' component={NotFound} />
             <Route path='*' component={NotFound} />
           </Route>
         </Router>
@@ -76,4 +81,4 @@ class LoginFlow extends Component {
   }
 }
 
-ReactDOM.render(<LoginFlow />, document.getElementById('app'))
+ReactDOM.render(<Wrapper />, document.getElementById('app'))

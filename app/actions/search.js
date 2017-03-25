@@ -1,4 +1,5 @@
 import asyncRequest from '../helpers/remote'
+//import history from '../helpers/history'
 
 import {
   CHANGE_SEARCH_STRING,
@@ -15,19 +16,40 @@ export function changeSearchString(newSearchString) {
   }
 }
 
-export function doSearchRequestAsync() {
-  return (dispatch, getState) => {
-    let searchString = getState().searchState.searchString
-    dispatch({
-      type: SEARCH_REQUEST_START
+function searchRequestAsync(dispatch, getState, cb) {
+  let searchString = getState().searchState.searchString
+  dispatch({
+    type: SEARCH_REQUEST_START
+  })
+  console.log('Let\'s start an async request to db! searchString is "' + searchString + '"')
+  return asyncRequest(`search?pattern=${searchString}`, null, (data, error) => {
+    let searchEnd = dispatch({
+      type: SEARCH_REQUEST_END,
+      result: data,
+      error: error
     })
-    console.log('Let\'s start an async request to db! searchString is "' + searchString + '"')
-    return asyncRequest(`search?pattern=${searchString}`, null, (data, error) =>
-      dispatch({
-        type: SEARCH_REQUEST_END,
-        result: data,
-        error: error
-      }))
+    cb(data)
+    return searchEnd
+  })
+}
+
+export function doSearchRequestAsync(cb) {
+  return (dispatch, getState) => {
+    searchRequestAsync(dispatch, getState, () => null)
+  }
+}
+
+export function selectTermAsync(termId) {
+  return (dispatch, getState) => {
+    dispatch(changeSearchString(termId.replace(/[\W_]+/g," ")))
+    return searchRequestAsync(dispatch, getState, (result) => {
+      if(result) {
+        let term = result.find(term => term.id === termId)
+        if(term) {
+          dispatch(selectTerm(term));
+        }
+      }
+    })
   }
 }
 
