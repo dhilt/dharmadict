@@ -47,7 +47,7 @@ export function selectTermAsync(termId) {
       if(result) {
         let term = result.find(term => term.id === termId)
         if(term) {
-          dispatch(selectTerm(term));
+          dispatch(selectTerm(term))
         }
       }
     })
@@ -56,15 +56,16 @@ export function selectTermAsync(termId) {
 
 export function selectTerm(term) {
   return (dispatch, getState) => {
+    let selectDispatch = dispatch({
+      type: SELECT_TERM,
+      term
+    })
     let location = browserHistory.getCurrentLocation()
     browserHistory.push({
       ...location,
       query: {...location.query, term: term.id}
     })
-    return dispatch({
-      type: SELECT_TERM,
-      term
-    })
+    return selectDispatch
   }
 }
 
