@@ -9,6 +9,7 @@ import thunkMiddleware from 'redux-thunk'
 import createLogger from 'redux-logger'
 
 import reducer from './reducers'
+import {changeRoute} from './actions/route'
 import {getUserInfoAsync} from './actions/auth'
 import {selectTermAsync} from './actions/search'
 
@@ -39,6 +40,10 @@ let location = browserHistory.getCurrentLocation()
 if(location.query.term) {
   store.dispatch(selectTermAsync(location.query.term))
 }
+
+browserHistory.listenBefore((location) => {
+  return store.dispatch(changeRoute(location))
+})
 
 function unauthorizedAccess (replace) {
   replace('/not_authorized')

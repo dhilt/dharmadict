@@ -1,4 +1,5 @@
 import {
+  CHANGE_ROUTE,
   USERINFO_REQUEST_START,
   USERINFO_REQUEST_END,
   OPEN_LOGIN_MODAL,
@@ -23,6 +24,9 @@ import {
 import auth from '../helpers/auth'
 
 let initialState = {
+  route: {
+    location: null
+  },
   auth: {
     loggedIn: false,
     token: null,
@@ -68,6 +72,12 @@ auth.initialize(initialState.auth)
 
 function reducer(state = initialState, action) {
   switch (action.type) {
+    case CHANGE_ROUTE:
+      return {...state,
+        route: {...state.route,
+          location: action.location
+        }
+      }
     case USERINFO_REQUEST_START:
       return {...state,
         auth: {...state.auth,
