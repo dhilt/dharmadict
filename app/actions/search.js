@@ -18,7 +18,7 @@ export function changeSearchString(newSearchString) {
 }
 
 function searchRequestAsync(dispatch, getState, cb) {
-  let searchString = getState().searchState.searchString
+  let searchString = getState().search.searchString
   dispatch({
     type: SEARCH_REQUEST_START
   })

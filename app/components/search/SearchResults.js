@@ -6,10 +6,10 @@ import Term from '../Term'
 
 class SearchResults extends Component {
   render () {
-    let searchState = this.props.data
+    let search = this.props.data
     return (
     <div className="row search-results-row"> {
-        searchState.started && searchState.result && !searchState.pending ? (
+        search.started && search.result && !search.pending ? (
       <div>
         <div className="col-md-3">
           <div className="list-group terms">
@@ -25,12 +25,12 @@ class SearchResults extends Component {
         </div>
       </div>
         ) :
-          searchState.started && !searchState.pending ?
+          search.started && !search.pending ?
           ( <div> nothing found </div> ) :
           ( null )
       } {
-        searchState.error ? (
-      <div> { searchState.error.message } </div>
+        search.error ? (
+      <div> { search.error.message } </div>
         ) : ( null )
       }
     </div>
@@ -40,7 +40,7 @@ class SearchResults extends Component {
 
 function select (state) {
   return {
-    data: state.searchState,
+    data: state.search,
     getSelectedTerm: () => state.selected.term
   }
 }

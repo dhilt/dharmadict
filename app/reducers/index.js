@@ -43,7 +43,7 @@ let initialState = {
     pending: false,
     error: null
   },
-  searchState: {
+  search: {
     searchString: '',
     started: false,
     pending: false,
@@ -151,20 +151,20 @@ function reducer(state = initialState, action) {
       }
     case CHANGE_SEARCH_STRING:
       return {...state,
-        searchState: {...state.searchState,
+        search: {...state.search,
           searchString: action.newSearchString
         }
       }
     case SEARCH_REQUEST_START:
       return {...state,
-        searchState: {...state.searchState,
+        search: {...state.search,
           pending: true,
           error: null
         }
       }
     case SEARCH_REQUEST_END:
       return {...state,
-        searchState: {...state.searchState,
+        search: {...state.search,
           started: true,
           pending: false,
           result: action.result,

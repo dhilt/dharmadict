@@ -34,7 +34,7 @@ class TermList extends Component {
 
 function select(state) {
   return {
-    termList: state.searchState.result,
+    termList: state.search.result,
     isTermSelected: (term) =>
       state.selected.term && state.selected.term.wylie === term.wylie
   }

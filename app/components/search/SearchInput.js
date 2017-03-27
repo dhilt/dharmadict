@@ -12,7 +12,7 @@ class SearchInput extends Component {
   }
 
   render () {
-    let searchState = this.props.data
+    let search = this.props.data
     return (
       <div className='row'>
         <form>
@@ -20,7 +20,7 @@ class SearchInput extends Component {
             <div className='col-md-6'>
               <input className='form-control col-md-7'
                 name='search' type='search'
-                value={searchState.searchString}
+                value={search.searchString}
                 onChange={this._onSearchStringChange}/>
             </div>
           </div>
@@ -29,10 +29,10 @@ class SearchInput extends Component {
               <Button
                 bsStyle='default'
                 type='submit'
-                className={searchState.pending ? 'loader' : ''}
-                disabled={!searchState.searchString || searchState.pending}
+                className={search.pending ? 'loader' : ''}
+                disabled={!search.searchString || search.pending}
                 onClick={this._onSubmit}>
-                <span className={searchState.pending ? 'invisible' : ''}>
+                <span className={search.pending ? 'invisible' : ''}>
                   Найти
                 </span>
               </Button>
@@ -55,7 +55,7 @@ class SearchInput extends Component {
 
 function select (state) {
   return {
-    data: state.searchState
+    data: state.search
   }
 }
 
