@@ -12,7 +12,7 @@ export function changeRoute(location) {
       if(state.selected.term.id !== location.query.term) {
         let term = state.search.result.find(term => term.id === location.query.term)
         if(term) {
-          dispatch(selectTerm(term))
+          dispatch(selectTerm(term, true))
         }
       }
     }

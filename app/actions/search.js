@@ -54,17 +54,19 @@ export function selectTermAsync(termId) {
   }
 }
 
-export function selectTerm(term) {
+export function selectTerm(term, doNotTouchHistory) {
   return (dispatch, getState) => {
     let selectDispatch = dispatch({
       type: SELECT_TERM,
       term
     })
-    let location = browserHistory.getCurrentLocation()
-    browserHistory.push({
-      ...location,
-      query: {...location.query, term: term.id}
-    })
+    if(!doNotTouchHistory) {
+      let location = browserHistory.getCurrentLocation()
+      browserHistory.push({
+        ...location,
+        query: {...location.query, term: term.id}
+      })
+    }
     return selectDispatch
   }
 }
