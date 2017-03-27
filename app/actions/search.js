@@ -1,3 +1,4 @@
+import {browserHistory} from 'react-router'
 import asyncRequest from '../helpers/remote'
 //import history from '../helpers/history'
 
@@ -54,9 +55,16 @@ export function selectTermAsync(termId) {
 }
 
 export function selectTerm(term) {
-  return {
-    type: SELECT_TERM,
-    term
+  return (dispatch, getState) => {
+    let location = browserHistory.getCurrentLocation()
+    browserHistory.push({
+      ...location,
+      query: {...location.query, term: term.id}
+    })
+    return dispatch({
+      type: SELECT_TERM,
+      term
+    })
   }
 }
 
