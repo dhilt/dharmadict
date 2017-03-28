@@ -113,29 +113,6 @@ app.post('/api/login', function(req, res) {
   }
 });
 
-app.get('/api/test', function(req, res) {
-  elasticClient.index({
-    index: 'test',
-    id: '1',
-    type: 'terms',
-    body: {
-      "ConstituencyName": "Ipswich",
-      "ConstituencyID": "E14000761",
-      "ConstituencyType": "Borough",
-      "Electorate": 74499,
-      "ValidVotes": 1,
-    }
-  }, function(err, resp, status) {
-    console.log(resp);
-  });
-});
-
-let mockData = require('./mock.json');
-
-app.get('/api/search_test', function(req, res) {
-  res.send(mockData.results);
-});
-
 app.get('/api/search', function(req, res) {
   console.log('Searching terms by "' + req.query.pattern + '" pattern.')
   return elasticClient.search({
@@ -158,7 +135,7 @@ app.get('/api/search', function(req, res) {
     } else {
       let result = [];
       response.hits.hits.forEach((hit) => {
-        hit._source.id = hit._id;
+        hit._source.id = hit._id; // add id field
         result.push(hit._source);
       });
       console.log("Found items: " + result.length + ".");
@@ -269,12 +246,13 @@ app.post('/api/update', function(req, res) {
           return responseError(res, error.message, 500);
         } else {
           console.log("Term was successfully updated.");
+          term.id = termId; // add id field
           return res.json({
-            success: true
+            success: true,
+            term: term
           });
         }
       });
-
     });
   });
 });
