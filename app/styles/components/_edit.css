@@ -58,3 +58,7 @@
   cursor: pointer;
   margin-left: 15px;
 }
+
+.back-link {
+  cursor: pointer;
+}

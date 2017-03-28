@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
+import {browserHistory} from 'react-router'
 import {Link} from 'react-router'
 
 import Meanings from './edit/Meanings'
@@ -7,6 +8,11 @@ import Meanings from './edit/Meanings'
 import {selectTranslation} from '../actions/edit'
 
 class Edit extends Component {
+
+  constructor(props) {
+    super(props)
+    this._goBack = this._goBack.bind(this)
+  }
 
   componentWillMount () {
     let translatorId = this.props.query.translatorId
@@ -18,14 +24,18 @@ class Edit extends Component {
     this.props.dispatch(selectTranslation(translatorId, termId))
   }
 
+  _goBack() {
+    browserHistory.push(this.props.prevLocation)
+  }
+
   render () {
     let editState = this.props.editState
     let allOk = editState.started && !this.blockMessage && !editState.pending && !editState.error
     return (
       <div>
-        <Link to='/'>
+        <a className="back-link" onClick={() => this._goBack()}>
           Назад
-        </Link>
+        </a>
         {
           this.blockMessage ? (
             <div>
@@ -60,6 +70,7 @@ class Edit extends Component {
 
 function select (state, ownProps) {
   return {
+    prevLocation: state.route.prevLocation,
     editState: state.edit,
     query: ownProps.location.query
   }
