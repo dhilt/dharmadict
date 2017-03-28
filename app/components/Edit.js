@@ -25,7 +25,12 @@ class Edit extends Component {
   }
 
   _goBack() {
-    browserHistory.push(this.props.prevLocation)
+    if(this.props.prevLocation) {
+      browserHistory.push(this.props.prevLocation)
+    }
+    else {
+      browserHistory.push('/')
+    }
   }
 
   render () {
