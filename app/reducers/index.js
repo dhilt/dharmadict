@@ -46,10 +46,10 @@ function reducer(state = initialState, action) {
     case USERINFO_REQUEST_END:
       return {...state,
         auth: {...state.auth,
-          loggedIn: !action.error,
+          loggedIn: action.loggedIn,
           userInfo: {...state.auth.userInfo,
             pending: false,
-            promise: !action.error ? state.auth.userInfo.promise : null,
+            promise: action.promise,
             data: action.result,
             error: action.error
           }
@@ -94,7 +94,7 @@ function reducer(state = initialState, action) {
           pending: false,
           token: action.token,
           error: action.error,
-          loggedIn: !action.error,
+          loggedIn: action.loggedIn,
           password: ''
         }
       }
@@ -176,6 +176,12 @@ function reducer(state = initialState, action) {
       }
     case TRANSLATION_UPDATE_END:
       return {...state,
+        search: {...state.search,
+          result: action.searchResult
+        },
+        selected: {...state.select,
+          term: action.term
+        },
         edit: {...state.edit,
           update: {
             pending: false,

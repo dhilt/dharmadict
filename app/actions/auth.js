@@ -15,12 +15,15 @@ import {
 } from './_constants'
 
 export function getUserInfoAsync() {
-  return (dispatch) => {
+  return (dispatch, getState) => {
+    let authState = getState().auth
     let promise = asyncRequest('userInfo', false, (data, error) =>
       dispatch({
         type: USERINFO_REQUEST_END,
         result: data,
-        error: error
+        error: error,
+        loggedIn: !error,
+        promise: error ? authState.userInfo.promise : null
       }))
     dispatch({
       type: USERINFO_REQUEST_START,
@@ -70,12 +73,15 @@ export function doLoginAsync() {
       dispatch({
         type: LOGIN_REQUEST_END,
         token: data ? data.token : null,
-        error: error
+        error: error,
+        loggedIn: !error
       })
       dispatch({
         type: USERINFO_REQUEST_END,
         result: data ? data.user : null,
-        error: error
+        error: error,
+        loggedIn: !error,
+        promise: !error ? authState.userInfo.promise : null
       })
     })
 

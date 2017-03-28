@@ -1,4 +1,4 @@
-import {browserHistory} from 'react-router'
+import { browserHistory } from 'react-router'
 import asyncRequest from '../helpers/remote'
 //import history from '../helpers/history'
 
@@ -42,11 +42,11 @@ export function doSearchRequestAsync(cb) {
 
 export function selectTermAsync(termId) {
   return (dispatch, getState) => {
-    dispatch(changeSearchString(termId.replace(/[\W_]+/g," ")))
+    dispatch(changeSearchString(termId.replace(/[\W_]+/g, " ")))
     return searchRequestAsync(dispatch, getState, (result) => {
-      if(result) {
+      if (result) {
         let term = result.find(term => term.id === termId)
-        if(term) {
+        if (term) {
           dispatch(selectTerm(term))
         }
       }
@@ -60,11 +60,13 @@ export function selectTerm(term, doNotTouchHistory) {
       type: SELECT_TERM,
       term
     })
-    if(!doNotTouchHistory) {
+    if (!doNotTouchHistory) {
       let location = browserHistory.getCurrentLocation()
       browserHistory.push({
         ...location,
-        query: {...location.query, term: term.id}
+        query: {...location.query,
+          term: term.id
+        }
       })
     }
     return selectDispatch

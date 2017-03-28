@@ -12,15 +12,15 @@ function getTranslationCopy(translation) {
   let translationCopy = translation ? JSON.parse(JSON.stringify(translation)) : null
   if (translationCopy) {
     translationCopy.meanings.forEach(m => {
-       m.versions.push('')
-       delete m.versions_lower
-     })
+      m.versions.push('')
+      delete m.versions_lower
+    })
   }
   return translationCopy
 }
 
 function dispatchTranslationRequestEnd(dispatch, translatorId, translation, termId, termName, error) {
-  if(!translation) {
+  if (!translation) {
     translation = {
       meanings: [],
       translatorId
@@ -149,7 +149,9 @@ export function saveTranslationAsync() {
     }, (data, error) => {
       return dispatch({
         type: TRANSLATION_UPDATE_END,
-        error: error
+        error: error,
+        searchResult: getState().search.result.map(r => r.id === data.term.id ? data.term : r),
+        term: data.term
       })
     })
   }
