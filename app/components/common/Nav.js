@@ -37,9 +37,7 @@ class Nav extends Component {
     return (
       <div className='nav'>
         <div className='nav__wrapper'>
-          <Link to='/' className='nav__logo-wrapper' onClick={this._clearError}>
-            <h1 className='nav__logo'>Dharma Dictionary</h1>
-          </Link>
+          <span className='nav__logo-wrapper'></span>
           {navButtons}
         </div>
       </div>
