@@ -28,6 +28,7 @@ function reducer(state = initialState, action) {
     case CHANGE_ROUTE:
       return {...state,
         route: {...state.route,
+          prevLocation: state.route.location,
           location: action.location
         }
       }

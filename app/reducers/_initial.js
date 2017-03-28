@@ -2,6 +2,7 @@ import auth from '../helpers/auth'
 
 let initialState = {
   route: {
+    prevLocation: null,
     location: null
   },
   auth: {
