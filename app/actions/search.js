@@ -41,15 +41,17 @@ export function doSearchRequestAsync(cb) {
 
 export function selectTermAsync(termId) {
   return (dispatch, getState) => {
-    dispatch(changeSearchString(termId.replace(/[\W_]+/g, " ")))
-    return searchRequestAsync(dispatch, getState, (result) => {
-      if (result) {
-        let term = result.find(term => term.id === termId)
-        if (term) {
-          dispatch(selectTerm(term))
+    if (termId) {
+      dispatch(changeSearchString(termId.replace(/[\W_]+/g, " ")))
+      return searchRequestAsync(dispatch, getState, (result) => {
+        if (result) {
+          let term = result.find(term => term.id === termId)
+          if (term) {
+            dispatch(selectTerm(term))
+          }
         }
-      }
-    })
+      })
+    }
   }
 }
 

@@ -24,7 +24,7 @@ class Edit extends Component {
   }
 
   _goBack() {
-    this.props.dispatch(goBack())
+    this.props.dispatch(goBack(true))
   }
 
   render () {

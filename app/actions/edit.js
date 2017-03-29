@@ -154,7 +154,7 @@ export function saveTranslationAsync(shouldClose) {
         term: !error ? data.term : null
       })
       if(shouldClose) {
-        dispatch(goBack())
+        dispatch(goBack(true))
       }
     })
   }

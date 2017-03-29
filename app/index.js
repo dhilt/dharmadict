@@ -26,7 +26,7 @@ let middleware = [ thunkMiddleware ]
 if(process.env.NODE_ENV !== 'production') {
   let logger = createLogger({
     // Ignore `CHANGE...` actions in the logger, since they fire after every keystroke
-    predicate: (getState, action) => action.type && action.type.indexOf('CHANGE_') !== 0
+    predicate: (getState, action) => action && action.type && action.type.indexOf('CHANGE_') !== 0
   })
   middleware = [ ...middleware, logger ]
 }
