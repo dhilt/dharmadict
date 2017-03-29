@@ -19,6 +19,14 @@ class EditControls extends Component {
           type="button"
           className={this.props.data.pending ? 'loader' : ''}
           disabled={this.props.data.pending}
+          onClick={(event) => this._onSave(event, true)}>
+          Сохранить и закрыть
+        </Button>
+        <Button
+          bsStyle='primary'
+          type="button"
+          className={this.props.data.pending ? 'loader' : ''}
+          disabled={this.props.data.pending}
           onClick={this._onSave}>
           Сохранить
         </Button>
@@ -36,8 +44,8 @@ class EditControls extends Component {
     this.props.dispatch(resetTranslation())
   }
 
-  _onSave () {
-    this.props.dispatch(saveTranslationAsync())
+  _onSave (event, shouldClose) {
+    this.props.dispatch(saveTranslationAsync(shouldClose))
   }
 }
 

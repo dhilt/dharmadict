@@ -1,5 +1,5 @@
 import asyncRequest from '../helpers/remote'
-
+import { goBack } from './route'
 import {
   TRANSLATION_REQUEST_START,
   TRANSLATION_REQUEST_END,
@@ -132,7 +132,7 @@ export function resetTranslation() {
   }
 }
 
-export function saveTranslationAsync() {
+export function saveTranslationAsync(shouldClose) {
   return (dispatch, getState) => {
     let editSate = getState().edit
     let termId = editSate.termId
@@ -147,12 +147,15 @@ export function saveTranslationAsync() {
       termId: termId,
       translation
     }, (data, error) => {
-      return dispatch({
+      dispatch({
         type: TRANSLATION_UPDATE_END,
         error: error,
-        searchResult: getState().search.result.map(r => r.id === data.term.id ? data.term : r),
-        term: data.term
+        searchResult: !error ? getState().search.result.map(r => r.id === data.term.id ? data.term : r) : null,
+        term: !error ? data.term : null
       })
+      if(shouldClose) {
+        dispatch(goBack())
+      }
     })
   }
 }

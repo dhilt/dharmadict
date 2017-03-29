@@ -1,6 +1,5 @@
 import { browserHistory } from 'react-router'
 import asyncRequest from '../helpers/remote'
-//import history from '../helpers/history'
 
 import {
   CHANGE_SEARCH_STRING,

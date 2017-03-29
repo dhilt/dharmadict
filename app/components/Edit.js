@@ -1,11 +1,10 @@
-import React, {Component} from 'react'
-import {connect} from 'react-redux'
-import {browserHistory} from 'react-router'
-import {Link} from 'react-router'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
 
 import Meanings from './edit/Meanings'
 
-import {selectTranslation} from '../actions/edit'
+import { selectTranslation } from '../actions/edit'
+import { goBack } from '../actions/route'
 
 class Edit extends Component {
 
@@ -14,10 +13,10 @@ class Edit extends Component {
     this._goBack = this._goBack.bind(this)
   }
 
-  componentWillMount () {
+  componentWillMount() {
     let translatorId = this.props.query.translatorId
     let termId = this.props.query.termId
-    if(!translatorId || !termId) {
+    if (!translatorId || !termId) {
       this.blockMessage = 'You should select a term to edit.'
       return
     }
@@ -25,12 +24,7 @@ class Edit extends Component {
   }
 
   _goBack() {
-    if(this.props.prevLocation) {
-      browserHistory.push(this.props.prevLocation)
-    }
-    else {
-      browserHistory.push('/')
-    }
+    this.props.dispatch(goBack())
   }
 
   render () {
