@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import SearchInput from './search/SearchInput'
 import SearchResults from './search/SearchResults'
 
-import logoPath from '../styles/images/manjushri.jpg'
+import logoPath from '../styles/images/manjushri_175x226.jpg'
 
 class Home extends Component {
   render () {
