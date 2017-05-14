@@ -48,7 +48,7 @@ let responseError = (res, message, status, level = 'error') => {
 
 let redirect302 = (res) => {
   res.statusCode = 302;
-  res.send('Authorization is needed.');
+  res.send('Authorization is needed');
 };
 
 let getTokenFromRequest = (req) => {
@@ -70,7 +70,7 @@ let authorize = (req, res, onSuccess) => {
   }
   jwt.verify(token, secretKey, (err, decoded) => {
     if (err) {
-      return responseError(res, 'Authorization error. Missed token.', 500);
+      return responseError(res, 'Authorization error. Missed token', 500);
     }
     userId = decoded.id;
     for (let i = 0; i < Users.length; i++) {
@@ -78,7 +78,7 @@ let authorize = (req, res, onSuccess) => {
         return onSuccess(Users[i]);
       }
     }
-    return responseError(res, 'Authorization error. Can not find user.', 404);
+    return responseError(res, 'Authorization error. Can not find user', 404);
   });
 };
 
@@ -97,10 +97,10 @@ app.post('/api/login', function(req, res) {
   for (let i = 0; i < Users.length; i++) {
     if (Users[i].login === login) {
       if (!passwordHash.verify(password, Users[i].hash)) {
-        return responseError(res, 'Login error. Can\'t authenticate user ' + login + '.', 401, 'info');
+        return responseError(res, 'Login error. Can\'t authenticate user ' + login, 401, 'info');
       }
       let user = getUserInfo(Users[i]);
-      logger.info('Logged in as ' + user.login + '.');
+      logger.info('Logged in as ' + user.login);
       let token = jwt.sign(user, secretKey, {
         expiresIn: accessTokenExpiration
       });
@@ -110,11 +110,11 @@ app.post('/api/login', function(req, res) {
       });
     }
   }
-  responseError(res, 'Login error. Can not find user ' + login + '.', 404, 'info');
+  responseError(res, 'Login error. Can not find user ' + login, 404, 'info');
 });
 
 app.get('/api/search', function(req, res) {
-  logger.info('Searching terms by "' + req.query.pattern + '" pattern.')
+  logger.info('Searching terms by "' + req.query.pattern + '" pattern')
   return elasticClient.search({
     index: 'dharmadict',
     type: 'terms',
@@ -130,7 +130,7 @@ app.get('/api/search', function(req, res) {
     }
   }, (error, response, status) => {
     if (error) {
-      logger.error('Search error.');
+      logger.error('Search error');
       return responseError(res, error.message, 500);
     }
     let result = [];
@@ -138,7 +138,7 @@ app.get('/api/search', function(req, res) {
       hit._source.id = hit._id; // add id field
       result.push(hit._source);
     });
-    logger.info('Found items: ' + result.length + '.');
+    logger.info('Found items: ' + result.length);
     return res.json(result);
   });
 });
@@ -156,30 +156,30 @@ function getTermById(res, termId, successCallback) {
     }
   }, (error, response, status) => {
     if (error) {
-      logger.error('Get term by id (' + termId + ') error.');
+      logger.error('Get term by id (' + termId + ') error');
       return responseError(res, error.message, 500);
     }
-    logger.info('A term was found by id ' + termId + '.');
+    logger.info('A term was found by id ' + termId);
     return successCallback(response.hits.hits[0]);
   });
 }
 
 app.get('/api/translation', function(req, res) {
   if (!req.query.termId || !req.query.translatorId) {
-    return responseError(res, 'Incorrect /api/term request params.', 500, 'info');
+    return responseError(res, 'Incorrect /api/term request params', 500, 'info');
   }
-  logger.info('Requesting a translation by term id "' + req.query.termId + '" and translatorId "' + req.query.translatorId + '".');
+  logger.info('Requesting a translation by term id "' + req.query.termId + '" and translatorId "' + req.query.translatorId + '"');
 
   authorize(req, res, (user) => {
     getTermById(res, req.query.termId, (hit) => {
       let translator = users.getUserByCode(req.query.translatorId);
       if (!translator) {
-        return responseError(res, 'Can not find a translator by translatorId.', 500);
+        return responseError(res, 'Can not find a translator by translatorId', 500);
       }
       let term = hit ? hit._source : null;
       let translations = term ? term.translations : null;
       if (!translations) {
-        return responseError(res, 'Can not find a translation by termId.', 500);
+        return responseError(res, 'Can not find a translation by termId', 500);
       }
       let translation = translations.find(t => t.translatorId === translator.code);
       if (!translation) {
@@ -194,9 +194,9 @@ app.get('/api/translation', function(req, res) {
         });
       }
       if ((user.code !== translation.translatorId || user.code !== translator.code) && user.role !== 'admin') {
-        return responseError(res, 'Unpermitted access.', 500);
+        return responseError(res, 'Unpermitted access', 500);
       }
-      logger.info('Term\'s translation was successfully found.');
+      logger.info('Term\'s translation was successfully found');
       res.json({
         termId: hit._id,
         termName: term.wylie,
@@ -210,16 +210,16 @@ app.post('/api/update', function(req, res) {
   let termId = req.body.termId;
   let translation = req.body.translation;
   if (!termId || !translation) {
-    return responseError(res, 'Incorrect /api/update request params.', 500, 'info');
+    return responseError(res, 'Incorrect /api/update request params', 500, 'info');
   }
   let translatorId = req.body.translation.translatorId;
-  logger.info('Term updating. Term id = "' + termId + '", translator id = "' + translation.translatorId + '".');
+  logger.info('Term updating. Term id = "' + termId + '", translator id = "' + translation.translatorId + '"');
 
   authorize(req, res, function(user) {
     getTermById(res, termId, (hit) => {
       let term = hit ? hit._source : null;
       if (!term) {
-        return responseError(res, 'Can\'t request term to update.', 500);
+        return responseError(res, 'Can\'t request term to update', 500);
       }
       term.translations = term.translations || [];
       let foundT = term.translations.find(t => t.translatorId === translatorId);
@@ -241,10 +241,10 @@ app.post('/api/update', function(req, res) {
         body: term
       }, (error, response, status) => {
         if (error) {
-          logger.error('Update term error.');
+          logger.error('Update term error');
           return responseError(res, error.message, 500);
         }
-        logger.info('Term was successfully updated.');
+        logger.info('Term was successfully updated');
         term.id = termId; // add id field
         return res.json({
           success: true,
