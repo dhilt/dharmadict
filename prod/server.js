@@ -5,6 +5,7 @@ let elasticsearch = require('elasticsearch');
 let jwt = require('jsonwebtoken');
 let Cookies = require('cookies');
 let path = require('path');
+var logger = require('./log/logger');
 
 let app = express();
 let port = 3000;
@@ -32,8 +33,12 @@ let getUserInfo = (user) => ({
   name: user.name
 })
 
-let responseError = (res, message, status) => {
-  console.log(message);
+let responseError = (res, message, status, level = 'error') => {
+  if (level === 'error') {
+    logger.error(message);
+  } else {
+    logger.info(message);
+  }
   //res.status(status);
   res.send({
     error: true,
@@ -64,23 +69,22 @@ let authorize = (req, res, onSuccess) => {
     return redirect302(res);
   }
   jwt.verify(token, secretKey, (err, decoded) => {
-    if (!err) {
-      userId = decoded.id;
-      for (let i = 0; i < Users.length; i++) {
-        if (Users[i].id == userId) {
-          return onSuccess(Users[i]);
-        }
-      }
-      return responseError(res, 'Can not find user.', 404);
-    } else {
-      return responseError(res, 'Missed token.', 500);
+    if (err) {
+      return responseError(res, 'Authorization error. Missed token.', 500);
     }
-  })
+    userId = decoded.id;
+    for (let i = 0; i < Users.length; i++) {
+      if (Users[i].id == userId) {
+        return onSuccess(Users[i]);
+      }
+    }
+    return responseError(res, 'Authorization error. Can not find user.', 404);
+  });
 };
 
 app.get('/api/userInfo', function(req, res) {
   authorize(req, res, (user) => {
-    console.log('Authenticated as ' + user.login);
+    logger.info('Authenticated as ' + user.login);
     return res.send(getUserInfo(user));
   });
 });
@@ -92,62 +96,57 @@ app.post('/api/login', function(req, res) {
   // search user by login
   for (let i = 0; i < Users.length; i++) {
     if (Users[i].login === login) {
-      if (passwordHash.verify(password, Users[i].hash)) {
-        let user = getUserInfo(Users[i]);
-        console.log('Logged in as ' + user.login + '.');
-        let token = jwt.sign(user, secretKey, {
-          expiresIn: accessTokenExpiration
-        });
-        res.send({
-          user: user,
-          token: token
-        });
-        return;
-      } else {
-        responseError(res, 'Can not authenticate.', 401);
+      if (!passwordHash.verify(password, Users[i].hash)) {
+        return responseError(res, 'Login error. Can\'t authenticate user ' + login + '.', 401, 'info');
       }
+      let user = getUserInfo(Users[i]);
+      logger.info('Logged in as ' + user.login + '.');
+      let token = jwt.sign(user, secretKey, {
+        expiresIn: accessTokenExpiration
+      });
+      return res.send({
+        user: user,
+        token: token
+      });
     }
   }
-  if (!user) {
-    responseError(res, 'Can not find user.', 404);
-  }
+  responseError(res, 'Login error. Can not find user ' + login + '.', 404, 'info');
 });
 
 app.get('/api/search', function(req, res) {
-  console.log('Searching terms by "' + req.query.pattern + '" pattern.')
+  logger.info('Searching terms by "' + req.query.pattern + '" pattern.')
   return elasticClient.search({
-    index: "dharmadict",
-    type: "terms",
+    index: 'dharmadict',
+    type: 'terms',
     body: {
       query: {
         multi_match: {
           query: req.query.pattern,
-          type: "most_fields",
-          operator: "and",
-          fields: ["wylie", "sanskrit_rus_lower", "sanskrit_eng_lower", "translation.meanings.versions_lower"]
+          type: 'most_fields',
+          operator: 'and',
+          fields: ['wylie', 'sanskrit_rus_lower', 'sanskrit_eng_lower', 'translation.meanings.versions_lower']
         }
       }
     }
   }, (error, response, status) => {
     if (error) {
-      console.log("Search error.");
+      logger.error('Search error.');
       return responseError(res, error.message, 500);
-    } else {
-      let result = [];
-      response.hits.hits.forEach((hit) => {
-        hit._source.id = hit._id; // add id field
-        result.push(hit._source);
-      });
-      console.log("Found items: " + result.length + ".");
-      return res.json(result);
     }
+    let result = [];
+    response.hits.hits.forEach((hit) => {
+      hit._source.id = hit._id; // add id field
+      result.push(hit._source);
+    });
+    logger.info('Found items: ' + result.length + '.');
+    return res.json(result);
   });
 });
 
 function getTermById(res, termId, successCallback) {
   elasticClient.search({
-    index: "dharmadict",
-    type: "terms",
+    index: 'dharmadict',
+    type: 'terms',
     body: {
       query: {
         ids: {
@@ -157,30 +156,30 @@ function getTermById(res, termId, successCallback) {
     }
   }, (error, response, status) => {
     if (error) {
-      console.log("Get term by id error.");
-      responseError(res, error.message, 500);
-    } else {
-      successCallback(response.hits.hits[0]);
+      logger.error('Get term by id (' + termId + ') error.');
+      return responseError(res, error.message, 500);
     }
+    logger.info('A term was found by id ' + termId + '.');
+    return successCallback(response.hits.hits[0]);
   });
 }
 
 app.get('/api/translation', function(req, res) {
   if (!req.query.termId || !req.query.translatorId) {
-    return responseError(res, 'Incorrect "/api/term" request params.', 500);
+    return responseError(res, 'Incorrect /api/term request params.', 500, 'info');
   }
-  console.log('Requesting translation "' + req.query.termId + '" (' + req.query.translatorId + ') data.');
+  logger.info('Requesting a translation by term id "' + req.query.termId + '" and translatorId "' + req.query.translatorId + '".');
 
   authorize(req, res, (user) => {
     getTermById(res, req.query.termId, (hit) => {
       let translator = users.getUserByCode(req.query.translatorId);
       if (!translator) {
-        return responseError(res, 'Can not find a translator.', 500);
+        return responseError(res, 'Can not find a translator by translatorId.', 500);
       }
       let term = hit ? hit._source : null;
       let translations = term ? term.translations : null;
       if (!translations) {
-        return responseError(res, 'Can not find a translation.', 500);
+        return responseError(res, 'Can not find a translation by termId.', 500);
       }
       let translation = translations.find(t => t.translatorId === translator.code);
       if (!translation) {
@@ -197,7 +196,7 @@ app.get('/api/translation', function(req, res) {
       if ((user.code !== translation.translatorId || user.code !== translator.code) && user.role !== 'admin') {
         return responseError(res, 'Unpermitted access.', 500);
       }
-      console.log('Term\'s translation was successfully found.');
+      logger.info('Term\'s translation was successfully found.');
       res.json({
         termId: hit._id,
         termName: term.wylie,
@@ -211,10 +210,10 @@ app.post('/api/update', function(req, res) {
   let termId = req.body.termId;
   let translation = req.body.translation;
   if (!termId || !translation) {
-    return responseError(res, 'Incorrect request params.', 500);
+    return responseError(res, 'Incorrect /api/update request params.', 500, 'info');
   }
   let translatorId = req.body.translation.translatorId;
-  console.log('Term updating. Term id = "' + termId + '", translator id = "' + translation.translatorId + '".');
+  logger.info('Term updating. Term id = "' + termId + '", translator id = "' + translation.translatorId + '".');
 
   authorize(req, res, function(user) {
     getTermById(res, termId, (hit) => {
@@ -236,31 +235,31 @@ app.post('/api/update', function(req, res) {
       }
       translation.meanings.forEach(m => m.versions_lower = m.versions.map(v => v.toLowerCase()));
       elasticClient.index({
-        index: "dharmadict",
-        type: "terms",
+        index: 'dharmadict',
+        type: 'terms',
         id: termId,
         body: term
       }, (error, response, status) => {
         if (error) {
-          console.log("Update term error.");
+          logger.error('Update term error.');
           return responseError(res, error.message, 500);
-        } else {
-          console.log("Term was successfully updated.");
-          term.id = termId; // add id field
-          return res.json({
-            success: true,
-            term: term
-          });
         }
+        logger.info('Term was successfully updated.');
+        term.id = termId; // add id field
+        return res.json({
+          success: true,
+          term: term
+        });
       });
     });
   });
 });
 
+// serve static
 app.get('*', function(req, res) {
   res.sendFile(path.join(__dirname + '/client/index.html'));
 });
 
 app.listen(port);
 
-console.log('Listening on port ' + port + '...');
+logger.info('Listening on port ' + port + '...');
