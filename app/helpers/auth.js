@@ -1,4 +1,5 @@
 let localStorage
+let tokenNameLS = 'dharmadictToken'
 
 // If we're testing, use a local storage polyfill
 if (global.process && process.env.NODE_ENV === 'test') {
@@ -17,20 +18,20 @@ let auth = {
   },
 
   getToken() {
-    return localStorage.token || null
+    return localStorage[tokenNameLS] || null
   },
 
   loggedIn() {
-    return !!localStorage.token
+    return !!localStorage[tokenNameLS]
   },
 
   setToken(token) {
-    localStorage.token = token
+    localStorage[tokenNameLS] = token
     this.setInitialStateParams()
   },
 
   removeToken() {
-    delete localStorage.token
+    delete localStorage[tokenNameLS]
     this.setInitialStateParams()
   },
 
