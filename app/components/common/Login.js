@@ -31,6 +31,7 @@ class Login extends Component {
       <span>
         <a href="/login" onClick={this.openModal}>Login</a>
         <Modal
+          contentLabel='Log In Dialog'
           isOpen={this.props.data.modalIsOpen}
           onAfterOpen={this.afterOpenModal}
           onRequestClose={this.closeModal}
