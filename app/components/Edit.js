@@ -1,10 +1,10 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
+import React, {Component} from 'react'
+import {connect} from 'react-redux'
 
 import Meanings from './edit/Meanings'
 
-import { selectTranslation } from '../actions/edit'
-import { goBack } from '../actions/route'
+import {selectTranslation} from '../actions/edit'
+import {goBack} from '../actions/route'
 
 class Edit extends Component {
 

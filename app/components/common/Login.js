@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import Modal from 'react-modal'
 
@@ -91,8 +92,8 @@ class Login extends Component {
 }
 
 Login.propTypes = {
-  data: React.PropTypes.object,
-  dispatch: React.PropTypes.func
+  data: PropTypes.object,
+  dispatch: PropTypes.func
 }
 
 function select (state) {

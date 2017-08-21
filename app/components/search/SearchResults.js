@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 
 import TermList from './TermList'
@@ -46,7 +47,7 @@ function select (state) {
 }
 
 SearchResults.propTypes = {
-  data: React.PropTypes.object
+  data: PropTypes.object
 }
 
 export default connect(select)(SearchResults)

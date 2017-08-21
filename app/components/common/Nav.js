@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 
 import LoadingButton from './LoadingButton'
@@ -45,7 +46,7 @@ class Nav extends Component {
 }
 
 Nav.propTypes = {
-  dispatch: React.PropTypes.func
+  dispatch: PropTypes.func
 }
 
 function select (state) {

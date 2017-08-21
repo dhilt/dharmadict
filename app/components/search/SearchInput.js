@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import {Button} from 'react-bootstrap'
 
@@ -60,8 +61,8 @@ function select (state) {
 }
 
 SearchInput.propTypes = {
-  data: React.PropTypes.object,
-  onSubmit: React.PropTypes.func
+  data: PropTypes.object,
+  onSubmit: PropTypes.func
 }
 
 export default connect(select)(SearchInput)

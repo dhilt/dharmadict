@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 
 import {doLogout} from '../../actions/auth'
@@ -24,7 +25,7 @@ class Logout extends Component {
 }
 
 Logout.propTypes = {
-  dispatch: React.PropTypes.func
+  dispatch: PropTypes.func
 }
 
 function select (state) {

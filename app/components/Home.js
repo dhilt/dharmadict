@@ -13,11 +13,11 @@ class Home extends Component {
           <img src={logoPath} className="logo" />
         </div>
         <div className="col-md-10">
-    			<div className="row header-row">
-    					<div className="col-md-12">
-    						<h1><em>Буддийская терминология</em> в русских переводах</h1>
-    					</div>
-    			</div>
+          <div className="row header-row">
+              <div className="col-md-12">
+                <h1><em>Буддийская терминология</em> в русских переводах...</h1>
+              </div>
+          </div>
           <div className="row search-row" >
             <div className="col-md-12">
               <SearchInput />
