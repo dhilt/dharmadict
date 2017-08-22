@@ -255,6 +255,47 @@ app.post('/api/update', function(req, res) {
   });
 });
 
+app.post('/api/newTerm', function(req, res) {
+  let termName = req.body.term.trim();
+  if (!termName) {
+    return responseError(res, 'Incorrect /api/newTerm request params', 500);
+  }
+  let termId = termName.replace(/ /g, '_');
+  logger.info('Term adding: name "' + termName + '", id "' + termId + '"');
+
+  authorize(req, res, function(user) {
+    if(user.role !== 'admin') {
+      return responseError(res, 'Only superadmin can create new terms', 500);
+    }
+    getTermById(res, termId, (hit) => {
+      let term = hit ? hit._source : null;
+      if (term) {
+        return responseError(res, term, 500);
+        return responseError(res, 'Such term ("' + termId + '") already exists', 500);
+      }
+      term = {
+        wylie: termName,
+        translations: []
+      };
+      elasticClient.index({
+        index: 'dharmadict',
+        type: 'terms',
+        id: termId,
+        body: term
+      }, (error, response, status) => {
+        if (error) {
+          logger.error('Create term error');
+          return responseError(res, error.message, 500);
+        }
+        logger.info('Term was successfully created');
+        return res.json({
+          success: true
+        });
+      });
+    });
+  });
+});
+
 // serve static
 app.get('*', function(req, res) {
   res.sendFile(path.join(__dirname + '/client/index.html'));
