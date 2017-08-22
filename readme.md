@@ -13,6 +13,7 @@ Scripts:
 
 Development:
 * install nodejs dependencies `npm install`  (`sudo npm install` for mac)
+* install nodejs dependencies for api-server (see "Production" section)
 * run the app within the local memory via webpack `npm run dev-server`
 * run the app in the prod mode to make /api requests work `npm run prod-server`
 * or run both servers concurrently `npm start`
@@ -22,5 +23,5 @@ Development:
 Production:
 * `cd ./prod`
 * install nodejs dependencies `npm install`  (`sudo npm install` for mac)
-* run the app 'node server.js'
+* run the app `node server.js`
 * go to http://localhost:3000/
