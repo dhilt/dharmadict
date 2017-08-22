@@ -15,7 +15,7 @@ class Home extends Component {
         <div className="col-md-10">
           <div className="row header-row">
               <div className="col-md-12">
-                <h1><em>Буддийская терминология</em> в русских переводах...</h1>
+                <h1><em>Буддийская терминология</em> в русских переводах</h1>
               </div>
           </div>
           <div className="row search-row" >

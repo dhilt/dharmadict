@@ -13,6 +13,7 @@ class Nav extends Component {
   }
 
   render () {
+    let userInfo = !this.props.data.userInfo.pending ? this.props.data.userInfo.data : {}
     let navButtons = this.props.loggedIn ? (
       <div>
         <Link to='/dashboard' className='btn btn--dash btn--nav'>Dashboard</Link>
@@ -26,7 +27,9 @@ class Nav extends Component {
       <div>
         {this.props.data.loggedIn ? (
           <span>
+            {userInfo.name}
             <Logout dispatch={this.props.dispatch}/>
+            {userInfo.role === 'admin' ? (<Link to={`/newTerm`}>New term</Link>) : ''}
           </span>
         ) : (
           <Login dispatch={this.props.dispatch}/>
