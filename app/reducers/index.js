@@ -18,7 +18,10 @@ import {
   TRANSLATION_REQUEST_END,
   CHANGE_TRANSLATION_LOCAL,
   TRANSLATION_UPDATE_START,
-  TRANSLATION_UPDATE_END
+  TRANSLATION_UPDATE_END,
+  CHANGE_NEW_TERM_NAME,
+  ADD_TERM_START,
+  ADD_TERM_END
 } from '../actions/_constants'
 
 import initialState from './_initial'
@@ -187,6 +190,25 @@ function reducer(state = initialState, action) {
             pending: false,
             error: action.error
           }
+        }
+      }
+    case CHANGE_NEW_TERM_NAME:
+      return {...state,
+        newTerm: {...state.newTerm,
+          term: action.newTermString
+        }
+      }
+    case ADD_TERM_START:
+      return {...state,
+        newTerm: {...state.newTerm,
+          pending: true
+        }
+      }
+    case ADD_TERM_END:
+      return {...state,
+        newTerm: {...state.newTerm,
+          pending: false,
+          error: action.error
         }
       }
     default:

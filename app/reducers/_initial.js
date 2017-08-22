@@ -43,6 +43,11 @@ let initialState = {
       pending: false,
       error: null
     }
+  },
+  newTerm: {
+    term: '',
+    pending: false,
+    error: null
   }
 }
 
