@@ -20,6 +20,7 @@ import App from './components/App'
 import Home from './components/Home'
 import NotFound from './components/NotFound'
 import Edit from './components/Edit'
+import NewTerm from './components/NewTerm'
 
 let middleware = [ thunkMiddleware ]
 
@@ -77,6 +78,7 @@ class Wrapper extends Component {
           <Route component={App}>
             <Route exactly path='/' component={Home} />
             <Route exactly path='/edit' component={Edit} onEnter={checkAuth} />
+            <Route exactly path='/newTerm' component={NewTerm} onEnter={checkAuth} />
             <Route exactly path='/not_authorized' component={NotFound} />
             <Route path='*' component={NotFound} />
           </Route>
