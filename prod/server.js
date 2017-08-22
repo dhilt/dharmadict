@@ -270,7 +270,6 @@ app.post('/api/newTerm', function(req, res) {
     getTermById(res, termId, (hit) => {
       let term = hit ? hit._source : null;
       if (term) {
-        return responseError(res, term, 500);
         return responseError(res, 'Such term ("' + termId + '") already exists', 500);
       }
       term = {
