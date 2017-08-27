@@ -3,10 +3,10 @@ import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import {Link} from 'react-router'
 
-import translators from '../helpers/translators'
-import {toggleComment} from '../actions/search'
+import translators from '../../helpers/translators'
+import {toggleComment} from '../../actions/search'
 
-import editIcon from '../styles/images/edit2.png'
+import editIcon from '../../styles/images/edit2.png'
 
 class Term extends Component {
   constructor (props) {

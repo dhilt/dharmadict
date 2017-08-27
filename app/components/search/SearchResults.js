@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 
 import TermList from './TermList'
-import Term from '../Term'
+import Term from './Term'
 
 class SearchResults extends Component {
   render () {
