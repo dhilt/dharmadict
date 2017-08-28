@@ -1,5 +1,4 @@
 import { browserHistory } from 'react-router'
-import store from '../index.js'
 import auth from '../helpers/auth'
 import asyncRequest from '../helpers/remote'
 
@@ -35,9 +34,9 @@ export function getUserInfoAsync() {
 }
 
 export function openLoginModal() {
-  store.dispatch({
+  return {
     type: OPEN_LOGIN_MODAL
-  })
+  }
 }
 
 export function closeLoginModal() {
