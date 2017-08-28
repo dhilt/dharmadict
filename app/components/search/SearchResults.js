@@ -14,7 +14,7 @@ class SearchResults extends Component {
       <div>
         <div className="col-md-3">
           <div className="list-group terms">
-              <TermList />
+            <TermList />
           </div>
         </div>
         <div className="col-md-9">
@@ -27,8 +27,8 @@ class SearchResults extends Component {
       </div>
         ) :
           search.started && !search.pending ?
-          ( <div> nothing found </div> ) :
-          ( null )
+            ( <div> nothing found </div> ) :
+            ( null )
       } {
         search.error ? (
       <div> { search.error.message } </div>

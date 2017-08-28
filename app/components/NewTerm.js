@@ -18,7 +18,7 @@ class NewTerm extends Component {
         <h3>Новый термин</h3>
         <div className="form-group col-md-4">
           <input className="form-control" name="term" type="text"
-            value={this.props.term}
+            value={this.props.data.term}
             onChange={this._onTermChange}/>
         </div>
         <div className="form-group form-inline">

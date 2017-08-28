@@ -1,9 +1,9 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
+import {Link} from 'react-router'
 
 import LoadingButton from './LoadingButton'
-import {Link} from 'react-router'
 import Login from './Login'
 import Logout from './Logout'
 
@@ -14,13 +14,13 @@ class Nav extends Component {
 
   render () {
     let userInfo = !this.props.data.userInfo.pending ? this.props.data.userInfo.data : {}
-    let navButtons = this.props.loggedIn ? (
+    let navButtons = this.props.data.loggedIn ? (
       <div>
         <Link to='/dashboard' className='btn btn--dash btn--nav'>Dashboard</Link>
-        {this.props.currentlySending ? (
+        {userInfo.pending ? (
           <LoadingButton className='btn--nav' />
         ) : (
-          <a href='#' className='btn btn--login btn--nav' onClick={this._logout}>Logout</a>
+          <Logout />
         )}
       </div>
     ) : (
@@ -28,11 +28,11 @@ class Nav extends Component {
         {this.props.data.loggedIn ? (
           <span>
             {userInfo.name}
-            <Logout dispatch={this.props.dispatch}/>
+            <Logout />
             {userInfo.role === 'admin' ? (<Link to={`/newTerm`}>New term</Link>) : ''}
           </span>
         ) : (
-          <Login dispatch={this.props.dispatch}/>
+          <Login />
         )}
       </div>
     )

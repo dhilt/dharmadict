@@ -69,7 +69,6 @@ class Edit extends Component {
 
 function select (state, ownProps) {
   return {
-    prevLocation: state.route.prevLocation,
     editState: state.edit,
     query: ownProps.location.query
   }

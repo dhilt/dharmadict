@@ -61,8 +61,7 @@ function select (state) {
 }
 
 SearchInput.propTypes = {
-  data: PropTypes.object,
-  onSubmit: PropTypes.func
+  data: PropTypes.object
 }
 
 export default connect(select)(SearchInput)
