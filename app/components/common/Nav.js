@@ -16,24 +16,15 @@ class Nav extends Component {
     let userInfo = !this.props.data.userInfo.pending ? this.props.data.userInfo.data : {}
     let navButtons = this.props.data.loggedIn ? (
       <div>
-        <Link to='/dashboard' className='btn btn--dash btn--nav'>Dashboard</Link>
-        {userInfo.pending ? (
-          <LoadingButton className='btn--nav' />
-        ) : (
-          <Logout />
-        )}
+        {userInfo.name}
+        <Logout />
+        {userInfo.role === 'admin' ? <Link to={`/newTerm`}>New term</Link> : null}
       </div>
     ) : (
       <div>
-        {this.props.data.loggedIn ? (
-          <span>
-            {userInfo.name}
-            <Logout />
-            {userInfo.role === 'admin' ? (<Link to={`/newTerm`}>New term</Link>) : ''}
-          </span>
-        ) : (
-          <Login />
-        )}
+        {this.props.data.userInfo.pending ?
+          <LoadingButton className='btn--nav' /> : <Login />
+        }
       </div>
     )
 
