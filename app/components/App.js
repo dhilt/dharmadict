@@ -17,9 +17,7 @@ class App extends Component {
 }
 
 App.propTypes = {
-  location: PropTypes.object,
-  children: PropTypes.object,
-  dispatch: PropTypes.func
+  children: PropTypes.object
 }
 
 export default App
