@@ -37,6 +37,8 @@ if(store.getState().auth.token) {
   store.dispatch(getUserInfoAsync())
 }
 
+export default store 
+
 let location = browserHistory.getCurrentLocation()
 if(location.query.term) {
   store.dispatch(selectTermAsync(location.query.term))

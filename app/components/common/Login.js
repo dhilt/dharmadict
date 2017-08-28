@@ -71,7 +71,8 @@ class Login extends Component {
 
   openModal (event) {
     event.preventDefault()
-    this.props.dispatch(openLoginModal())
+    // this.props.dispatch(openLoginModal())
+    openLoginModal()
   }
 
   closeModal () {
