@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 
-import Nav from './common/Nav'
+import Nav from './common/header/Nav'
 
 class App extends Component {
   render () {

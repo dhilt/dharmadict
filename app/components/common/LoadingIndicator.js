@@ -1,9 +1,9 @@
-import React, {Component} from 'react'
+import React from 'react'
 
 function LoadingIndicator () {
   return (
     <div>
-      Loading
+      {'Loading'}
       <div className='sk-fading-circle'>
         <div className='sk-circle1 sk-circle' />
         <div className='sk-circle2 sk-circle' />
