@@ -2,7 +2,7 @@ import 'babel-polyfill'
 
 import React, {Component} from 'react'
 import ReactDOM from 'react-dom'
-import {Router, Route, browserHistory} from 'react-router'
+import {browserHistory} from 'react-router'
 import {createStore, applyMiddleware} from 'redux'
 import {Provider} from 'react-redux'
 import thunkMiddleware from 'redux-thunk'
@@ -13,14 +13,9 @@ import {changeRoute} from './actions/route'
 import {getUserInfoAsync} from './actions/auth'
 import {selectTermAsync} from './actions/search'
 
+import Routes from './routes'
 import './styles/main.css'
 import './styles/images/favicon.ico';
-
-import App from './components/App'
-import Home from './components/Home'
-import NotFound from './components/NotFound'
-import Edit from './components/Edit'
-import NewTerm from './components/NewTerm'
 
 let middleware = [ thunkMiddleware ]
 
@@ -46,46 +41,9 @@ browserHistory.listenBefore((location) => {
   return store.dispatch(changeRoute(location))
 })
 
-function unauthorizedAccess (replace) {
-  replace('/not_authorized')
-  browserHistory.replace('/not_authorized')
-}
-
-function checkAuth (nextState, replace, callback) {
-  let {auth} = store.getState()
-  if(auth.loggedIn) {
-    callback()
-    return
-  }
-  if(auth.userInfo.promise) {
-    auth.userInfo.promise.then(() => {
-      if (!auth.loggedIn) {
-        unauthorizedAccess(replace)
-      }
-      callback()
-    })
-  }
-  else {
-    unauthorizedAccess(replace)
-  }
-}
-
-class Wrapper extends Component {
-  render () {
-    return (
-      <Provider store={store}>
-        <Router history={browserHistory}>
-          <Route component={App}>
-            <Route exactly path='/' component={Home} />
-            <Route exactly path='/edit' component={Edit} onEnter={checkAuth} />
-            <Route exactly path='/newTerm' component={NewTerm} onEnter={checkAuth} />
-            <Route exactly path='/not_authorized' component={NotFound} />
-            <Route path='*' component={NotFound} />
-          </Route>
-        </Router>
-      </Provider>
-    )
-  }
-}
-
-ReactDOM.render(<Wrapper />, document.getElementById('app'))
+ReactDOM.render(
+  <Provider store={store}>
+    <Routes auth={store.getState().auth} />
+  </Provider>,
+  document.getElementById('app')
+)
