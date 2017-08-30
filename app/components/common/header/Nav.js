@@ -26,7 +26,7 @@ class Nav extends Component {
     let userInfo = !this.props.data.userInfo.pending ? this.props.data.userInfo.data : {}
     let navButtons = this.props.data.loggedIn ? (
       <div>
-        {userInfo.name}
+        <Link to={'/user?name=' + userInfo.login}>{userInfo.name}</Link>
         <Logout doLogout={this.doLogout} />
         {userInfo.role === 'admin' ? <Link to={`/newTerm`}>New term</Link> : null}
       </div>
