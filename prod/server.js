@@ -295,6 +295,21 @@ app.post('/api/newTerm', function(req, res) {
   });
 });
 
+app.get('/api/user/:name', function(req, res) {
+  const name = req.params.name
+  const isExistUser = Users.find(elem => elem.login === String(name))
+  if (isExistUser) {
+    return res.send({
+      name: isExistUser.name,
+      role: isExistUser.role,
+      language: isExistUser.language,
+      description: 'Some information about user...'
+    })
+  } else {
+    return responseError(res, 'Error. This user doesn\'t exist', 500)
+  }
+});
+
 // serve static
 app.get('*', function(req, res) {
   res.sendFile(path.join(__dirname + '/client/index.html'));

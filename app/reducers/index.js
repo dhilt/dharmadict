@@ -21,7 +21,9 @@ import {
   TRANSLATION_UPDATE_END,
   CHANGE_NEW_TERM_NAME,
   ADD_TERM_START,
-  ADD_TERM_END
+  ADD_TERM_END,
+  GET_TRANSLATOR_INFO_START,
+  GET_TRANSLATOR_INFO_END
 } from '../actions/_constants'
 
 import initialState from './_initial'
@@ -209,6 +211,20 @@ function reducer(state = initialState, action) {
         newTerm: {...state.newTerm,
           pending: false,
           error: action.error
+        }
+      }
+    case GET_TRANSLATOR_INFO_START:
+      return {...state,
+        translatorInfo: {...state.translatorInfo,
+          pending: true
+        }
+      }
+    case GET_TRANSLATOR_INFO_END:
+      return {...state,
+        translatorInfo: {...state.translatorInfo,
+          pending: false,
+          error: action.error,
+          data: action.result
         }
       }
     default:

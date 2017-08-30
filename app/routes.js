@@ -6,6 +6,7 @@ import Home from './components/Home'
 import NotFound from './components/NotFound'
 import Edit from './components/Edit'
 import NewTerm from './components/NewTerm'
+import TranslatorPage from './components/TranslatorPage'
 
 const Routes = props => {
 
@@ -39,6 +40,7 @@ const Routes = props => {
         <Route exactly path='/' component={Home} />
         <Route exactly path='/edit' component={Edit} onEnter={checkAuth} />
         <Route exactly path='/newTerm' component={NewTerm} onEnter={checkAuth} />
+        <Route exactly path='/user' component={TranslatorPage} />
         <Route exactly path='/not_authorized' component={NotFound} />
         <Route path='*' component={NotFound} />
       </Route>

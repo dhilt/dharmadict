@@ -48,6 +48,16 @@ let initialState = {
     term: '',
     pending: false,
     error: null
+  },
+  translatorInfo: {
+    pending: false,
+    error: null,
+    data: {
+      name: '',
+      role: '',
+      language: '',
+      description: ''
+    }
   }
 }
 
