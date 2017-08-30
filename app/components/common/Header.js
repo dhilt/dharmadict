@@ -3,14 +3,13 @@ import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import {Link} from 'react-router'
 
-import {openLoginModal, closeLoginModal, changeLoginString, changePasswordString, doLoginAsync} from '../../../actions/auth'
-import {doLogout} from '../../../actions/auth'
+import {openLoginModal, closeLoginModal, changeLoginString, changePasswordString, doLoginAsync, doLogout} from '../../actions/auth'
 
-import LoadingButton from '../LoadingButton'
-import Login from './Login'
-import Logout from './Logout'
+import LoadingButton from './LoadingButton'
+import Login from './header/Login'
+import Logout from './header/Logout'
 
-class Nav extends Component {
+class Header extends Component {
 
   constructor (props) {
     super(props)
@@ -82,7 +81,7 @@ class Nav extends Component {
   }
 }
 
-Nav.propTypes = {
+Header.propTypes = {
   dispatch: PropTypes.func
 }
 
@@ -92,4 +91,4 @@ function select (state) {
   }
 }
 
-export default connect(select)(Nav)
+export default connect(select)(Header)

@@ -1,13 +1,13 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 
-import Nav from './common/header/Nav'
+import Header from './common/Header'
 
 class App extends Component {
   render () {
     return (
       <div className='wrapper'>
-        <Nav />
+        <Header />
         <div className='container'>
           {this.props.children}
         </div>
