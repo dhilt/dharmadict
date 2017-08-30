@@ -49,7 +49,7 @@ class Header extends Component {
     return (
       <div className='nav'>
         <div className='nav__wrapper'>
-          <span className='nav__logo-wrapper'></span>
+          <Link to={'/about'}>О проекте</Link>
           {navButtons}
         </div>
       </div>

@@ -3,6 +3,7 @@ import {Router, Route, browserHistory} from 'react-router'
 
 import App from './components/App'
 import Home from './components/Home'
+import About from './components/About'
 import NotFound from './components/NotFound'
 import Edit from './components/Edit'
 import NewTerm from './components/NewTerm'
@@ -38,6 +39,7 @@ const Routes = props => {
     <Router history={browserHistory}>
       <Route component={App}>
         <Route exactly path='/' component={Home} />
+        <Route exactly path='/about' component={About} />
         <Route exactly path='/edit' component={Edit} onEnter={checkAuth} />
         <Route exactly path='/newTerm' component={NewTerm} onEnter={checkAuth} />
         <Route exactly path='/user' component={TranslatorPage} />
