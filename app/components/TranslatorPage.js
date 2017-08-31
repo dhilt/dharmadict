@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 
-import {getTranslatorInfoAsync} from '../actions/getTranslatorInfo'
+import {getTranslatorInfoAsync} from '../actions/translators'
 
 class TranslatorPage extends Component {
 
@@ -14,27 +14,28 @@ class TranslatorPage extends Component {
     this.props.dispatch(getTranslatorInfoAsync(name))
   }
 
-  render () {
-    let translatorInfo = this.props.data
-    let showTranslatorInfo = translatorInfo.pending ? (
-      <h3>{'Loading...'}</h3>
-    ) : (
-      translatorInfo.error ? (
-        <h3>{translatorInfo.error.message}</h3>
-      ) : (
-        <div>
-          <h2>{translatorInfo.data.name}</h2>
-          <h3>{'Role: ' + translatorInfo.data.role}</h3>
-          <h3>{'Language of translation: ' + translatorInfo.data.language}</h3>
-          <pre>{translatorInfo.data.description}</pre>
-        </div>
-      )
-    )
-
+  getTranslatorContent (data) {
     return (
       <div>
-        {showTranslatorInfo}
+        <h3>{data.name}</h3>
+        <h4>{'Язык переводов: ' + (data.language == 'rus' ? 'русский' : 'английский')}</h4>
+        <pre>{data.description}</pre>
       </div>
+    )
+  }
+
+  render () {
+    let data = this.props.data
+    let content = data.pending ? (
+      <h3>{'Loading...'}</h3>
+    ) : (
+      data.error ? (
+        <h3>{data.error.message}</h3>
+      ) :
+        this.getTranslatorContent(data.data)
+    )
+    return (
+      <div>{content}</div>
     )
   }
 }
