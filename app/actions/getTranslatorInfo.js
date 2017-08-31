@@ -7,7 +7,7 @@ import {
 
 export function getTranslatorInfoAsync(name) {
   return (dispatch) => {
-    const query = 'user/' + name
+    const query = 'translator/' + name
     dispatch({
       type: GET_TRANSLATOR_INFO_START
     })

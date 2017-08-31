@@ -295,18 +295,20 @@ app.post('/api/newTerm', function(req, res) {
   });
 });
 
-app.get('/api/user/:name', function(req, res) {
+app.get('/api/translator/:name', function(req, res) {
   const name = req.params.name
-  const isExistUser = Users.find(elem => elem.login === String(name))
-  if (isExistUser) {
+  const isExistTranslator = Users.find(elem =>
+    elem.login === String(name) && elem.role === 'translator'
+  )
+  if (isExistTranslator) {
     return res.send({
-      name: isExistUser.name,
-      role: isExistUser.role,
-      language: isExistUser.language,
+      name: isExistTranslator.name,
+      role: isExistTranslator.role,
+      language: isExistTranslator.language,
       description: 'Some information about user...'
     })
   } else {
-    return responseError(res, 'Error. This user doesn\'t exist', 500)
+    return responseError(res, 'Error. This translator doesn\'t exist.', 500)
   }
 });
 
