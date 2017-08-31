@@ -7,15 +7,15 @@ import {
 
 export function getTranslatorInfoAsync(name) {
   return (dispatch) => {
-    const query = 'translator/' + name
+    const query = 'translators/' + name
     dispatch({
       type: GET_TRANSLATOR_INFO_START
     })
     asyncRequest(query, false, (data, error) =>
       dispatch({
         type: GET_TRANSLATOR_INFO_END,
-        result: data,
-        error: error
+        error: error,
+        result: !error ? data.user : null
       })
     )
   }
