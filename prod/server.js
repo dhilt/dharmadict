@@ -295,6 +295,59 @@ app.post('/api/newTerm', function(req, res) {
   });
 });
 
+app.post('/api/newUser', function(req, res) {
+  let newUser = req.body;
+  newUser.hash = passwordHash.generate(newUser.password);
+  delete newUser.password;
+  let userId = newUser.login;
+
+  elasticClient.index({
+    index: 'dharmadict',
+    type: 'users',
+    id: userId,
+    body: newUser
+  }, (error, response, status) => {
+    if (error) {
+      logger.error('Create user error');
+      return responseError(res, error.message, 500);
+    }
+    logger.info('User was successfully created');
+    return res.json({
+      success: true
+    });
+  });
+});
+
+app.post('/api/findByLogin', function(req, res) {
+  let login = req.body.login;
+  let password = req.body.password;
+  getUserByLogin(res, login, hit => {
+    console.log('!!!');
+    return res.json(hit._source);
+  })
+});
+
+function getUserByLogin(res, userLogin, successCallback) {
+  elasticClient.search({
+    index: 'dharmadict',
+    type: 'users',
+    body: {
+      query: {
+        ids: {
+          values: [userLogin]
+        }
+      }
+    }
+  }, (error, response, status) => {
+    if (error) {
+      logger.error('Get user by id (' + userLogin + ') error');
+      return responseError(res, error.message, 500);
+    }
+    logger.info('A user was found by id ' + userLogin);
+    return successCallback(response.hits.hits[0]);
+  });
+}
+
 app.get('/api/translators/:name', function(req, res) {
   const name = req.params.name;
   const user = Users.find(user => user.login === name && user.role === 'translator');
