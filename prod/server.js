@@ -304,7 +304,6 @@ app.post('/api/newUser', function(req, res) {
   elasticClient.index({
     index: 'dharmadict',
     type: 'users',
-    id: userId,
     body: newUser
   }, (error, response, status) => {
     if (error) {
@@ -318,12 +317,12 @@ app.post('/api/newUser', function(req, res) {
   });
 });
 
-app.post('/api/findByLogin', function(req, res) {
-  let login = req.body.login;
-  let password = req.body.password;
-  getUserByLogin(res, login, hit => {
-    console.log('!!!');
-    return res.json(hit._source);
+app.post('/api/findById', function(req, res) {
+  let id = req.body.id;
+  getUserByLogin(res, id, hit => {
+    let user = hit._source;
+    user.id = hit._id;
+    return res.json(user);
   })
 });
 
