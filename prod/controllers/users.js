@@ -37,8 +37,9 @@ let findById = userId => new Promise((resolve, reject) => {
 })
 
 let findByLogin = userLogin => new Promise((resolve, reject) => {
+  logger.info(`Find user by login ${userLogin}`)
   if (!userLogin) {
-    return reject(`Can't find user. Invalid login.`)
+    return reject('Invalid login')
   }
   elasticClient.search({
     index: 'dharmadict',
@@ -52,16 +53,15 @@ let findByLogin = userLogin => new Promise((resolve, reject) => {
     }
   }, (error, response, status) => {
     if (error) {
-      logger.error('Get user by login (' + userLogin + ') error')
-      return reject(error.message)
+      logger.error(error)
+      return reject('DB error')
     }
-    if (!response.hits.hits[0] || !response.hits.hits[0]._source) {
-      return reject(`Can't find user. User with this login doesn't exist.`)
+    const found = response.hits.hits[0]
+    if (!found || !found._source) {
+      return reject('No login found')
     }
-    let user = response.hits.hits[0]._source
-    user.id = response.hits.hits[0]._id
-    logger.info('A user was found by login ' + userLogin)
-    return resolve(user)
+    found._source.id = found._id
+    return resolve(getUserInfo(found._source))
   })
 })
 
@@ -158,10 +158,11 @@ let removeById = userId => new Promise((resolve, reject) => {
 
 let getUserInfo = user => ({
   id: user.id,
+  name: user.name,
   login: user.login,
   role: user.role,
   roleId: user.roleId,
-  name: user.name
+  description: user.description
 })
 
 module.exports = {

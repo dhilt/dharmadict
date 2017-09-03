@@ -288,21 +288,18 @@ app.post('/api/newUser', function(req, res) {
     .catch(error => responseError(res, error, 500))
 });
 
-app.get('/api/translators/:name', function(req, res) {
-  const name = req.params.name;
-  usersController.findByLogin(name).then(user =>
+app.get('/api/users/:name', (req, res) =>
+  usersController.findByLogin(req.params.name)
+  .then(user =>
     res.json({
       success: true,
-      user: {
-        name: user.name,
-        role: user.role,
-        language: user.language,
-        description: user.description
-      }
-    })).catch(error => {
-      return responseError(res, error, 500)
-  });
-});
+      user
+    })
+  )
+  .catch(error =>
+    responseError(res, `Can't find user. ${error}`, 500)
+  )
+);
 
 // serve static
 app.get('*', function(req, res) {
