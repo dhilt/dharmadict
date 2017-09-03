@@ -1,8 +1,3 @@
-// findById(id) для работы authorize
-// findByLogin(login) для /api/login и для /api/translators/:name, (!) и для /api/translation
-// функцию getTermById, используемую на /api/translation пришлось переделать под новый id у переводчика
-// findAll() понадобится для front end вместо ./app/helpers/translators.js
-// create(), removeById(id) для создания API по добавлению/удалению пользователей
 let elasticsearch = require('elasticsearch');
 let passwordHash = require('password-hash');
 let logger = require('../log/logger');
@@ -163,7 +158,6 @@ let removeById = userId => new Promise((resolve, reject) => {
 
 let getUserInfo = user => ({
   id: user.id,
-  code: user.code,
   login: user.login,
   role: user.role,
   roleId: user.roleId,
