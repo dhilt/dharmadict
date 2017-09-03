@@ -3,9 +3,12 @@ let passwordHash = require('password-hash');
 let bodyParser = require('body-parser');
 let elasticsearch = require('elasticsearch');
 let jwt = require('jsonwebtoken');
-let Cookies = require('cookies');
+let Cookies = require('cookies');  // Delete this?
 let path = require('path');
-var logger = require('./log/logger');
+let logger = require('./log/logger');
+
+let usersController = require('./controllers/users');
+let getUserInfo = usersController.getUserInfo;
 
 let app = express();
 let port = 3000;
@@ -19,19 +22,6 @@ let elasticClient = new elasticsearch.Client({
   host: 'localhost:9200',
   log: 'info'
 });
-
-let users = require('./users.js');
-let Users = users.Users;
-let Roles = users.Roles;
-
-let getUserInfo = (user) => ({
-  id: user.id,
-  code: user.code,
-  login: user.login,
-  role: user.role,
-  roleId: user.roleId,
-  name: user.name
-})
 
 let responseError = (res, message, status, level = 'error') => {
   if (level === 'error') {
@@ -72,13 +62,10 @@ let authorize = (req, res, onSuccess) => {
     if (err) {
       return responseError(res, 'Authorization error. Missed token', 500);
     }
-    userId = decoded.id;
-    for (let i = 0; i < Users.length; i++) {
-      if (Users[i].id == userId) {
-        return onSuccess(Users[i]);
-      }
-    }
-    return responseError(res, 'Authorization error. Can not find user', 404);
+    let userId = decoded.id;    // let userId = "HOK";
+    usersController.findById(userId)
+      .then(result => onSuccess(result))
+      .catch(error => responseError(res, error, 500));
   });
 };
 
@@ -90,16 +77,15 @@ app.get('/api/userInfo', function(req, res) {
 });
 
 app.post('/api/login', function(req, res) {
-  let login = req.body.login;
-  let password = req.body.password;
+  const login = req.body.login;
+  const password = req.body.password;
 
-  // search user by login
-  for (let i = 0; i < Users.length; i++) {
-    if (Users[i].login === login) {
-      if (!passwordHash.verify(password, Users[i].hash)) {
+  usersController.findByLogin(login)
+    .then(user => {
+      if (!passwordHash.verify(password, user.hash)) {
         return responseError(res, 'Login error. Can\'t authenticate user ' + login, 401, 'info');
       }
-      let user = getUserInfo(Users[i]);
+      user = getUserInfo(user);
       logger.info('Logged in as ' + user.login);
       let token = jwt.sign(user, secretKey, {
         expiresIn: accessTokenExpiration
@@ -108,9 +94,8 @@ app.post('/api/login', function(req, res) {
         user: user,
         token: token
       });
-    }
-  }
-  responseError(res, 'Login error. Can not find user ' + login, 404, 'info');
+    })
+    .catch(error => responseError(res, error, 500));
 });
 
 app.get('/api/search', function(req, res) {
@@ -172,36 +157,37 @@ app.get('/api/translation', function(req, res) {
 
   authorize(req, res, (user) => {
     getTermById(res, req.query.termId, (hit) => {
-      let translator = users.getUserByCode(req.query.translatorId);
-      if (!translator) {
-        return responseError(res, 'Can not find a translator by translatorId', 500);
-      }
-      let term = hit ? hit._source : null;
-      let translations = term ? term.translations : null;
-      if (!translations) {
-        return responseError(res, 'Can not find a translation by termId', 500);
-      }
-      let translation = translations.find(t => t.translatorId === translator.code);
-      if (!translation) {
-        return res.json({
+      usersController.findByLogin(req.query.translatorId).then(translator => {
+        if (!translator) {
+          return responseError(res, 'Can not find a translator by translatorId', 500);
+        }
+        let term = hit ? hit._source : null;
+        let translations = term ? term.translations : null;
+        if (!translations) {
+          return responseError(res, 'Can not find a translation by termId', 500);
+        }
+        let translation = translations.find(t => t.translatorId === translator.code);
+        if (!translation) {
+          return res.json({
+            termId: hit._id,
+            termName: term.wylie,
+            translation: {
+              translatorId: translator.id,
+              language: translator.language,
+              meanings: []
+            }
+          });
+        }
+        if ((user.code !== translation.translatorId || user.code !== translator.code) && user.role !== 'admin') {
+          return responseError(res, 'Unpermitted access', 500);
+        }
+        logger.info('Term\'s translation was successfully found');
+        res.json({
           termId: hit._id,
           termName: term.wylie,
-          translation: {
-            translatorId: translator.code,
-            language: translator.language,
-            meanings: []
-          }
+          translation
         });
-      }
-      if ((user.code !== translation.translatorId || user.code !== translator.code) && user.role !== 'admin') {
-        return responseError(res, 'Unpermitted access', 500);
-      }
-      logger.info('Term\'s translation was successfully found');
-      res.json({
-        termId: hit._id,
-        termName: term.wylie,
-        translation
-      });
+      }).catch(error => responseError(res, error, 500));
     });
   });
 });
@@ -296,71 +282,25 @@ app.post('/api/newTerm', function(req, res) {
 });
 
 app.post('/api/newUser', function(req, res) {
-  let newUser = req.body;
-  newUser.hash = passwordHash.generate(newUser.password);
-  delete newUser.password;
-  let userId = newUser.login;
-
-  elasticClient.index({
-    index: 'dharmadict',
-    type: 'users',
-    body: newUser
-  }, (error, response, status) => {
-    if (error) {
-      logger.error('Create user error');
-      return responseError(res, error.message, 500);
-    }
-    logger.info('User was successfully created');
-    return res.json({
-      success: true
-    });
-  });
+  let newUser = req.body.user;
+  usersController.create(newUser)
+    .then(result => res.json(result))
+    .catch(error => responseError(res, error, 500))
 });
-
-app.post('/api/findById', function(req, res) {
-  let id = req.body.id;
-  getUserByLogin(res, id, hit => {
-    let user = hit._source;
-    user.id = hit._id;
-    return res.json(user);
-  })
-});
-
-function getUserByLogin(res, userLogin, successCallback) {
-  elasticClient.search({
-    index: 'dharmadict',
-    type: 'users',
-    body: {
-      query: {
-        ids: {
-          values: [userLogin]
-        }
-      }
-    }
-  }, (error, response, status) => {
-    if (error) {
-      logger.error('Get user by id (' + userLogin + ') error');
-      return responseError(res, error.message, 500);
-    }
-    logger.info('A user was found by id ' + userLogin);
-    return successCallback(response.hits.hits[0]);
-  });
-}
 
 app.get('/api/translators/:name', function(req, res) {
   const name = req.params.name;
-  const user = Users.find(user => user.login === name && user.role === 'translator');
-  if (!user) {
-    return responseError(res, 'Error. This translator doesn\'t exist', 500);
-  }
-  return res.json({
-    success: true,
-    user: {
-      name: user.name,
-      role: user.role,
-      language: user.language,
-      description: 'Some information about user...'
-    }
+  usersController.findByLogin(name).then(user =>
+    res.json({
+      success: true,
+      user: {
+        name: user.name,
+        role: user.role,
+        language: user.language,
+        description: user.description
+      }
+    })).catch(error => {
+      return responseError(res, error, 500)
   });
 });
 
