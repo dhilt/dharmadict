@@ -79,23 +79,15 @@ app.get('/api/userInfo', function (req, res) {
 app.post('/api/login', function (req, res) {
   const login = req.body.login;
   const password = req.body.password;
-
-  usersController.findByLogin(login)
+  usersController.doLogin(login, password)
     .then(user => {
-      if (!passwordHash.verify(password, user.hash)) {
-        return responseError(res, 'Login error. Can\'t authenticate user ' + login, 401, 'info');
-      }
-      user = getUserInfo(user);
       logger.info('Logged in as ' + user.login);
-      let token = jwt.sign(user, secretKey, {
+      const token = jwt.sign(user, secretKey, {
         expiresIn: accessTokenExpiration
       });
-      return res.send({
-        user: user,
-        token: token
-      });
+      res.send({user: getUserInfo(user), token});
     })
-    .catch(error => responseError(res, error, 500));
+    .catch(error => responseError(res, `Can't login. ${error}`, 500));
 });
 
 app.get('/api/search', function (req, res) {
@@ -290,12 +282,8 @@ app.post('/api/newUser', function (req, res) {
 
 app.get('/api/users/:name', (req, res) =>
   usersController.findByLogin(req.params.name)
-    .then(user =>
-      res.json({success: true, user})
-    )
-    .catch(error =>
-      responseError(res, `Can't find user. ${error}`, 500)
-    )
+    .then(user => res.json({success: true, user: getUserInfo(user)}))
+    .catch(error => responseError(res, `Can't find user. ${error}`, 500))
 );
 
 // serve static

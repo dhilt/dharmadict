@@ -7,6 +7,23 @@ let elasticClient = new elasticsearch.Client({
   log: 'info'
 });
 
+let doLogin = (login, password) => {
+  logger.info(`Check if user ${login} can login`)
+  if (!login || !password) {
+    throw 'Invalid params'
+  }
+  return findByLogin(login, true).then(user => {
+      if (!passwordHash.verify(password, user.hash)) {
+        throw 'Wrong credentionals'
+      }
+      return Promise.resolve(user)
+    },
+    error => {
+      throw error
+    }
+  )
+}
+
 let findById = userId => new Promise((resolve, reject) => {
   logger.info(`Find user by ID ${userId}`)
   if (!userId) {
@@ -32,7 +49,7 @@ let findById = userId => new Promise((resolve, reject) => {
       return reject('No ID found')
     }
     result._source.id = result._id
-    return resolve(getUserInfo(result._source))
+    return resolve(result._source)
   })
 })
 
@@ -61,7 +78,7 @@ let findByLogin = userLogin => new Promise((resolve, reject) => {
       return reject('No login found')
     }
     result._source.id = result._id
-    return resolve(getUserInfo(result._source))
+    return resolve(result._source)
   })
 })
 
@@ -162,13 +179,15 @@ let getUserInfo = user => ({
   login: user.login,
   role: user.role,
   roleId: user.roleId,
-  description: user.description
+  description: user.description,
+  hash: user.hash
 })
 
 module.exports = {
   getUserInfo: getUserInfo,
-  findById: findById,
-  findByLogin: findByLogin,
+  doLogin,
+  findById,
+  findByLogin,
   findAll: findAll,
   create: create,
   removeById: removeById
