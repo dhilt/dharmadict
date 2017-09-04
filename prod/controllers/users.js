@@ -106,6 +106,14 @@ let create = newUser => new Promise((resolve, reject) => {
   delete newUser.id
   return resolve({ newUser, userId })
 })
+.then(data => // check login - user exist or not?
+  findByLogin(data.newUser.login).then(
+    result => {
+      throw `User already exists`
+    },
+    error => Promise.resolve(data)
+  )
+)
 .then(data =>  // Adding new user
   elasticClient.index({
     index: 'dharmadict',
