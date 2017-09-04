@@ -2,7 +2,10 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const elasticsearch = require('elasticsearch');
 const path = require('path');
+
+const config = require('./config.js');
 const logger = require('./log/logger');
+const elasticClient = require('./controllers/helpers/db.js');
 
 const serverHelper = require('./controllers/helpers/serverHelper.js');
 const usersController = require('./controllers/users');
@@ -11,15 +14,6 @@ const authController = require('./controllers/auth');
 const responseError = require('./controllers/helpers/serverHelper').responseError;
 
 const app = express();
-const port = 3000;
-
-app.use(express.static(path.join(__dirname + '/client')));
-app.use(bodyParser.json());
-
-let elasticClient = new elasticsearch.Client({
-  host: 'localhost:9200',
-  log: 'info'
-});
 
 const doAuthorize = (req, res) => {
   const token = authController.extractToken(req.headers.authorization);
@@ -63,7 +57,7 @@ app.post('/api/login', (req, res) => {
 app.get('/api/search', function (req, res) {
   logger.info('Searching terms by "' + req.query.pattern + '" pattern');
   return elasticClient.search({
-    index: 'dharmadict',
+    index: config.db.index,
     type: 'terms',
     body: {
       query: {
@@ -92,7 +86,7 @@ app.get('/api/search', function (req, res) {
 
 function getTermById(res, termId, successCallback) {
   elasticClient.search({
-    index: 'dharmadict',
+    index: config.db.index,
     type: 'terms',
     body: {
       query: {
@@ -183,7 +177,7 @@ app.post('/api/update', function (req, res) {
       }
       translation.meanings.forEach(m => m.versions_lower = m.versions.map(v => v.toLowerCase()));
       elasticClient.index({
-        index: 'dharmadict',
+        index: config.db.index,
         type: 'terms',
         id: termId,
         body: term
@@ -225,7 +219,7 @@ app.post('/api/newTerm', function (req, res) {
         translations: []
       };
       elasticClient.index({
-        index: 'dharmadict',
+        index: config.db.index,
         type: 'terms',
         id: termId,
         body: term
@@ -256,10 +250,13 @@ app.get('/api/users/:name', (req, res) =>
 );
 
 // serve static
+app.use(express.static(path.join(__dirname + '/client')));
 app.get('*', function (req, res) {
   res.sendFile(path.join(__dirname + '/client/index.html'));
 });
 
-app.listen(port);
+app.use(bodyParser.json());
 
-logger.info('Listening on port ' + port + '...');
+app.listen(config.app.port);
+
+logger.info(`Listening on port ${config.app.port}...`);

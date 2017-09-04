@@ -1,8 +1,6 @@
 const jwt = require('jsonwebtoken');
 const logger = require('../log/logger');
-
-const secretKey = 'supersecret';
-const accessTokenExpiration = 60 * 60 * 24 * 31;  // 1 month
+const config = require('../config.js');
 
 const extractToken = (authHeader) => {
   if (!authHeader) {
@@ -16,7 +14,7 @@ const extractToken = (authHeader) => {
 };
 
 const parseToken = (token) => new Promise((resolve, reject) => {
-  jwt.verify(token, secretKey, (err, decoded) => {
+  jwt.verify(token, config.token.secretKey, (err, decoded) => {
     if (err || !decoded) {
       return reject('Missed token')
     }
@@ -26,8 +24,8 @@ const parseToken = (token) => new Promise((resolve, reject) => {
 
 const generateToken = (user) => {
   logger.info('Logged in as ' + user.login);
-  const token = jwt.sign(user, secretKey, {
-    expiresIn: accessTokenExpiration
+  const token = jwt.sign(user, config.token.secretKey, {
+    expiresIn: config.token.expiration
   });
   return {user, token}
 };

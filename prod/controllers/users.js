@@ -1,6 +1,7 @@
-const elasticClient = require('./helpers/db.js');
 const passwordHash = require('password-hash');
+const elasticClient = require('./helpers/db.js');
 const logger = require('../log/logger');
+const config = require('../config.js');
 
 let canLogin = (login, password) => {
   logger.info(`Check if user ${login} can login`);
@@ -25,7 +26,7 @@ let _findById = userId => new Promise((resolve, reject) => {
     return reject('Invalid ID')
   }
   elasticClient.search({
-    index: 'dharmadict',
+    index: config.db.index,
     type: 'users',
     body: {
       query: {
@@ -54,7 +55,7 @@ let findByLogin = userLogin => new Promise((resolve, reject) => {
     return reject('Invalid login')
   }
   elasticClient.search({
-    index: 'dharmadict',
+    index: config.db.index,
     type: 'users',
     body: {
       query: {
@@ -79,7 +80,7 @@ let findByLogin = userLogin => new Promise((resolve, reject) => {
 let findAll = () => new Promise((resolve, reject) => {
   logger.info(`Find all users`);
   elasticClient.search({
-    index: 'dharmadict',
+    index: config.db.index,
     type: 'users',
     body: {}
   }).then(result => {
@@ -165,7 +166,7 @@ let create = newUser => new Promise((resolve, reject) => {
   )
   .then(data =>  // Adding new user
     elasticClient.index({
-      index: 'dharmadict',
+      index: config.db.index,
       type: 'users',
       id: data.userId,
       body: data.newUser
@@ -185,7 +186,7 @@ let removeById = userId => new Promise((resolve, reject) => {
     return reject('Error in delete user. Invalid id')
   }
   elasticClient.delete({
-    index: 'dharmadict',
+    index: config.db.index,
     type: 'users',
     id: userId
   }).then(response => {
