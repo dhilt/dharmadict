@@ -107,11 +107,11 @@ let create = newUser => new Promise((resolve, reject) => {
   return resolve({ newUser, userId })
 })
 .then(data => // check login - user exist or not?
-  findByLogin(data.newUser.login).then(
-    result => {
-      throw `User already exists`
-    },
-    error => Promise.resolve(data)
+  _checkUniqueOfLoginAndId({ login: data.newUser.login, id: data.userId }).then(
+    result => Promise.resolve(data),
+    error => {
+      throw `User already exists. ${error} `
+    }
   )
 )
 .then(data =>  // Adding new user
@@ -128,6 +128,36 @@ let create = newUser => new Promise((resolve, reject) => {
   }, error => {
     logger.error(error.message)
     throw `Create user error`
+  })
+)
+
+let _checkUniqueOfLoginAndId = data => new Promise((resolve, reject) =>
+// check login
+  findByLogin(data.login).then(
+    result => reject(`Login not unique`),
+    error => resolve(data)
+  )
+).then(data =>  // check id
+  elasticClient.search({
+    index: 'dharmadict',
+    type: 'users',
+    body: {
+      query: {
+        ids: {
+          values: [data.id]
+        }
+      }
+    }
+  }).then(response => {
+    const result = response.hits.hits[0]
+    if (!result || !result._source) {
+      return Promise.resolve()
+    } else {
+      throw `Id not unique`
+    }
+  }, error => {
+    logger.error(error.message)
+    return reject('Database error')
   })
 )
 
