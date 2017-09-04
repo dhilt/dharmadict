@@ -1,11 +1,6 @@
-let elasticsearch = require('elasticsearch');
-let passwordHash = require('password-hash');
-let logger = require('../log/logger');
-
-let elasticClient = new elasticsearch.Client({
-  host: 'localhost:9200',
-  log: 'info'
-});
+const elasticClient = require('./helpers/db.js')
+const passwordHash = require('password-hash')
+const logger = require('../log/logger')
 
 let doLogin = (login, password) => {
   logger.info(`Check if user ${login} can login`)
@@ -39,17 +34,16 @@ let findByLogin = userLogin => new Promise((resolve, reject) => {
         }
       }
     }
-  }, (error, response, status) => {
-    if (error) {
-      logger.error(error)
-      return reject('DB error')
-    }
+  }).then(response => {
     const result = response.hits.hits[0]
     if (!result || !result._source) {
       return reject('No login found')
     }
     result._source.id = result._id
     return resolve(result._source)
+  }, error => {
+    logger.error(error.message)
+    return reject('Database error')
   })
 })
 
@@ -59,22 +53,25 @@ let findAll = () => new Promise((resolve, reject) => {
     index: 'dharmadict',
     type: 'users',
     body: {}
-  }, (error, response, status) => {
-    if (error) {
-      logger.error('Get all users error')
-      return reject(error.message)
+  }).then(result => {
+    let users = result.hits.hits
+    if (!users.length) {
+      return reject(`Can't find all users`)
     }
-    if (!response.hits.hits.length) {
-      return reject(`Can't find all users.`)
-    }
-    let users = response.hits.hits.map(elem => {
-      let cleanUserInfo = elem._source
-      cleanUserInfo.id = elem._id
-      return cleanUserInfo
-    })
     logger.info('A users was found')
     return resolve(users)
+  }, error => {
+    logger.error(error.message)
+    return reject('Database error')
   })
+})
+.then(users => {  // perfection of data
+  users = users.map(elem => {
+    let cleanUserInfo = elem._source
+    cleanUserInfo.id = elem._id
+    return getUserInfo(cleanUserInfo)
+  })
+  return Promise.resolve(users)
 })
 
 let create = newUser => new Promise((resolve, reject) => {
@@ -107,23 +104,24 @@ let create = newUser => new Promise((resolve, reject) => {
   let userId = newUser.id
   delete newUser.password
   delete newUser.id
-
+  return resolve({ newUser, userId })
+})
+.then(data =>  // Adding new user
   elasticClient.index({
     index: 'dharmadict',
     type: 'users',
-    id: userId,
-    body: newUser
-  }, (error, response, status) => {
-    if (error) {
-      logger.error('Create user error')
-      return reject(error.message)
-    }
-    logger.info('User was successfully created');
-    return resolve({
+    id: data.userId,
+    body: data.newUser
+  }).then(result => {
+    logger.info('User was successfully created')
+    return Promise.resolve({
       success: true
     })
+  }, error => {
+    logger.error(error.message)
+    throw `Create user error`
   })
-})
+)
 
 let removeById = userId => new Promise((resolve, reject) => {
   if (!userId) {
@@ -133,15 +131,14 @@ let removeById = userId => new Promise((resolve, reject) => {
     index: 'dharmadict',
     type: 'users',
     id: userId
-  }, (error, response, status) => {
-    if (error) {
-      logger.error('Delete user error')
-      return reject(error.message)
-    }
+  }).then(response => {
     logger.info('User was deleted')
     return resolve({
       success: true
     })
+  }, error => {
+    logger.error(error.message)
+    return reject('Delete user error')
   })
 })
 
