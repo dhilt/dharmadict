@@ -13,6 +13,7 @@ const authController = require('./controllers/auth');
 const responseError = require('./controllers/helpers/serverHelper').responseError;
 
 const app = express();
+app.use(bodyParser.json());
 
 const doAuthorize = (req, res) => {
   const token = authController.extractToken(req.headers.authorization);
@@ -253,8 +254,6 @@ app.use(express.static(path.join(__dirname + '/client')));
 app.get('*', function (req, res) {
   res.sendFile(path.join(__dirname + '/client/index.html'));
 });
-
-app.use(bodyParser.json());
 
 app.listen(config.app.port);
 

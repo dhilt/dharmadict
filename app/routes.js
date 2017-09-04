@@ -42,7 +42,7 @@ const Routes = props => {
         <Route exactly path='/about' component={About} />
         <Route exactly path='/edit' component={Edit} onEnter={checkAuth} />
         <Route exactly path='/newTerm' component={NewTerm} onEnter={checkAuth} />
-        <Route exactly path='/user' component={TranslatorPage} />
+        <Route exactly path='/translator' component={TranslatorPage} />
         <Route exactly path='/not_authorized' component={NotFound} />
         <Route path='*' component={NotFound} />
       </Route>
