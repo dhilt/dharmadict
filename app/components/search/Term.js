@@ -79,7 +79,7 @@ class Term extends Component {
             <div className="add-translation">
               <Link to={{
                 pathname: '/edit',
-                query: { termId: term.id, translatorId: this.userInfo.code }
+                query: { termId: term.id, translatorId: this.userInfo.id }
               }}>
                 Добавить перевод...
               </Link>
@@ -94,14 +94,14 @@ class Term extends Component {
     if(!this.userInfo) {
       return false;
     }
-    return this.userInfo.code === translatorId || this.userInfo.code === 'ADMIN'
+    return this.userInfo.id === translatorId || this.userInfo.role === 'admin'
   }
 
   canAdd(term) {
     if(!this.userInfo || this.userInfo.role !== "translator") {
       return false;
     }
-    return !term.translations.find(t => t.translatorId === this.userInfo.code)
+    return !term.translations.find(t => t.translatorId === this.userInfo.id)
   }
 
   _toggleComment(translationIndex, meaningIndex) {
