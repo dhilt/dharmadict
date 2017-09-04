@@ -1,18 +1,17 @@
-let express = require('express');
-let passwordHash = require('password-hash');
-let bodyParser = require('body-parser');
-let elasticsearch = require('elasticsearch');
-let jwt = require('jsonwebtoken');
-let path = require('path');
-let logger = require('./log/logger');
+const express = require('express')
+const bodyParser = require('body-parser')
+const elasticsearch = require('elasticsearch')
+const path = require('path')
+const logger = require('./log/logger')
 
-let usersController = require('./controllers/users');
-let getUserInfo = usersController.getUserInfo;
+const usersController = require('./controllers/users')
+const getUserInfo = usersController.getUserInfo
+const authController = require('./controllers/auth')
+const authorize = authController.authorize
+const responseError = require('./controllers/helpers/serverHelper').responseError
 
-let app = express();
-let port = 3000;
-let secretKey = 'supersecret';
-let accessTokenExpiration = 60 * 60 * 24 * 31; // 1 month
+const app = express()
+const port = 3000
 
 app.use(express.static(path.join(__dirname + '/client')));
 app.use(bodyParser.json());
@@ -22,70 +21,23 @@ let elasticClient = new elasticsearch.Client({
   log: 'info'
 });
 
-let responseError = (res, message, status, level = 'error') => {
-  if (level === 'error') {
-    logger.error(message);
-  } else {
-    logger.info(message);
-  }
-  //res.status(status);
-  res.send({
-    error: true,
-    message: message
-  });
-};
-
-let redirect302 = (res) => {
-  res.statusCode = 302;
-  res.send('Authorization is needed');
-};
-
-let getTokenFromRequest = (req) => {
-  let authHeader = req.headers.authorization;
-  if (!authHeader) {
-    return;
-  }
-  let bearer = authHeader.substr(7);
-  if (!bearer || bearer.length < 10) {
-    return;
-  }
-  return bearer;
-};
-
-let authorize = (req, res, onSuccess) => {
-  let token;
-  if (!(token = getTokenFromRequest(req))) {
-    return redirect302(res);
-  }
-  jwt.verify(token, secretKey, (err, decoded) => {
-    if (err) {
-      return responseError(res, 'Authorization error. Missed token', 500);
-    }
-    usersController.findByLogin(decoded.login)
-      .then(result => onSuccess(result))
-      .catch(error => responseError(res, error, 500));
-  });
-};
+app.get('/api/mytest', (req, res) => {
+  usersController.findAll()
+  .then(result => res.send({ result }))
+  .catch(error => res.send({ error }))
+});
 
 app.get('/api/userInfo', function (req, res) {
   authorize(req, res, (user) => {
     logger.info('Authenticated as ' + user.login);
-    return res.send(getUserInfo(user));
+    return res.send(user);
   });
 });
 
 app.post('/api/login', function (req, res) {
-  const login = req.body.login;
-  const password = req.body.password;
-  usersController.doLogin(login, password)
-    .then(user => {
-      logger.info('Logged in as ' + user.login);
-      const token = jwt.sign(user, secretKey, {
-        expiresIn: accessTokenExpiration
-      });
-      res.send({user: getUserInfo(user), token});
-    })
-    .catch(error => responseError(res, `Can't login. ${error}`, 500));
+  authController.doLogin(req)
+    .then(result => res.send({ user: getUserInfo(result.user), token: result.token }))
+    .catch(error => responseError(res, `Can't login. ${error}`, 500))
 });
 
 app.get('/api/search', function (req, res) {

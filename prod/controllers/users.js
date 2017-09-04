@@ -2,21 +2,20 @@ const elasticClient = require('./helpers/db.js')
 const passwordHash = require('password-hash')
 const logger = require('../log/logger')
 
-let doLogin = (login, password) => {
+let canLogin = (login, password) => {
   logger.info(`Check if user ${login} can login`)
   if (!login || !password) {
     throw 'Invalid params'
   }
-  return findByLogin(login, true).then(user => {
-      if (!passwordHash.verify(password, user.hash)) {
-        throw 'Wrong credentionals'
-      }
-      return Promise.resolve(user)
-    },
-    error => {
-      throw error
+  return findByLogin(login).then(user => {
+    if (!passwordHash.verify(password, user.hash)) {
+      throw 'Wrong credentionals'
     }
-  )
+    return Promise.resolve(user)
+  },
+  error => {
+    throw error
+  })
 }
 
 let _findById = userId => new Promise((resolve, reject) => {
@@ -210,7 +209,7 @@ let getUserInfo = user => ({
 
 module.exports = {
   getUserInfo,
-  doLogin,
+  canLogin,
   findByLogin,
   findAll,
   create,
