@@ -30,7 +30,7 @@ app.get('/api/mytest', (req, res) => {
 app.get('/api/userInfo', function (req, res) {
   authorize(req, res, (user) => {
     logger.info('Authenticated as ' + user.login);
-    return res.send(user);
+    return res.send(getUserInfo(user));
   });
 });
 
