@@ -3,7 +3,6 @@ let passwordHash = require('password-hash');
 let bodyParser = require('body-parser');
 let elasticsearch = require('elasticsearch');
 let jwt = require('jsonwebtoken');
-let Cookies = require('cookies');  // Delete this?
 let path = require('path');
 let logger = require('./log/logger');
 
