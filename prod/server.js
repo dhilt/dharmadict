@@ -62,8 +62,7 @@ let authorize = (req, res, onSuccess) => {
     if (err) {
       return responseError(res, 'Authorization error. Missed token', 500);
     }
-    let userId = decoded.id;
-    usersController.findById(userId)
+    usersController.findByLogin(decoded.login)
       .then(result => onSuccess(result))
       .catch(error => responseError(res, error, 500));
   });
@@ -274,8 +273,7 @@ app.post('/api/newTerm', function (req, res) {
 });
 
 app.post('/api/newUser', function (req, res) {
-  let newUser = req.body.user;
-  usersController.create(newUser)
+  usersController.create(req.body.user)
     .then(result => res.json(result))
     .catch(error => responseError(res, error, 500))
 });
