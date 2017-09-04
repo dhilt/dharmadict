@@ -140,7 +140,13 @@ let create = newUser => new Promise((resolve, reject) => {
     result => {
       throw `Login not unique`
     },
-    error => Promise.resolve(data)
+    error => {
+      // The error should mean the absence of data.
+      // And correspond to the message about this error in the method findByLogin.
+      if (error == 'No login found') {
+        return Promise.resolve(data)
+      }
+    }
   )
 )
 .then(data =>  // check id uniqueness)
@@ -148,7 +154,13 @@ let create = newUser => new Promise((resolve, reject) => {
     result => {
       throw `Id not unique`
     },
-    error => Promise.resolve(data)
+    error => {
+      // The error should mean the absence of data.
+      // And correspond to the message about this error in the method _findById.
+      if (error == 'No ID found') {
+        return Promise.resolve(data)
+      }
+    }
   )
 )
 .then(data =>  // Adding new user
