@@ -62,21 +62,21 @@ let authorize = (req, res, onSuccess) => {
     if (err) {
       return responseError(res, 'Authorization error. Missed token', 500);
     }
-    let userId = decoded.id;    // let userId = "HOK";
+    let userId = decoded.id;
     usersController.findById(userId)
       .then(result => onSuccess(result))
       .catch(error => responseError(res, error, 500));
   });
 };
 
-app.get('/api/userInfo', function(req, res) {
+app.get('/api/userInfo', function (req, res) {
   authorize(req, res, (user) => {
     logger.info('Authenticated as ' + user.login);
     return res.send(getUserInfo(user));
   });
 });
 
-app.post('/api/login', function(req, res) {
+app.post('/api/login', function (req, res) {
   const login = req.body.login;
   const password = req.body.password;
 
@@ -98,7 +98,7 @@ app.post('/api/login', function(req, res) {
     .catch(error => responseError(res, error, 500));
 });
 
-app.get('/api/search', function(req, res) {
+app.get('/api/search', function (req, res) {
   logger.info('Searching terms by "' + req.query.pattern + '" pattern')
   return elasticClient.search({
     index: 'dharmadict',
@@ -149,7 +149,7 @@ function getTermById(res, termId, successCallback) {
   });
 }
 
-app.get('/api/translation', function(req, res) {
+app.get('/api/translation', function (req, res) {
   if (!req.query.termId || !req.query.translatorId) {
     return responseError(res, 'Incorrect /api/term request params', 500, 'info');
   }
@@ -192,7 +192,7 @@ app.get('/api/translation', function(req, res) {
   });
 });
 
-app.post('/api/update', function(req, res) {
+app.post('/api/update', function (req, res) {
   let termId = req.body.termId;
   let translation = req.body.translation;
   if (!termId || !translation) {
@@ -201,7 +201,7 @@ app.post('/api/update', function(req, res) {
   let translatorId = req.body.translation.translatorId;
   logger.info('Term updating. Term id = "' + termId + '", translator id = "' + translation.translatorId + '"');
 
-  authorize(req, res, function(user) {
+  authorize(req, res, function (user) {
     getTermById(res, termId, (hit) => {
       let term = hit ? hit._source : null;
       if (!term) {
@@ -241,7 +241,7 @@ app.post('/api/update', function(req, res) {
   });
 });
 
-app.post('/api/newTerm', function(req, res) {
+app.post('/api/newTerm', function (req, res) {
   let termName = req.body.term.trim();
   if (!termName) {
     return responseError(res, 'Incorrect /api/newTerm request params', 500);
@@ -249,8 +249,8 @@ app.post('/api/newTerm', function(req, res) {
   let termId = termName.replace(/ /g, '_');
   logger.info('Term adding: name "' + termName + '", id "' + termId + '"');
 
-  authorize(req, res, function(user) {
-    if(user.role !== 'admin') {
+  authorize(req, res, function (user) {
+    if (user.role !== 'admin') {
       return responseError(res, 'Only superadmin can create new terms', 500);
     }
     getTermById(res, termId, (hit) => {
@@ -281,7 +281,7 @@ app.post('/api/newTerm', function(req, res) {
   });
 });
 
-app.post('/api/newUser', function(req, res) {
+app.post('/api/newUser', function (req, res) {
   let newUser = req.body.user;
   usersController.create(newUser)
     .then(result => res.json(result))
@@ -290,19 +290,16 @@ app.post('/api/newUser', function(req, res) {
 
 app.get('/api/users/:name', (req, res) =>
   usersController.findByLogin(req.params.name)
-  .then(user =>
-    res.json({
-      success: true,
-      user
-    })
-  )
-  .catch(error =>
-    responseError(res, `Can't find user. ${error}`, 500)
-  )
+    .then(user =>
+      res.json({success: true, user})
+    )
+    .catch(error =>
+      responseError(res, `Can't find user. ${error}`, 500)
+    )
 );
 
 // serve static
-app.get('*', function(req, res) {
+app.get('*', function (req, res) {
   res.sendFile(path.join(__dirname + '/client/index.html'));
 });
 

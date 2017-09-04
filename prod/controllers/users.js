@@ -8,8 +8,9 @@ let elasticClient = new elasticsearch.Client({
 });
 
 let findById = userId => new Promise((resolve, reject) => {
+  logger.info(`Find user by ID ${userId}`)
   if (!userId) {
-    return reject(`Can't find user. Invalid id.`)
+    return reject('Invalid ID')
   }
   elasticClient.search({
     index: 'dharmadict',
@@ -23,16 +24,15 @@ let findById = userId => new Promise((resolve, reject) => {
     }
   }, (error, response, status) => {
     if (error) {
-      logger.error('Get user by id (' + userId + ') error')
-      return reject(error.message)
+      logger.error(error)
+      return reject('DB error')
     }
-    if (!response.hits.hits[0] || !response.hits.hits[0]._source) {
-      return reject(`Can't find user. User with this id doesn't exist.`)
+    const result = response.hits.hits[0]
+    if (!result || !result._source) {
+      return reject('No ID found')
     }
-    let user = response.hits.hits[0]._source
-    user.id = userId
-    logger.info('A user was found by id ' + userId)
-    return resolve(user)
+    result._source.id = result._id
+    return resolve(getUserInfo(result._source))
   })
 })
 
@@ -56,12 +56,12 @@ let findByLogin = userLogin => new Promise((resolve, reject) => {
       logger.error(error)
       return reject('DB error')
     }
-    const found = response.hits.hits[0]
-    if (!found || !found._source) {
+    const result = response.hits.hits[0]
+    if (!result || !result._source) {
       return reject('No login found')
     }
-    found._source.id = found._id
-    return resolve(getUserInfo(found._source))
+    result._source.id = result._id
+    return resolve(getUserInfo(result._source))
   })
 })
 
