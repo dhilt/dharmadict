@@ -18,15 +18,11 @@ app.use(bodyParser.json());
 const doAuthorize = (req, res) => {
   const token = authController.extractToken(req.headers.authorization);
   if (!token) {
-    serverHelper.redirect302(res);
-    throw null
+    return Promise.reject('Authorization needed');
   }
   return authController.parseToken(token)
     .then(login => usersController.findByLogin(login))
-    .catch(error => {
-      serverHelper.responseError(res, `Authorization error. ${error}`, 500);
-      throw null
-    })
+    .catch(error => Promise.reject(`Unauthorized access. ${error}`))
 };
 
 app.get('/api/mytest', (req, res) => {
@@ -41,7 +37,7 @@ app.get('/api/userInfo', (req, res) => {
       logger.info('Authenticated as ' + user.login);
       res.send(getUserInfo(user));
     })
-    .catch(err => null);
+    .catch(error => responseError(res, `Can't get user info. ${error}`, 500))
 });
 
 app.post('/api/login', (req, res) => {
@@ -237,10 +233,12 @@ app.post('/api/newTerm', function (req, res) {
   });
 });
 
-app.post('/api/newUser', function (req, res) {
-  usersController.create(req.body.user)
-    .then(result => res.json(result))
-    .catch(error => responseError(res, error, 500))
+app.put('/api/newUser', (req, res) => {
+  doAuthorize(req, res)
+    .then(user => usersController.isAdmin(user))
+    .then(user => usersController.create(req.body.user))
+    .then(result => res.json({success: true, user: result}))
+    .catch(error => responseError(res, `Can't create new user. ${error}`, 500))
 });
 
 app.get('/api/users/:name', (req, res) =>

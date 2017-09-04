@@ -16,7 +16,7 @@ const extractToken = (authHeader) => {
 const parseToken = (token) => new Promise((resolve, reject) => {
   jwt.verify(token, config.token.secretKey, (err, decoded) => {
     if (err || !decoded) {
-      return reject('Missed token')
+      return reject('Invalid token')
     }
     resolve(decoded.login)
   })
