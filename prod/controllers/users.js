@@ -3,6 +3,13 @@ const elasticClient = require('./helpers/db.js');
 const logger = require('../log/logger');
 const config = require('../config.js');
 
+let isAdmin = (user) => {
+  if (user.role !== 'admin') {
+    return Promise.reject('Admin only');
+  }
+  Promise.resolve(user);
+};
+
 let canLogin = (login, password) => {
   logger.info(`Check if user ${login} can login`);
   if (!login || !password) {
@@ -107,28 +114,28 @@ let findAll = () => new Promise((resolve, reject) => {
 let create = newUser => new Promise((resolve, reject) => {
   // data validation
   if (!newUser) {
-    return reject('Error in create user. Invalid data')
+    return reject('Invalid data')
   }
   if (!newUser.id) {
-    return reject('Error in create user. Invalid id')
+    return reject('Invalid id')
   }
   if (!newUser.role) {
-    return reject('Error in create user. Invalid role')
+    return reject('Invalid role')
   }
   if (!newUser.roleId) {
-    return reject('Error in create user. Invalid roleId')
+    return reject('Invalid roleId')
   }
   if (!newUser.login) {
-    return reject('Error in create user. Invalid login')
+    return reject('Invalid login')
   }
   if (!newUser.name) {
-    return reject('Error in create user. Invalid name')
+    return reject('Invalid name')
   }
   if (!newUser.password) {
-    return reject('Error in create user. Invalid password')
+    return reject('Invalid password')
   }
   if (!newUser.description) {
-    return reject('Error in create user. Invalid description')
+    return reject('Invalid description')
   }
   newUser.hash = passwordHash.generate(newUser.password);
   let userId = newUser.id;
@@ -210,6 +217,7 @@ let getUserInfo = user => ({
 });
 
 module.exports = {
+  isAdmin,
   getUserInfo,
   canLogin,
   findByLogin,
