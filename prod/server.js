@@ -1,17 +1,17 @@
-const express = require('express')
-const bodyParser = require('body-parser')
-const elasticsearch = require('elasticsearch')
-const path = require('path')
-const logger = require('./log/logger')
+const express = require('express');
+const bodyParser = require('body-parser');
+const elasticsearch = require('elasticsearch');
+const path = require('path');
+const logger = require('./log/logger');
 
-const usersController = require('./controllers/users')
-const getUserInfo = usersController.getUserInfo
-const authController = require('./controllers/auth')
-const authorize = authController.authorize
-const responseError = require('./controllers/helpers/serverHelper').responseError
+const serverHelper = require('./controllers/helpers/serverHelper.js');
+const usersController = require('./controllers/users');
+const getUserInfo = usersController.getUserInfo;
+const authController = require('./controllers/auth');
+const responseError = require('./controllers/helpers/serverHelper').responseError;
 
-const app = express()
-const port = 3000
+const app = express();
+const port = 3000;
 
 app.use(express.static(path.join(__dirname + '/client')));
 app.use(bodyParser.json());
@@ -21,27 +21,47 @@ let elasticClient = new elasticsearch.Client({
   log: 'info'
 });
 
+const doAuthorize = (req, res) => {
+  const token = authController.extractToken(req.headers.authorization);
+  if (!token) {
+    serverHelper.redirect302(res);
+    throw null
+  }
+  return authController.parseToken(token)
+    .then(login => usersController.findByLogin(login))
+    .catch(error => {
+      serverHelper.responseError(res, `Authorization error. ${error}`, 500);
+      throw null
+    })
+};
+
 app.get('/api/mytest', (req, res) => {
   usersController.findAll()
-  .then(result => res.send({ result }))
-  .catch(error => res.send({ error }))
+    .then(result => res.send({result}))
+    .catch(error => res.send({error}))
 });
 
-app.get('/api/userInfo', function (req, res) {
-  authorize(req, res, (user) => {
-    logger.info('Authenticated as ' + user.login);
-    return res.send(getUserInfo(user));
-  });
+app.get('/api/userInfo', (req, res) => {
+  doAuthorize(req, res)
+    .then(user => {
+      logger.info('Authenticated as ' + user.login);
+      res.send(getUserInfo(user));
+    })
+    .catch(err => null);
 });
 
-app.post('/api/login', function (req, res) {
-  authController.doLogin(req)
-    .then(result => res.send({ user: getUserInfo(result.user), token: result.token }))
+app.post('/api/login', (req, res) => {
+  const {login, password} = req.body;
+  usersController.canLogin(login, password)
+    .then(user => {
+      const {token} = authController.generateToken(user);
+      res.send({user: getUserInfo(user), token})
+    })
     .catch(error => responseError(res, `Can't login. ${error}`, 500))
 });
 
 app.get('/api/search', function (req, res) {
-  logger.info('Searching terms by "' + req.query.pattern + '" pattern')
+  logger.info('Searching terms by "' + req.query.pattern + '" pattern');
   return elasticClient.search({
     index: 'dharmadict',
     type: 'terms',
@@ -55,7 +75,7 @@ app.get('/api/search', function (req, res) {
         }
       }
     }
-  }, (error, response, status) => {
+  }, (error, response) => {
     if (error) {
       logger.error('Search error');
       return responseError(res, error.message, 500);
@@ -81,7 +101,7 @@ function getTermById(res, termId, successCallback) {
         }
       }
     }
-  }, (error, response, status) => {
+  }, (error, response) => {
     if (error) {
       logger.error('Get term by id (' + termId + ') error');
       return responseError(res, error.message, 500);
@@ -97,7 +117,7 @@ app.get('/api/translation', function (req, res) {
   }
   logger.info('Requesting a translation by term id "' + req.query.termId + '" and translatorId "' + req.query.translatorId + '"');
 
-  authorize(req, res, (user) => {
+  doAuthorize(req, res, (user) => {
     getTermById(res, req.query.termId, (hit) => {
       usersController.findByLogin(req.query.translatorId).then(translator => {
         if (!translator) {
@@ -143,7 +163,7 @@ app.post('/api/update', function (req, res) {
   let translatorId = req.body.translation.translatorId;
   logger.info('Term updating. Term id = "' + termId + '", translator id = "' + translation.translatorId + '"');
 
-  authorize(req, res, function (user) {
+  doAuthorize(req, res, function (user) {
     getTermById(res, termId, (hit) => {
       let term = hit ? hit._source : null;
       if (!term) {
@@ -191,7 +211,7 @@ app.post('/api/newTerm', function (req, res) {
   let termId = termName.replace(/ /g, '_');
   logger.info('Term adding: name "' + termName + '", id "' + termId + '"');
 
-  authorize(req, res, function (user) {
+  doAuthorize(req, res, function (user) {
     if (user.role !== 'admin') {
       return responseError(res, 'Only superadmin can create new terms', 500);
     }

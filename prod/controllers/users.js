@@ -1,25 +1,26 @@
-const elasticClient = require('./helpers/db.js')
-const passwordHash = require('password-hash')
-const logger = require('../log/logger')
+const elasticClient = require('./helpers/db.js');
+const passwordHash = require('password-hash');
+const logger = require('../log/logger');
 
 let canLogin = (login, password) => {
-  logger.info(`Check if user ${login} can login`)
+  logger.info(`Check if user ${login} can login`);
   if (!login || !password) {
     throw 'Invalid params'
   }
-  return findByLogin(login).then(user => {
-    if (!passwordHash.verify(password, user.hash)) {
-      throw 'Wrong credentionals'
-    }
-    return Promise.resolve(user)
-  },
-  error => {
-    throw error
-  })
-}
+  return findByLogin(login)
+    .then(user => {
+      if (!passwordHash.verify(password, user.hash)) {
+        throw 'Wrong credentials'
+      }
+      return Promise.resolve(user)
+    })
+    .catch(error => {
+      throw error
+    })
+};
 
 let _findById = userId => new Promise((resolve, reject) => {
-  logger.info(`Find user by ID ${userId}`)
+  logger.info(`Find user by ID ${userId}`);
   if (!userId) {
     return reject('Invalid ID')
   }
@@ -34,21 +35,21 @@ let _findById = userId => new Promise((resolve, reject) => {
       }
     }
   }).then(response => {
-    const result = response.hits.hits[0]
-    if (!result || !result._source) {
-      return reject('No ID found')
-    }
-    result._source.id = result._id
-    return resolve(result._source)
-  },
-  error => {
-    logger.error(error)
-    return reject('Database error')
-  })
-})
+      const result = response.hits.hits[0];
+      if (!result || !result._source) {
+        return reject('No ID found')
+      }
+      result._source.id = result._id;
+      return resolve(result._source)
+    },
+    error => {
+      logger.error(error);
+      return reject('Database error')
+    })
+});
 
 let findByLogin = userLogin => new Promise((resolve, reject) => {
-  logger.info(`Find user by login ${userLogin}`)
+  logger.info(`Find user by login ${userLogin}`);
   if (!userLogin) {
     return reject('Invalid login')
   }
@@ -63,44 +64,44 @@ let findByLogin = userLogin => new Promise((resolve, reject) => {
       }
     }
   }).then(response => {
-    const result = response.hits.hits[0]
+    const result = response.hits.hits[0];
     if (!result || !result._source) {
       return reject('No login found')
     }
-    result._source.id = result._id
+    result._source.id = result._id;
     return resolve(result._source)
   }, error => {
-    logger.error(error.message)
+    logger.error(error.message);
     return reject('Database error')
   })
-})
+});
 
 let findAll = () => new Promise((resolve, reject) => {
-  logger.info(`Find all users`)
+  logger.info(`Find all users`);
   elasticClient.search({
     index: 'dharmadict',
     type: 'users',
     body: {}
   }).then(result => {
-    let users = result.hits.hits
+    let users = result.hits.hits;
     if (!users.length) {
       return reject(`Can't find all users`)
     }
-    logger.info('A users was found')
+    logger.info('A users was found');
     return resolve(users)
   }, error => {
-    logger.error(error.message)
+    logger.error(error.message);
     return reject('Database error')
   })
 })
-.then(users => {  // perfection of data
-  users = users.map(elem => {
-    let cleanUserInfo = elem._source
-    cleanUserInfo.id = elem._id
-    return getUserInfo(cleanUserInfo)
-  })
-  return Promise.resolve(users)
-})
+  .then(users => {  // perfection of data
+    users = users.map(elem => {
+      let cleanUserInfo = elem._source;
+      cleanUserInfo.id = elem._id;
+      return getUserInfo(cleanUserInfo)
+    });
+    return Promise.resolve(users)
+  });
 
 let create = newUser => new Promise((resolve, reject) => {
   // data validation
@@ -128,56 +129,56 @@ let create = newUser => new Promise((resolve, reject) => {
   if (!newUser.description) {
     return reject('Error in create user. Invalid description')
   }
-  newUser.hash = passwordHash.generate(newUser.password)
-  let userId = newUser.id
-  delete newUser.password
-  delete newUser.id
-  return resolve({ newUser, userId })
+  newUser.hash = passwordHash.generate(newUser.password);
+  let userId = newUser.id;
+  delete newUser.password;
+  delete newUser.id;
+  return resolve({newUser, userId})
 })
-.then(data =>  // check login uniqueness
-  findByLogin(data.newUser.login).then(
-    result => {
-      throw `Login not unique`
-    },
-    error => {
-      // The error should mean the absence of data.
-      // And correspond to the message about this error in the method findByLogin.
-      if (error == 'No login found') {
-        return Promise.resolve(data)
+  .then(data =>  // check login uniqueness
+    findByLogin(data.newUser.login).then(
+      result => {
+        throw `Login not unique`
+      },
+      error => {
+        // The error should mean the absence of data.
+        // And correspond to the message about this error in the method findByLogin.
+        if (error == 'No login found') {
+          return Promise.resolve(data)
+        }
       }
-    }
+    )
   )
-)
-.then(data =>  // check id uniqueness)
-  _findById(data.userId).then(
-    result => {
-      throw `Id not unique`
-    },
-    error => {
-      // The error should mean the absence of data.
-      // And correspond to the message about this error in the method _findById.
-      if (error == 'No ID found') {
-        return Promise.resolve(data)
+  .then(data =>  // check id uniqueness)
+    _findById(data.userId).then(
+      result => {
+        throw `Id not unique`
+      },
+      error => {
+        // The error should mean the absence of data.
+        // And correspond to the message about this error in the method _findById.
+        if (error == 'No ID found') {
+          return Promise.resolve(data)
+        }
       }
-    }
+    )
   )
-)
-.then(data =>  // Adding new user
-  elasticClient.index({
-    index: 'dharmadict',
-    type: 'users',
-    id: data.userId,
-    body: data.newUser
-  }).then(result => {
-    logger.info('User was successfully created')
-    return Promise.resolve({
-      success: true
+  .then(data =>  // Adding new user
+    elasticClient.index({
+      index: 'dharmadict',
+      type: 'users',
+      id: data.userId,
+      body: data.newUser
+    }).then(result => {
+      logger.info('User was successfully created');
+      return Promise.resolve({
+        success: true
+      })
+    }, error => {
+      logger.error(error.message);
+      throw `Create user error`
     })
-  }, error => {
-    logger.error(error.message)
-    throw `Create user error`
-  })
-)
+  );
 
 let removeById = userId => new Promise((resolve, reject) => {
   if (!userId) {
@@ -188,15 +189,15 @@ let removeById = userId => new Promise((resolve, reject) => {
     type: 'users',
     id: userId
   }).then(response => {
-    logger.info('User was deleted')
+    logger.info('User was deleted');
     return resolve({
       success: true
     })
   }, error => {
-    logger.error(error.message)
+    logger.error(error.message);
     return reject('Delete user error')
   })
-})
+});
 
 let getUserInfo = user => ({
   id: user.id,
@@ -205,7 +206,7 @@ let getUserInfo = user => ({
   role: user.role,
   roleId: user.roleId,
   description: user.description
-})
+});
 
 module.exports = {
   getUserInfo,
@@ -214,4 +215,4 @@ module.exports = {
   findAll,
   create,
   removeById
-}
+};
