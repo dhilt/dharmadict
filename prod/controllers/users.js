@@ -1,5 +1,6 @@
 const passwordHash = require('password-hash');
 const elasticClient = require('./helpers/db.js');
+const ApiError = require('./helpers/serverHelper.js').ApiError;
 const logger = require('../log/logger');
 const config = require('../config.js');
 
@@ -30,7 +31,7 @@ let canLogin = (login, password) => {
 let _findById = userId => new Promise((resolve, reject) => {
   logger.info(`Find user by ID ${userId}`);
   if (!userId) {
-    return reject('Invalid ID')
+    return reject(new ApiError('Invalid ID'))
   }
   elasticClient.search({
     index: config.db.index,
@@ -45,21 +46,21 @@ let _findById = userId => new Promise((resolve, reject) => {
   }).then(response => {
       const result = response.hits.hits[0];
       if (!result || !result._source) {
-        return reject('No ID found')
+        return reject(new ApiError('No user found', 404))
       }
       result._source.id = result._id;
-      return resolve(result._source)
+      resolve(result._source)
     },
     error => {
       logger.error(error);
-      return reject('Database error')
+      reject(new ApiError('Database error'))
     })
 });
 
 let findByLogin = userLogin => new Promise((resolve, reject) => {
   logger.info(`Find user by login ${userLogin}`);
   if (!userLogin) {
-    return reject('Invalid login')
+    return reject(new ApiError('Invalid login'))
   }
   elasticClient.search({
     index: config.db.index,
@@ -74,13 +75,13 @@ let findByLogin = userLogin => new Promise((resolve, reject) => {
   }).then(response => {
     const result = response.hits.hits[0];
     if (!result || !result._source) {
-      return reject('No user found')
+      return reject(new ApiError('No user found', 404))
     }
     result._source.id = result._id;
-    return resolve(result._source)
+    resolve(result._source)
   }, error => {
     logger.error(error.message);
-    return reject('Database error')
+    reject(new ApiError('Database error'))
   })
 });
 
@@ -144,36 +145,28 @@ let create = newUser => new Promise((resolve, reject) => {
   return resolve({newUser, userId})
 })
   .then(data =>  // check login uniqueness
-    findByLogin(data.newUser.login).then(
-      () => {
-        throw `Login not unique`
-      },
-      error => {
-        // The error should mean the absence of data.
-        // And correspond to the message about this error in the method findByLogin.
-        // todo dhilt : need to refactor, string must go off
-        if (error == 'No user found') {
+    findByLogin(data.newUser.login)
+      .then(() => {
+        throw new ApiError('Login not unique')
+      })
+      .catch(error => {
+        if (error.code === 404) {
           return Promise.resolve(data)
         }
-        throw `Login not unique`
-      }
-    )
+        throw new ApiError('Login not unique')
+      })
   )
-  .then(data =>  // check id uniqueness)
-    _findById(data.userId).then(
-      () => {
-        throw `Id not unique`
-      },
-      error => {
-        // The error should mean the absence of data.
-        // And correspond to the message about this error in the method _findById.
-        // todo dhilt : need to refactor, string must go off
-        if (error == 'No ID found') {
+  .then(data => // check id uniqueness
+    _findById(data.userId)
+      .then(() => {
+        throw new ApiError('Id not unique')
+      })
+      .catch(error => {
+        if (error.code === 404) {
           return Promise.resolve(data)
         }
-        throw `Id not unique`
-      }
-    )
+        throw new ApiError('Id not unique')
+      })
   )
   .then(data =>  // Adding new user
     elasticClient.index({

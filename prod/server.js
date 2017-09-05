@@ -11,6 +11,7 @@ const usersController = require('./controllers/users');
 const getUserInfo = usersController.getUserInfo;
 const authController = require('./controllers/auth');
 const responseError = require('./controllers/helpers/serverHelper').responseError;
+const sendApiError = require('./controllers/helpers/serverHelper').sendApiError;
 const termsController = require('./controllers/terms');
 
 const app = express();
@@ -203,7 +204,7 @@ app.put('/api/newUser', (req, res) => {
     .then(user => usersController.isAdmin(user))
     .then(user => usersController.create(req.body.user))
     .then(result => res.json({success: true, user: result}))
-    .catch(error => responseError(res, `Can't create new user. ${error}`, 500))
+    .catch(error => sendApiError(res, 'Can\'t create new user.', error))
 });
 
 app.get('/api/users/:name', (req, res) =>
