@@ -112,34 +112,31 @@ let findAll = () => new Promise((resolve, reject) => {
     return Promise.resolve(users)
   });
 
-let create = newUser => new Promise((resolve, reject) => {
+const create = newUser => new Promise(resolve => {
   // data validation
   if (!newUser) {
-    return reject('Invalid data')
+    throw new ApiError('Invalid data')
   }
   if (!newUser.id) {
-    return reject('Invalid id')
+    throw new ApiError('Invalid id')
   }
   if (!newUser.role) {
-    return reject('Invalid role')
-  }
-  if (!newUser.roleId) {
-    return reject('Invalid roleId')
+    throw new ApiError('Invalid role')
   }
   if (!newUser.login) {
-    return reject('Invalid login')
+    throw new ApiError('Invalid login')
   }
   if (!newUser.name) {
-    return reject('Invalid name')
+    throw new ApiError('Invalid name')
   }
   if (!newUser.password) {
-    return reject('Invalid password')
+    throw new ApiError('Invalid password')
   }
   if (!newUser.description) {
-    return reject('Invalid description')
+    throw new ApiError('Invalid description')
   }
   newUser.hash = passwordHash.generate(newUser.password);
-  let userId = newUser.id;
+  const userId = newUser.id;
   delete newUser.password;
   delete newUser.id;
   return resolve({newUser, userId})
@@ -174,15 +171,17 @@ let create = newUser => new Promise((resolve, reject) => {
       type: 'users',
       id: data.userId,
       body: data.newUser
-    }).then(result => {
-      logger.info('User was successfully created');
-      return Promise.resolve({
-        success: true
-      })
-    }, error => {
-      logger.error(error.message);
-      throw `Create user error`
     })
+      .then(() => {
+        logger.info('User was successfully created');
+        return Promise.resolve({
+          success: true
+        })
+      })
+      .catch(error => {
+        logger.error(error.message);
+        throw new ApiError('DB error')
+      })
   );
 
 let removeById = userId => new Promise((resolve, reject) => {
