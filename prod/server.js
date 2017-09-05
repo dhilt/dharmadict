@@ -11,6 +11,7 @@ const usersController = require('./controllers/users');
 const getUserInfo = usersController.getUserInfo;
 const authController = require('./controllers/auth');
 const responseError = require('./controllers/helpers/serverHelper').responseError;
+const termsController = require('./controllers/terms');
 
 const app = express();
 app.use(bodyParser.json());
@@ -80,30 +81,6 @@ app.get('/api/search', function (req, res) {
   });
 });
 
-function getTermById(termId) {
-  return elasticClient.search({
-    index: config.db.index,
-    type: 'terms',
-    body: {
-      query: {
-        ids: {
-          values: [termId]
-        }
-      }
-    }
-  }).then(response => {
-    const result = response.hits.hits[0];
-    if (!result || !result._source) {
-      return Promise.reject('No term found')
-    }
-    result._source.id = result._id;
-    return Promise.resolve(result._source)
-  }, error => {
-    logger.error(error.message);
-    return Promise.reject('Database error')
-  });
-}
-
 app.get('/api/translation', (req, res) => {
   if (!req.query.termId || !req.query.translatorId) {
     return responseError(res, 'Incorrect /api/term request params', 500, 'info');
@@ -113,7 +90,7 @@ app.get('/api/translation', (req, res) => {
   doAuthorize(req)
     .then(result => {
       user = result;
-      return getTermById(req.query.termId);
+      return termsController.findById(req.query.termId);
     })
     .then(result => {
       term = result;
@@ -127,29 +104,10 @@ app.get('/api/translation', (req, res) => {
       if (!translations) {
         return responseError(res, 'Can not find a translation by termId', 500);
       }
-      let translation = translations.find(t => t.translatorId === translator.code);
-      if (!translation) {
-        return res.json({
-          termId: hit._id,
-          termName: term.wylie,
-          translation: {
-            translatorId: translator.id,
-            language: translator.language,
-            meanings: []
-          }
-        });
-      }
-      if ((user.code !== translation.translatorId || user.code !== translator.code) && user.role !== 'admin') {
-        return responseError(res, 'Unpermitted access', 500);
-      }
-      logger.info('Term\'s translation was successfully found');
-      res.json({
-        termId: hit._id,
-        termName: term.wylie,
-        translation
-      });
+      return termsController.findTranslations(translator, term, translations)
     })
-    .catch(error => responseError(res, `Can't get a translation. ${error}`, 500));
+    .then(result => res.json({ result }))
+    .catch(error => responseError(res, `Can't get a translation. ${error}`, 500))
 });
 
 app.post('/api/update', function (req, res) {
@@ -162,7 +120,7 @@ app.post('/api/update', function (req, res) {
   logger.info('Term updating. Term id = "' + termId + '", translator id = "' + translation.translatorId + '"');
 
   doAuthorize(req, res, function (user) {
-    getTermById(res, termId, (hit) => {
+    termsController.findById(res, termId, (hit) => {
       let term = hit ? hit._source : null;
       if (!term) {
         return responseError(res, 'Can\'t request term to update', 500);
@@ -213,7 +171,7 @@ app.post('/api/newTerm', function (req, res) {
     if (user.role !== 'admin') {
       return responseError(res, 'Only superadmin can create new terms', 500);
     }
-    getTermById(res, termId, (hit) => {
+    termsController.findById(res, termId, (hit) => {
       let term = hit ? hit._source : null;
       if (term) {
         return responseError(res, 'Such term ("' + termId + '") already exists', 500);
