@@ -145,29 +145,33 @@ let create = newUser => new Promise((resolve, reject) => {
 })
   .then(data =>  // check login uniqueness
     findByLogin(data.newUser.login).then(
-      result => {
+      () => {
         throw `Login not unique`
       },
       error => {
         // The error should mean the absence of data.
         // And correspond to the message about this error in the method findByLogin.
-        if (error == 'No login found') {
+        // todo dhilt : need to refactor, string must go off
+        if (error == 'No user found') {
           return Promise.resolve(data)
         }
+        throw `Login not unique`
       }
     )
   )
   .then(data =>  // check id uniqueness)
     _findById(data.userId).then(
-      result => {
+      () => {
         throw `Id not unique`
       },
       error => {
         // The error should mean the absence of data.
         // And correspond to the message about this error in the method _findById.
+        // todo dhilt : need to refactor, string must go off
         if (error == 'No ID found') {
           return Promise.resolve(data)
         }
+        throw `Id not unique`
       }
     )
   )
