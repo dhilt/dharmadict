@@ -11,6 +11,7 @@ const usersController = require('./controllers/users');
 const getUserInfo = usersController.getUserInfo;
 const authController = require('./controllers/auth');
 const responseError = require('./controllers/helpers/serverHelper').responseError;
+const ApiError = require('./controllers/helpers/serverHelper').ApiError;
 const sendApiError = require('./controllers/helpers/serverHelper').sendApiError;
 const termsController = require('./controllers/terms');
 
@@ -24,7 +25,9 @@ const doAuthorize = (req) => {
   }
   return authController.parseToken(token)
     .then(login => usersController.findByLogin(login))
-    .catch(error => Promise.reject(`Unauthorized access. ${error}`))
+    .catch(error => {
+      throw new ApiError(`Unauthorized access. ${error.text}`, error.code)
+    })
 };
 
 app.get('/api/mytest', (req, res) =>

@@ -62,28 +62,32 @@ let findByLogin = userLogin => new Promise((resolve, reject) => {
   if (!userLogin) {
     return reject(new ApiError('Invalid login'))
   }
-  elasticClient.search({
-    index: config.db.index,
-    type: 'users',
-    body: {
-      query: {
-        match: {
-          login: userLogin
+  return resolve(true)
+})
+  .then(() =>
+    elasticClient.search({
+      index: config.db.index,
+      type: 'users',
+      body: {
+        query: {
+          match: {
+            login: userLogin
+          }
         }
       }
-    }
-  }).then(response => {
+    })
+  )
+  .then(response => {
     const result = response.hits.hits[0];
     if (!result || !result._source) {
-      return reject(new ApiError('No user found', 404))
+      throw new ApiError('No user found', 404)
     }
     result._source.id = result._id;
-    resolve(result._source)
+    return Promise.resolve(result._source)
   }, error => {
     logger.error(error.message);
-    reject(new ApiError('Database error'))
-  })
-});
+    throw new ApiError('Database error')
+  });
 
 let findAll = () => new Promise((resolve, reject) => {
   logger.info(`Find all users`);
@@ -142,28 +146,24 @@ const create = newUser => new Promise(resolve => {
   return resolve({newUser, userId})
 })
   .then(data =>  // check login uniqueness
-    findByLogin(data.newUser.login)
-      .then(() => {
-        throw new ApiError('Login not unique')
-      })
-      .catch(error => {
-        if (error.code === 404) {
-          return Promise.resolve(data)
-        }
-        throw new ApiError('Login not unique')
-      })
+    findByLogin(data.newUser.login).then(() => {
+      throw new ApiError('Login not unique')
+    }, error => {
+      if (error.code === 404) {
+        return Promise.resolve(data)
+      }
+      throw error
+    })
   )
   .then(data => // check id uniqueness
-    _findById(data.userId)
-      .then(() => {
-        throw new ApiError('Id not unique')
-      })
-      .catch(error => {
-        if (error.code === 404) {
-          return Promise.resolve(data)
-        }
-        throw new ApiError('Id not unique')
-      })
+    _findById(data.userId).then(() => {
+      throw new ApiError('Id not unique')
+    }, error => {
+      if (error.code === 404) {
+        return Promise.resolve(data)
+      }
+      throw error
+    })
   )
   .then(data =>  // Adding new user
     elasticClient.index({
@@ -171,17 +171,15 @@ const create = newUser => new Promise(resolve => {
       type: 'users',
       id: data.userId,
       body: data.newUser
+    }).then(() => {
+      logger.info('User was successfully created');
+      return Promise.resolve({
+        success: true
+      })
+    }, error => {
+      logger.error(error.message);
+      throw new ApiError('DB error')
     })
-      .then(() => {
-        logger.info('User was successfully created');
-        return Promise.resolve({
-          success: true
-        })
-      })
-      .catch(error => {
-        logger.error(error.message);
-        throw new ApiError('DB error')
-      })
   );
 
 let removeById = userId => new Promise((resolve, reject) => {
