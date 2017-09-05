@@ -74,7 +74,7 @@ let findByLogin = userLogin => new Promise((resolve, reject) => {
   }).then(response => {
     const result = response.hits.hits[0];
     if (!result || !result._source) {
-      return reject('No login found')
+      return reject('No user found')
     }
     result._source.id = result._id;
     return resolve(result._source)

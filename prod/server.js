@@ -82,31 +82,30 @@ app.get('/api/search', function (req, res) {
 });
 
 app.get('/api/translation', (req, res) => {
-  if (!req.query.termId || !req.query.translatorId) {
+  const {termId, translatorId} = req.query;
+  if (!termId || !translatorId) {
     return responseError(res, 'Incorrect /api/term request params', 500, 'info');
   }
-  logger.info('Requesting a translation by term id "' + req.query.termId + '" and translatorId "' + req.query.translatorId + '"');
-  let user, term;
+  logger.info('Requesting a translation by term id "' + termId + '" and translatorId "' + translatorId + '"');
+  let user, term, translations;
   doAuthorize(req)
     .then(result => {
       user = result;
-      return termsController.findById(req.query.termId);
+      return termsController.findById(termId);
     })
-    .then(result => {
-      term = result;
-      return usersController.findByLogin(req.query.translatorId);
+    .then(term => {
+      if (!(translations = term ? term.translations : null)) {
+        throw 'Can not find a translation by termId'
+      }
+      return usersController.findByLogin(translatorId)
     })
     .then(translator => {
-      if (!translator) {
-        return responseError(res, 'Can not find a translator by translatorId', 500);
-      }
-      let translations = term ? term.translations : null;
-      if (!translations) {
-        return responseError(res, 'Can not find a translation by termId', 500);
+      if(user.id !== translator.id && user.role !== 'admin') {
+        throw 'Unpermitted access'
       }
       return termsController.findTranslations(translator, term, translations)
     })
-    .then(result => res.json({ result }))
+    .then(result => res.json({result}))
     .catch(error => responseError(res, `Can't get a translation. ${error}`, 500))
 });
 
