@@ -117,37 +117,38 @@ let findAll = () => new Promise((resolve, reject) => {
     return Promise.resolve(users)
   });
 
-const create = newUser => new Promise(resolve => {
+const create = user => new Promise(resolve => {
   // data validation
-  if (!newUser) {
+  if (!user) {
     throw new ApiError('Invalid data')
   }
-  if (!newUser.id) {
+  if (!user.id) {
     throw new ApiError('Invalid id')
   }
-  if (!newUser.role) {
+  if (!user.role) {
     throw new ApiError('Invalid role')
   }
-  if (!newUser.login) {
+  if (!user.login) {
     throw new ApiError('Invalid login')
   }
-  if (!newUser.name) {
+  if (!user.name) {
     throw new ApiError('Invalid name')
   }
-  if (!newUser.password) {
+  if (!user.password) {
     throw new ApiError('Invalid password')
   }
-  if (!newUser.description) {
+  if (!user.description) {
     throw new ApiError('Invalid description')
   }
-  newUser.hash = passwordHash.generate(newUser.password);
+  let newUser = Object.assign({}, user);
+  newUser.hash = passwordHash.generate(user.password);
   const userId = newUser.id;
   delete newUser.password;
   delete newUser.id;
-  return resolve({newUser, userId})
+  return resolve({user: newUser, userId})
 })
   .then(data =>  // check login uniqueness
-    findByLogin(data.newUser.login).then(() => {
+    findByLogin(data.user.login).then(() => {
       throw new ApiError('Login not unique')
     }, error => {
       if (error.code === 404) {
@@ -171,7 +172,7 @@ const create = newUser => new Promise(resolve => {
       index: config.db.index,
       type: 'users',
       id: data.userId,
-      body: data.newUser
+      body: data.user
     }).then(() => {
       logger.info('User was successfully created');
       return Promise.resolve({
