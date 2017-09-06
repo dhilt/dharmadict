@@ -207,7 +207,6 @@ let getUserInfo = user => ({
   name: user.name,
   login: user.login,
   role: user.role,
-  roleId: user.roleId,
   description: user.description
 });
 

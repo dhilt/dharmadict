@@ -2,7 +2,7 @@ const elasticClient = require('./helpers/db.js');
 const logger = require('../log/logger');
 const config = require('../config.js');
 
-let findById = termId => new Promise((resolve, reject) => {
+const findById = termId => new Promise((resolve, reject) => {
   return elasticClient.search({
     index: config.db.index,
     type: 'terms',
@@ -26,7 +26,7 @@ let findById = termId => new Promise((resolve, reject) => {
   });
 });
 
-let findTranslations = (translator, term, translations) => new Promise((resolve, reject) => {
+const findTranslations = (translator, term, translations) => new Promise((resolve, reject) => {
   let translation = translations.find(t => t.translatorId === translator.id);
   if (!translation) {
     return reject({
@@ -50,7 +50,37 @@ let findTranslations = (translator, term, translations) => new Promise((resolve,
   });
 });
 
+const searchByPattern = (pattern) => new Promise((resolve, reject) => {
+  logger.info('Searching terms by "' + pattern + '" pattern');
+  elasticClient.search({
+    index: config.db.index,
+    type: 'terms',
+    body: {
+      query: {
+        multi_match: {
+          query: pattern,
+          type: 'most_fields',
+          operator: 'and',
+          fields: ['wylie', 'sanskrit_rus_lower', 'sanskrit_eng_lower', 'translation.meanings.versions_lower']
+        }
+      }
+    }
+  }).then(response => {
+    let result = [];
+    response.hits.hits.forEach((hit) => {
+      hit._source.id = hit._id; // add id field
+      result.push(hit._source);
+    });
+    logger.info('Found items: ' + result.length);
+    return resolve(result);
+  }, error => {
+    logger.error('Search error:', error.message);
+    return reject(error);
+  })
+})
+
 module.exports = {
   findById,
-  findTranslations
+  findTranslations,
+  searchByPattern
 };

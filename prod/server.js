@@ -60,34 +60,10 @@ app.post('/api/login', (req, res) => {
     .catch(error => sendApiError(res, 'Can\'t login.', error))
 });
 
-app.get('/api/search', function (req, res) {
-  logger.info('Searching terms by "' + req.query.pattern + '" pattern');
-  return elasticClient.search({
-    index: config.db.index,
-    type: 'terms',
-    body: {
-      query: {
-        multi_match: {
-          query: req.query.pattern,
-          type: 'most_fields',
-          operator: 'and',
-          fields: ['wylie', 'sanskrit_rus_lower', 'sanskrit_eng_lower', 'translation.meanings.versions_lower']
-        }
-      }
-    }
-  }, (error, response) => {
-    if (error) {
-      logger.error('Search error');
-      return responseError(res, error.message, 500);
-    }
-    let result = [];
-    response.hits.hits.forEach((hit) => {
-      hit._source.id = hit._id; // add id field
-      result.push(hit._source);
-    });
-    logger.info('Found items: ' + result.length);
-    return res.json(result);
-  });
+app.get('/api/search', (req, res) => {
+  termsController.searchByPattern(req.query.pattern)
+    .then(result => res.json(result))
+    .catch(error => sendApiError(res, 'Search error', error))
 });
 
 app.get('/api/translation', (req, res) => {
