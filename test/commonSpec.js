@@ -24,3 +24,26 @@ describe('Common', () => {
   });
 
 });
+
+describe('Login', () => {
+
+  it('should work', (done) => {
+    request.post('/api/login').end(
+      (err, res) => {
+        res.should.have.status(200);
+        done();
+      }
+    );
+  });
+
+  it('should not log in (no params)', (done) => {
+    request.post('/api/login').end(
+      (err, res) => {
+        assert.equal(res.body.success, false);
+        assert.equal(res.body.message, "Can't login. Invalid params");
+        done();
+      }
+    );
+  });
+
+});

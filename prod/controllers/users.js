@@ -14,7 +14,7 @@ let isAdmin = (user) => {
 let canLogin = (login, password) => {
   logger.info(`Check if user ${login} can login`);
   if (!login || !password) {
-    throw 'Invalid params'
+    return Promise.reject('Invalid params')
   }
   return findByLogin(login)
     .then(user => {
