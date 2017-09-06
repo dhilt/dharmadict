@@ -144,43 +144,11 @@ app.post('/api/update', function (req, res) {
 });
 
 app.post('/api/newTerm', function (req, res) {
-  let termName = req.body.term.trim();
-  if (!termName) {
-    return responseError(res, 'Incorrect /api/newTerm request params', 500);
-  }
-  let termId = termName.replace(/ /g, '_');
-  logger.info('Term adding: name "' + termName + '", id "' + termId + '"');
-
-  doAuthorize(req, res, function (user) {
-    if (user.role !== 'admin') {
-      return responseError(res, 'Only superadmin can create new terms', 500);
-    }
-    termsController.findById(res, termId, (hit) => {
-      let term = hit ? hit._source : null;
-      if (term) {
-        return responseError(res, 'Such term ("' + termId + '") already exists', 500);
-      }
-      term = {
-        wylie: termName,
-        translations: []
-      };
-      elasticClient.index({
-        index: config.db.index,
-        type: 'terms',
-        id: termId,
-        body: term
-      }, (error, response, status) => {
-        if (error) {
-          logger.error('Create term error');
-          return responseError(res, error.message, 500);
-        }
-        logger.info('Term was successfully created');
-        return res.json({
-          success: true
-        });
-      });
-    });
-  });
+  doAuthorize(req)
+    .then(user => usersController.isAdmin(user))
+    .then(() => termsController.createTerm(req.body.term))
+    .then(() => res.json({success: true}))
+    .catch(error => sendApiError(res, 'Can\'t create new term.', error))
 });
 
 app.put('/api/newUser', (req, res) => {
