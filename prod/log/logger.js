@@ -17,11 +17,9 @@ if (process.env.NODE_ENV !== 'test') {
 }
 else {
   logger = new (winston.Logger)({
-    transports: [
-      new (winston.transports.Console)({json: false, timestamp: true})
-    ],
+    transports: [new winston.transports.File({filename: __dirname + '/test-debug.log', json: false})],
     exceptionHandlers: [
-      new (winston.transports.Console)({json: false, timestamp: true})
+      new winston.transports.File({filename: __dirname + '/test-exceptions.log', json: false})
     ],
     exitOnError: false
   });
