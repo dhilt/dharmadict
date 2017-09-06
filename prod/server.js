@@ -57,7 +57,7 @@ app.post('/api/login', (req, res) => {
       const {token} = authController.generateToken(user);
       res.send({user: getUserInfo(user), token})
     })
-    .catch(error => responseError(res, `Can't login. ${error}`, 500))
+    .catch(error => sendApiError(res, 'Can\'t login.', error))
 });
 
 app.get('/api/search', function (req, res) {

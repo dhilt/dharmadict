@@ -11,22 +11,23 @@ let isAdmin = (user) => {
   Promise.resolve(user);
 };
 
-let canLogin = (login, password) => {
+let canLogin = (login, password) => new Promise(resolve => {
   logger.info(`Check if user ${login} can login`);
   if (!login || !password) {
-    return Promise.reject('Invalid params')
+    throw new ApiError('Invalid params')
   }
-  return findByLogin(login)
-    .then(user => {
-      if (!passwordHash.verify(password, user.hash)) {
-        throw 'Wrong credentials'
-      }
-      return Promise.resolve(user)
-    })
-    .catch(error => {
-      throw error
-    })
-};
+  resolve(true)
+})
+  .then(() => findByLogin(login))
+  .then(user => {
+    if (!passwordHash.verify(password, user.hash)) {
+      throw new ApiError('Wrong credentials')
+    }
+    return Promise.resolve(user)
+  })
+  .catch(error => {
+    throw error
+  });
 
 let _findById = userId => new Promise((resolve, reject) => {
   logger.info(`Find user by ID ${userId}`);
