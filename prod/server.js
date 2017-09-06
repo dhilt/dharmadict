@@ -94,56 +94,15 @@ app.get('/api/translation', (req, res) => {
     .catch(error => responseError(res, `Can't get a translation. ${error}`, 500))
 });
 
-app.post('/api/update', function (req, res) {
-  let termId = req.body.termId;
-  let translation = req.body.translation;
-  if (!termId || !translation) {
-    return responseError(res, 'Incorrect /api/update request params', 500, 'info');
-  }
-  let translatorId = req.body.translation.translatorId;
-  logger.info('Term updating. Term id = "' + termId + '", translator id = "' + translation.translatorId + '"');
-
-  doAuthorize(req, res, function (user) {
-    termsController.findById(res, termId, (hit) => {
-      let term = hit ? hit._source : null;
-      if (!term) {
-        return responseError(res, 'Can\'t request term to update', 500);
-      }
-      term.translations = term.translations || [];
-      let foundT = term.translations.find(t => t.translatorId === translatorId);
-      let isEmpty = !(translation.meanings && translation.meanings.length);
-      if (!foundT && !isEmpty) {
-        term.translations.push(translation);
-      } else if (foundT) {
-        if (isEmpty) {
-          term.translations = term.translations.filter(t => t.translatorId !== translatorId);
-        } else {
-          foundT.meanings = translation.meanings;
-        }
-      }
-      translation.meanings.forEach(m => m.versions_lower = m.versions.map(v => v.toLowerCase()));
-      elasticClient.index({
-        index: config.db.index,
-        type: 'terms',
-        id: termId,
-        body: term
-      }, (error, response, status) => {
-        if (error) {
-          logger.error('Update term error');
-          return responseError(res, error.message, 500);
-        }
-        logger.info('Term was successfully updated');
-        term.id = termId; // add id field
-        return res.json({
-          success: true,
-          term: term
-        });
-      });
-    });
-  });
+app.post('/api/update', (req, res) => {
+  const {termId, translation} = req.body;
+  doAuthorize(req)
+    .then(user => termsController.updateTerm(user, termId, translation))
+    .then(term => res.json({success: true, term}))
+    .catch(error => sendApiError(res, 'Can\'t update term', error))
 });
 
-app.post('/api/newTerm', function (req, res) {
+app.post('/api/newTerm', (req, res) => {
   doAuthorize(req)
     .then(user => usersController.isAdmin(user))
     .then(() => termsController.createTerm(req.body.term))

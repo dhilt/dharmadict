@@ -114,9 +114,58 @@ const createTerm = (termName) => new Promise((resolve, reject) => {
   })
 });
 
+const updateTerm = (user, termId, translation) => new Promise((resolve, reject) => {
+  if (!termId || !translation) {
+    return reject('Incorrect /api/update request params');
+  }
+  const translatorId = user.id;
+  logger.info('Term updating. Term id = "' + termId + '", translator id = "' + translatorId + '"');
+  return findById(termId).then(term => {
+    return resolve({translatorId, termId, translation, term})
+  }, error => {
+    if (error.code === 404) {
+      return reject('Can\'t request term to update')
+    }
+  })
+})
+.then(data => {
+  let {translatorId, termId, translation, term} = data;
+  term.translations = term.translations || [];
+  let foundT = term.translations.find(t => t.translatorId === translatorId);
+  let isEmpty = !(translation.meanings && translation.meanings.length);
+  if (!foundT && !isEmpty) {
+    term.translations.push(translation);
+  } else if (foundT) {
+    if (isEmpty) {
+      term.translations = term.translations.filter(t => t.translatorId !== translatorId);
+    } else {
+      foundT.meanings = translation.meanings;
+    }
+  }
+  translation.meanings.forEach(m => m.versions_lower = m.versions.map(v => v.toLowerCase()));
+  return Promise.resolve({term, termId})
+})
+.then(data => {
+  let {term, termId} = data;
+  elasticClient.index({
+    index: config.db.index,
+    type: 'terms',
+    id: termId,
+    body: term
+  }).then(response => {
+    logger.info('Term was successfully updated');
+    term.id = termId; // add id field
+    return Promise.resolve(term)
+  }, error => {
+    logger.error('Update term error');
+    return new ApiError('Can\'t update term. Database error')
+  })
+});
+
 module.exports = {
   findById,
   findTranslations,
   searchByPattern,
-  createTerm
+  createTerm,
+  updateTerm
 };
