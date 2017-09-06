@@ -119,6 +119,9 @@ const updateTerm = (user, termId, translation) => new Promise((resolve, reject) 
     return reject('Incorrect /api/update request params');
   }
   const translatorId = user.id;
+  if (user.role !== 'translator') {
+    return reject('Update term can only translator.')
+  }
   logger.info('Term updating. Term id = "' + termId + '", translator id = "' + translatorId + '"');
   return findById(termId).then(term => {
     return resolve({translatorId, termId, translation, term})
