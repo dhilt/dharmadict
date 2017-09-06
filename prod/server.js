@@ -30,6 +30,11 @@ const doAuthorize = (req) => {
     })
 };
 
+app.get('/api/test', (req, res) => {
+  const param = req.query.param;
+  res.send({success: true, param});
+});
+
 app.get('/api/mytest', (req, res) =>
   usersController.findAll()
     .then(result => res.send({result}))
@@ -104,7 +109,7 @@ app.get('/api/translation', (req, res) => {
       return usersController.findByLogin(translatorId)
     })
     .then(translator => {
-      if(user.id !== translator.id && user.role !== 'admin') {
+      if (user.id !== translator.id && user.role !== 'admin') {
         throw 'Unpermitted access'
       }
       return termsController.findTranslations(translator, term, translations)
