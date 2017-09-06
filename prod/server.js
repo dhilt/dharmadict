@@ -225,3 +225,5 @@ app.get('*', function (req, res) {
 app.listen(config.app.port);
 
 logger.info(`Listening on port ${config.app.port}...`);
+
+module.exports = app;
