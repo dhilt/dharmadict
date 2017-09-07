@@ -83,39 +83,49 @@ const searchByPattern = (pattern) => new Promise((resolve, reject) => {
   });
 });
 
-const createTerm = (termName) => new Promise((resolve, reject) => {
+const createTerm = (termName) => new Promise(resolve => {
+  if(typeof termName !== 'string') {
+    throw new ApiError('Invalid params')
+  }
   termName = termName.trim();
   if (!termName) {
-    return reject(new ApiError('Incorrect term params'))
+    throw new ApiError('Invalid params')
   }
   const termId = termName.replace(/ /g, '_');
-  logger.info('Term adding: name "' + termName + '", id "' + termId + '"');
-  findById(termId).then(() => {
-    return reject(new ApiError('Such term ("' + termId + '") already exists'))
-  }, error => {
-    if (error.code === 404) {
-      return resolve({termId, termName})
-    }
-  })
+  logger.info(`Term adding: name "${termName}", id "${termId}"`);
+  resolve({name: termName, id: termId})
 })
-.then(data => {
-  const term = {
-    wylie: data.termName,
-    translations: []
-  };
-  elasticClient.index({
-    index: config.db.index,
-    type: 'terms',
-    id: data.termId,
-    body: term
-  }).then(response => {
-    logger.info('Term was successfully created');
-    return Promise.resolve(true)
-  }, error => {
-    logger.error('Create term error');
-    throw new ApiError('Database error')
-  })
-});
+  .then(term =>
+    findById(term.id).then(() => {
+      throw new ApiError('Already exists')
+    }, error => {
+      if (error.code === 404) {
+        return Promise.resolve(term)
+      }
+      throw error
+    })
+  )
+  .then(term => {
+    const termBody = {
+      wylie: term.name,
+      translations: []
+    };
+    elasticClient.index({
+      index: config.db.index,
+      type: 'terms',
+      id: term.id,
+      body: termBody
+    }).then(() => {
+      logger.info('Term was successfully created');
+      return Promise.resolve({
+        success: true,
+        id: term.id
+      })
+    }, error => {
+      logger.error(error.message);
+      throw new ApiError('Database error')
+    })
+  });
 
 const updateTerm = (user, termId, translation) => new Promise((resolve, reject) => {
   if (!termId || !translation) {
@@ -134,39 +144,39 @@ const updateTerm = (user, termId, translation) => new Promise((resolve, reject) 
     }
   })
 })
-.then(data => {
-  let {translatorId, termId, translation, term} = data;
-  term.translations = term.translations || [];
-  let foundT = term.translations.find(t => t.translatorId === translatorId);
-  let isEmpty = !(translation.meanings && translation.meanings.length);
-  if (!foundT && !isEmpty) {
-    term.translations.push(translation);
-  } else if (foundT) {
-    if (isEmpty) {
-      term.translations = term.translations.filter(t => t.translatorId !== translatorId);
-    } else {
-      foundT.meanings = translation.meanings;
+  .then(data => {
+    let {translatorId, termId, translation, term} = data;
+    term.translations = term.translations || [];
+    let foundT = term.translations.find(t => t.translatorId === translatorId);
+    let isEmpty = !(translation.meanings && translation.meanings.length);
+    if (!foundT && !isEmpty) {
+      term.translations.push(translation);
+    } else if (foundT) {
+      if (isEmpty) {
+        term.translations = term.translations.filter(t => t.translatorId !== translatorId);
+      } else {
+        foundT.meanings = translation.meanings;
+      }
     }
-  }
-  translation.meanings.forEach(m => m.versions_lower = m.versions.map(v => v.toLowerCase()));
-  return Promise.resolve({term, termId})
-})
-.then(data => {
-  let {term, termId} = data;
-  elasticClient.index({
-    index: config.db.index,
-    type: 'terms',
-    id: termId,
-    body: term
-  }).then(response => {
-    logger.info('Term was successfully updated');
-    term.id = termId; // add id field
-    return Promise.resolve(term)
-  }, error => {
-    logger.error('Update term error');
-    return new ApiError('Can\'t update term. Database error')
+    translation.meanings.forEach(m => m.versions_lower = m.versions.map(v => v.toLowerCase()));
+    return Promise.resolve({term, termId})
   })
-});
+  .then(data => {
+    let {term, termId} = data;
+    elasticClient.index({
+      index: config.db.index,
+      type: 'terms',
+      id: termId,
+      body: term
+    }).then(response => {
+      logger.info('Term was successfully updated');
+      term.id = termId; // add id field
+      return Promise.resolve(term)
+    }, error => {
+      logger.error('Update term error');
+      return new ApiError('Can\'t update term. Database error')
+    })
+  });
 
 module.exports = {
   findById,
