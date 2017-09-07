@@ -20,22 +20,65 @@ const testAdmin = {
   "password": "test-admin-pass"
 };
 
+const testTranslator = {
+  "id": "TEST-TRANSLATOR",
+  "role": "translator",
+  "login": "test-translator",
+  "name": "Test Translator",
+  "description": "...",
+  "password": "test-translator-pass"
+};
+
 const forceCleanUp = () => {
   describe('Force cleanup', () => {
     it('may delete test user', (done) => {
+
+      let ready = 0;
+      const _done = (index) => {
+        if(ready) {
+          done();
+        }
+        ready = index;
+      };
+
       usersController.removeById(testAdmin.id)
         .then(() => {
-          console.log('Test user was successfully deleted');
-          setTimeout(() => done(), 1500);
+          console.log('Test admin user was successfully deleted');
+          setTimeout(() => _done(1), 1000);
         })
-        .catch(() => done())
+        .catch(() => _done(1));
+
+      usersController.removeById(testTranslator.id)
+        .then(() => {
+          console.log('Test translator user was successfully deleted');
+          setTimeout(() => _done(2), 1000);
+        })
+        .catch(() => _done(2));
     });
   });
 };
 
 forceCleanUp();
 
+const shouldLogIn = (user) => {
+  it('should log in', (done) => {
+    request.post('/api/login').send({
+      login: user.login,
+      password: user.password
+    }).end(
+      (err, res) => {
+        user.token = res.body.token;
+        assert.notEqual(res.body.success, true);
+        assert.equal(res.body.user.login, user.login);
+        done();
+      }
+    )
+  });
+};
+
 module.exports = {
   request,
-  testAdmin
+  testAdmin,
+  testTranslator,
+  shouldLogIn
 };

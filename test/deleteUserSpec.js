@@ -1,5 +1,6 @@
 const assert = require('assert');
 const testAdmin = require('./_shared.js').testAdmin;
+const testTranslator = require('./_shared.js').testTranslator;
 
 const usersController = require('../prod/controllers/users.js');
 
@@ -23,8 +24,17 @@ describe('Delete user ctrl method', () => {
       })
   });
 
-  it('should delete user (via controller)', (done) => {
+  it('should delete admin user', (done) => {
     usersController.removeById(testAdmin.id)
+      .then(result => {
+        assert.equal(result.success, true);
+        done();
+      })
+      .catch(error => done(error))
+  });
+
+  it('should delete translator user', (done) => {
+    usersController.removeById(testTranslator.id)
       .then(result => {
         assert.equal(result.success, true);
         done();
