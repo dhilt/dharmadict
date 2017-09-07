@@ -1,18 +1,5 @@
 const logger = require('../../log/logger');
 
-let responseError = (res, message, status, logLevel = 'error') => {
-  if (logLevel === 'error') {
-    logger.error(message)
-  } else {
-    logger.info(message)
-  }
-  // res.statusCode = status ???
-  res.send({
-    error: true,
-    message: message
-  })
-};
-
 class ApiError {
   constructor(text, code = 500) {
     this.text = text;
@@ -26,13 +13,16 @@ const sendApiError = (res, text, error) => {
     text = text + ' ' + error.text;
     code = error.code
   }
-  responseError(res, text, code)
+  // res.statusCode = status ???
+  res.send({
+    error: true,
+    message: text
+  })
 };
 
 // responseSuccess ???
 
 module.exports = {
-  responseError,
   ApiError,
   sendApiError
 };
