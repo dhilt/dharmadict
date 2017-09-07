@@ -25,9 +25,6 @@ let canLogin = (login, password) => new Promise(resolve => {
     }
     return Promise.resolve(user)
   })
-  .catch(error => {
-    throw new ApiError('Database error')
-  });
 
 let _findById = userId => new Promise((resolve, reject) => {
   logger.info(`Find user by ID ${userId}`);
