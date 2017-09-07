@@ -1,5 +1,6 @@
 const assert = require('assert');
 const testAdmin = require('./_shared.js').testAdmin;
+const testTranslator = require('./_shared.js').testTranslator;
 
 const usersController = require('../prod/controllers/users.js');
 
@@ -33,11 +34,20 @@ describe('Create user ctrl method', () => {
   shouldNotCreateUser('login');
   shouldNotCreateUser('password');
 
-  it('should create user', (done) => {
+  it('should create admin user', (done) => {
     usersController.create(testAdmin)
       .then(result => {
         assert.equal(result.success, true);
-        setTimeout(() => done(), 1500);
+        setTimeout(() => done(), 1000);
+      })
+      .catch(error => done(error))
+  });
+
+  it('should create translator user', (done) => {
+    usersController.create(testTranslator)
+      .then(result => {
+        assert.equal(result.success, true);
+        setTimeout(() => done(), 1000);
       })
       .catch(error => done(error))
   });
