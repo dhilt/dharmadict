@@ -1,2 +1,3 @@
-test/commonSpec.js
+test/createUserSpec.js
 test/loginSpec.js
+test/deleteUserSpec.js

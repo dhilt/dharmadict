@@ -1,16 +1,6 @@
+const assert = require('assert');
 const request = require('./_shared.js').request;
-const assert = require('./_shared.js').assert;
-const usersController = require('../prod/controllers/users.js');
-
-const testAdmin = {
-  "id": "TEST-ADMIN",
-  "role": "admin",
-  "roleId": 2,
-  "login": "test-admin",
-  "name": "Test Admin",
-  "description": "...",
-  "password": "test-admin-pass"
-};
+const testAdmin = require('./_shared.js').testAdmin;
 
 describe('Login API', () => {
 
@@ -35,8 +25,8 @@ describe('Login API', () => {
 
   it('should not log in (wrong login)', (done) => {
     request.post('/api/login').send({
-      login: 'test',
-      password: 'test'
+      login: '...',
+      password: '...'
     }).end(
       (err, res) => {
         assert.notEqual(res.body.success, true);
@@ -46,22 +36,31 @@ describe('Login API', () => {
     )
   });
 
-  it('should create user (via controller)', (done) => {
-    usersController.create(testAdmin)
-      .then(result => {
-        assert.equal(result.success, true);
+  it('should not log in (wrong password)', (done) => {
+    request.post('/api/login').send({
+      login: testAdmin.login,
+      password: testAdmin.password + '...'
+    }).end(
+      (err, res) => {
+        assert.notEqual(res.body.success, true);
+        assert.equal(res.body.message, "Can't login. Wrong credentials");
         done();
-      })
-      .catch(error => done(error))
+      }
+    )
   });
 
-  it('should delete user (via controller)', (done) => {
-    usersController.removeById(testAdmin.id)
-      .then(result => {
-        assert.equal(result.success, true);
+  it('should log in', (done) => {
+    request.post('/api/login').send({
+      login: testAdmin.login,
+      password: testAdmin.password
+    }).end(
+      (err, res) => {
+        let user = res.body.user;
+        assert.notEqual(res.body.success, true);
+        assert.equal(user.login, testAdmin.login);
         done();
-      })
-      .catch(error => done(error))
+      }
+    )
   });
 
 });

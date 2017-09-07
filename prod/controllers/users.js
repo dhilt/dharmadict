@@ -145,7 +145,7 @@ const create = user => new Promise(resolve => {
   const userId = newUser.id;
   delete newUser.password;
   delete newUser.id;
-  return resolve({user: newUser, userId})
+  resolve({user: newUser, userId})
 })
   .then(data =>  // check login uniqueness
     findByLogin(data.user.login).then(() => {
@@ -184,24 +184,28 @@ const create = user => new Promise(resolve => {
     })
   );
 
-let removeById = userId => new Promise((resolve, reject) => {
+let removeById = userId => new Promise(resolve => {
   if (!userId) {
-    return new ApiError('Invalid id')
+    throw new ApiError('Invalid id')
   }
-  elasticClient.delete({
-    index: config.db.index,
-    type: 'users',
-    id: userId
-  }).then(response => {
-    logger.info('User was deleted');
-    return resolve({
-      success: true
+  resolve()
+})
+  .then(() => _findById(userId))
+  .then(() =>
+    elasticClient.delete({
+      index: config.db.index,
+      type: 'users',
+      id: userId
+    }).then(() => {
+      logger.info('User was successfully deleted');
+      return Promise.resolve({
+        success: true
+      })
+    }, error => {
+      logger.error(error.message);
+      throw new ApiError('DB error')
     })
-  }, error => {
-    logger.error(error.message);
-    return new ApiError('Database error')
-  })
-});
+  );
 
 let getUserInfo = user => ({
   id: user.id,

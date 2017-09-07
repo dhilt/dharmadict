@@ -11,5 +11,12 @@ const request = chai.request(server);
 
 module.exports = {
   request,
-  assert
+  testAdmin: {
+    "id": "TEST-ADMIN",
+    "role": "admin",
+    "login": "test-admin",
+    "name": "Test Admin",
+    "description": "...",
+    "password": "test-admin-pass"
+  }
 };
