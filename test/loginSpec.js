@@ -1,6 +1,7 @@
 const assert = require('assert');
 const request = require('./_shared.js').request;
 const testAdmin = require('./_shared.js').testAdmin;
+const shouldLogIn = require('./_shared.js').shouldLogIn;
 
 describe('Login API', () => {
 
@@ -49,18 +50,6 @@ describe('Login API', () => {
     )
   });
 
-  it('should log in', (done) => {
-    request.post('/api/login').send({
-      login: testAdmin.login,
-      password: testAdmin.password
-    }).end(
-      (err, res) => {
-        let user = res.body.user;
-        assert.notEqual(res.body.success, true);
-        assert.equal(user.login, testAdmin.login);
-        done();
-      }
-    )
-  });
+  shouldLogIn(testAdmin);
 
 });

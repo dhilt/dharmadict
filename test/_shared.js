@@ -60,17 +60,16 @@ const forceCleanUp = () => {
 
 forceCleanUp();
 
-const shouldLogIn = () => {
+const shouldLogIn = (user) => {
   it('should log in', (done) => {
     request.post('/api/login').send({
-      login: testAdmin.login,
-      password: testAdmin.password
+      login: user.login,
+      password: user.password
     }).end(
       (err, res) => {
-        let { user, token } = res.body;
-        testAdmin.token = token;
+        user.token = res.body.token;
         assert.notEqual(res.body.success, true);
-        assert.equal(user.login, testAdmin.login);
+        assert.equal(res.body.user.login, user.login);
         done();
       }
     )
