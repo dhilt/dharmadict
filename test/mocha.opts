@@ -1,3 +1,4 @@
 test/createUserSpec.js
 test/loginSpec.js
+test/newTermSpec.js
 test/deleteUserSpec.js
