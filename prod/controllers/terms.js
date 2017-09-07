@@ -83,8 +83,8 @@ const searchByPattern = (pattern) => new Promise((resolve, reject) => {
   });
 });
 
-const createTerm = (termName) => new Promise(resolve => {
-  if(typeof termName !== 'string') {
+const create = (termName) => new Promise(resolve => {
+  if (typeof termName !== 'string') {
     throw new ApiError('Invalid params')
   }
   termName = termName.trim();
@@ -105,29 +105,25 @@ const createTerm = (termName) => new Promise(resolve => {
       throw error
     })
   )
-  .then(term => {
-    const termBody = {
-      wylie: term.name,
-      translations: []
-    };
+  .then(term =>
     elasticClient.index({
       index: config.db.index,
       type: 'terms',
       id: term.id,
-      body: termBody
+      body: {
+        wylie: term.name,
+        translations: []
+      }
     }).then(() => {
       logger.info('Term was successfully created');
-      return Promise.resolve({
-        success: true,
-        id: term.id
-      })
+      return Promise.resolve(term.id)
     }, error => {
       logger.error(error.message);
       throw new ApiError('Database error')
     })
-  });
+  );
 
-const updateTerm = (user, termId, translation) => new Promise((resolve, reject) => {
+const update = (user, termId, translation) => new Promise((resolve, reject) => {
   if (!termId || !translation) {
     return reject(new ApiError('Incorrect /api/update request params'));
   }
@@ -178,10 +174,34 @@ const updateTerm = (user, termId, translation) => new Promise((resolve, reject) 
     })
   });
 
+const removeById = termId => new Promise(resolve => {
+  if (!termId || typeof termId !== 'string') {
+    throw new ApiError('Invalid id')
+  }
+  resolve()
+})
+  .then(() => findById(termId))
+  .then(() =>
+    elasticClient.delete({
+      index: config.db.index,
+      type: 'terms',
+      id: termId
+    }).then(() => {
+      logger.info('Term was successfully deleted');
+      return Promise.resolve({
+        success: true
+      })
+    }, error => {
+      logger.error(error.message);
+      throw new ApiError('DB error')
+    })
+  );
+
 module.exports = {
   findById,
   findTranslations,
   searchByPattern,
-  createTerm,
-  updateTerm
+  create,
+  update,
+  removeById
 };

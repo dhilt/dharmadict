@@ -182,7 +182,7 @@ const create = user => new Promise(resolve => {
   );
 
 let removeById = userId => new Promise(resolve => {
-  if (!userId) {
+  if (!userId || typeof userId !== 'string') {
     throw new ApiError('Invalid id')
   }
   resolve()

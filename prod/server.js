@@ -90,7 +90,7 @@ app.get('/api/translation', (req, res) => {
 app.post('/api/update', (req, res) => {
   const {termId, translation} = req.body;
   doAuthorize(req)
-    .then(user => termsController.updateTerm(user, termId, translation))
+    .then(user => termsController.update(user, termId, translation))
     .then(term => res.json({success: true, term}))
     .catch(error => sendApiError(res, 'Can\'t update term', error))
 });
@@ -98,8 +98,8 @@ app.post('/api/update', (req, res) => {
 app.post('/api/newTerm', (req, res) => {
   doAuthorize(req)
     .then(user => usersController.isAdmin(user))
-    .then(() => termsController.createTerm(req.body.term))
-    .then(() => res.json({success: true}))
+    .then(() => termsController.create(req.body.term))
+    .then(id => res.json({success: true, id: id}))
     .catch(error => sendApiError(res, 'Can\'t create new term.', error))
 });
 
