@@ -6,7 +6,7 @@ const config = require('../config.js');
 
 let isAdmin = (user) => {
   if (user.role !== 'admin') {
-    return Promise.reject('Admin only');
+    return Promise.reject(new ApiError('Admin only', 302));
   }
   Promise.resolve(user);
 };
@@ -26,7 +26,7 @@ let canLogin = (login, password) => new Promise(resolve => {
     return Promise.resolve(user)
   })
   .catch(error => {
-    throw error
+    throw new ApiError('Database error')
   });
 
 let _findById = userId => new Promise((resolve, reject) => {
@@ -99,13 +99,13 @@ let findAll = () => new Promise((resolve, reject) => {
   }).then(result => {
     let users = result.hits.hits;
     if (!users.length) {
-      return reject(`Can't find all users`)
+      return reject(new ApiError(`Can't find all users`, 404))
     }
     logger.info('A users was found');
     return resolve(users)
   }, error => {
     logger.error(error.message);
-    return reject('Database error')
+    return reject(new ApiError('Database error'))
   })
 })
   .then(users => {  // perfection of data
@@ -180,13 +180,13 @@ const create = user => new Promise(resolve => {
       })
     }, error => {
       logger.error(error.message);
-      throw new ApiError('DB error')
+      throw new ApiError('Database error')
     })
   );
 
 let removeById = userId => new Promise((resolve, reject) => {
   if (!userId) {
-    return reject('Error in delete user. Invalid id')
+    return new ApiError('Invalid id')
   }
   elasticClient.delete({
     index: config.db.index,
@@ -199,7 +199,7 @@ let removeById = userId => new Promise((resolve, reject) => {
     })
   }, error => {
     logger.error(error.message);
-    return reject('Delete user error')
+    return new ApiError('Database error')
   })
 });
 

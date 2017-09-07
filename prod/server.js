@@ -10,7 +10,6 @@ const serverHelper = require('./controllers/helpers/serverHelper.js');
 const usersController = require('./controllers/users');
 const getUserInfo = usersController.getUserInfo;
 const authController = require('./controllers/auth');
-const responseError = require('./controllers/helpers/serverHelper').responseError;
 const ApiError = require('./controllers/helpers/serverHelper').ApiError;
 const sendApiError = require('./controllers/helpers/serverHelper').sendApiError;
 const termsController = require('./controllers/terms');
@@ -21,7 +20,7 @@ app.use(bodyParser.json());
 const doAuthorize = (req) => {
   const token = authController.extractToken(req.headers.authorization);
   if (!token) {
-    return Promise.reject('Authorization needed');
+    return Promise.reject(new ApiError('Authorization needed', 302));
   }
   return authController.parseToken(token)
     .then(login => usersController.findByLogin(login))
@@ -35,19 +34,13 @@ app.get('/api/test', (req, res) => {
   res.send({success: true, param});
 });
 
-app.get('/api/mytest', (req, res) =>
-  usersController.findAll()
-    .then(result => res.send({result}))
-    .catch(error => res.send({error}))
-);
-
 app.get('/api/userInfo', (req, res) =>
   doAuthorize(req)
     .then(user => {
       logger.info('Authenticated as ' + user.login);
       res.send(getUserInfo(user));
     })
-    .catch(error => responseError(res, `Can't get user info. ${error}`, 500))
+    .catch(error => sendApiError(res, 'Can\'t get user info.', error))
 );
 
 app.post('/api/login', (req, res) => {
@@ -69,7 +62,7 @@ app.get('/api/search', (req, res) => {
 app.get('/api/translation', (req, res) => {
   const {termId, translatorId} = req.query;
   if (!termId || !translatorId) {
-    return responseError(res, 'Incorrect /api/term request params', 500, 'info');
+    return sendApiError(res, 'Incorrect /api/term request params', null);
   }
   logger.info('Requesting a translation by term id "' + termId + '" and translatorId "' + translatorId + '"');
   let user, term, translations;
@@ -91,7 +84,7 @@ app.get('/api/translation', (req, res) => {
       return termsController.findTranslations(translator, term, translations)
     })
     .then(result => res.json({result}))
-    .catch(error => responseError(res, `Can't get a translation. ${error}`, 500))
+    .catch(error => sendApiError(res, `Can't get a translation.`, error))
 });
 
 app.post('/api/update', (req, res) => {
@@ -121,7 +114,7 @@ app.put('/api/newUser', (req, res) => {
 app.get('/api/users/:name', (req, res) =>
   usersController.findByLogin(req.params.name)
     .then(user => res.json({success: true, user: getUserInfo(user)}))
-    .catch(error => responseError(res, `Can't find user. ${error}`, 500))
+    .catch(error => sendApiError(res, 'Can\'t find user', error))
 );
 
 // serve static

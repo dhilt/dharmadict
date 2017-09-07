@@ -6,6 +6,7 @@ let responseError = (res, message, status, logLevel = 'error') => {
   } else {
     logger.info(message)
   }
+  // res.statusCode = status ???
   res.send({
     error: true,
     message: message

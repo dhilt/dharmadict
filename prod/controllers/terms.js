@@ -4,7 +4,10 @@ const logger = require('../log/logger');
 const config = require('../config.js');
 
 const findById = termId => new Promise((resolve, reject) => {
-  return elasticClient.search({
+  if (!termId) {
+    return reject(new ApiError('Invalid params.'))
+  }
+  elasticClient.search({
     index: config.db.index,
     type: 'terms',
     body: {
@@ -23,14 +26,14 @@ const findById = termId => new Promise((resolve, reject) => {
     return resolve(result._source)
   }, error => {
     logger.error(error.message);
-    return reject('Database error')
+    return reject(new ApiError('Database error'))
   });
 });
 
 const findTranslations = (translator, term, translations) => new Promise((resolve, reject) => {
   let translation = translations.find(t => t.translatorId === translator.id);
   if (!translation) {
-    return reject({
+    return resolve({
       termId: term.id,
       termName: term.wylie,
       translation: {
@@ -41,7 +44,7 @@ const findTranslations = (translator, term, translations) => new Promise((resolv
     });
   }
   if (translator.id !== translation.translatorId) {
-    return reject('Unpermitted access');
+    return reject(new ApiError('Unpermitted access', 302));
   }
   logger.info('Term\'s translation was successfully found');
   return resolve({
@@ -76,19 +79,19 @@ const searchByPattern = (pattern) => new Promise((resolve, reject) => {
     return resolve(result);
   }, error => {
     logger.error('Search error:', error.message);
-    return reject(error);
+    return reject(new ApiError('Database error'));
   });
 });
 
 const createTerm = (termName) => new Promise((resolve, reject) => {
   termName = termName.trim();
   if (!termName) {
-    return reject('Incorrect term params')
+    return reject(new ApiError('Incorrect term params'))
   }
   const termId = termName.replace(/ /g, '_');
   logger.info('Term adding: name "' + termName + '", id "' + termId + '"');
   findById(termId).then(() => {
-    return reject('Such term ("' + termId + '") already exists')
+    return reject(new ApiError('Such term ("' + termId + '") already exists'))
   }, error => {
     if (error.code === 404) {
       return resolve({termId, termName})
@@ -110,24 +113,24 @@ const createTerm = (termName) => new Promise((resolve, reject) => {
     return Promise.resolve(true)
   }, error => {
     logger.error('Create term error');
-    throw new ApiError('Can\'t create term. Database error')
+    throw new ApiError('Database error')
   })
 });
 
 const updateTerm = (user, termId, translation) => new Promise((resolve, reject) => {
   if (!termId || !translation) {
-    return reject('Incorrect /api/update request params');
+    return reject(new ApiError('Incorrect /api/update request params'));
   }
   const translatorId = user.id;
   if (user.role !== 'translator') {
-    return reject('Update term can only translator.')
+    return reject(new ApiError('Update term can only translator.', 302))
   }
   logger.info('Term updating. Term id = "' + termId + '", translator id = "' + translatorId + '"');
   return findById(termId).then(term => {
     return resolve({translatorId, termId, translation, term})
   }, error => {
     if (error.code === 404) {
-      return reject('Can\'t request term to update')
+      return reject(new ApiError('Can\'t request term to update'))
     }
   })
 })

@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const logger = require('../log/logger');
 const config = require('../config.js');
+const ApiError = require('./helpers/serverHelper.js').ApiError;
 
 const extractToken = (authHeader) => {
   if (!authHeader) {
@@ -16,7 +17,7 @@ const extractToken = (authHeader) => {
 const parseToken = (token) => new Promise((resolve, reject) => {
   jwt.verify(token, config.token.secretKey, (err, decoded) => {
     if (err || !decoded) {
-      return reject('Invalid token')
+      return reject(new ApiError('Invalid token', 302))
     }
     resolve(decoded.login)
   })
