@@ -13,15 +13,6 @@ let responseError = (res, message, status, logLevel = 'error') => {
   })
 };
 
-let redirect302 = (res) => {
-  logger.info('Unauthorized access');
-  res.statusCode = 302;
-  res.send({
-    error: true,
-    message: 'Authorization is needed'
-  })
-};
-
 class ApiError {
   constructor(text, code = 500) {
     this.text = text;
@@ -42,7 +33,6 @@ const sendApiError = (res, text, error) => {
 
 module.exports = {
   responseError,
-  redirect302,
   ApiError,
   sendApiError
 };
