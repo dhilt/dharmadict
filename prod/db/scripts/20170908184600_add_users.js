@@ -8,6 +8,7 @@ const users = [{
     login: 'admin',
     name: 'Администратор',
     hash: 'sha1$e0ef0f22$1$d1931026965efb48a9d28b1fee6970a0e9983baf',
+    description: ''
   }
 }, {
   id: 'USER',
@@ -16,6 +17,7 @@ const users = [{
     login: 'user',
     name: 'Пользователь',
     hash: 'sha1$b860d9c2$1$36010684ad559eb7f7e039fb01839ce2b52b4880',
+    description: ''
   }
 }, {
   id: 'MK',
@@ -24,7 +26,8 @@ const users = [{
     login: 'mk',
     name: 'М.Н. Кожевникова',
     hash: 'sha1$ce4a9ca0$1$ef1aabb5804cf7e7b397344720224f33a5a788c6',
-    language: 'rus'
+    language: 'rus',
+    description: ''
   }
 }, {
   id: 'AKT',
@@ -33,7 +36,8 @@ const users = [{
     login: 'akt',
     name: 'А. Кугявичус - А.А. Терентьев',
     hash: 'sha1$b4089de2$1$3fc5af2bf791224f1316fe2e2b0a530dc8aa4ba0',
-    language: 'rus'
+    language: 'rus',
+    description: ''
   }
 }, {
   id: 'ZAG',
@@ -42,7 +46,8 @@ const users = [{
     login: 'zag',
     name: 'Б.И. Загуменнов',
     hash: 'sha1$26f87429$1$af2f2de31509fc6da7432f70773ed529288c1daa',
-    language: 'rus'
+    language: 'rus',
+    description: ''
   }
 }, {
   id: 'DON',
@@ -51,7 +56,8 @@ const users = [{
     login: 'don',
     name: 'А.М. Донец',
     hash: 'sha1$81db2f3b$1$8580e47f134905fbe6885f6e7aed31ac283d21a6',
-    language: 'rus'
+    language: 'rus',
+    description: ''
   }
 }, {
   id: 'HOP',
@@ -60,7 +66,8 @@ const users = [{
     login: 'hop',
     name: 'J. Hopkins',
     hash: 'sha1$7c4a6e42$1$1fe059bfe474c38bcc74f6d44f54928d12fa27d5',
-    language: 'eng'
+    language: 'eng',
+    description: ''
   }
 }, {
   id: 'BRZ',
@@ -69,7 +76,8 @@ const users = [{
     login: 'brz',
     name: 'A. Berzin',
     hash: 'sha1$ec042dac$1$e88e2babfc1730d1ba4ae8da16fc5f624f9bc858',
-    language: 'eng'
+    language: 'eng',
+    description: ''
   }
 }];
 

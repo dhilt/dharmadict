@@ -10,87 +10,84 @@ const script = {
           "users": {
             "properties": {
               "name": {
-                "type": "string"
+                "type": "text"
               },
               "role": {
-                "type": "string",
-                "index": "not_analyzed"
+                "type": "keyword"
               },
               "login": {
-                "type": "string",
-                "index": "not_analyzed"
+                "type": "keyword"
               },
               "hash": {
-                "type": "string",
-                "index": "not_analyzed"
+                "type": "keyword"
               },
               "description": {
-                "type": "string"
+                "type": "text"
               }
             }
           },
           "terms": {
             "properties": {
               "sanskrit_eng": {
-                "type": "string"
+                "type": "text"
               },
               "sanskrit_eng_lower": {
-                "type": "string"
+                "type": "text"
               },
               "sanskrit_rus": {
-                "type": "string"
+                "type": "text"
               },
               "sanskrit_rus_lower": {
-                "type": "string"
+                "type": "text"
               },
               "translation": {
                 "properties": {
                   "language": {
-                    "type": "string"
+                    "type": "keyword"
                   },
                   "meanings": {
                     "properties": {
                       "comment": {
-                        "type": "string"
+                        "type": "text"
                       },
                       "versions": {
-                        "type": "string"
+                        "type": "text"
                       },
                       "versions_lower": {
-                        "type": "string"
+                        "type": "text"
                       }
                     }
                   },
                   "translatorId": {
-                    "type": "string"
+                    "type": "keyword"
                   }
                 }
               },
               "translations": {
                 "properties": {
                   "language": {
-                    "type": "string"
+                    "type": "keyword"
                   },
                   "meanings": {
                     "properties": {
                       "comment": {
-                        "type": "string"
+                        "type": "text"
                       },
                       "versions": {
-                        "type": "string"
+                        "type": "text"
                       },
                       "versions_lower": {
-                        "type": "string"
+                        "type": "text"
                       }
                     }
                   },
                   "translatorId": {
-                    "type": "string"
+                    "type": "keyword"
                   }
                 }
               },
               "wylie": {
-                "type": "string"
+                "type": "text"
               }
             }
           }
