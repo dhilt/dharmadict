@@ -1,3 +1,6 @@
+
+// TODO dhilt : replace it with ./prod/db/client.js !!
+
 const elasticsearch = require('elasticsearch');
 const config = require('../../config.js');
 

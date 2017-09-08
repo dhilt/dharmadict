@@ -4,7 +4,6 @@ const path = require('path');
 
 const config = require('./config.js');
 const logger = require('./log/logger');
-const elasticClient = require('./controllers/helpers/db.js');
 
 const serverHelper = require('./controllers/helpers/serverHelper.js');
 const usersController = require('./controllers/users');
