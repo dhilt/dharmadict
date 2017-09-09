@@ -123,23 +123,48 @@ const create = (termName) => new Promise(resolve => {
     })
   );
 
-const update = (user, termId, translation) => new Promise((resolve, reject) => {
-  if (!termId || !translation) {
-    return reject(new ApiError('Incorrect /api/update request params'));
+const update = (user, termId, translation) => new Promise(resolve => {
+  if (!user || !user.id || !termId || !translation || !translation.meanings || !translation.language) {
+    throw new ApiError('Incorrect /api/update request params')
   }
-  const translatorId = user.id;
-  if (user.role !== 'translator') {
-    return reject(new ApiError('Update term can only translator.', 302))
+  if (typeof termId !== 'string') {
+    throw new ApiError('Invalid termId')
   }
-  logger.info('Term updating. Term id = "' + termId + '", translator id = "' + translatorId + '"');
-  return findById(termId).then(term => {
-    return resolve({translatorId, termId, translation, term})
-  }, error => {
-    if (error.code === 404) {
-      return reject(new ApiError('Can\'t request term to update'))
+  if (typeof translation !== 'object') {
+    throw new ApiError('Invalid translation')
+  }
+  if (!Array.isArray(translation.meanings)) {
+    throw new ApiError('Invalid meanings')
+  }
+  translation.meanings.forEach(elem => {
+    if (!elem.hasOwnProperty('versions') || !elem.hasOwnProperty('comment')) {
+      throw new ApiError('Invalid properties of meanings')
+    }
+    if (!Array.isArray(elem.versions)) {
+      throw new ApiError('Invalid versions object')
+    }
+    if ((typeof elem.comment !== 'string') && elem.comment !== null) {
+      throw new ApiError('Invalid comment object')
     }
   })
+  const translatorId = user.id;
+  if (user.role !== 'translator') {
+    throw new ApiError('Update term can only translator.', 302)
+  }
+  logger.info('Term updating. Term id = "' + termId + '", translator id = "' + translatorId + '"');
+  resolve({translatorId, termId, translation})
 })
+  .then(data =>
+    findById(data.termId).then(term => {
+      return Promise.resolve(Object.assign(data, {term}))
+    }, error => {
+      if (error.code === 404) {
+        throw new ApiError('Can\'t request term to update', 404)
+      } else {
+        throw new ApiError('Database error')
+      }
+    })
+  )
   .then(data => {
     let {translatorId, termId, translation, term} = data;
     term.translations = term.translations || [];
