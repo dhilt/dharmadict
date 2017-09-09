@@ -124,8 +124,20 @@ const create = (termName) => new Promise(resolve => {
   );
 
 const update = (user, termId, translation) => new Promise(resolve => {
-  if (!user || !user.id || !termId || !translation || !translation.meanings || !translation.language) {
-    throw new ApiError('Incorrect /api/update request params')
+  if (!user || !user.id) {
+    throw new ApiError('Incorrect authorization info')
+  }
+  if (!termId) {
+    throw new ApiError('Incorrect termId')
+  }
+  if (!translation) {
+    throw new ApiError('Incorrect translation')
+  }
+  if (!translation.meanings) {
+    throw new ApiError('Incorrect translation.meanings')
+  }
+  if (!translation.language) {
+    throw new ApiError('Incorrect translation.language')
   }
   if (typeof termId !== 'string') {
     throw new ApiError('Invalid termId')
@@ -134,17 +146,20 @@ const update = (user, termId, translation) => new Promise(resolve => {
     throw new ApiError('Invalid translation')
   }
   if (!Array.isArray(translation.meanings)) {
-    throw new ApiError('Invalid meanings')
+    throw new ApiError('Invalid translation.meanings')
   }
   translation.meanings.forEach(elem => {
-    if (!elem.hasOwnProperty('versions') || !elem.hasOwnProperty('comment')) {
-      throw new ApiError('Invalid properties of meanings')
+    if (!elem.hasOwnProperty('versions')) {
+      throw new ApiError('Invalid versions')
+    }
+    if (!elem.hasOwnProperty('comment')) {
+      throw new ApiError('Invalid comment')
     }
     if (!Array.isArray(elem.versions)) {
-      throw new ApiError('Invalid versions object')
+      throw new ApiError('Invalid versions')
     }
     if ((typeof elem.comment !== 'string') && elem.comment !== null) {
-      throw new ApiError('Invalid comment object')
+      throw new ApiError('Invalid comment')
     }
   })
   const translatorId = user.id;
@@ -194,8 +209,8 @@ const update = (user, termId, translation) => new Promise(resolve => {
       term.id = termId; // add id field
       return Promise.resolve(term)
     }, error => {
-      logger.error('Update term error');
-      return new ApiError('Can\'t update term. Database error')
+      logger.error(error.message);
+      return new ApiError('Database error')
     })
   });
 

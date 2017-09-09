@@ -91,7 +91,7 @@ app.post('/api/update', (req, res) => {
   doAuthorize(req)
     .then(user => termsController.update(user, termId, translation))
     .then(term => res.json({success: true, term}))
-    .catch(error => sendApiError(res, 'Can\'t update term', error))
+    .catch(error => sendApiError(res, 'Can\'t update term.', error))
 });
 
 app.post('/api/newTerm', (req, res) => {
