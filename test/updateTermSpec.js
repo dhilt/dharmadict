@@ -2,6 +2,27 @@ const assert = require('assert');
 const request = require('./_shared.js').request;
 const shouldLogIn = require('./_shared.js').shouldLogIn;
 const testTranslator = require('./_shared.js').testTranslator;
+const testTerm = require('./_shared.js').testTerm;
+
+const goclone = source => {
+  if (Object.prototype.toString.call(source) === '[object Array]') {
+    let clone = [];
+    for (let i=0; i<source.length; i++) {
+      clone[i] = goclone(source[i]);
+    }
+    return clone;
+  } else if (typeof(source)=="object") {
+    let clone = {};
+    for (var prop in source) {
+      if (source.hasOwnProperty(prop)) {
+        clone[prop] = goclone(source[prop]);
+      }
+    }
+    return clone;
+  } else {
+    return source;
+  }
+}
 
 describe('Update term API', () => {
 
@@ -29,7 +50,7 @@ describe('Update term API', () => {
 
   // Incoming data from client
   const testUpdateTerm = {
-    termId: "chos",
+    termId: testTerm.id,
     translation: {
       translatorId: "MK",
       language: "rus",
@@ -40,7 +61,7 @@ describe('Update term API', () => {
   };
 
   it('should not update term (Missing termId)', (done) => {
-    let term = Object.assign({}, testUpdateTerm);
+    let term = goclone(testUpdateTerm);
     delete term['termId'];
     request.post('/api/update')
       .set('Authorization', 'Bearer ' + testTranslator.token)
@@ -55,7 +76,7 @@ describe('Update term API', () => {
   });
 
   it('should not update term (Missing translation)', (done) => {
-    let term = Object.assign({}, testUpdateTerm);
+    let term = goclone(testUpdateTerm);
     delete term['translation'];
     request.post('/api/update')
       .set('Authorization', 'Bearer ' + testTranslator.token)
@@ -69,23 +90,23 @@ describe('Update term API', () => {
       )
   });
 
-  // it('should not update term (Missing translation.meanings)', (done) => {
-  //   let term = Object.assign({}, testUpdateTerm);
-  //   delete term['translation'].meanings;
-  //   request.post('/api/update')
-  //     .set('Authorization', 'Bearer ' + testTranslator.token)
-  //     .send(term)
-  //     .end(
-  //       (err, res) => {
-  //         assert.notEqual(res.body.success, true);
-  //         assert.equal(res.body.message, "Can't update term. Incorrect translation.meanings");
-  //         done();
-  //       }
-  //     )
-  // });
+  it('should not update term (Missing translation.meanings)', (done) => {
+    let term = goclone(testUpdateTerm);
+    delete term['translation'].meanings;
+    request.post('/api/update')
+      .set('Authorization', 'Bearer ' + testTranslator.token)
+      .send(term)
+      .end(
+        (err, res) => {
+          assert.notEqual(res.body.success, true);
+          assert.equal(res.body.message, "Can't update term. Incorrect translation.meanings");
+          done();
+        }
+      )
+  });
 
   it('should not update term (Missing translation.language)', (done) => {
-    let term = Object.assign({}, testUpdateTerm);
+    let term = goclone(testUpdateTerm);
     delete term['translation'].language;
     request.post('/api/update')
       .set('Authorization', 'Bearer ' + testTranslator.token)
@@ -99,50 +120,96 @@ describe('Update term API', () => {
       )
   });
 
-  // it('should not update term (Invalid termId)', (done) => {
-  //   let term = Object.assign({}, testUpdateTerm);
-  //   term.termId = 123;
-  //   console.log(term);
-  //   request.post('/api/update')
-  //     .set('Authorization', 'Bearer ' + testTranslator.token)
-  //     .send(term)
-  //     .end(
-  //       (err, res) => {
-  //         assert.notEqual(res.body.success, true);
-  //         assert.equal(res.body.message, "Can't update term. Invalid termId");
-  //         done();
-  //       }
-  //     )
-  // });
+  it('should not update term (Invalid termId)', (done) => {
+    let term = goclone(testUpdateTerm);
+    term.termId = 123;
+    console.log(term);
+    request.post('/api/update')
+      .set('Authorization', 'Bearer ' + testTranslator.token)
+      .send(term)
+      .end(
+        (err, res) => {
+          assert.notEqual(res.body.success, true);
+          assert.equal(res.body.message, "Can't update term. Invalid termId");
+          done();
+        }
+      )
+  });
 
-  // it('should not update term (Invalid translation)', (done) => {
-  //   let term = Object.assign({}, testUpdateTerm);
-  //   term.translation = 123;
-  //   request.post('/api/update')
-  //     .set('Authorization', 'Bearer ' + testTranslator.token)
-  //     .send(term)
-  //     .end(
-  //       (err, res) => {
-  //         assert.notEqual(res.body.success, true);
-  //         assert.equal(res.body.message, "Can't update term. Invalid translation");
-  //         done();
-  //       }
-  //     )
-  // });
+  it('should not update term (Invalid translation.meanings)', (done) => {
+    let term = goclone(testUpdateTerm);
+    term.translation.meanings = 123;
+    request.post('/api/update')
+      .set('Authorization', 'Bearer ' + testTranslator.token)
+      .send(term)
+      .end(
+        (err, res) => {
+          assert.notEqual(res.body.success, true);
+          assert.equal(res.body.message, "Can't update term. Invalid translation.meanings");
+          done();
+        }
+      )
+  });
 
-  // it('should not update term (Invalid translation.meanings)', (done) => {
-  //   let term = Object.assign({}, testUpdateTerm);
-  //   term.translation.meanings = 123;
-  //   request.post('/api/update')
-  //     .set('Authorization', 'Bearer ' + testTranslator.token)
-  //     .send(term)
-  //     .end(
-  //       (err, res) => {
-  //         assert.notEqual(res.body.success, true);
-  //         assert.equal(res.body.message, "Can't update term. Invalid translation.meanings");
-  //         done();
-  //       }
-  //     )
-  // });
+  it('should not update term (Invalid versions)', (done) => {
+    let term = goclone(testUpdateTerm);
+    delete term.translation.meanings[0].versions;
+    request.post('/api/update')
+      .set('Authorization', 'Bearer ' + testTranslator.token)
+      .send(term)
+      .end(
+        (err, res) => {
+          assert.notEqual(res.body.success, true);
+          assert.equal(res.body.message, "Can't update term. Invalid versions");
+          done();
+        }
+      )
+  });
+
+  it('should not update term (Invalid comment)', (done) => {
+    let term = goclone(testUpdateTerm);
+    delete term.translation.meanings[0].comment;
+    request.post('/api/update')
+      .set('Authorization', 'Bearer ' + testTranslator.token)
+      .send(term)
+      .end(
+        (err, res) => {
+          assert.notEqual(res.body.success, true);
+          assert.equal(res.body.message, "Can't update term. Invalid comment");
+          done();
+        }
+      )
+  });
+
+  it('should not update term (Invalid versions)', (done) => {
+    let term = goclone(testUpdateTerm);
+    term.translation.meanings[0].versions = 123;
+    request.post('/api/update')
+      .set('Authorization', 'Bearer ' + testTranslator.token)
+      .send(term)
+      .end(
+        (err, res) => {
+          assert.notEqual(res.body.success, true);
+          assert.equal(res.body.message, "Can't update term. Invalid versions");
+          done();
+        }
+      )
+  });
+
+  it('should not update term (Invalid comment)', (done) => {
+    let term = goclone(testUpdateTerm);
+    term.translation.meanings[0].comment = {obj: 'temp'};
+    request.post('/api/update')
+      .set('Authorization', 'Bearer ' + testTranslator.token)
+      .send(term)
+      .end(
+        (err, res) => {
+          assert.notEqual(res.body.success, true);
+          assert.equal(res.body.message, "Can't update term. Invalid comment");
+          done();
+        }
+      )
+  });
+
 
 })
