@@ -49,12 +49,15 @@ const processListItem = (client, listItem) => {
         }
       });
       bulkObject.body.push({
-        script: "if (ctx._source.containsKey('translations')) {def idx = ctx._source.translations.findIndexOf {t -> t.translatorId == authorId}; if (idx == -1) ctx._source.translations += translation; else ctx._source.translations[idx] = translation;} else {ctx._source.translations = [translation]}",
-        upsert: term,
-        params: {
-          translation: term.translation,
-          authorId: term.translation.translatorId
-        }
+        script: {
+          inline: "if(!ctx._source.containsKey('translations')) { ctx._source.translations = [params.translation]} else { int idx = -1; for(int i = 0; i < ctx._source.translations.length; ++i) { if(ctx._source.translations[i].translatorId == params.authorId) { idx = i; break; } } if(idx == -1) { ctx._source.translations.add(params.translation); } else { ctx._source.translations[idx] = params.translation; } }",
+          params: {
+            translation: term.translation,
+            authorId: term.translation.translatorId
+          },
+          "lang": "painless"
+        },
+        upsert: term
       });
     }
   };
