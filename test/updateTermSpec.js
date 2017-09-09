@@ -13,7 +13,7 @@ const goclone = source => {
     return clone;
   } else if (typeof(source)=="object") {
     let clone = {};
-    for (var prop in source) {
+    for (let prop in source) {
       if (source.hasOwnProperty(prop)) {
         clone[prop] = goclone(source[prop]);
       }
@@ -123,7 +123,6 @@ describe('Update term API', () => {
   it('should not update term (Invalid termId)', (done) => {
     let term = goclone(testUpdateTerm);
     term.termId = 123;
-    console.log(term);
     request.post('/api/update')
       .set('Authorization', 'Bearer ' + testTranslator.token)
       .send(term)
@@ -198,7 +197,7 @@ describe('Update term API', () => {
 
   it('should not update term (Invalid comment)', (done) => {
     let term = goclone(testUpdateTerm);
-    term.translation.meanings[0].comment = {obj: 'temp'};
+    term.translation.meanings[0].comment = 123;
     request.post('/api/update')
       .set('Authorization', 'Bearer ' + testTranslator.token)
       .send(term)
@@ -211,5 +210,19 @@ describe('Update term API', () => {
       )
   });
 
+  it('should not update term (This term doesn\'t exist)', (done) => {
+    let term = goclone(testUpdateTerm);
+    term.termId = "UNEXISTENT_TERM!!!";
+    request.post('/api/update')
+      .set('Authorization', 'Bearer ' + testTranslator.token)
+      .send(term)
+      .end(
+        (err, res) => {
+          assert.notEqual(res.body.success, true);
+          assert.equal(res.body.message, "Can't update term. This term doesn\'t exist");
+          done();
+        }
+      )
+  });
 
-})
+});

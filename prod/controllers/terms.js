@@ -174,7 +174,7 @@ const update = (user, termId, translation) => new Promise(resolve => {
       return Promise.resolve(Object.assign(data, {term}))
     }, error => {
       if (error.code === 404) {
-        throw new ApiError('Can\'t request term to update', 404)
+        throw new ApiError('This term doesn\'t exist', 404)
       } else {
         throw new ApiError('Database error')
       }
