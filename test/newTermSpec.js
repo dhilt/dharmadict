@@ -76,6 +76,7 @@ describe('New term API', () => {
         (err, res) => {
           assert.equal(res.body.success, true);
           assert.equal(res.body.id, testTerm.id);
+          //setTimeout(() => done(), 1000);
           done();
         }
       )
