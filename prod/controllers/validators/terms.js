@@ -26,14 +26,13 @@ update = (user, termId, translation) => new Promise(resolve => {
     if (!elem.hasOwnProperty('versions')) {
       throw new ApiError('Invalid versions')
     }
-    if (!elem.hasOwnProperty('comment')) {
-      throw new ApiError('Invalid comment')
+    if (elem.hasOwnProperty('comment') && elem.comment !== null) {
+      if ((typeof elem.comment !== 'string')) {
+        throw new ApiError('Invalid comment')
+      }
     }
     if (!Array.isArray(elem.versions)) {
       throw new ApiError('Invalid versions')
-    }
-    if ((typeof elem.comment !== 'string') && elem.comment !== null) {
-      throw new ApiError('Invalid comment')
     }
   });
   resolve({user, termId, translation})

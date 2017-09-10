@@ -24,9 +24,9 @@ let canLogin = (login, password) => new Promise(resolve => {
       throw new ApiError('Wrong credentials')
     }
     return Promise.resolve(user)
-  })
+  });
 
-let _findById = userId => new Promise((resolve, reject) => {
+let findById = userId => new Promise((resolve, reject) => {
   logger.info(`Find user by ID ${userId}`);
   if (!userId) {
     return reject(new ApiError('Invalid ID'))
@@ -155,7 +155,7 @@ const create = user => new Promise(resolve => {
     })
   )
   .then(data => // check id uniqueness
-    _findById(data.userId).then(() => {
+    findById(data.userId).then(() => {
       throw new ApiError('Id not unique')
     }, error => {
       if (error.code === 404) {
@@ -187,7 +187,7 @@ let removeById = userId => new Promise(resolve => {
   }
   resolve()
 })
-  .then(() => _findById(userId))
+  .then(() => findById(userId))
   .then(() =>
     elasticClient.delete({
       index: config.db.index,
@@ -216,6 +216,7 @@ module.exports = {
   isAdmin,
   getUserInfo,
   canLogin,
+  findById,
   findByLogin,
   findAll,
   create,

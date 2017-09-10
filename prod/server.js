@@ -70,11 +70,12 @@ app.get('/api/translation', (req, res) => {
       user = result;
       return termsController.findById(termId);
     })
-    .then(term => {
+    .then(_term => {
+      term =_term;
       if (!(translations = term ? term.translations : null)) {
         throw 'Can not find a translation by termId'
       }
-      return usersController.findByLogin(translatorId)
+      return usersController.findById(translatorId)
     })
     .then(translator => {
       if (user.id !== translator.id && user.role !== 'admin') {
@@ -83,7 +84,10 @@ app.get('/api/translation', (req, res) => {
       return termsController.findTranslations(translator, term, translations)
     })
     .then(result => res.json({result}))
-    .catch(error => sendApiError(res, `Can't get a translation.`, error))
+    .catch(error => {
+      console.log(error);
+      sendApiError(res, `Can't get a translation.`, error)
+    })
 });
 
 app.post('/api/update', (req, res) => {
