@@ -125,50 +125,38 @@ const create = (termName) => new Promise(resolve => {
   );
 
 const update = (user, termId, translation) => validator.update(user, termId, translation)
-  .then(data =>
-    findById(data.termId).then(term => {
-      return Promise.resolve(Object.assign(data, {term}))
-    }, error => {
-      if (error.code === 404) {
-        throw new ApiError('This term doesn\'t exist', 404)
-      } else {
-        throw new ApiError('Database error')
-      }
-    })
-  )
-  .then(data => {
-    let {translatorId, termId, translation, term} = data;
+  .then(() => findById(termId))
+  .then(term => {
     term.translations = term.translations || [];
-    let foundT = term.translations.find(t => t.translatorId === translatorId);
+    let foundT = term.translations.find(t => t.translatorId === user.id);
     let isEmpty = !(translation.meanings && translation.meanings.length);
     if (!foundT && !isEmpty) {
       term.translations.push(translation);
     } else if (foundT) {
       if (isEmpty) {
-        term.translations = term.translations.filter(t => t.translatorId !== translatorId);
+        term.translations = term.translations.filter(t => t.translatorId !== user.id);
       } else {
         foundT.meanings = translation.meanings;
       }
     }
     translation.meanings.forEach(m => m.versions_lower = m.versions.map(v => v.toLowerCase()));
-    return Promise.resolve({term, termId})
+    return Promise.resolve(term)
   })
-  .then(data => {
-    let {term, termId} = data;
+  .then(term =>
     elasticClient.index({
       index: config.db.index,
       type: 'terms',
       id: termId,
       body: term
-    }).then(response => {
+    }).then(() => {
       logger.info('Term was successfully updated');
-      term.id = termId; // add id field
+      term.id = termId;
       return Promise.resolve(term)
     }, error => {
       logger.error(error.message);
       return new ApiError('Database error')
     })
-  });
+  );
 
 const removeById = termId => new Promise(resolve => {
   if (!termId || typeof termId !== 'string') {
