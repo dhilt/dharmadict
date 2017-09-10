@@ -53,7 +53,6 @@ describe('Update term API', () => {
     termId: testTerm.id,
     translation: {
       translatorId: "MK",
-      language: "rus",
       meanings:
         [  { versions: ["a1", "b1", "c1"], comment: "comment1" },
            { versions: ["a1", "b1", "c1"], comment: null }  ]
@@ -100,21 +99,6 @@ describe('Update term API', () => {
         (err, res) => {
           assert.notEqual(res.body.success, true);
           assert.equal(res.body.message, "Can't update term. Incorrect translation.meanings");
-          done();
-        }
-      )
-  });
-
-  it('should not update term (Missing translation.language)', (done) => {
-    let term = goclone(testUpdateTerm);
-    delete term['translation'].language;
-    request.post('/api/update')
-      .set('Authorization', 'Bearer ' + testTranslator.token)
-      .send(term)
-      .end(
-        (err, res) => {
-          assert.notEqual(res.body.success, true);
-          assert.equal(res.body.message, "Can't update term. Incorrect translation.language");
           done();
         }
       )

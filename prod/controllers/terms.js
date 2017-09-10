@@ -136,9 +136,6 @@ const update = (user, termId, translation) => new Promise(resolve => {
   if (!translation.meanings) {
     throw new ApiError('Incorrect translation.meanings')
   }
-  if (!translation.language) {
-    throw new ApiError('Incorrect translation.language')
-  }
   if (typeof termId !== 'string') {
     throw new ApiError('Invalid termId')
   }
