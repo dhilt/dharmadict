@@ -2,6 +2,7 @@ const elasticClient = require('../db/client.js');
 const ApiError = require('./helpers/serverHelper.js').ApiError;
 const logger = require('../log/logger');
 const config = require('../config.js');
+const validator = require('./validators/terms.js');
 
 const findById = termId => new Promise((resolve, reject) => {
   if (!termId) {
@@ -123,49 +124,7 @@ const create = (termName) => new Promise(resolve => {
     })
   );
 
-const update = (user, termId, translation) => new Promise(resolve => {
-  if (!user || !user.id) {
-    throw new ApiError('Incorrect authorization info')
-  }
-  if (!termId) {
-    throw new ApiError('Incorrect termId')
-  }
-  if (!translation) {
-    throw new ApiError('Incorrect translation')
-  }
-  if (!translation.meanings) {
-    throw new ApiError('Incorrect translation.meanings')
-  }
-  if (typeof termId !== 'string') {
-    throw new ApiError('Invalid termId')
-  }
-  if (typeof translation !== 'object') {
-    throw new ApiError('Invalid translation')
-  }
-  if (!Array.isArray(translation.meanings)) {
-    throw new ApiError('Invalid translation.meanings')
-  }
-  translation.meanings.forEach(elem => {
-    if (!elem.hasOwnProperty('versions')) {
-      throw new ApiError('Invalid versions')
-    }
-    if (!elem.hasOwnProperty('comment')) {
-      throw new ApiError('Invalid comment')
-    }
-    if (!Array.isArray(elem.versions)) {
-      throw new ApiError('Invalid versions')
-    }
-    if ((typeof elem.comment !== 'string') && elem.comment !== null) {
-      throw new ApiError('Invalid comment')
-    }
-  })
-  const translatorId = user.id;
-  if (user.role !== 'translator') {
-    throw new ApiError('Update term can only translator.', 302)
-  }
-  logger.info('Term updating. Term id = "' + termId + '", translator id = "' + translatorId + '"');
-  resolve({translatorId, termId, translation})
-})
+const update = (user, termId, translation) => validator.update(user, termId, translation)
   .then(data =>
     findById(data.termId).then(term => {
       return Promise.resolve(Object.assign(data, {term}))

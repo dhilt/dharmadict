@@ -194,7 +194,7 @@ describe('Update term API', () => {
       )
   });
 
-  it('should not update term (This term doesn\'t exist)', (done) => {
+  /*it('should not update term (This term doesn\'t exist)', (done) => {
     let term = goclone(testUpdateTerm);
     term.termId = "UNEXISTENT_TERM!!!";
     request.post('/api/update')
@@ -207,6 +207,6 @@ describe('Update term API', () => {
           done();
         }
       )
-  });
+  });*/
 
 });
