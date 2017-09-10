@@ -44,6 +44,21 @@ describe('Update term API', () => {
       )
   });
 
+  it('should not update term (bad termId)', (done) => {
+    let term = JSON.parse(JSON.stringify(testTermTranslation));
+    term.termId = 123;
+    request.post('/api/update')
+      .set('Authorization', 'Bearer ' + testTranslator.token)
+      .send(term)
+      .end(
+        (err, res) => {
+          assert.notEqual(res.body.success, true);
+          assert.equal(res.body.message, "Can't update term. Incorrect termId");
+          done();
+        }
+      )
+  });
+
   it('should not update term (no translation)', (done) => {
     let term = JSON.parse(JSON.stringify(testTermTranslation));
     delete term['translation'];
@@ -136,7 +151,7 @@ describe('Update term API', () => {
 
   it('should not update term (wrong termId)', (done) => {
     let term = JSON.parse(JSON.stringify(testTermTranslation));
-    term.termId = 123;
+    term.termId = testTerm.id + '___';
     request.post('/api/update')
       .set('Authorization', 'Bearer ' + testTranslator.token)
       .send(term)
@@ -148,20 +163,5 @@ describe('Update term API', () => {
         }
       )
   });
-
-  /*it('should not update term (This term doesn\'t exist)', (done) => {
-    let term = goclone(testUpdateTerm);
-    term.termId = "UNEXISTENT_TERM!!!";
-    request.post('/api/update')
-      .set('Authorization', 'Bearer ' + testTranslator.token)
-      .send(term)
-      .end(
-        (err, res) => {
-          assert.notEqual(res.body.success, true);
-          assert.equal(res.body.message, "Can't update term. This term doesn\'t exist");
-          done();
-        }
-      )
-  });*/
 
 });

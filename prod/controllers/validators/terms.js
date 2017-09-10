@@ -15,7 +15,7 @@ const update = (user, termId, translation) => new Promise(resolve => {
   if (!user || !user.id) {
     throw new ApiError('Incorrect authorization info')
   }
-  if (!termId) {
+  if (!termId || typeof termId !== 'string') {
     throw new ApiError('Incorrect termId')
   }
   if (!translation) {
