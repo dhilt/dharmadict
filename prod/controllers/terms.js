@@ -84,18 +84,12 @@ const searchByPattern = (pattern) => new Promise((resolve, reject) => {
   });
 });
 
-const create = (termName) => new Promise(resolve => {
-  if (typeof termName !== 'string') {
-    throw new ApiError('Invalid params')
-  }
-  termName = termName.trim();
-  if (!termName) {
-    throw new ApiError('Invalid params')
-  }
-  const termId = termName.replace(/ /g, '_');
-  logger.info(`Term adding: name "${termName}", id "${termId}"`);
-  resolve({name: termName, id: termId})
-})
+const create = (termName) => validator.create(termName)
+  .then(name => {
+    const id = name.replace(/ /g, '_');
+    logger.info(`Term adding: name "${name}", id "${id}"`);
+    return Promise.resolve({name, id})
+  })
   .then(term =>
     findById(term.id).then(() => {
       throw new ApiError('Already exists')

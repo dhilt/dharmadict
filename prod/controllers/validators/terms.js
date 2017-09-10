@@ -1,6 +1,17 @@
 const ApiError = require('../helpers/serverHelper.js').ApiError;
 
-update = (user, termId, translation) => new Promise(resolve => {
+const create = (name) => new Promise(resolve => {
+  if (typeof name !== 'string') {
+    throw new ApiError('Invalid params')
+  }
+  name = name.trim();
+  if (!name) {
+    throw new ApiError('Invalid params')
+  }
+  resolve(name)
+});
+
+const update = (user, termId, translation) => new Promise(resolve => {
   if (!user || !user.id) {
     throw new ApiError('Incorrect authorization info')
   }
@@ -39,5 +50,6 @@ update = (user, termId, translation) => new Promise(resolve => {
 });
 
 module.exports = {
+  create,
   update
 };
