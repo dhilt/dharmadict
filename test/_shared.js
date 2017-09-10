@@ -35,6 +35,15 @@ const testTerm = {
   id: 'test_term'
 };
 
+const testTermTranslation = {
+  termId: testTerm.id,
+  translation: {
+    meanings: [
+      {versions: ["a1", "b1", "c1"], comment: "comment1"},
+      {versions: ["a2", "b2", "c2"], comment: null}]
+  }
+};
+
 const forceCleanUp = () => {
   describe('Force cleanup', () => {
     it('may delete test user', (done) => {
@@ -92,5 +101,6 @@ module.exports = {
   testAdmin,
   testTranslator,
   testTerm,
+  testTermTranslation,
   shouldLogIn
 };
