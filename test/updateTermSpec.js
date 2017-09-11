@@ -164,4 +164,26 @@ describe('Update term API', () => {
       )
   });
 
+  it('should update term', (done) => {
+    let term = JSON.parse(JSON.stringify(testTermTranslation));
+    term.termName = testTerm.name;
+    term.translation.translatorId = testTranslator.id;
+    request.post('/api/update')
+      .set('Authorization', 'Bearer ' + testTranslator.token)
+      .send(term)
+      .end(
+        (err, res) => {
+          assert.notEqual(res.body.success, false);
+          assert.equal(res.body.term, term);
+          done();
+        }
+      )
+  });
+
+
+
+
+
+
+
 });
