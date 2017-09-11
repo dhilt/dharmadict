@@ -3,6 +3,7 @@ const elasticClient = require('../db/client.js');
 const ApiError = require('./helpers/serverHelper.js').ApiError;
 const logger = require('../log/logger');
 const config = require('../config.js');
+const validator = require('./validators/users.js');
 
 let isAdmin = (user) => {
   if (user.role !== 'admin') {
@@ -114,36 +115,15 @@ let findAll = () => new Promise((resolve, reject) => {
     return Promise.resolve(users)
   });
 
-const create = user => new Promise(resolve => {
-  // data validation
-  if (!user) {
-    throw new ApiError('Invalid data')
-  }
-  if (!user.id) {
-    throw new ApiError('Invalid id')
-  }
-  if (!user.role) {
-    throw new ApiError('Invalid role')
-  }
-  if (!user.login) {
-    throw new ApiError('Invalid login')
-  }
-  if (!user.name) {
-    throw new ApiError('Invalid name')
-  }
-  if (!user.password) {
-    throw new ApiError('Invalid password')
-  }
-  if (!user.description) {
-    throw new ApiError('Invalid description')
-  }
-  let newUser = Object.assign({}, user);
-  newUser.hash = passwordHash.generate(user.password);
-  const userId = newUser.id;
-  delete newUser.password;
-  delete newUser.id;
-  resolve({user: newUser, userId})
-})
+const create = user => validator.create(user)
+  .then(user => {
+    let newUser = Object.assign({}, user);
+    newUser.hash = passwordHash.generate(user.password);
+    const userId = newUser.id;
+    delete newUser.password;
+    delete newUser.id;
+    return Promise.resolve({user: newUser, userId})
+  })
   .then(data =>  // check login uniqueness
     findByLogin(data.user.login).then(() => {
       throw new ApiError('Login not unique')
