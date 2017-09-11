@@ -184,7 +184,7 @@ describe('Update term API', () => {
         }
       )
   });
-/*
+
   it('should update term (added new meanings)', (done) => {
     let term = JSON.parse(JSON.stringify(testTermTranslation));
     term.termName = testTerm.name;
@@ -194,8 +194,10 @@ describe('Update term API', () => {
       .send(term)
       .end(
         (err, res) => {
-          assert.notEqual(res.body.success, false);
-          assert.equal(res.body.term, term);
+          assert.equal(res.body.success, true);
+          let translation = res.body.term.translation;
+          assert.equal(translation.meanings[2].comment, term.translation.meanings[2].comment);
+          assert.equal(JSON.stringify(translation.meanings[2].versions), JSON.stringify(term.translation.meanings[2].versions));
           done();
         }
       )
@@ -209,8 +211,11 @@ describe('Update term API', () => {
       .send(term)
       .end(
         (err, res) => {
-          assert.notEqual(res.body.success, false);
-          assert.equal(res.body.term, term);
+          assert.equal(res.body.success, true);
+          let translation = res.body.term.translation;
+          assert.equal(translation.meanings.length, 2);
+          let tryFindMeaning = translation.meanings.find(elem => elem.comment === "New test comment");
+          assert.notEqual(true, tryFindMeaning);
           done();
         }
       )
@@ -225,10 +230,10 @@ describe('Update term API', () => {
       .send(term)
       .end(
         (err, res) => {
-          assert.notEqual(res.body.success, false);
-          assert.equal(res.body.term.translation.meanings, []);
+          assert.equal(res.body.success, true);
+          assert.equal(res.body.term.translation.meanings.length, term.translation.meanings.length);
           done();
         }
       )
-  });*/
+  });
 });
