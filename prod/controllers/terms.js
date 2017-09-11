@@ -136,34 +136,24 @@ const update = (user, termId, translation) => validator.update(user, termId, tra
     translation.meanings.forEach(m => m.versions_lower = m.versions.map(v => v.toLowerCase()));
     return Promise.resolve(term)
   })
-  .then(term => {
+  .then(term =>
     elasticClient.index({
       index: config.db.index,
       type: 'terms',
       id: termId,
-      body: term
-    }).then((res) => {
+      body: term,
+      refresh: true
+    }).then(() => {
       logger.info('Term was successfully updated');
       term.id = termId;
-      // return Promise.resolve(term)
+      return Promise.resolve(term)
     }, error => {
       logger.error(error.message);
       return new ApiError('Database error')
     })
-    return Promise.resolve(term)
-  })
-  .then(term =>
-    findById(term.id).then(_translations => {
-      _translations = _translations.translations;
-      return findTranslations(user, term, _translations).then(_result => {
-        return Promise.resolve(_result)
-      }, error => {
-        throw error
-      })
-    }, error => {
-      throw error
-    })
-  );
+  )
+  .then(term => findById(term.id))
+  .then(term => findTranslations(user, term, term.translations));
 
 const removeById = termId => new Promise(resolve => {
   if (!termId || typeof termId !== 'string') {
