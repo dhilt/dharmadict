@@ -154,6 +154,7 @@ const update = (user, termId, translation) => validator.update(user, termId, tra
   })
   .then(term =>
     findById(term.id).then(_translations => {
+      console.log('Not found ---> ', _translations);  // error
       _translations = _translations.translations;
       return findTranslations(user, term, _translations).then(_result => {
         return Promise.resolve(_result)

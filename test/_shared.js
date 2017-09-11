@@ -40,7 +40,8 @@ const testTermTranslation = {
   translation: {
     meanings: [
       {versions: ["a1", "b1", "c1"], comment: "comment1"},
-      {versions: ["a2", "b2", "c2"], comment: null}]
+      {versions: ["a2", "b2", "c2"], comment: null}],
+    translatorId: testTranslator.id
   }
 };
 
