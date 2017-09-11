@@ -108,7 +108,8 @@ const create = (termName) => validator.create(termName)
       body: {
         wylie: term.name,
         translations: []
-      }
+      },
+      refresh: true
     }).then(() => {
       logger.info('Term was successfully created');
       return Promise.resolve(term.id)
@@ -166,7 +167,8 @@ const removeById = termId => new Promise(resolve => {
     elasticClient.delete({
       index: config.db.index,
       type: 'terms',
-      id: termId
+      id: termId,
+      refresh: true
     }).then(() => {
       logger.info('Term was successfully deleted');
       return Promise.resolve({

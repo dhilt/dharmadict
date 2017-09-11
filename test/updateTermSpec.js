@@ -174,7 +174,6 @@ describe('Update term API', () => {
         (err, res) => {
           assert.equal(res.body.success, true);
           let translation = res.body.term.translation;
-          console.log(translation);
           assert.equal(translation.translatorId, testTranslator.id);
           assert.equal(translation.meanings.length, 2);
           assert.equal(translation.meanings[0].comment, term.translation.meanings[0].comment);

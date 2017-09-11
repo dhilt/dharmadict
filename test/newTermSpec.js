@@ -76,13 +76,12 @@ describe('New term API', () => {
         (err, res) => {
           assert.equal(res.body.success, true);
           assert.equal(res.body.id, testTerm.id);
-          setTimeout(() => done(), 1000);
-          // done();
+          done();
         }
       )
   });
 
-  /*it('should not create duplicate term', (done) => {
+  it('should not create duplicate term', (done) => {
     request.post('/api/newTerm')
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .send({term: testTerm.name})
@@ -93,6 +92,6 @@ describe('New term API', () => {
           done();
         }
       )
-  });*/
+  });
 
 });

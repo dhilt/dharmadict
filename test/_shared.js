@@ -47,7 +47,7 @@ const testTermTranslation = {
 
 const forceCleanUp = () => {
   describe('Force cleanup', () => {
-    it('may delete test user', (done) => {
+    it('may delete test data', (done) => {
       let ready = 0;
       const _done = () => {
         if (++ready === 3) {
@@ -58,23 +58,23 @@ const forceCleanUp = () => {
       usersController.removeById(testAdmin.id)
         .then(() => {
           console.log('Test admin user was successfully deleted');
-          setTimeout(() => _done(), 1000);
+          _done();
         })
-        .catch(() => _done());
+        .catch(_done);
 
       usersController.removeById(testTranslator.id)
         .then(() => {
           console.log('Test translator user was successfully deleted');
-          setTimeout(() => _done(), 1000);
+          _done();
         })
-        .catch(() => _done());
+        .catch(_done);
 
       termsController.removeById(testTerm.id)
         .then(() => {
           console.log('Test term user was successfully deleted');
-          setTimeout(() => _done(), 1000);
+          _done();
         })
-        .catch(() => _done());
+        .catch(_done);
     });
   });
 };

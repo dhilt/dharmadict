@@ -169,7 +169,8 @@ const create = user => new Promise(resolve => {
       index: config.db.index,
       type: 'users',
       id: data.userId,
-      body: data.user
+      body: data.user,
+      refresh: true
     }).then(() => {
       logger.info('User was successfully created');
       return Promise.resolve({
@@ -192,7 +193,8 @@ let removeById = userId => new Promise(resolve => {
     elasticClient.delete({
       index: config.db.index,
       type: 'users',
-      id: userId
+      id: userId,
+      refresh: true
     }).then(() => {
       logger.info('User was successfully deleted');
       return Promise.resolve({

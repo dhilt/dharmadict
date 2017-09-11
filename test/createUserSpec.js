@@ -38,7 +38,7 @@ describe('Create user ctrl method', () => {
     usersController.create(testAdmin)
       .then(result => {
         assert.equal(result.success, true);
-        setTimeout(() => done(), 1000);
+        done();
       })
       .catch(error => done(error))
   });
@@ -47,7 +47,7 @@ describe('Create user ctrl method', () => {
     usersController.create(testTranslator)
       .then(result => {
         assert.equal(result.success, true);
-        setTimeout(() => done(), 1000);
+        done();
       })
       .catch(error => done(error))
   });
