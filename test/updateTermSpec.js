@@ -167,7 +167,6 @@ describe('Update term API', () => {
   it('should update term', (done) => {
     let term = JSON.parse(JSON.stringify(testTermTranslation));
     term.termName = testTerm.name;
-    term.translation.translatorId = testTranslator.id;
     request.post('/api/update')
       .set('Authorization', 'Bearer ' + testTranslator.token)
       .send(term)
@@ -183,7 +182,6 @@ describe('Update term API', () => {
   it('should update term (added new meanings)', (done) => {
     let term = JSON.parse(JSON.stringify(testTermTranslation));
     term.termName = testTerm.name;
-    term.translation.translatorId = testTranslator.id;
     term.translation.meanings.push({versions: ["New test translation"], comment: "New test comment"});
     request.post('/api/update')
       .set('Authorization', 'Bearer ' + testTranslator.token)
@@ -200,7 +198,6 @@ describe('Update term API', () => {
   it('should update term (it will remove third meaning)', (done) => {
     let term = JSON.parse(JSON.stringify(testTermTranslation));
     term.termName = testTerm.name;
-    term.translation.translatorId = testTranslator.id;
     request.post('/api/update')
       .set('Authorization', 'Bearer ' + testTranslator.token)
       .send(term)
@@ -216,7 +213,6 @@ describe('Update term API', () => {
   it('should update term (it will remove all meaning)', (done) => {
     let term = JSON.parse(JSON.stringify(testTermTranslation));
     term.termName = testTerm.name;
-    term.translation.translatorId = testTranslator.id;
     term.translation.meanings = [];
     request.post('/api/update')
       .set('Authorization', 'Bearer ' + testTranslator.token)
