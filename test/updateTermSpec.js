@@ -173,13 +173,20 @@ describe('Update term API', () => {
       .send(term)
       .end(
         (err, res) => {
-          assert.notEqual(res.body.success, false);
-          assert.equal(res.body.term, term);
+          assert.equal(res.body.success, true);
+          let translation = res.body.term.translation;
+          console.log(translation);
+          assert.equal(translation.translatorId, testTranslator.id);
+          assert.equal(translation.meanings.length, 2);
+          assert.equal(translation.meanings[0].comment, term.translation.meanings[0].comment);
+          assert.equal(translation.meanings[1].comment, term.translation.meanings[1].comment);
+          assert.equal(JSON.stringify(translation.meanings[0].versions), JSON.stringify(term.translation.meanings[0].versions));
+          assert.equal(JSON.stringify(translation.meanings[1].versions), JSON.stringify(term.translation.meanings[1].versions));
           done();
         }
       )
   });
-
+/*
   it('should update term (added new meanings)', (done) => {
     let term = JSON.parse(JSON.stringify(testTermTranslation));
     term.termName = testTerm.name;
@@ -228,5 +235,5 @@ describe('Update term API', () => {
           done();
         }
       )
-  });
+  });*/
 });
