@@ -1,4 +1,4 @@
-const ApiError = require('../helpers/serverHelper.js').ApiError;
+const ApiError = require('../../helper.js').ApiError;
 
 const create = (name) => new Promise(resolve => {
   if (typeof name !== 'string') {

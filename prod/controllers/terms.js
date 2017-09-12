@@ -1,5 +1,5 @@
 const elasticClient = require('../db/client.js');
-const ApiError = require('./helpers/serverHelper.js').ApiError;
+const ApiError = require('./../helper.js').ApiError;
 const logger = require('../log/logger');
 const config = require('../config.js');
 const validator = require('./validators/terms.js');

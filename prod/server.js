@@ -5,12 +5,11 @@ const path = require('path');
 const config = require('./config.js');
 const logger = require('./log/logger');
 
-const ApiError = require('./controllers/helpers/serverHelper').ApiError;
-const sendApiError = require('./controllers/helpers/serverHelper').sendApiError;
+const ApiError = require('./helper').ApiError;
+const sendApiError = require('./helper').sendApiError;
 const authController = require('./controllers/auth');
 const termsController = require('./controllers/terms');
 const usersController = require('./controllers/users');
-const getUserInfo = usersController.getUserInfo;
 
 const app = express();
 app.use(bodyParser.json());
@@ -36,7 +35,7 @@ app.get('/api/userInfo', (req, res) =>
   doAuthorize(req)
     .then(user => {
       logger.info('Authenticated as ' + user.login);
-      res.send(getUserInfo(user));
+      res.send(usersController.getUserInfo(user));
     })
     .catch(error => sendApiError(res, 'Can\'t get user info.', error))
 );
@@ -116,7 +115,7 @@ app.put('/api/newUser', (req, res) => {
 
 app.get('/api/users/:name', (req, res) =>
   usersController.findByLogin(req.params.name)
-    .then(user => res.json({success: true, user: getUserInfo(user)}))
+    .then(user => res.json({success: true, user: usersController.getUserInfo(user)}))
     .catch(error => sendApiError(res, 'Can\'t find user', error))
 );
 

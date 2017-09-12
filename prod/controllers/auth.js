@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const logger = require('../log/logger');
 const config = require('../config.js');
-const ApiError = require('./helpers/serverHelper.js').ApiError;
+const ApiError = require('./../helper.js').ApiError;
 
 const extractToken = (authHeader) => {
   if (!authHeader) {
