@@ -184,8 +184,16 @@ function reducer(state = initialState, action) {
         search: {...state.search,
           result: action.searchResult
         },
-        selected: {...state.select,
-          term: action.term
+        selected: {...state.selected,
+          term: {...state.selected.term,
+            translations: state.selected.term.translations.map(elem => {
+              if (elem.translatorId === action.term.translation.translatorId) {
+                return action.term.translation
+              } else {
+                return elem
+              }
+            })
+          }
         },
         edit: {...state.edit,
           update: {
