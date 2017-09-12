@@ -5,13 +5,12 @@ const path = require('path');
 const config = require('./config.js');
 const logger = require('./log/logger');
 
-const serverHelper = require('./controllers/helpers/serverHelper.js');
-const usersController = require('./controllers/users');
-const getUserInfo = usersController.getUserInfo;
-const authController = require('./controllers/auth');
 const ApiError = require('./controllers/helpers/serverHelper').ApiError;
 const sendApiError = require('./controllers/helpers/serverHelper').sendApiError;
+const authController = require('./controllers/auth');
 const termsController = require('./controllers/terms');
+const usersController = require('./controllers/users');
+const getUserInfo = usersController.getUserInfo;
 
 const app = express();
 app.use(bodyParser.json());
