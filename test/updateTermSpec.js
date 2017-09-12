@@ -272,4 +272,26 @@ describe('Update term API', () => {
       )
   });
 
+  it('should update term by translator-2', (done) => {
+    let term = JSON.parse(JSON.stringify(testTermTranslation));
+    term.termName = testTerm.name;
+    term.translation.translatorId = testTranslator_2.id;
+    request.post('/api/update')
+      .set('Authorization', 'Bearer ' + testTranslator_2.token)
+      .send(term)
+      .end(
+        (err, res) => {
+          assert.equal(res.body.success, true);
+          const translation = res.body.term.translation;
+          const meanings = term.translation.meanings, _meanings = translation.meanings;
+          assert.equal(translation.translatorId, testTranslator_2.id);
+          assert.equal(_meanings.length, testTermTranslation.translation.meanings.length);
+          assert.equal(_meanings[0].comment, meanings[0].comment);
+          assert.equal(_meanings[1].comment, meanings[1].comment);
+          assert.equal(JSON.stringify(_meanings[0].versions), JSON.stringify(meanings[0].versions));
+          assert.equal(JSON.stringify(_meanings[1].versions), JSON.stringify(meanings[1].versions));
+          done();
+        }
+      )
+  });
 });
