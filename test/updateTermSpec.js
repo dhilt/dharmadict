@@ -164,28 +164,33 @@ describe('Update term API', () => {
       )
   });
 
-  it('should update term', (done) => {
-    let term = JSON.parse(JSON.stringify(testTermTranslation));
-    term.termName = testTerm.name;
-    request.post('/api/update')
-      .set('Authorization', 'Bearer ' + testTranslator.token)
-      .send(term)
-      .end(
-        (err, res) => {
-          assert.equal(res.body.success, true);
-          let translation = res.body.term.translation;
-          assert.equal(translation.translatorId, testTranslator.id);
-          assert.equal(translation.meanings.length, 2);
-          assert.equal(translation.meanings[0].comment, term.translation.meanings[0].comment);
-          assert.equal(translation.meanings[1].comment, term.translation.meanings[1].comment);
-          assert.equal(JSON.stringify(translation.meanings[0].versions), JSON.stringify(term.translation.meanings[0].versions));
-          assert.equal(JSON.stringify(translation.meanings[1].versions), JSON.stringify(term.translation.meanings[1].versions));
-          done();
-        }
-      )
-  });
+  const addTestTranslation = (text) => {
+    it(text, (done) => {
+      let term = JSON.parse(JSON.stringify(testTermTranslation));
+      term.termName = testTerm.name;
+      request.post('/api/update')
+        .set('Authorization', 'Bearer ' + testTranslator.token)
+        .send(term)
+        .end(
+          (err, res) => {
+            assert.equal(res.body.success, true);
+            const translation = res.body.term.translation;
+            const meanings = term.translation.meanings, _meanings = translation.meanings;
+            assert.equal(translation.translatorId, testTranslator.id);
+            assert.equal(_meanings.length, testTermTranslation.translation.meanings.length);
+            assert.equal(_meanings[0].comment, meanings[0].comment);
+            assert.equal(_meanings[1].comment, meanings[1].comment);
+            assert.equal(JSON.stringify(_meanings[0].versions), JSON.stringify(meanings[0].versions));
+            assert.equal(JSON.stringify(_meanings[1].versions), JSON.stringify(meanings[1].versions));
+            done();
+          }
+        )
+    });
+  };
 
-  it('should update term (added new meanings)', (done) => {
+  addTestTranslation('should update term');
+
+  it('should update term (add 1 more meaning)', (done) => {
     let term = JSON.parse(JSON.stringify(testTermTranslation));
     term.termName = testTerm.name;
     term.translation.meanings.push({versions: ["New test translation"], comment: "New test comment"});
@@ -195,33 +200,19 @@ describe('Update term API', () => {
       .end(
         (err, res) => {
           assert.equal(res.body.success, true);
-          let translation = res.body.term.translation;
-          assert.equal(translation.meanings[2].comment, term.translation.meanings[2].comment);
-          assert.equal(JSON.stringify(translation.meanings[2].versions), JSON.stringify(term.translation.meanings[2].versions));
+          const translation = res.body.term.translation;
+          const meanings = term.translation.meanings, _meanings = translation.meanings;
+          assert.equal(_meanings.length, testTermTranslation.translation.meanings.length + 1);
+          assert.equal(_meanings[2].comment, meanings[2].comment);
+          assert.equal(JSON.stringify(_meanings[2].versions), JSON.stringify(meanings[2].versions));
           done();
         }
       )
   });
 
-  it('should update term (it will remove third meaning)', (done) => {
-    let term = JSON.parse(JSON.stringify(testTermTranslation));
-    term.termName = testTerm.name;
-    request.post('/api/update')
-      .set('Authorization', 'Bearer ' + testTranslator.token)
-      .send(term)
-      .end(
-        (err, res) => {
-          assert.equal(res.body.success, true);
-          let translation = res.body.term.translation;
-          assert.equal(translation.meanings.length, 2);
-          let tryFindMeaning = translation.meanings.find(elem => elem.comment === "New test comment");
-          assert.notEqual(true, tryFindMeaning);
-          done();
-        }
-      )
-  });
+  addTestTranslation('should update term (remove meaning just added)');
 
-  it('should update term (it will remove all meaning)', (done) => {
+  it('should update term (remove all meanings)', (done) => {
     let term = JSON.parse(JSON.stringify(testTermTranslation));
     term.termName = testTerm.name;
     term.translation.meanings = [];
@@ -231,9 +222,12 @@ describe('Update term API', () => {
       .end(
         (err, res) => {
           assert.equal(res.body.success, true);
-          assert.equal(res.body.term.translation.meanings.length, term.translation.meanings.length);
+          assert.equal(res.body.term.translation.meanings.length, 0);
           done();
         }
       )
   });
+
+  addTestTranslation('should update term (get initial meanings back)');
+
 });
