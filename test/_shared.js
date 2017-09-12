@@ -31,6 +31,16 @@ const testTranslator = {
   password: "test-translator-pass"
 };
 
+const testTranslator_2 = {
+  id: "TEST-TRANSLATOR-2",
+  role: "translator",
+  login: "test-translator-2",
+  name: "Test Translator 2",
+  language: "eng",
+  description: "...",
+  password: "test-translator-pass-2"
+};
+
 const testTerm = {
   name: 'test term',
   id: 'test_term'
@@ -51,7 +61,7 @@ const forceCleanUp = () => {
     it('may delete test data', (done) => {
       let ready = 0;
       const _done = () => {
-        if (++ready === 3) {
+        if (++ready === 4) {
           done();
         }
       };
@@ -66,6 +76,13 @@ const forceCleanUp = () => {
       usersController.removeById(testTranslator.id)
         .then(() => {
           console.log('Test translator user was successfully deleted');
+          _done();
+        })
+        .catch(_done);
+
+      usersController.removeById(testTranslator_2.id)
+        .then(() => {
+          console.log('Test translator-2 user was successfully deleted');
           _done();
         })
         .catch(_done);
@@ -102,6 +119,7 @@ module.exports = {
   request,
   testAdmin,
   testTranslator,
+  testTranslator_2,
   testTerm,
   testTermTranslation,
   shouldLogIn

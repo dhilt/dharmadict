@@ -3,6 +3,7 @@ const request = require('./_shared.js').request;
 const shouldLogIn = require('./_shared.js').shouldLogIn;
 const testAdmin = require('./_shared.js').testAdmin;
 const testTranslator = require('./_shared.js').testTranslator;
+const testTranslator_2 = require('./_shared.js').testTranslator_2;
 const testTerm = require('./_shared.js').testTerm;
 const testTermTranslation = require('./_shared.js').testTermTranslation;
 
@@ -253,21 +254,22 @@ describe('Update term API', () => {
       )
   });
 
-/*  shouldLogIn(testTranslator2);
+  shouldLogIn(testTranslator_2);
 
   it('should not update term (unpermitted access)', (done) => {
     let term = JSON.parse(JSON.stringify(testTermTranslation));
     term.termName = testTerm.name;
     request.post('/api/update')
-      .set('Authorization', 'Bearer ' + testTranslator.token2)
+      .set('Authorization', 'Bearer ' + testTranslator_2.token)
       .send(term)
       .end(
         (err, res) => {
+          console.log(res.body);
           assert.notEqual(res.body.success, true);
           assert.equal(res.body.message, "Can't update term. Unpermitted access");
           done();
         }
       )
-  });*/
+  });
 
 });

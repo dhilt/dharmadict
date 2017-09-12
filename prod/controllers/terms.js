@@ -125,7 +125,7 @@ const update = (user, termId, translation) => validator.update(termId, translati
       throw new ApiError('Incorrect authorization info')
     }
     if (!(user.role === 'translator' && translation.translatorId === user.id) && user.role !== 'admin') {
-      return new ApiError('Unpermitted access')
+      throw new ApiError('Unpermitted access')
     }
     return findById(termId)
   })
