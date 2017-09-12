@@ -131,6 +131,7 @@ const update = (user, termId, translation) => validator.update(termId, translati
   })
   .then(term => {
     term.translations = term.translations || [];
+    user.id = user.role === 'translator' ? user.id : translation.translatorId;
     let foundT = term.translations.find(t => t.translatorId === user.id);
     let isEmpty = !(translation.meanings && translation.meanings.length);
     if (!foundT && !isEmpty) {

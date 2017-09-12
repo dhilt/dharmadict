@@ -1,6 +1,7 @@
 const assert = require('assert');
 const request = require('./_shared.js').request;
 const shouldLogIn = require('./_shared.js').shouldLogIn;
+const testAdmin = require('./_shared.js').testAdmin;
 const testTranslator = require('./_shared.js').testTranslator;
 const testTerm = require('./_shared.js').testTerm;
 const testTermTranslation = require('./_shared.js').testTermTranslation;
@@ -229,6 +230,28 @@ describe('Update term API', () => {
   });
 
   addTestTranslation('should update term (get initial meanings back)');
+
+  shouldLogIn(testAdmin);
+
+  it('should update term by admin (change comment on first meaning)', (done) => {
+    let term = JSON.parse(JSON.stringify(testTermTranslation));
+    term.termName = testTerm.name;
+    term.translation.meanings[0].comment = "New test comment by admin";
+    request.post('/api/update')
+      .set('Authorization', 'Bearer ' + testAdmin.token)
+      .send(term)
+      .end(
+        (err, res) => {
+          assert.equal(res.body.success, true);
+          const translation = res.body.term.translation;
+          const meanings = term.translation.meanings, _meanings = translation.meanings;
+          assert.equal(JSON.stringify(meanings[0].versions), JSON.stringify(_meanings[0].versions));
+          assert.equal(_meanings.length, meanings.length);
+          assert.equal(translation.translatorId, term.translation.translatorId);
+          done();
+        }
+      )
+  });
 
 /*  shouldLogIn(testTranslator2);
 
