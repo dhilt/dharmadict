@@ -230,4 +230,21 @@ describe('Update term API', () => {
 
   addTestTranslation('should update term (get initial meanings back)');
 
+/*  shouldLogIn(testTranslator2);
+
+  it('should not update term (unpermitted access)', (done) => {
+    let term = JSON.parse(JSON.stringify(testTermTranslation));
+    term.termName = testTerm.name;
+    request.post('/api/update')
+      .set('Authorization', 'Bearer ' + testTranslator.token2)
+      .send(term)
+      .end(
+        (err, res) => {
+          assert.notEqual(res.body.success, true);
+          assert.equal(res.body.message, "Can't update term. Unpermitted access");
+          done();
+        }
+      )
+  });*/
+
 });

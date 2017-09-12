@@ -72,7 +72,7 @@ const forceCleanUp = () => {
 
       termsController.removeById(testTerm.id)
         .then(() => {
-          console.log('Test term user was successfully deleted');
+          console.log('Test term was successfully deleted');
           _done();
         })
         .catch(_done);

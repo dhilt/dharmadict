@@ -120,7 +120,12 @@ const create = (termName) => validator.create(termName)
   );
 
 const update = (user, termId, translation) => validator.update(user, termId, translation)
-  .then(() => findById(termId))
+  .then(() => {
+    if (!(user.role === 'translator' && translation.translatorId === user.id) && user.role !== 'admin') {
+      return new ApiError('Unpermitted access')
+    }
+    return findById(termId)
+  })
   .then(term => {
     term.translations = term.translations || [];
     let foundT = term.translations.find(t => t.translatorId === user.id);
