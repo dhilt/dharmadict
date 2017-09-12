@@ -11,13 +11,7 @@ const create = (name) => new Promise(resolve => {
   resolve(name)
 });
 
-const update = (user, termId, translation) => new Promise(resolve => {
-  if (!user || !user.id) {
-    throw new ApiError('Incorrect authorization info')
-  }
-  if (user.role !== 'translator') {
-    throw new ApiError('Only translator can update term')
-  }
+const update = (termId, translation) => new Promise(resolve => {
   if (!termId || typeof termId !== 'string') {
     throw new ApiError('Incorrect termId')
   }
@@ -46,7 +40,7 @@ const update = (user, termId, translation) => new Promise(resolve => {
       throw new ApiError('Invalid versions')
     }
   });
-  resolve({user, termId, translation})
+  resolve({termId, translation})
 });
 
 module.exports = {

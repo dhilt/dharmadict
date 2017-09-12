@@ -119,8 +119,11 @@ const create = (termName) => validator.create(termName)
     })
   );
 
-const update = (user, termId, translation) => validator.update(user, termId, translation)
+const update = (user, termId, translation) => validator.update(termId, translation)
   .then(() => {
+    if (!user || !user.id || !user.role) {
+      throw new ApiError('Incorrect authorization info')
+    }
     if (!(user.role === 'translator' && translation.translatorId === user.id) && user.role !== 'admin') {
       return new ApiError('Unpermitted access')
     }
