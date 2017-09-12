@@ -26,6 +26,7 @@ const testTranslator = {
   role: "translator",
   login: "test-translator",
   name: "Test Translator",
+  language: "eng",
   description: "...",
   password: "test-translator-pass"
 };
