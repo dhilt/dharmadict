@@ -45,8 +45,9 @@ app.post('/api/login', (req, res) => {
   const {login, password} = req.body;
   usersController.canLogin(login, password)
     .then(user => {
-      const {token} = authController.generateToken(user);
-      res.send({user: getUserInfo(user), token})
+      const _user = usersController.getUserInfo(user);
+      const token = authController.generateToken(_user);
+      res.send({user: _user, token})
     })
     .catch(error => sendApiError(res, 'Can\'t login.', error))
 });
