@@ -2,7 +2,6 @@ const assert = require('assert');
 const request = require('./_shared.js').request;
 const shouldLogIn = require('./_shared.js').shouldLogIn;
 const testAdmin = require('./_shared.js').testAdmin;
-const testTranslator = require('./_shared.js').testTranslator;
 const testUpdateTranslatorDescription = require('./_shared.js').testUpdateTranslatorDescription;
 
 describe('Update user API', () => {
