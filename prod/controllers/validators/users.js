@@ -25,6 +25,26 @@ const create = (user) => new Promise(resolve => {
   resolve(user)
 });
 
+const updateDescription = (userDescription) => new Promise(resolve => {
+  if (!userDescription || (typeof userDescription !== 'object')) {
+    throw new ApiError('Invalid data')
+  }
+  if (!userDescription.id) {
+    throw new ApiError('No id')
+  }
+  if (!userDescription.description) {
+    throw new ApiError('No description')
+  }
+  if (typeof userDescription.id !== 'string') {
+    throw new ApiError('Invalid id')
+  }
+  if (typeof userDescription.description !== 'string') {
+    throw new ApiError('Invalid description')
+  }
+  resolve(userDescription)
+});
+
 module.exports = {
-  create
+  create,
+  updateDescription
 };

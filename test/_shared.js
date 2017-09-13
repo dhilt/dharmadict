@@ -41,6 +41,11 @@ const testTranslator_2 = {
   password: "test-translator-pass-2"
 };
 
+const testUpdateTranslatorDescription = {
+  id: "TEST-TRANSLATOR",
+  description: "New description written by admin"
+};
+
 const testTerm = {
   name: 'test term',
   id: 'test_term'
@@ -120,6 +125,7 @@ module.exports = {
   testAdmin,
   testTranslator,
   testTranslator_2,
+  testUpdateTranslatorDescription,
   testTerm,
   testTermTranslation,
   shouldLogIn

@@ -5,14 +5,14 @@ const logger = require('../log/logger');
 const config = require('../config.js');
 const validator = require('./validators/users.js');
 
-let isAdmin = (user) => {
+const isAdmin = (user) => {
   if (user.role !== 'admin') {
     return Promise.reject(new ApiError('Admin only', 302));
   }
   Promise.resolve(user);
 };
 
-let canLogin = (login, password) => new Promise(resolve => {
+const canLogin = (login, password) => new Promise(resolve => {
   logger.info(`Check if user ${login} can login`);
   if (!login || !password) {
     throw new ApiError('Invalid params')
@@ -27,7 +27,7 @@ let canLogin = (login, password) => new Promise(resolve => {
     return Promise.resolve(user)
   });
 
-let findById = userId => new Promise((resolve, reject) => {
+const findById = userId => new Promise((resolve, reject) => {
   logger.info(`Find user by ID ${userId}`);
   if (!userId) {
     return reject(new ApiError('Invalid ID'))
@@ -56,7 +56,7 @@ let findById = userId => new Promise((resolve, reject) => {
     })
 });
 
-let findByLogin = userLogin => new Promise((resolve, reject) => {
+const findByLogin = userLogin => new Promise((resolve, reject) => {
   logger.info(`Find user by login ${userLogin}`);
   if (!userLogin) {
     return reject(new ApiError('Invalid login'))
@@ -88,7 +88,7 @@ let findByLogin = userLogin => new Promise((resolve, reject) => {
     throw new ApiError('Database error')
   });
 
-let findAll = () => new Promise((resolve, reject) => {
+const findAll = () => new Promise((resolve, reject) => {
   logger.info(`Find all users`);
   elasticClient.search({
     index: config.db.index,
@@ -162,7 +162,7 @@ const create = user => validator.create(user)
     })
   );
 
-let removeById = userId => new Promise(resolve => {
+const removeById = userId => new Promise(resolve => {
   if (!userId || typeof userId !== 'string') {
     throw new ApiError('Invalid id')
   }
@@ -186,7 +186,28 @@ let removeById = userId => new Promise(resolve => {
     })
   );
 
-let getUserInfo = user => ({
+const updateDescription = userDescription => validator.updateDescription(userDescription)
+  .then(() => findById(userDescription.id))
+  .then(user => {
+    user.description = userDescription.description;
+    delete user.id;
+    return elasticClient.index({
+      index: config.db.index,
+      type: 'users',
+      id: userDescription.id,
+      body: user,
+      refresh: true
+    }).then(() => {
+      logger.info('User description was successfully updated');
+      return Promise.resolve(userDescription.id)
+    }, error => {
+      logger.error(error.message);
+      throw new ApiError('DB error')
+    })
+  })
+  .then(id => findById(id));
+
+const getUserInfo = user => ({
   id: user.id,
   name: user.name,
   login: user.login,
@@ -202,5 +223,6 @@ module.exports = {
   findByLogin,
   findAll,
   create,
+  updateDescription,
   removeById
 };
