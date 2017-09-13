@@ -117,7 +117,7 @@ app.post('/api/updateUserDescription', (req, res) => {
   doAuthorize(req)
     .then(user => usersController.isAdmin(user))
     .then(user => usersController.updateDescription(req.body.userNewDescription))
-    .then(result => res.json({success: true, user: result}))
+    .then(result => res.json({success: true, user: usersController.getUserInfo(result)}))
     .catch(error => sendApiError(res, 'Can\'t update translator description.', error))
 });
 

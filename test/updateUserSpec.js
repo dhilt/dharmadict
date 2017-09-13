@@ -30,7 +30,7 @@ describe('Update user API', () => {
       .end(
         (err, res) => {
           assert.notEqual(res.body.success, true);
-          assert.equal(res.body.message, "Can't update translator description. No id");
+          assert.equal(res.body.message, "Can't update translator description. Invalid id");
           done();
         }
       )
@@ -45,7 +45,7 @@ describe('Update user API', () => {
       .end(
         (err, res) => {
           assert.notEqual(res.body.success, true);
-          assert.equal(res.body.message, "Can't update translator description. No description");
+          assert.equal(res.body.message, "Can't update translator description. Invalid description");
           done();
         }
       )

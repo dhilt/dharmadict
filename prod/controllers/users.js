@@ -186,20 +186,20 @@ const removeById = userId => new Promise(resolve => {
     })
   );
 
-const updateDescription = userDescription => validator.updateDescription(userDescription)
-  .then(() => findById(userDescription.id))
+const updateDescription = data => validator.updateDescription(data)
+  .then(() => findById(data.id))
   .then(user => {
-    user.description = userDescription.description;
+    user.description = data.description;
     delete user.id;
     return elasticClient.index({
       index: config.db.index,
       type: 'users',
-      id: userDescription.id,
+      id: data.id,
       body: user,
       refresh: true
     }).then(() => {
       logger.info('User description was successfully updated');
-      return Promise.resolve(userDescription.id)
+      return Promise.resolve(data.id)
     }, error => {
       logger.error(error.message);
       throw new ApiError('DB error')
