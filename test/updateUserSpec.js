@@ -155,7 +155,7 @@ describe('Update user API', () => {
 
   it('should cleanup user description', (done) => {
     let _requestObj = JSON.parse(JSON.stringify(requestObj));
-    _requestObj.payload['description'] = '';
+    _requestObj.payload['description'] = '  ';
     request.post('/api/updateUser')
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .send(_requestObj)
