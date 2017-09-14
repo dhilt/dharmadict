@@ -98,6 +98,21 @@ describe('Update user API', () => {
       )
   });
 
+  it('should not update user description (user with this id doesn\'t exist)', (done) => {
+    let userDescription = Object.assign({}, testUpdateTranslatorDescription);
+    userDescription['id'] = 'UNEXISTENT-TRANSLATOR!';
+    request.post('/api/updateUserDescription')
+      .set('Authorization', 'Bearer ' + testAdmin.token)
+      .send({userNewDescription: userDescription})
+      .end(
+        (err, res) => {
+          assert.notEqual(res.body.success, true);
+          assert.equal(res.body.message, "Can't update translator description. No user found");
+          done();
+        }
+      )
+  });
+
   it('should update user description', (done) => {
     let userDescription = Object.assign({}, testUpdateTranslatorDescription);
     request.post('/api/updateUserDescription')
