@@ -3,17 +3,40 @@ const request = require('./_shared.js').request;
 const shouldLogIn = require('./_shared.js').shouldLogIn;
 const testAdmin = require('./_shared.js').testAdmin;
 const testTranslator = require('./_shared.js').testTranslator;
-const testUpdateTranslatorDescription = require('./_shared.js').testUpdateTranslatorDescription;
+
+const payload = {
+  id: testTranslator.id,
+  description: "New description written by admin"
+};
 
 describe('Update user API', () => {
 
+  it('should work', (done) => {
+    request.post('/api/updateUserDescription').end(
+      (err, res) => {
+        res.should.have.status(200);
+        done();
+      }
+    )
+  });
+
+  it('should not create new term (auth needed)', (done) => {
+    request.post('/api/updateUserDescription')
+      .end(
+        (err, res) => {
+          assert.notEqual(res.body.success, true);
+          assert.equal(res.body.message, "Can't update translator description. Authorization needed");
+          done();
+        }
+      )
+  });
+
   shouldLogIn(testTranslator);
 
-  it('should not update user description (Admin only)', (done) => {
-    let userDescription = Object.assign({}, testUpdateTranslatorDescription);
+  it('should not update user description (admin only)', (done) => {
     request.post('/api/updateUserDescription')
       .set('Authorization', 'Bearer ' + testTranslator.token)
-      .send({userNewDescription: userDescription})
+      .send({userNewDescription: payload})
       .end(
         (err, res) => {
           assert.notEqual(res.body.success, true);
@@ -39,11 +62,11 @@ describe('Update user API', () => {
   });
 
   it('should not update user description (no id)', (done) => {
-    let userDescription = Object.assign({}, testUpdateTranslatorDescription);
-    delete userDescription['id'];
+    let _payload = Object.assign({}, payload);
+    delete _payload['id'];
     request.post('/api/updateUserDescription')
       .set('Authorization', 'Bearer ' + testAdmin.token)
-      .send({userNewDescription: userDescription})
+      .send({userNewDescription: _payload})
       .end(
         (err, res) => {
           assert.notEqual(res.body.success, true);
@@ -54,11 +77,11 @@ describe('Update user API', () => {
   });
 
   it('should not update user description (no description)', (done) => {
-    let userDescription = Object.assign({}, testUpdateTranslatorDescription);
-    delete userDescription['description'];
+    let _payload = Object.assign({}, payload);
+    delete _payload['description'];
     request.post('/api/updateUserDescription')
       .set('Authorization', 'Bearer ' + testAdmin.token)
-      .send({userNewDescription: userDescription})
+      .send({userNewDescription: _payload})
       .end(
         (err, res) => {
           assert.notEqual(res.body.success, true);
@@ -69,11 +92,11 @@ describe('Update user API', () => {
   });
 
   it('should not update user description (invalid id)', (done) => {
-    let userDescription = Object.assign({}, testUpdateTranslatorDescription);
-    userDescription['id'] = {obj: 'wrong_id'};
+    let _payload = Object.assign({}, payload);
+    _payload['id'] = {};
     request.post('/api/updateUserDescription')
       .set('Authorization', 'Bearer ' + testAdmin.token)
-      .send({userNewDescription: userDescription})
+      .send({userNewDescription: _payload})
       .end(
         (err, res) => {
           assert.notEqual(res.body.success, true);
@@ -84,11 +107,11 @@ describe('Update user API', () => {
   });
 
   it('should not update user description (invalid description)', (done) => {
-    let userDescription = Object.assign({}, testUpdateTranslatorDescription);
-    userDescription['description'] = {obj: 'wrong_description'};
+    let _payload = Object.assign({}, payload);
+    _payload['description'] = {};
     request.post('/api/updateUserDescription')
       .set('Authorization', 'Bearer ' + testAdmin.token)
-      .send({userNewDescription: userDescription})
+      .send({userNewDescription: _payload})
       .end(
         (err, res) => {
           assert.notEqual(res.body.success, true);
@@ -114,13 +137,12 @@ describe('Update user API', () => {
   });
 
   it('should update user description', (done) => {
-    let userDescription = Object.assign({}, testUpdateTranslatorDescription);
     request.post('/api/updateUserDescription')
       .set('Authorization', 'Bearer ' + testAdmin.token)
-      .send({userNewDescription: userDescription})
+      .send({userNewDescription: payload})
       .end(
         (err, res) => {
-          assert.equal(res.body.user.description, testUpdateTranslatorDescription.description);
+          assert.equal(res.body.user.description, payload.description);
           assert.equal(res.body.success, true);
           done();
         }
