@@ -2,9 +2,26 @@ const assert = require('assert');
 const request = require('./_shared.js').request;
 const shouldLogIn = require('./_shared.js').shouldLogIn;
 const testAdmin = require('./_shared.js').testAdmin;
+const testTranslator = require('./_shared.js').testTranslator;
 const testUpdateTranslatorDescription = require('./_shared.js').testUpdateTranslatorDescription;
 
 describe('Update user API', () => {
+
+  shouldLogIn(testTranslator);
+
+  it('should not update user description (Admin only)', (done) => {
+    let userDescription = Object.assign({}, testUpdateTranslatorDescription);
+    request.post('/api/updateUserDescription')
+      .set('Authorization', 'Bearer ' + testTranslator.token)
+      .send({userNewDescription: userDescription})
+      .end(
+        (err, res) => {
+          assert.notEqual(res.body.success, true);
+          assert.equal(res.body.message, "Can't update translator description. Admin only");
+          done();
+        }
+      )
+  });
 
   shouldLogIn(testAdmin);
 
