@@ -122,11 +122,11 @@ describe('Update user API', () => {
   });
 
   it('should not update user description (user with this id doesn\'t exist)', (done) => {
-    let userDescription = Object.assign({}, testUpdateTranslatorDescription);
-    userDescription['id'] = 'UNEXISTENT-TRANSLATOR!';
+    let _payload = Object.assign({}, payload);
+    _payload['id'] = 'UNEXISTENT-TRANSLATOR!';
     request.post('/api/updateUserDescription')
       .set('Authorization', 'Bearer ' + testAdmin.token)
-      .send({userNewDescription: userDescription})
+      .send({userNewDescription: _payload})
       .end(
         (err, res) => {
           assert.notEqual(res.body.success, true);
