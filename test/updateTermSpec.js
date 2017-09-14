@@ -3,7 +3,7 @@ const request = require('./_shared.js').request;
 const shouldLogIn = require('./_shared.js').shouldLogIn;
 const testAdmin = require('./_shared.js').testAdmin;
 const testTranslator = require('./_shared.js').testTranslator;
-const testTranslator_2 = require('./_shared.js').testTranslator_2;
+const testTranslator2 = require('./_shared.js').testTranslator2;
 const testTerm = require('./_shared.js').testTerm;
 const testTermTranslation = require('./_shared.js').testTermTranslation;
 
@@ -252,13 +252,13 @@ describe('Update term API', () => {
       )
   });
 
-  shouldLogIn(testTranslator_2);
+  shouldLogIn(testTranslator2);
 
   it('should not update term (unpermitted access)', (done) => {
     let term = JSON.parse(JSON.stringify(testTermTranslation));
     term.termName = testTerm.name;
     request.post('/api/update')
-      .set('Authorization', 'Bearer ' + testTranslator_2.token)
+      .set('Authorization', 'Bearer ' + testTranslator2.token)
       .send(term)
       .end(
         (err, res) => {
@@ -269,5 +269,5 @@ describe('Update term API', () => {
       )
   });
 
-  updateTranslation('should update term by translator-2', testTerm, testTranslator_2);
+  updateTranslation('should update term by translator-2', testTerm, testTranslator2);
 });

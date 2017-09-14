@@ -31,7 +31,7 @@ const testTranslator = {
   password: "test-translator-pass"
 };
 
-const testTranslator_2 = {
+const testTranslator2 = {
   id: "TEST-TRANSLATOR-2",
   role: "translator",
   login: "test-translator-2",
@@ -39,11 +39,6 @@ const testTranslator_2 = {
   language: "eng",
   description: "...",
   password: "test-translator-pass-2"
-};
-
-const testUpdateTranslatorDescription = {
-  id: "TEST-TRANSLATOR",
-  description: "New description written by admin"
 };
 
 const testTerm = {
@@ -85,7 +80,7 @@ const forceCleanUp = () => {
         })
         .catch(_done);
 
-      usersController.removeById(testTranslator_2.id)
+      usersController.removeById(testTranslator2.id)
         .then(() => {
           console.log('Test translator-2 user was successfully deleted');
           _done();
@@ -105,7 +100,7 @@ const forceCleanUp = () => {
 forceCleanUp();
 
 const shouldLogIn = (user) => {
-  it('should log in', (done) => {
+  it(`should log in as ${user.login}`, (done) => {
     request.post('/api/login').send({
       login: user.login,
       password: user.password
@@ -124,8 +119,7 @@ module.exports = {
   request,
   testAdmin,
   testTranslator,
-  testTranslator_2,
-  testUpdateTranslatorDescription,
+  testTranslator2,
   testTerm,
   testTermTranslation,
   shouldLogIn
