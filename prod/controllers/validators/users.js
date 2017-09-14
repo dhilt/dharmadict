@@ -25,20 +25,23 @@ const create = (user) => new Promise(resolve => {
   resolve(user)
 });
 
-const updateDescription = (data) => new Promise(resolve => {
-  if (!data || (typeof data !== 'object')) {
-    throw new ApiError('Invalid data')
-  }
-  if (!data.id || typeof data.id !== 'string') {
+const update = (userId, payload) => new Promise(resolve => {
+  if (!userId || typeof userId !== 'string') {
     throw new ApiError('Invalid id')
   }
-  if (!data.description || typeof data.description !== 'string') {
-    throw new ApiError('Invalid description')
+  if (!payload || (typeof payload !== 'object')) {
+    throw new ApiError('Invalid payload')
   }
-  resolve(data)
+  if (payload.hasOwnProperty('description')) {
+    if (typeof payload.description !== 'string') {
+      throw new ApiError('Invalid description')
+    }
+    payload.description = payload.description.trim();
+  }
+  resolve(userId, payload)
 });
 
 module.exports = {
   create,
-  updateDescription
+  update
 };

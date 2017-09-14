@@ -70,7 +70,7 @@ app.get('/api/translation', (req, res) => {
       return termsController.findById(termId);
     })
     .then(_term => {
-      term =_term;
+      term = _term;
       if (!(translations = term ? term.translations : null)) {
         throw 'Can not find a translation by termId'
       }
@@ -113,10 +113,10 @@ app.put('/api/newUser', (req, res) => {
     .catch(error => sendApiError(res, 'Can\'t create new user.', error))
 });
 
-app.post('/api/updateUserDescription', (req, res) => {
+app.post('/api/updateUser', (req, res) => {
   doAuthorize(req)
     .then(user => usersController.isAdmin(user))
-    .then(user => usersController.updateDescription(req.body.userNewDescription))
+    .then(user => usersController.update(req.body.userId, req.body.payload))
     .then(result => res.json({success: true, user: usersController.getUserInfo(result)}))
     .catch(error => sendApiError(res, 'Can\'t update translator description.', error))
 });

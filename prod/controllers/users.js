@@ -9,7 +9,7 @@ const isAdmin = (user) => {
   if (user.role !== 'admin') {
     return Promise.reject(new ApiError('Admin only', 302));
   }
-  Promise.resolve(user);
+  return Promise.resolve(user);
 };
 
 const canLogin = (login, password) => new Promise(resolve => {
@@ -186,26 +186,26 @@ const removeById = userId => new Promise(resolve => {
     })
   );
 
-const updateDescription = data => validator.updateDescription(data)
-  .then(() => findById(data.id))
+const update = (userId, payload) => validator.update(userId, payload)
+  .then(() => findById(userId))
   .then(user => {
-    user.description = data.description;
-    delete user.id;
+    let body = Object.assign({}, user, payload);
+    delete body.id;
     return elasticClient.index({
       index: config.db.index,
       type: 'users',
-      id: data.id,
-      body: user,
+      id: userId,
+      body,
       refresh: true
     }).then(() => {
       logger.info('User description was successfully updated');
-      return Promise.resolve(data.id)
+      return Promise.resolve(userId)
     }, error => {
       logger.error(error.message);
       throw new ApiError('DB error')
     })
   })
-  .then(id => findById(id));
+  .then(findById);
 
 const getUserInfo = user => ({
   id: user.id,
@@ -223,6 +223,6 @@ module.exports = {
   findByLogin,
   findAll,
   create,
-  updateDescription,
+  update,
   removeById
 };

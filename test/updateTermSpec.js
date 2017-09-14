@@ -151,7 +151,7 @@ describe('Update term API', () => {
       )
   });
 
-  it('should not update term (wrong termId)', (done) => {
+  it('should not update term (term not found)', (done) => {
     let term = JSON.parse(JSON.stringify(testTermTranslation));
     term.termId = testTerm.id + '___';
     request.post('/api/update')
@@ -269,5 +269,5 @@ describe('Update term API', () => {
       )
   });
 
-  updateTranslation('should update term by translator-2', testTerm, testTranslator2);
+  updateTranslation('should update term by ' + testTranslator2.login, testTerm, testTranslator2);
 });
