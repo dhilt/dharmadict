@@ -10,8 +10,7 @@ class TranslatorPage extends Component {
   }
 
   componentWillMount () {
-    const query = this.props.location.query
-    const name = Object.keys(query).find(key => query[key] === null)
+    const name = this.props.params.login
     this.props.dispatch(getTranslatorInfoAsync(name))
   }
 
