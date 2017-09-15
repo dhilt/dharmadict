@@ -23,7 +23,11 @@ import {
   ADD_TERM_START,
   ADD_TERM_END,
   GET_TRANSLATOR_INFO_START,
-  GET_TRANSLATOR_INFO_END
+  GET_TRANSLATOR_INFO_END,
+  CHANGE_USER_DATA_START,
+  CHANGE_USER_DATA_END,
+  WRITE_USER_ID,
+  WRITE_USER_DESCRIPTION
 } from '../actions/_constants'
 
 import initialState from './_initial'
@@ -233,6 +237,41 @@ function reducer(state = initialState, action) {
           pending: false,
           error: action.error,
           data: action.result
+        }
+      }
+    case CHANGE_USER_DATA_START:
+      return {...state,
+        admin: {...state.admin,
+          changeUserData: {...state.admin.changeUserData,
+            pending: true,
+            error: null
+          }
+        }
+      }
+    case CHANGE_USER_DATA_END:
+      return {...state,
+        admin: {...state.admin,
+          changeUserData: {...state.admin.changeUserData,
+            result: action.success,
+            pending: false,
+            error: action.error
+          }
+        }
+      }
+    case WRITE_USER_ID:
+      return {...state,
+        admin: {...state.admin,
+          changeUserData: {...state.admin.changeUserData,
+            id: action.id
+          }
+        }
+      }
+    case WRITE_USER_DESCRIPTION:
+      return {...state,
+        admin: {...state.admin,
+          changeUserData: {...state.admin.changeUserData,
+            description: action.description
+          }
         }
       }
     default:

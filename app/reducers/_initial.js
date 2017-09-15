@@ -58,6 +58,15 @@ let initialState = {
       language: '',
       description: ''
     }
+  },
+  admin: {
+    changeUserData: {
+      id: '',
+      description: '',
+      pending: false,
+      result: null,
+      error: null
+    }
   }
 }
 
