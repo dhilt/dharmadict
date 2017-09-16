@@ -37,15 +37,37 @@ const Routes = props => {
     }
   }
 
+  function checkAdmin (nextState, replace, callback) {
+    let {auth} = props
+    if(auth.loggedIn && auth.userInfo.data && auth.userInfo.data.role === 'admin') {
+      callback()
+      return
+    }
+    if(auth.userInfo.promise) {
+      auth.userInfo.promise.then(response => {
+        if (!auth.loggedIn) {
+          unauthorizedAccess(replace)
+        }
+        if (!response || !response.result || !response.result.role || response.result.role !== 'admin') {
+          unauthorizedAccess(replace)
+        }
+        callback()
+      })
+    }
+    else {
+      unauthorizedAccess(replace)
+    }
+  }
+
   return (
     <Router history={browserHistory}>
       <Route component={App}>
         <Route exactly path='/' component={Home} />
-        <Route exactly path='/admin' component={AdminPage} />
+        <Route exactly path='/admin' component={AdminPage} onEnter={checkAdmin} />
         <Route exactly path='/about' component={About} />
         <Route exactly path='/edit' component={Edit} onEnter={checkAuth} />
-        <Route exactly path='/newTerm' component={NewTerm} onEnter={checkAuth} />
-        <Route exactly path='/translator/:login' component={TranslatorPage} />
+        <Route exactly path='/newTerm' component={NewTerm} onEnter={checkAdmin} />
+        <Route exactly path='/translator/:login' component={TranslatorPage} onEnter={checkAdmin} />
         <Route exactly path='/not_authorized' component={NotFound} />
         <Route path='*' component={NotFound} />
       </Route>
