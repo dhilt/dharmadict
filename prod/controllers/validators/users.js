@@ -29,8 +29,20 @@ const update = (userId, payload) => new Promise(resolve => {
   if (!userId || typeof userId !== 'string') {
     throw new ApiError('Invalid id')
   }
-  if (!payload || (typeof payload !== 'object')) {
+  if (!payload || typeof payload !== 'object') {
     throw new ApiError('Invalid payload')
+  }
+  if (payload.hasOwnProperty('name')) {
+    if (typeof payload.name !== 'string') {
+      throw new ApiError('Invalid name')
+    }
+    payload.name = payload.name.trim();
+  }
+  if (payload.hasOwnProperty('language')) {
+    if (typeof payload.language !== 'string') {
+      throw new ApiError('Invalid language')
+    }
+    payload.language = payload.language.trim();
   }
   if (payload.hasOwnProperty('description')) {
     if (typeof payload.description !== 'string') {

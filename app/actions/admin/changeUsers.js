@@ -3,6 +3,8 @@ import asyncRequest from '../../helpers/remote'
 import {
   CHANGE_USER_DATA_START,
   CHANGE_USER_DATA_END,
+  WRITE_USER_NAME,
+  WRITE_USER_LANGUAGE,
   WRITE_USER_DESCRIPTION
 } from '../_constants'
 
@@ -11,8 +13,9 @@ export function changeUserDataAsync(userId) {
     dispatch({
       type: CHANGE_USER_DATA_START
     })
-    userId = userId.toUpperCase();  // а всегда ли id - это login, написанный заглавными буквами?
     const payload = {
+      name: getState().admin.changeUserData.name,
+      language: getState().admin.changeUserData.language,
       description: getState().admin.changeUserData.description
     }
     return asyncRequest('updateUser', {userId, payload}, (data, error) =>
@@ -24,9 +27,23 @@ export function changeUserDataAsync(userId) {
   }
 }
 
-export function writeUserDescription(desc) {
+export function writeUserName(name) {
+  return {
+    type: WRITE_USER_NAME,
+    name
+  }
+}
+
+export function writeUserLanguage(language) {
+  return {
+    type: WRITE_USER_LANGUAGE,
+    language
+  }
+}
+
+export function writeUserDescription(description) {
   return {
     type: WRITE_USER_DESCRIPTION,
-    description: desc
+    description
   }
 }

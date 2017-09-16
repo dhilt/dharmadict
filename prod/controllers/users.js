@@ -212,7 +212,8 @@ const getUserInfo = user => ({
   name: user.name,
   login: user.login,
   role: user.role,
-  description: user.description
+  description: user.description,
+  language: user.language
 });
 
 module.exports = {

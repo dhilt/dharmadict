@@ -1,14 +1,36 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 
-import { changeUserDataAsync, writeUserDescription } from '../../actions/admin/changeUsers'
+import {getTranslatorInfoAsync} from '../../actions/translators'
+import {changeUserDataAsync, writeUserName, writeUserLanguage, writeUserDescription} from '../../actions/admin/changeUsers'
 
 class EditUser extends Component {
 
   constructor(props) {
     super(props)
     this.sendNewUserData = this.sendNewUserData.bind(this)
+    this.changeUserName = this.changeUserName.bind(this)
+    this.changeUserLanguage = this.changeUserLanguage.bind(this)
     this.changeUserDescription = this.changeUserDescription.bind(this)
+  }
+
+  componentWillMount () {
+    const { name, language, description } = this.props.initTranslatorInfo
+    const {dispatch} = this.props
+    if (name === '') {
+      dispatch(getTranslatorInfoAsync(this.props.params.login))
+    }
+    dispatch(writeUserName(name))
+    dispatch(writeUserLanguage(language))
+    dispatch(writeUserDescription(description))
+  }
+
+  changeUserName (event) {
+    this.props.dispatch(writeUserName(event.target.value))
+  }
+
+  changeUserLanguage (language) {
+    this.props.dispatch(writeUserLanguage(language))
   }
 
   changeUserDescription (event) {
@@ -17,22 +39,60 @@ class EditUser extends Component {
 
   sendNewUserData (event) {
     event.preventDefault()
-    const userId = this.props.params.login
+    const userId = this.props.params.login.toUpperCase();
     this.props.dispatch(changeUserDataAsync(userId))
   }
 
   render () {
-    const { error, result } = this.props.data
-    console.log('!!', this.props)
+    const { error, result, name, language, description } = this.props.newTranslatorInfo
     return (
       <div className='wrapper'>
         <h3>{'Admin page'}</h3>
         <div className='container'>
-          <form className='thumbnail col-md-4'>
-            <h3>{'Change user description'}</h3>
+          <form className='thumbnail col-md-6'>
+            <h3>{'Change user information'}</h3>
+            <div className="form-group">
+              <label>{'Enter name'}</label>
+              <input
+                type="text"
+                value={name}
+                className="form-control"
+                placeholder="User name"
+                onChange={this.changeUserName}
+              />
+            </div>
+            <div className="form-group">
+              <label>{'Pick language'}</label>
+              <div className="radio">
+                <label>
+                  <input
+                    type="radio"
+                    name="optradio"
+                    onClick={() => this.changeUserLanguage('rus')}
+                    checked={language === 'rus'}
+                  />{'Russian'}
+                </label>
+              </div>
+              <div className="radio">
+                <label>
+                  <input
+                    type="radio"
+                    name="optradio"
+                    onClick={() => this.changeUserLanguage('eng')}
+                    checked={language === 'eng'}
+                  />{'English'}
+                </label>
+              </div>
+            </div>
             <div className="form-group">
               <label>{'Enter description'}</label>
-              <input type="text" className="form-control" placeholder="User description" onChange={this.changeUserDescription} />
+              <textarea
+                type="text"
+                value={description}
+                className="form-control"
+                placeholder="User description"
+                onChange={this.changeUserDescription}
+              />
             </div>
             <button className="btn btn-primary" onClick={this.sendNewUserData}>{'Change'}</button>
             {error && <div className='alert alert-danger'>{error.message}</div>}
@@ -46,7 +106,8 @@ class EditUser extends Component {
 
 function select (state, ownProps) {
   return {
-    data: state.admin.changeUserData
+    newTranslatorInfo: state.admin.changeUserData,
+    initTranslatorInfo: state.translatorInfo.data
   }
 }
 
