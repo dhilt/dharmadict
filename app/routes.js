@@ -67,7 +67,7 @@ const Routes = props => {
         <Route exactly path='/about' component={About} />
         <Route exactly path='/edit' component={Edit} onEnter={checkAuth} />
         <Route exactly path='/newTerm' component={NewTerm} onEnter={checkAdmin} />
-        <Route exactly path='/translator/:login' component={TranslatorPage} onEnter={checkAdmin} />
+        <Route exactly path='/translator/:login' component={TranslatorPage} />
         <Route exactly path='/not_authorized' component={NotFound} />
         <Route path='*' component={NotFound} />
       </Route>
