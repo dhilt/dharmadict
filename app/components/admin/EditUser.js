@@ -15,11 +15,15 @@ class EditUser extends Component {
   }
 
   componentWillMount () {
-    const { name, language, description } = this.props.initTranslatorInfo
-    const {dispatch} = this.props
+    const {name} = this.props.initTranslatorInfo
     if (name === '') {
-      dispatch(getTranslatorInfoAsync(this.props.params.login))
+      this.props.dispatch(getTranslatorInfoAsync(this.props.params.login))
     }
+  }
+
+  componentDidMount () {
+    const {name, language, description} = this.props.initTranslatorInfo
+    const {dispatch} = this.props
     dispatch(writeUserName(name))
     dispatch(writeUserLanguage(language))
     dispatch(writeUserDescription(description))
