@@ -5,8 +5,26 @@ import {
   CHANGE_USER_DATA_END,
   WRITE_USER_NAME,
   WRITE_USER_LANGUAGE,
-  WRITE_USER_DESCRIPTION
+  WRITE_USER_DESCRIPTION,
+  GET_TRANSLATOR_INFO_FOR_EDIT_START,
+  GET_TRANSLATOR_INFO_FOR_EDIT_END
 } from '../_constants'
+
+export function getTranslatorInfoAsync(login) {
+  return (dispatch) => {
+    const query = 'users/' + login
+    dispatch({
+      type: GET_TRANSLATOR_INFO_FOR_EDIT_START
+    })
+    asyncRequest(query, false, (data, error) =>
+      dispatch({
+        type: GET_TRANSLATOR_INFO_FOR_EDIT_END,
+        error: error,
+        result: !error ? data.user : null
+      })
+    )
+  }
+}
 
 export function changeUserDataAsync(userId) {
   return (dispatch, getState) => {

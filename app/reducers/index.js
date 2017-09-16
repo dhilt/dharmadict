@@ -24,6 +24,8 @@ import {
   ADD_TERM_END,
   GET_TRANSLATOR_INFO_START,
   GET_TRANSLATOR_INFO_END,
+  GET_TRANSLATOR_INFO_FOR_EDIT_START,
+  GET_TRANSLATOR_INFO_FOR_EDIT_END,
   CHANGE_USER_DATA_START,
   CHANGE_USER_DATA_END,
   WRITE_USER_NAME,
@@ -238,6 +240,27 @@ function reducer(state = initialState, action) {
           pending: false,
           error: action.error,
           data: action.result
+        }
+      }
+    case GET_TRANSLATOR_INFO_FOR_EDIT_START:
+      return {...state,
+        admin: {...state.admin,
+          changeUserData: {...state.admin.changeUserData,
+            pending: true,
+            error: null
+          }
+        }
+      }
+    case GET_TRANSLATOR_INFO_FOR_EDIT_END:
+      return {...state,
+        admin: {...state.admin,
+          changeUserData: {...state.admin.changeUserData,
+            name: action.result.name,
+            language: action.result.language,
+            description: action.result.description,
+            pending: false,
+            error: null
+          }
         }
       }
     case CHANGE_USER_DATA_START:

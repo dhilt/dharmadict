@@ -1,8 +1,8 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
+import {Link} from 'react-router'
 
-import {getTranslatorInfoAsync} from '../../actions/translators'
-import {changeUserDataAsync, writeUserName, writeUserLanguage, writeUserDescription} from '../../actions/admin/changeUsers'
+import {changeUserDataAsync, writeUserName, writeUserLanguage, writeUserDescription, getTranslatorInfoAsync} from '../../actions/admin/changeUsers'
 
 class EditUser extends Component {
 
@@ -19,14 +19,6 @@ class EditUser extends Component {
     if (name === '') {
       this.props.dispatch(getTranslatorInfoAsync(this.props.params.login))
     }
-  }
-
-  componentDidMount () {
-    const {name, language, description} = this.props.initTranslatorInfo
-    const {dispatch} = this.props
-    dispatch(writeUserName(name))
-    dispatch(writeUserLanguage(language))
-    dispatch(writeUserDescription(description))
   }
 
   changeUserName (event) {
@@ -48,12 +40,12 @@ class EditUser extends Component {
   }
 
   render () {
-    const { error, result, name, language, description } = this.props.newTranslatorInfo
+    const { pending, error, result, name, language, description } = this.props.newTranslatorInfo
     return (
-      <div className='wrapper'>
+      <div className="wrapper">
         <h3>{'Admin page'}</h3>
         <div className='container'>
-          <form className='thumbnail col-md-6'>
+          <form className="thumbnail col-md-6">
             <h3>{'Change user information'}</h3>
             <div className="form-group">
               <label>{'Enter name'}</label>
@@ -98,9 +90,17 @@ class EditUser extends Component {
                 onChange={this.changeUserDescription}
               />
             </div>
-            <button className="btn btn-primary" onClick={this.sendNewUserData}>{'Change'}</button>
-            {error && <div className='alert alert-danger'>{error.message}</div>}
-            {!error && result && <div className='alert alert-success'>{'success'}</div>}
+            <button
+              className="btn btn-primary"
+              onClick={this.sendNewUserData}
+              disabled={pending}
+              >{'Change'}
+            </button>
+            <Link to={`/translator/${this.props.params.login}`}>
+              <button className="btn">{'Вернуться на страницу переводчика'}</button>
+            </Link>
+            {error && <div className="alert alert-danger">{error.message}</div>}
+            {!error && result && <div className="alert alert-success">{'success'}</div>}
           </form>
         </div>
       </div>
