@@ -61,7 +61,6 @@ let initialState = {
   },
   admin: {
     changeUserData: {
-      id: '',
       description: '',
       pending: false,
       result: null,

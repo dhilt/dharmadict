@@ -6,10 +6,10 @@ import Home from './components/Home'
 import About from './components/About'
 import NotFound from './components/NotFound'
 import Edit from './components/Edit'
-import NewTerm from './components/NewTerm'
 import TranslatorPage from './components/TranslatorPage'
 
-import AdminPage from './components/admin'
+import NewTerm from './components/NewTerm'
+import EditUser from './components/admin/EditUser'
 
 const Routes = props => {
 
@@ -63,11 +63,11 @@ const Routes = props => {
     <Router history={browserHistory}>
       <Route component={App}>
         <Route exactly path='/' component={Home} />
-        <Route exactly path='/admin' component={AdminPage} onEnter={checkAdmin} />
         <Route exactly path='/about' component={About} />
         <Route exactly path='/edit' component={Edit} onEnter={checkAuth} />
         <Route exactly path='/newTerm' component={NewTerm} onEnter={checkAdmin} />
         <Route exactly path='/translator/:login' component={TranslatorPage} />
+        <Route exactly path='/translator/:login/edit' component={EditUser} onEnter={checkAdmin} />
         <Route exactly path='/not_authorized' component={NotFound} />
         <Route path='*' component={NotFound} />
       </Route>

@@ -1,19 +1,14 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 
-import { changeUserDataAsync, writeUserId, writeUserDescription } from '../../actions/admin/changeUsers'
+import { changeUserDataAsync, writeUserDescription } from '../../actions/admin/changeUsers'
 
-class AdminPage extends Component {
+class EditUser extends Component {
 
   constructor(props) {
     super(props)
     this.sendNewUserData = this.sendNewUserData.bind(this)
-    this.changeUserId = this.changeUserId.bind(this)
     this.changeUserDescription = this.changeUserDescription.bind(this)
-  }
-
-  changeUserId (event) {
-    this.props.dispatch(writeUserId(event.target.value))
   }
 
   changeUserDescription (event) {
@@ -22,21 +17,19 @@ class AdminPage extends Component {
 
   sendNewUserData (event) {
     event.preventDefault()
-    this.props.dispatch(changeUserDataAsync())
+    const userId = this.props.params.login
+    this.props.dispatch(changeUserDataAsync(userId))
   }
 
   render () {
     const { error, result } = this.props.data
+    console.log('!!', this.props)
     return (
       <div className='wrapper'>
         <h3>{'Admin page'}</h3>
         <div className='container'>
           <form className='thumbnail col-md-4'>
             <h3>{'Change user description'}</h3>
-            <div className="form-group">
-              <label>{'Enter user id'}</label>
-              <input type="text" className="form-control" placeholder="User id" onChange={this.changeUserId} />
-            </div>
             <div className="form-group">
               <label>{'Enter description'}</label>
               <input type="text" className="form-control" placeholder="User description" onChange={this.changeUserDescription} />
@@ -57,4 +50,4 @@ function select (state, ownProps) {
   }
 }
 
-export default connect(select)(AdminPage)
+export default connect(select)(EditUser)

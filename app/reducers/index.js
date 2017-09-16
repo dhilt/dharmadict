@@ -26,7 +26,6 @@ import {
   GET_TRANSLATOR_INFO_END,
   CHANGE_USER_DATA_START,
   CHANGE_USER_DATA_END,
-  WRITE_USER_ID,
   WRITE_USER_DESCRIPTION
 } from '../actions/_constants'
 
@@ -252,17 +251,9 @@ function reducer(state = initialState, action) {
       return {...state,
         admin: {...state.admin,
           changeUserData: {...state.admin.changeUserData,
-            result: action.success,
+            result: action.result,
             pending: false,
             error: action.error
-          }
-        }
-      }
-    case WRITE_USER_ID:
-      return {...state,
-        admin: {...state.admin,
-          changeUserData: {...state.admin.changeUserData,
-            id: action.id
           }
         }
       }

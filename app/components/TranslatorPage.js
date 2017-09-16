@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
+import {Link} from 'react-router'
 
 import {getTranslatorInfoAsync} from '../actions/translators'
 
@@ -20,6 +21,9 @@ class TranslatorPage extends Component {
         <h3>{data.name}</h3>
         <h4>{'Язык переводов: ' + (data.language == 'rus' ? 'русский' : 'английский')}</h4>
         <pre>{data.description}</pre>
+        {this.props.userInfo.data && this.props.userInfo.data.role === 'admin'
+          && <Link to={`/translator/${this.props.params.login}/edit`}>{'Править описание'}</Link>
+        }
       </div>
     )
   }
@@ -42,7 +46,8 @@ class TranslatorPage extends Component {
 
 function select (state) {
   return {
-    data: state.translatorInfo
+    data: state.translatorInfo,
+    userInfo: state.auth.userInfo
   }
 }
 
