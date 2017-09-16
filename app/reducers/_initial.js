@@ -61,6 +61,7 @@ let initialState = {
   },
   admin: {
     changeUserData: {
+      id: '',
       name: '',
       language: '',
       description: '',

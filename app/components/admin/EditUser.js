@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Link} from 'react-router'
 
-import {changeUserDataAsync, writeUserName, writeUserLanguage, writeUserDescription, getTranslatorInfoAsync} from '../../actions/admin/changeUsers'
+import {changeUserDataAsync, writeUserId, writeUserName, writeUserLanguage, writeUserDescription, getTranslatorInfoAsync} from '../../actions/admin/changeUsers'
 
 class EditUser extends Component {
 
@@ -22,11 +22,12 @@ class EditUser extends Component {
   }
 
   componentDidMount () {
-    const {name, language, description} = this.props.initTranslatorInfo
+    const {id, name, language, description} = this.props.initTranslatorInfo
     const {dispatch} = this.props
     dispatch(writeUserName(name))
     dispatch(writeUserLanguage(language))
     dispatch(writeUserDescription(description))
+    dispatch(writeUserId(id))
   }
 
   changeUserName (event) {
@@ -43,8 +44,7 @@ class EditUser extends Component {
 
   sendNewUserData (event) {
     event.preventDefault()
-    const userId = this.props.params.login.toUpperCase();
-    this.props.dispatch(changeUserDataAsync(userId))
+    this.props.dispatch(changeUserDataAsync())
   }
 
   render () {

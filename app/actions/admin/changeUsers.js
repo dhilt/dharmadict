@@ -3,6 +3,7 @@ import asyncRequest from '../../helpers/remote'
 import {
   CHANGE_USER_DATA_START,
   CHANGE_USER_DATA_END,
+  WRITE_USER_ID,
   WRITE_USER_NAME,
   WRITE_USER_LANGUAGE,
   WRITE_USER_DESCRIPTION,
@@ -26,11 +27,12 @@ export function getTranslatorInfoAsync(login) {
   }
 }
 
-export function changeUserDataAsync(userId) {
+export function changeUserDataAsync() {
   return (dispatch, getState) => {
     dispatch({
       type: CHANGE_USER_DATA_START
     })
+    const userId = getState().admin.changeUserData.id
     const payload = {
       name: getState().admin.changeUserData.name,
       language: getState().admin.changeUserData.language,
@@ -42,6 +44,13 @@ export function changeUserDataAsync(userId) {
         result: data,
         error: error
       }))
+  }
+}
+
+export function writeUserId (id) {
+  return {
+    type: WRITE_USER_ID,
+    id
   }
 }
 
