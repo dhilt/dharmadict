@@ -7,7 +7,9 @@ const testTranslator = require('./_shared.js').testTranslator;
 const requestObj = {
   userId: testTranslator.id,
   payload: {
-    description: "New description written by admin"
+    name: 'Name of test-translator',
+    language: 'eng',
+    description: 'New description written by admin'
   }
 };
 
@@ -22,7 +24,7 @@ describe('Update user API', () => {
     )
   });
 
-  it('should not create new term (auth needed)', (done) => {
+  it('should not update user information (auth needed)', (done) => {
     request.post('/api/updateUser')
       .end(
         (err, res) => {
@@ -35,7 +37,7 @@ describe('Update user API', () => {
 
   shouldLogIn(testTranslator);
 
-  it('should not update user description (admin only)', (done) => {
+  it('should not update user information (admin only)', (done) => {
     request.post('/api/updateUser')
       .set('Authorization', 'Bearer ' + testTranslator.token)
       .send(requestObj)
@@ -50,7 +52,7 @@ describe('Update user API', () => {
 
   shouldLogIn(testAdmin);
 
-  it('should not update user description (no payload)', (done) => {
+  it('should not update user information (no payload)', (done) => {
     let _requestObj = Object.assign({}, requestObj);
     delete _requestObj.payload;
     request.post('/api/updateUser')
@@ -65,7 +67,7 @@ describe('Update user API', () => {
       )
   });
 
-  it('should not update user description (invalid payload)', (done) => {
+  it('should not update user information (invalid payload)', (done) => {
     let _requestObj = Object.assign({}, requestObj);
     _requestObj.payload = false;
     request.post('/api/updateUser')
@@ -80,7 +82,7 @@ describe('Update user API', () => {
       )
   });
 
-  it('should not update user description (no id)', (done) => {
+  it('should not update user information (no id)', (done) => {
     let _requestObj = Object.assign({}, requestObj);
     delete _requestObj['userId'];
     request.post('/api/updateUser')
@@ -95,7 +97,7 @@ describe('Update user API', () => {
       )
   });
 
-  it('should not update user description (invalid id)', (done) => {
+  it('should not update user information (invalid id)', (done) => {
     let _requestObj = Object.assign({}, requestObj);
     _requestObj['userId'] = false;
     request.post('/api/updateUser')
@@ -110,7 +112,7 @@ describe('Update user API', () => {
       )
   });
 
-  it('should not update user description (user not found)', (done) => {
+  it('should not update user information (user not found)', (done) => {
     let _requestObj = Object.assign({}, requestObj);
     _requestObj['userId'] += '-UNEXISTED!';
     request.post('/api/updateUser')
@@ -120,6 +122,36 @@ describe('Update user API', () => {
         (err, res) => {
           assert.notEqual(res.body.success, true);
           assert.equal(res.body.message, "Can't update translator description. No user found");
+          done();
+        }
+      )
+  });
+
+  it('should not update user name (invalid name)', (done) => {
+    let _requestObj = JSON.parse(JSON.stringify(requestObj));
+    _requestObj.payload['name'] = false;
+    request.post('/api/updateUser')
+      .set('Authorization', 'Bearer ' + testAdmin.token)
+      .send(_requestObj)
+      .end(
+        (err, res) => {
+          assert.notEqual(res.body.success, true);
+          assert.equal(res.body.message, "Can't update translator description. Invalid name");
+          done();
+        }
+      )
+  });
+
+  it('should not update user language (invalid language)', (done) => {
+    let _requestObj = JSON.parse(JSON.stringify(requestObj));
+    _requestObj.payload['language'] = false;
+    request.post('/api/updateUser')
+      .set('Authorization', 'Bearer ' + testAdmin.token)
+      .send(_requestObj)
+      .end(
+        (err, res) => {
+          assert.notEqual(res.body.success, true);
+          assert.equal(res.body.message, "Can't update translator description. Invalid language");
           done();
         }
       )
@@ -140,7 +172,7 @@ describe('Update user API', () => {
       )
   });
 
-  it('should update user description', (done) => {
+  it('should update user information', (done) => {
     request.post('/api/updateUser')
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .send(requestObj)
@@ -148,6 +180,36 @@ describe('Update user API', () => {
         (err, res) => {
           assert.equal(res.body.success, true);
           assert.equal(res.body.user.description, requestObj.payload.description);
+          done();
+        }
+      )
+  });
+
+  it('should cleanup user name', (done) => {
+    let _requestObj = JSON.parse(JSON.stringify(requestObj));
+    _requestObj.payload['name'] = '  ';
+    request.post('/api/updateUser')
+      .set('Authorization', 'Bearer ' + testAdmin.token)
+      .send(_requestObj)
+      .end(
+        (err, res) => {
+          assert.equal(res.body.success, true);
+          assert.equal(res.body.user.name, '');
+          done();
+        }
+      )
+  });
+
+  it('should cleanup user language', (done) => {
+    let _requestObj = JSON.parse(JSON.stringify(requestObj));
+    _requestObj.payload['language'] = '  ';
+    request.post('/api/updateUser')
+      .set('Authorization', 'Bearer ' + testAdmin.token)
+      .send(_requestObj)
+      .end(
+        (err, res) => {
+          assert.equal(res.body.success, true);
+          assert.equal(res.body.user.language, '');
           done();
         }
       )
