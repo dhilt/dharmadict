@@ -105,7 +105,6 @@ class EditUser extends Component {
             Отмена
           </Link>
           {error && <div className="alert alert-danger">{error.message}</div>}
-          {!error && result && <div className="alert alert-success">{'success'}</div>}
         </form>
       </div>
     )

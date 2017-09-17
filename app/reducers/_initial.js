@@ -74,7 +74,6 @@ let initialState = {
         description: ''
       },
       pending: false,
-      result: null,
       error: null
     }
   }

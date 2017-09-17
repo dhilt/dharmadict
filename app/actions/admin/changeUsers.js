@@ -29,17 +29,16 @@ export function changeAdminUserDataAsync() {
     dispatch({
       type: CHANGE_ADMIN_USER_DATA_START
     })
-    const userId = getState().admin.editUser.id
-    const payload = {
-      name: getState().admin.editUser.data.name,
-      language: getState().admin.editUser.data.language,
-      description: getState().admin.editUser.data.description
-    }
-    return asyncRequest('updateUser', {userId, payload}, (data, error) =>
+    const {id, data, dataSource} = getState().admin.editUser
+    return asyncRequest('updateUser', {userId: id, payload: data}, (data, error) =>
       dispatch({
         type: CHANGE_ADMIN_USER_DATA_END,
-        result: !error ? data : null,
-        error: error ? error : null
+        error: error ? error : null,
+        result: error ? dataSource : {
+          name: data.user.name,
+          language: data.user.language,
+          description: data.user.description
+        }
       }))
   }
 }

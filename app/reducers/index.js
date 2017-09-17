@@ -290,14 +290,9 @@ function reducer(state = initialState, action) {
       return {...state,
         admin: {...state.admin,
           editUser: {...state.admin.editUser,
-            result: action.result,
-            error: action.error,
             pending: false,
-            dataSource: action.error ? state.admin.editUser.dataSource : {
-              name: action.result.user.name,
-              language: action.result.user.language,
-              description: action.result.user.description
-            }
+            error: action.error,
+            dataSource: action.result
           }
         }
       }
