@@ -15,16 +15,7 @@ class EditUser extends Component {
   }
 
   componentWillMount () {
-    const {name, language, description} = this.props.initTranslatorInfo
-    const {dispatch} = this.props
-    if (name === '') {
-      dispatch(getTranslatorInfoAsync(this.props.params.id))
-    } else {
-      dispatch(writeUserName(name))
-      dispatch(writeUserLanguage(language))
-      dispatch(writeUserDescription(description))
-      dispatch(writeUserId(this.props.params.id))
-    }
+    this.props.dispatch(getTranslatorInfoAsync(this.props.params.id))
   }
 
   changeUserName (event) {
@@ -116,8 +107,7 @@ class EditUser extends Component {
 
 function select (state, ownProps) {
   return {
-    newTranslatorInfo: state.admin.editUser,
-    initTranslatorInfo: state.translatorInfo.data
+    newTranslatorInfo: state.admin.editUser
   }
 }
 
