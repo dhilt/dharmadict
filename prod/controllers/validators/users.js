@@ -37,12 +37,20 @@ const update = (userId, payload) => new Promise(resolve => {
       throw new ApiError('Invalid name')
     }
     payload.name = payload.name.trim();
+    if(!payload.name) {
+      throw new ApiError('Invalid name')
+    }
+  }
+  else {
+    throw new ApiError('Invalid name')
   }
   if (payload.hasOwnProperty('language')) {
     if (payload.language !== 'rus' && payload.language !== 'eng') {
       throw new ApiError('Invalid language')
     }
-    payload.language = payload.language.trim();
+  }
+  else {
+    throw new ApiError('Invalid language')
   }
   if (payload.hasOwnProperty('description')) {
     if (typeof payload.description !== 'string') {

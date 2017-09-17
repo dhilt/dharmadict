@@ -187,6 +187,36 @@ describe('Update user API', () => {
       )
   });
 
+  it('should not update user if no name', (done) => {
+    let _requestObj = JSON.parse(JSON.stringify(requestObj));
+    delete _requestObj.payload['name'];
+    request.post('/api/updateUser')
+      .set('Authorization', 'Bearer ' + testAdmin.token)
+      .send(_requestObj)
+      .end(
+        (err, res) => {
+          assert.notEqual(res.body.success, true);
+          assert.equal(res.body.message, "Can't update translator description. Invalid name");
+          done();
+        }
+      )
+  });
+
+  it('should not update user if no language', (done) => {
+    let _requestObj = JSON.parse(JSON.stringify(requestObj));
+    delete _requestObj.payload['language'];
+    request.post('/api/updateUser')
+      .set('Authorization', 'Bearer ' + testAdmin.token)
+      .send(_requestObj)
+      .end(
+        (err, res) => {
+          assert.notEqual(res.body.success, true);
+          assert.equal(res.body.message, "Can't update translator description. Invalid language");
+          done();
+        }
+      )
+  });
+
   it('should update user information', (done) => {
     request.post('/api/updateUser')
       .set('Authorization', 'Bearer ' + testAdmin.token)
@@ -200,7 +230,7 @@ describe('Update user API', () => {
       )
   });
 
-  it('should cleanup user name', (done) => {
+  it('should not cleanup user name', (done) => {
     let _requestObj = JSON.parse(JSON.stringify(requestObj));
     _requestObj.payload['name'] = '  ';
     request.post('/api/updateUser')
@@ -208,23 +238,8 @@ describe('Update user API', () => {
       .send(_requestObj)
       .end(
         (err, res) => {
-          assert.equal(res.body.success, true);
-          assert.equal(res.body.user.name, '');
-          done();
-        }
-      )
-  });
-
-  it('should cleanup user language', (done) => {
-    let _requestObj = JSON.parse(JSON.stringify(requestObj));
-    _requestObj.payload['language'] = '  ';
-    request.post('/api/updateUser')
-      .set('Authorization', 'Bearer ' + testAdmin.token)
-      .send(_requestObj)
-      .end(
-        (err, res) => {
-          assert.equal(res.body.success, true);
-          assert.equal(res.body.user.language, '');
+          assert.notEqual(res.body.success, true);
+          assert.equal(res.body.message, "Can't update translator description. Invalid name");
           done();
         }
       )
