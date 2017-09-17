@@ -11,8 +11,8 @@ class TranslatorPage extends Component {
   }
 
   componentWillMount () {
-    const name = this.props.params.login
-    this.props.dispatch(getTranslatorInfoAsync(name))
+    const userId = this.props.params.id
+    this.props.dispatch(getTranslatorInfoAsync(userId))
   }
 
   getTranslatorContent (data) {
@@ -22,7 +22,7 @@ class TranslatorPage extends Component {
         <h4>{'Язык переводов: ' + (data.language == 'rus' ? 'русский' : 'английский')}</h4>
         <pre>{data.description}</pre>
         {this.props.userInfo.data && this.props.userInfo.data.role === 'admin'
-          && <Link to={`/translator/${this.props.params.login}/edit`}>{'Править описание'}</Link>
+          && <Link to={`/translator/${this.props.params.id}/edit`}>{'Править описание'}</Link>
         }
       </div>
     )

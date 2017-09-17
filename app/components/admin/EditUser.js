@@ -15,19 +15,17 @@ class EditUser extends Component {
   }
 
   componentWillMount () {
-    const {name} = this.props.initTranslatorInfo
-    if (name === '') {
-      this.props.dispatch(getTranslatorInfoAsync(this.props.params.login))
-    }
-  }
-
-  componentDidMount () {
     const {id, name, language, description} = this.props.initTranslatorInfo
     const {dispatch} = this.props
-    dispatch(writeUserName(name))
-    dispatch(writeUserLanguage(language))
-    dispatch(writeUserDescription(description))
-    dispatch(writeUserId(id))
+    if (name === '') {
+      dispatch(getTranslatorInfoAsync(this.props.params.id))
+    } else {
+      const {dispatch} = this.props
+      dispatch(writeUserName(name))
+      dispatch(writeUserLanguage(language))
+      dispatch(writeUserDescription(description))
+      dispatch(writeUserId(id))
+    }
   }
 
   changeUserName (event) {
@@ -104,7 +102,7 @@ class EditUser extends Component {
               disabled={pending}
               >{'Change'}
             </button>
-            <Link to={`/translator/${this.props.params.login}`}>
+            <Link to={`/translator/${this.props.params.id}`}>
               <button className="btn">{'Вернуться на страницу переводчика'}</button>
             </Link>
             {error && <div className="alert alert-danger">{error.message}</div>}

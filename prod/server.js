@@ -121,8 +121,8 @@ app.post('/api/updateUser', (req, res) => {
     .catch(error => sendApiError(res, 'Can\'t update translator description.', error))
 });
 
-app.get('/api/users/:name', (req, res) =>
-  usersController.findByLogin(req.params.name)
+app.get('/api/users/:id', (req, res) =>
+  usersController.findById(req.params.id)
     .then(user => res.json({success: true, user: usersController.getUserInfo(user)}))
     .catch(error => sendApiError(res, 'Can\'t find user', error))
 );

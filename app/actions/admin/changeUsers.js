@@ -11,9 +11,9 @@ import {
   GET_TRANSLATOR_INFO_FOR_EDIT_END
 } from '../_constants'
 
-export function getTranslatorInfoAsync(login) {
+export function getTranslatorInfoAsync(userId) {
   return (dispatch) => {
-    const query = 'users/' + login
+    const query = 'users/' + userId
     dispatch({
       type: GET_TRANSLATOR_INFO_FOR_EDIT_START
     })

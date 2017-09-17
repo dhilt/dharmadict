@@ -52,8 +52,8 @@ const Routes = props => {
         <Route exactly path='/about' component={About} />
         <Route exactly path='/edit' component={Edit} onEnter={checkAuth} />
         <Route exactly path='/newTerm' component={NewTerm} onEnter={(...args) => checkAuth(...args, 'admin')} />
-        <Route exactly path='/translator/:login' component={TranslatorPage} />
-        <Route exactly path='/translator/:login/edit' component={EditUser} onEnter={(...args) => checkAuth(...args, 'admin')} />
+        <Route exactly path='/translator/:id' component={TranslatorPage} />
+        <Route exactly path='/translator/:id/edit' component={EditUser} onEnter={(...args) => checkAuth(...args, 'admin')} />
         <Route exactly path='/not_authorized' component={NotFound} />
         <Route exactly path='/not_permitted' component={NotFound} />
         <Route path='*' component={NotFound} />
