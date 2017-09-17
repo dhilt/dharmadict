@@ -30,11 +30,11 @@ const Routes = props => {
       return
     }
     if(auth.userInfo.promise) {
-      auth.userInfo.promise.then(() => {
+      auth.userInfo.promise.then(response => {
         if (!auth.loggedIn) {
           unauthorizedAccess(replace)
         }
-        else if (role && (!auth.userInfo.data || auth.userInfo.data.role !== role)) {
+        if (role && (!response || !response.result || response.result.role !== role)) {
           unpermittedAccess(replace)
         }
         callback()
