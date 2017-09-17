@@ -42,75 +42,71 @@ class EditUser extends Component {
   }
 
   render () {
+    const {id} = this.props.params
     const {pending, error, result} = this.props.newTranslatorInfo
     const {name, language, description} = this.props.newTranslatorInfo.data
     return (
-      <div className="wrapper">
-        <h3>{'Admin page'}</h3>
-        <div className='container'>
-          <form className="thumbnail col-md-6">
-            <h3>{'Change user information'}</h3>
-            <div className="form-group">
-              <label>{'Enter name'}</label>
-              <input
-                type="text"
-                value={name}
-                className="form-control"
-                placeholder="User name"
-                onChange={this.changeUserName}
-              />
+      <div>
+        <form className="col-md-6">
+          <h3>Редактирование пользователя {id}</h3>
+          <div className="form-group">
+            <label>Имя перерводчика</label>
+            <input
+              type="text"
+              value={name}
+              className="form-control"
+              onChange={this.changeUserName}
+            />
+          </div>
+          <div className="form-group">
+            <label>Язык переводов</label>
+            <div className="radio">
+              <label>
+                <input
+                  type="radio"
+                  name="lang_radio"
+                  onChange={() => this.changeUserLanguage('rus')}
+                  checked={language === 'rus'}
+                />Русский
+              </label>
             </div>
-            <div className="form-group">
-              <label>{'Pick language'}</label>
-              <div className="radio">
-                <label>
-                  <input
-                    type="radio"
-                    name="optradio"
-                    onClick={() => this.changeUserLanguage('rus')}
-                    checked={language === 'rus'}
-                  />{'Russian'}
-                </label>
-              </div>
-              <div className="radio">
-                <label>
-                  <input
-                    type="radio"
-                    name="optradio"
-                    onClick={() => this.changeUserLanguage('eng')}
-                    checked={language === 'eng'}
-                  />{'English'}
-                </label>
-              </div>
+            <div className="radio">
+              <label>
+                <input
+                  type="radio"
+                  name="lang_radio"
+                  onChange={() => this.changeUserLanguage('eng')}
+                  checked={language === 'eng'}
+                />Английский
+              </label>
             </div>
-            <div className="form-group">
-              <label>{'Enter description'}</label>
-              <textarea
-                type="text"
-                value={description}
-                className="form-control"
-                placeholder="User description"
-                onChange={this.changeUserDescription}
-              />
-            </div>
-            <button
-              className="btn btn-primary"
-              onClick={this.sendNewUserData}
-              disabled={pending}
-              >{'Change'}
-            </button>
-            <button
-              className="btn btn-danger"
-              onClick={this.resetChanges}
-            >{'Reset changes'}
-            </button>
-            <Link to={`/translator/${this.props.params.id}`} className="btn btn-default">
-              {'Вернуться на страницу переводчика'}
-            </Link>
-            {error && <div className="alert alert-danger">{error.message}</div>}
-            {!error && result && <div className="alert alert-success">{'success'}</div>}
-          </form>
-        </div>
+          </div>
+          <div className="form-group">
+            <label>Описание перерводчика</label>
+            <textarea
+              type="text"
+              value={description}
+              className="form-control"
+              onChange={this.changeUserDescription}
+            />
+          </div>
+          <button
+            className="btn btn-primary"
+            onClick={this.sendNewUserData}
+            disabled={pending}
+            >Сохранить
+          </button>
+          <button
+            className="btn btn-default"
+            onClick={this.resetChanges}
+          >Сбросить
+          </button>
+          <Link to={`/translator/${this.props.params.id}`}>
+            Отмена
+          </Link>
+          {error && <div className="alert alert-danger">{error.message}</div>}
+          {!error && result && <div className="alert alert-success">{'success'}</div>}
+        </form>
       </div>
     )
   }

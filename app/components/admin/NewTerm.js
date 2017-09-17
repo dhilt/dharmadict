@@ -29,7 +29,7 @@ class NewTerm extends Component {
             className={pending ? 'loader' : ''}
             disabled={!term || pending}
             onClick={(event) => this._onTermSave(event)}
-          >{'Сохранить'}</Button> &nbsp;
+          >{'Сохранить'}</Button>
           <Link to={`/`}>{'Отмена'}</Link>
         </div>
         {error && <div className="alert alert-danger col-md-4">{error.message}</div>}

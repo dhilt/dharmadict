@@ -16,13 +16,17 @@ class TranslatorPage extends Component {
   }
 
   getTranslatorContent (data) {
+    const userInfo = this.props.userInfo.data
     return (
       <div>
         <h3>{data.name}</h3>
         <h4>{'Язык переводов: ' + (data.language == 'rus' ? 'русский' : 'английский')}</h4>
         <pre>{data.description}</pre>
-        {this.props.userInfo.data && this.props.userInfo.data.role === 'admin'
-          && <Link to={`/translator/${this.props.params.id}/edit`}>{'Править описание'}</Link>
+        {
+          userInfo && userInfo.role === 'admin' &&
+          <Link className="btn btn-default" to={`/translator/${this.props.params.id}/edit`}>
+            Редактировать
+          </Link>
         }
       </div>
     )

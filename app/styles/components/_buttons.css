@@ -15,7 +15,7 @@
   background-color: $brand-color;
 }
 
-.btn + .btn {
+.btn + .btn, .btn + a {
   margin-left: 1em;
 }
 
