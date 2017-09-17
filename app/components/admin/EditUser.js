@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Link} from 'react-router'
 
-import {updateUserData, changeUserDataAsync, getAdminUserDataAsync} from '../../actions/admin/changeUsers'
+import {updateUserData, resetAdminUserData, changeUserDataAsync, getAdminUserDataAsync} from '../../actions/admin/changeUsers'
 
 class EditUser extends Component {
 
@@ -12,6 +12,7 @@ class EditUser extends Component {
     this.changeUserName = this.changeUserName.bind(this)
     this.changeUserLanguage = this.changeUserLanguage.bind(this)
     this.changeUserDescription = this.changeUserDescription.bind(this)
+    this.resetChanges = this.resetChanges.bind(this)
   }
 
   componentWillMount () {
@@ -28,6 +29,11 @@ class EditUser extends Component {
 
   changeUserDescription (event) {
     this.props.dispatch(updateUserData({description: event.target.value}))
+  }
+
+  resetChanges (event) {
+    event.preventDefault()
+    this.props.dispatch(resetAdminUserData())
   }
 
   sendNewUserData (event) {
@@ -93,8 +99,13 @@ class EditUser extends Component {
               disabled={pending}
               >{'Change'}
             </button>
-            <Link to={`/translator/${this.props.params.id}`}>
-              <button className="btn">{'Вернуться на страницу переводчика'}</button>
+            <button
+              className="btn btn-danger"
+              onClick={this.resetChanges}
+            >{'Reset changes'}
+            </button>
+            <Link to={`/translator/${this.props.params.id}`} className="btn btn-default">
+              {'Вернуться на страницу переводчика'}
             </Link>
             {error && <div className="alert alert-danger">{error.message}</div>}
             {!error && result && <div className="alert alert-success">{'success'}</div>}
