@@ -26,10 +26,9 @@ import {
   GET_TRANSLATOR_INFO_END,
   GET_ADMIN_USER_DATA_START,
   GET_ADMIN_USER_DATA_END,
-  CHANGE_USER_DATA_START,
-  CHANGE_USER_DATA_END,
-  UPDATE_USER_DATA,
-  RESET_ADMIN_USER_DATA
+  CHANGE_ADMIN_USER_DATA_START,
+  CHANGE_ADMIN_USER_DATA_END,
+  UPDATE_ADMIN_USER_DATA
 } from '../actions/_constants'
 
 import initialState from './_initial'
@@ -278,7 +277,7 @@ function reducer(state = initialState, action) {
           }
         }
       }
-    case CHANGE_USER_DATA_START:
+    case CHANGE_ADMIN_USER_DATA_START:
       return {...state,
         admin: {...state.admin,
           editUser: {...state.admin.editUser,
@@ -287,7 +286,7 @@ function reducer(state = initialState, action) {
           }
         }
       }
-    case CHANGE_USER_DATA_END:
+    case CHANGE_ADMIN_USER_DATA_END:
       return {...state,
         admin: {...state.admin,
           editUser: {...state.admin.editUser,
@@ -302,15 +301,7 @@ function reducer(state = initialState, action) {
           }
         }
       }
-    case UPDATE_USER_DATA:
-      return {...state,
-        admin: {...state.admin,
-          editUser: {...state.admin.editUser,
-            data: action.payload
-          }
-        }
-      }
-    case RESET_ADMIN_USER_DATA:
+    case UPDATE_ADMIN_USER_DATA:
       return {...state,
         admin: {...state.admin,
           editUser: {...state.admin.editUser,
