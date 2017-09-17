@@ -29,9 +29,7 @@ import {
   CHANGE_USER_DATA_START,
   CHANGE_USER_DATA_END,
   UPDATE_USER_DATA,
-  RESET_ADMIN_USER_DATA_NAME,
-  RESET_ADMIN_USER_DATA_LANGUAGE,
-  RESET_ADMIN_USER_DATA_DESCRIPTION
+  RESET_ADMIN_USER_DATA
 } from '../actions/_constants'
 
 import initialState from './_initial'
@@ -312,33 +310,11 @@ function reducer(state = initialState, action) {
           }
         }
       }
-    case RESET_ADMIN_USER_DATA_NAME:
+    case RESET_ADMIN_USER_DATA:
       return {...state,
         admin: {...state.admin,
           editUser: {...state.admin.editUser,
-            data: {...state.admin.editUser.data,
-              name: action.name
-            }
-          }
-        }
-      }
-    case RESET_ADMIN_USER_DATA_LANGUAGE:
-      return {...state,
-        admin: {...state.admin,
-          editUser: {...state.admin.editUser,
-            data: {...state.admin.editUser.data,
-              language: action.language
-            }
-          }
-        }
-      }
-    case RESET_ADMIN_USER_DATA_DESCRIPTION:
-      return {...state,
-        admin: {...state.admin,
-          editUser: {...state.admin.editUser,
-            data: {...state.admin.editUser.data,
-              description: action.description
-            }
+            data: action.payload
           }
         }
       }

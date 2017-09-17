@@ -6,9 +6,7 @@ import {
   UPDATE_USER_DATA,
   GET_ADMIN_USER_DATA_START,
   GET_ADMIN_USER_DATA_END,
-  RESET_ADMIN_USER_DATA_NAME,
-  RESET_ADMIN_USER_DATA_LANGUAGE,
-  RESET_ADMIN_USER_DATA_DESCRIPTION
+  RESET_ADMIN_USER_DATA
 } from '../_constants'
 
 export function getAdminUserDataAsync(userId) {
@@ -65,16 +63,8 @@ export function updateUserData(_data) {
 export function resetAdminUserData() {
   return (dispatch, getState) => {
     dispatch({
-      type: RESET_ADMIN_USER_DATA_NAME,
-      name: getState().admin.editUser.dataSource.name
-    })
-    dispatch({
-      type: RESET_ADMIN_USER_DATA_LANGUAGE,
-      language: getState().admin.editUser.dataSource.language
-    })
-    dispatch({
-      type: RESET_ADMIN_USER_DATA_DESCRIPTION,
-      description: getState().admin.editUser.dataSource.description
+      type: RESET_ADMIN_USER_DATA,
+      payload: getState().admin.editUser.dataSource
     })
   }
 }
