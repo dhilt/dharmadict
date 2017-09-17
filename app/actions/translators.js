@@ -5,9 +5,9 @@ import {
   GET_TRANSLATOR_INFO_END
 } from './_constants'
 
-export function getTranslatorInfoAsync(name) {
+export function getTranslatorInfoAsync(userId) {
   return (dispatch) => {
-    const query = 'users/' + name
+    const query = 'users/' + userId
     dispatch({
       type: GET_TRANSLATOR_INFO_START
     })

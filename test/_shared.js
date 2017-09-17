@@ -26,8 +26,19 @@ const testTranslator = {
   role: "translator",
   login: "test-translator",
   name: "Test Translator",
+  language: "eng",
   description: "...",
   password: "test-translator-pass"
+};
+
+const testTranslator2 = {
+  id: "TEST-TRANSLATOR-2",
+  role: "translator",
+  login: "test-translator-2",
+  name: "Test Translator 2",
+  language: "eng",
+  description: "...",
+  password: "test-translator-pass-2"
 };
 
 const testTerm = {
@@ -35,12 +46,22 @@ const testTerm = {
   id: 'test_term'
 };
 
+const testTermTranslation = {
+  termId: testTerm.id,
+  translation: {
+    meanings: [
+      {versions: ["a1", "b1", "c1"], comment: "comment1"},
+      {versions: ["a2", "b2", "c2"], comment: null}],
+    translatorId: testTranslator.id
+  }
+};
+
 const forceCleanUp = () => {
   describe('Force cleanup', () => {
-    it('may delete test user', (done) => {
+    it('may delete test data', (done) => {
       let ready = 0;
       const _done = () => {
-        if (++ready === 3) {
+        if (++ready === 4) {
           done();
         }
       };
@@ -48,23 +69,30 @@ const forceCleanUp = () => {
       usersController.removeById(testAdmin.id)
         .then(() => {
           console.log('Test admin user was successfully deleted');
-          setTimeout(() => _done(), 1000);
+          _done();
         })
-        .catch(() => _done());
+        .catch(_done);
 
       usersController.removeById(testTranslator.id)
         .then(() => {
           console.log('Test translator user was successfully deleted');
-          setTimeout(() => _done(), 1000);
+          _done();
         })
-        .catch(() => _done());
+        .catch(_done);
+
+      usersController.removeById(testTranslator2.id)
+        .then(() => {
+          console.log('Test translator-2 user was successfully deleted');
+          _done();
+        })
+        .catch(_done);
 
       termsController.removeById(testTerm.id)
         .then(() => {
-          console.log('Test term user was successfully deleted');
-          setTimeout(() => _done(), 1000);
+          console.log('Test term was successfully deleted');
+          _done();
         })
-        .catch(() => _done());
+        .catch(_done);
     });
   });
 };
@@ -72,7 +100,7 @@ const forceCleanUp = () => {
 forceCleanUp();
 
 const shouldLogIn = (user) => {
-  it('should log in', (done) => {
+  it(`should log in as ${user.login}`, (done) => {
     request.post('/api/login').send({
       login: user.login,
       password: user.password
@@ -91,6 +119,8 @@ module.exports = {
   request,
   testAdmin,
   testTranslator,
+  testTranslator2,
   testTerm,
+  testTermTranslation,
   shouldLogIn
 };

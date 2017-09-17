@@ -81,7 +81,7 @@ describe('New term API', () => {
       )
   });
 
-  /*it('should not create duplicate term', (done) => {
+  it('should not create duplicate term', (done) => {
     request.post('/api/newTerm')
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .send({term: testTerm.name})
@@ -92,6 +92,6 @@ describe('New term API', () => {
           done();
         }
       )
-  });*/
+  });
 
 });

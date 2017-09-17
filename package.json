@@ -7,7 +7,8 @@
     "build": "webpack --config webpack/prod.js --progress --colors -p",
     "dev-server": "node webpack/server.js",
     "prod-server": "node prod/server.js",
-    "test": "mocha -R spec --bail"
+    "test": "mocha -R spec --bail",
+    "db-reset": "node prod/db/reset.js"
   },
   "repository": "dhilt/dharmadict",
   "license": "MIT",

@@ -1,17 +1,18 @@
 const passwordHash = require('password-hash');
-const elasticClient = require('./helpers/db.js');
-const ApiError = require('./helpers/serverHelper.js').ApiError;
+const elasticClient = require('../db/client.js');
+const ApiError = require('./../helper.js').ApiError;
 const logger = require('../log/logger');
 const config = require('../config.js');
+const validator = require('./validators/users.js');
 
-let isAdmin = (user) => {
+const isAdmin = (user) => {
   if (user.role !== 'admin') {
     return Promise.reject(new ApiError('Admin only', 302));
   }
-  Promise.resolve(user);
+  return Promise.resolve(user);
 };
 
-let canLogin = (login, password) => new Promise(resolve => {
+const canLogin = (login, password) => new Promise(resolve => {
   logger.info(`Check if user ${login} can login`);
   if (!login || !password) {
     throw new ApiError('Invalid params')
@@ -24,9 +25,9 @@ let canLogin = (login, password) => new Promise(resolve => {
       throw new ApiError('Wrong credentials')
     }
     return Promise.resolve(user)
-  })
+  });
 
-let _findById = userId => new Promise((resolve, reject) => {
+const findById = userId => new Promise((resolve, reject) => {
   logger.info(`Find user by ID ${userId}`);
   if (!userId) {
     return reject(new ApiError('Invalid ID'))
@@ -55,7 +56,7 @@ let _findById = userId => new Promise((resolve, reject) => {
     })
 });
 
-let findByLogin = userLogin => new Promise((resolve, reject) => {
+const findByLogin = userLogin => new Promise((resolve, reject) => {
   logger.info(`Find user by login ${userLogin}`);
   if (!userLogin) {
     return reject(new ApiError('Invalid login'))
@@ -68,7 +69,7 @@ let findByLogin = userLogin => new Promise((resolve, reject) => {
       type: 'users',
       body: {
         query: {
-          match: {
+          term: {
             login: userLogin
           }
         }
@@ -87,7 +88,7 @@ let findByLogin = userLogin => new Promise((resolve, reject) => {
     throw new ApiError('Database error')
   });
 
-let findAll = () => new Promise((resolve, reject) => {
+const findAll = () => new Promise((resolve, reject) => {
   logger.info(`Find all users`);
   elasticClient.search({
     index: config.db.index,
@@ -114,36 +115,15 @@ let findAll = () => new Promise((resolve, reject) => {
     return Promise.resolve(users)
   });
 
-const create = user => new Promise(resolve => {
-  // data validation
-  if (!user) {
-    throw new ApiError('Invalid data')
-  }
-  if (!user.id) {
-    throw new ApiError('Invalid id')
-  }
-  if (!user.role) {
-    throw new ApiError('Invalid role')
-  }
-  if (!user.login) {
-    throw new ApiError('Invalid login')
-  }
-  if (!user.name) {
-    throw new ApiError('Invalid name')
-  }
-  if (!user.password) {
-    throw new ApiError('Invalid password')
-  }
-  if (!user.description) {
-    throw new ApiError('Invalid description')
-  }
-  let newUser = Object.assign({}, user);
-  newUser.hash = passwordHash.generate(user.password);
-  const userId = newUser.id;
-  delete newUser.password;
-  delete newUser.id;
-  resolve({user: newUser, userId})
-})
+const create = user => validator.create(user)
+  .then(user => {
+    let newUser = Object.assign({}, user);
+    newUser.hash = passwordHash.generate(user.password);
+    const userId = newUser.id;
+    delete newUser.password;
+    delete newUser.id;
+    return Promise.resolve({user: newUser, userId})
+  })
   .then(data =>  // check login uniqueness
     findByLogin(data.user.login).then(() => {
       throw new ApiError('Login not unique')
@@ -155,7 +135,7 @@ const create = user => new Promise(resolve => {
     })
   )
   .then(data => // check id uniqueness
-    _findById(data.userId).then(() => {
+    findById(data.userId).then(() => {
       throw new ApiError('Id not unique')
     }, error => {
       if (error.code === 404) {
@@ -169,7 +149,8 @@ const create = user => new Promise(resolve => {
       index: config.db.index,
       type: 'users',
       id: data.userId,
-      body: data.user
+      body: data.user,
+      refresh: true
     }).then(() => {
       logger.info('User was successfully created');
       return Promise.resolve({
@@ -181,18 +162,19 @@ const create = user => new Promise(resolve => {
     })
   );
 
-let removeById = userId => new Promise(resolve => {
+const removeById = userId => new Promise(resolve => {
   if (!userId || typeof userId !== 'string') {
     throw new ApiError('Invalid id')
   }
   resolve()
 })
-  .then(() => _findById(userId))
+  .then(() => findById(userId))
   .then(() =>
     elasticClient.delete({
       index: config.db.index,
       type: 'users',
-      id: userId
+      id: userId,
+      refresh: true
     }).then(() => {
       logger.info('User was successfully deleted');
       return Promise.resolve({
@@ -204,20 +186,44 @@ let removeById = userId => new Promise(resolve => {
     })
   );
 
-let getUserInfo = user => ({
+const update = (userId, payload) => validator.update(userId, payload)
+  .then(() => findById(userId))
+  .then(user => {
+    let body = Object.assign({}, user, payload);
+    delete body.id;
+    return elasticClient.index({
+      index: config.db.index,
+      type: 'users',
+      id: userId,
+      body,
+      refresh: true
+    }).then(() => {
+      logger.info('User description was successfully updated');
+      return Promise.resolve(userId)
+    }, error => {
+      logger.error(error.message);
+      throw new ApiError('DB error')
+    })
+  })
+  .then(findById);
+
+const getUserInfo = user => ({
   id: user.id,
   name: user.name,
   login: user.login,
   role: user.role,
-  description: user.description
+  description: user.description,
+  language: user.language
 });
 
 module.exports = {
   isAdmin,
   getUserInfo,
   canLogin,
+  findById,
   findByLogin,
   findAll,
   create,
+  update,
   removeById
 };

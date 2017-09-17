@@ -23,7 +23,12 @@ import {
   ADD_TERM_START,
   ADD_TERM_END,
   GET_TRANSLATOR_INFO_START,
-  GET_TRANSLATOR_INFO_END
+  GET_TRANSLATOR_INFO_END,
+  GET_ADMIN_USER_DATA_START,
+  GET_ADMIN_USER_DATA_END,
+  CHANGE_ADMIN_USER_DATA_START,
+  CHANGE_ADMIN_USER_DATA_END,
+  UPDATE_ADMIN_USER_DATA
 } from '../actions/_constants'
 
 import initialState from './_initial'
@@ -184,8 +189,16 @@ function reducer(state = initialState, action) {
         search: {...state.search,
           result: action.searchResult
         },
-        selected: {...state.select,
-          term: action.term
+        selected: {...state.selected,
+          term: {...state.selected.term,
+            translations: state.selected.term.translations.map(elem => {
+              if (elem.translatorId === action.term.translation.translatorId) {
+                return action.term.translation
+              } else {
+                return elem
+              }
+            })
+          }
         },
         edit: {...state.edit,
           update: {
@@ -196,21 +209,29 @@ function reducer(state = initialState, action) {
       }
     case CHANGE_NEW_TERM_NAME:
       return {...state,
-        newTerm: {...state.newTerm,
-          term: action.newTermString
+        admin: {...state.admin,
+          newTerm: {...state.admin.newTerm,
+            term: action.newTermString
+          }
         }
       }
     case ADD_TERM_START:
       return {...state,
-        newTerm: {...state.newTerm,
-          pending: true
+        admin: {...state.admin,
+          newTerm: {...state.admin.newTerm,
+            pending: true,
+            termId: null
+          }
         }
       }
     case ADD_TERM_END:
       return {...state,
-        newTerm: {...state.newTerm,
-          pending: false,
-          error: action.error
+        admin: {...state.admin,
+          newTerm: {...state.admin.newTerm,
+            pending: false,
+            termId: !action.error ? action.termId : null,
+            error: action.error
+          }
         }
       }
     case GET_TRANSLATOR_INFO_START:
@@ -225,6 +246,54 @@ function reducer(state = initialState, action) {
           pending: false,
           error: action.error,
           data: action.result
+        }
+      }
+    case GET_ADMIN_USER_DATA_START:
+      return {...state,
+        admin: {...state.admin,
+          editUser: {...state.admin.editUser,
+            pending: true,
+            error: null
+          }
+        }
+      }
+    case GET_ADMIN_USER_DATA_END:
+      return {...state,
+        admin: {...state.admin,
+          editUser: {...state.admin.editUser,
+            id: action.id,
+            pending: false,
+            error: action.error,
+            data: action.data,
+            dataSource: action.data
+          }
+        }
+      }
+    case CHANGE_ADMIN_USER_DATA_START:
+      return {...state,
+        admin: {...state.admin,
+          editUser: {...state.admin.editUser,
+            pending: true,
+            error: null
+          }
+        }
+      }
+    case CHANGE_ADMIN_USER_DATA_END:
+      return {...state,
+        admin: {...state.admin,
+          editUser: {...state.admin.editUser,
+            pending: false,
+            error: action.error,
+            dataSource: action.data
+          }
+        }
+      }
+    case UPDATE_ADMIN_USER_DATA:
+      return {...state,
+        admin: {...state.admin,
+          editUser: {...state.admin.editUser,
+            data: action.payload
+          }
         }
       }
     default:

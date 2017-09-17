@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {Button} from 'react-bootstrap'
 import {Link} from 'react-router'
 
-import {changeTerm, saveTermAsync} from '../actions/newTerm'
+import {changeTerm, saveTermAsync} from '../../actions/admin/newTerm'
 
 class NewTerm extends Component {
   constructor (props) {
@@ -13,25 +13,27 @@ class NewTerm extends Component {
   }
 
   render () {
+    const {error, pending, term, termId} = this.props.data
     return (
       <div>
-        <h3>Новый термин</h3>
+        <h3>{'Новый термин'}</h3>
         <div className="form-group col-md-4">
           <input className="form-control" name="term" type="text"
-            value={this.props.data.term}
+            value={term}
             onChange={this._onTermChange}/>
         </div>
         <div className="form-group form-inline">
           <Button
             bsStyle='primary'
             type="button"
-            className={this.props.data.pending ? 'loader' : ''}
-            disabled={!this.props.data.term || this.props.data.pending}
-            onClick={(event) => this._onTermSave(event)}>
-            Сохранить
-          </Button> &nbsp;
-          <Link to={`/`}>Отмена</Link>
+            className={pending ? 'loader' : ''}
+            disabled={!term || pending}
+            onClick={(event) => this._onTermSave(event)}
+          >{'Сохранить'}</Button>
+          <Link to={`/`}>{'Отмена'}</Link>
         </div>
+        {error && <div className="alert alert-danger col-md-4">{error.message}</div>}
+        {!error && termId && <div className="alert alert-success col-md-4">{`Term was created with id: ${termId}`}</div>}
       </div>
     )
   }
@@ -47,7 +49,7 @@ class NewTerm extends Component {
 
 function select (state) {
   return {
-    data: state.newTerm
+    data: state.admin.newTerm
   }
 }
 

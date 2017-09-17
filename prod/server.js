@@ -4,15 +4,12 @@ const path = require('path');
 
 const config = require('./config.js');
 const logger = require('./log/logger');
-const elasticClient = require('./controllers/helpers/db.js');
 
-const serverHelper = require('./controllers/helpers/serverHelper.js');
-const usersController = require('./controllers/users');
-const getUserInfo = usersController.getUserInfo;
+const ApiError = require('./helper').ApiError;
+const sendApiError = require('./helper').sendApiError;
 const authController = require('./controllers/auth');
-const ApiError = require('./controllers/helpers/serverHelper').ApiError;
-const sendApiError = require('./controllers/helpers/serverHelper').sendApiError;
 const termsController = require('./controllers/terms');
+const usersController = require('./controllers/users');
 
 const app = express();
 app.use(bodyParser.json());
@@ -38,7 +35,7 @@ app.get('/api/userInfo', (req, res) =>
   doAuthorize(req)
     .then(user => {
       logger.info('Authenticated as ' + user.login);
-      res.send(getUserInfo(user));
+      res.send(usersController.getUserInfo(user));
     })
     .catch(error => sendApiError(res, 'Can\'t get user info.', error))
 );
@@ -47,8 +44,9 @@ app.post('/api/login', (req, res) => {
   const {login, password} = req.body;
   usersController.canLogin(login, password)
     .then(user => {
-      const {token} = authController.generateToken(user);
-      res.send({user: getUserInfo(user), token})
+      const _user = usersController.getUserInfo(user);
+      const token = authController.generateToken(_user);
+      res.send({user: _user, token})
     })
     .catch(error => sendApiError(res, 'Can\'t login.', error))
 });
@@ -71,11 +69,12 @@ app.get('/api/translation', (req, res) => {
       user = result;
       return termsController.findById(termId);
     })
-    .then(term => {
+    .then(_term => {
+      term = _term;
       if (!(translations = term ? term.translations : null)) {
         throw 'Can not find a translation by termId'
       }
-      return usersController.findByLogin(translatorId)
+      return usersController.findById(translatorId)
     })
     .then(translator => {
       if (user.id !== translator.id && user.role !== 'admin') {
@@ -84,7 +83,10 @@ app.get('/api/translation', (req, res) => {
       return termsController.findTranslations(translator, term, translations)
     })
     .then(result => res.json({result}))
-    .catch(error => sendApiError(res, `Can't get a translation.`, error))
+    .catch(error => {
+      console.log(error);
+      sendApiError(res, `Can't get a translation.`, error)
+    })
 });
 
 app.post('/api/update', (req, res) => {
@@ -92,7 +94,7 @@ app.post('/api/update', (req, res) => {
   doAuthorize(req)
     .then(user => termsController.update(user, termId, translation))
     .then(term => res.json({success: true, term}))
-    .catch(error => sendApiError(res, 'Can\'t update term', error))
+    .catch(error => sendApiError(res, 'Can\'t update term.', error))
 });
 
 app.post('/api/newTerm', (req, res) => {
@@ -111,16 +113,24 @@ app.put('/api/newUser', (req, res) => {
     .catch(error => sendApiError(res, 'Can\'t create new user.', error))
 });
 
-app.get('/api/users/:name', (req, res) =>
-  usersController.findByLogin(req.params.name)
-    .then(user => res.json({success: true, user: getUserInfo(user)}))
+app.post('/api/updateUser', (req, res) => {
+  doAuthorize(req)
+    .then(user => usersController.isAdmin(user))
+    .then(user => usersController.update(req.body.userId, req.body.payload))
+    .then(result => res.json({success: true, user: usersController.getUserInfo(result)}))
+    .catch(error => sendApiError(res, 'Can\'t update translator description.', error))
+});
+
+app.get('/api/users/:id', (req, res) =>
+  usersController.findById(req.params.id)
+    .then(user => res.json({success: true, user: usersController.getUserInfo(user)}))
     .catch(error => sendApiError(res, 'Can\'t find user', error))
 );
 
 // serve static
-app.use(express.static(path.join(__dirname + '/client')));
+app.use(express.static(path.join(__dirname, '/client')));
 app.get('*', function (req, res) {
-  res.sendFile(path.join(__dirname + '/client/index.html'));
+  res.sendFile(path.join(__dirname, '/client/index.html'));
 });
 
 app.listen(config.app.port);

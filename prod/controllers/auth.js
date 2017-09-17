@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const logger = require('../log/logger');
 const config = require('../config.js');
-const ApiError = require('./helpers/serverHelper.js').ApiError;
+const ApiError = require('./../helper.js').ApiError;
 
 const extractToken = (authHeader) => {
   if (!authHeader) {
@@ -25,10 +25,9 @@ const parseToken = (token) => new Promise((resolve, reject) => {
 
 const generateToken = (user) => {
   logger.info('Logged in as ' + user.login);
-  const token = jwt.sign(user, config.token.secretKey, {
+  return jwt.sign(user, config.token.secretKey, {
     expiresIn: config.token.expiration
-  });
-  return {user, token}
+  })
 };
 
 module.exports = {

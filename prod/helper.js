@@ -1,5 +1,3 @@
-const logger = require('../../log/logger');
-
 class ApiError {
   constructor(text, code = 500) {
     this.text = text;
@@ -13,9 +11,10 @@ const sendApiError = (res, text, error) => {
     text = text + ' ' + error.text;
     code = error.code
   }
-  // res.statusCode = status ???
+  // res.statusCode = code ???
   res.send({
     error: true,
+    code,
     message: text
   })
 };

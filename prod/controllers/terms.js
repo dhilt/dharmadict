@@ -1,7 +1,8 @@
-const elasticClient = require('./helpers/db.js');
-const ApiError = require('./helpers/serverHelper.js').ApiError;
+const elasticClient = require('../db/client.js');
+const ApiError = require('./../helper.js').ApiError;
 const logger = require('../log/logger');
 const config = require('../config.js');
+const validator = require('./validators/terms.js');
 
 const findById = termId => new Promise((resolve, reject) => {
   if (!termId) {
@@ -83,18 +84,12 @@ const searchByPattern = (pattern) => new Promise((resolve, reject) => {
   });
 });
 
-const create = (termName) => new Promise(resolve => {
-  if (typeof termName !== 'string') {
-    throw new ApiError('Invalid params')
-  }
-  termName = termName.trim();
-  if (!termName) {
-    throw new ApiError('Invalid params')
-  }
-  const termId = termName.replace(/ /g, '_');
-  logger.info(`Term adding: name "${termName}", id "${termId}"`);
-  resolve({name: termName, id: termId})
-})
+const create = (termName) => validator.create(termName)
+  .then(name => {
+    const id = name.replace(/ /g, '_');
+    logger.info(`Term adding: name "${name}", id "${id}"`);
+    return Promise.resolve({name, id})
+  })
   .then(term =>
     findById(term.id).then(() => {
       throw new ApiError('Already exists')
@@ -113,7 +108,8 @@ const create = (termName) => new Promise(resolve => {
       body: {
         wylie: term.name,
         translations: []
-      }
+      },
+      refresh: true
     }).then(() => {
       logger.info('Term was successfully created');
       return Promise.resolve(term.id)
@@ -123,56 +119,51 @@ const create = (termName) => new Promise(resolve => {
     })
   );
 
-const update = (user, termId, translation) => new Promise((resolve, reject) => {
-  if (!termId || !translation) {
-    return reject(new ApiError('Incorrect /api/update request params'));
-  }
-  const translatorId = user.id;
-  if (user.role !== 'translator') {
-    return reject(new ApiError('Update term can only translator.', 302))
-  }
-  logger.info('Term updating. Term id = "' + termId + '", translator id = "' + translatorId + '"');
-  return findById(termId).then(term => {
-    return resolve({translatorId, termId, translation, term})
-  }, error => {
-    if (error.code === 404) {
-      return reject(new ApiError('Can\'t request term to update'))
+const update = (user, termId, translation) => validator.update(termId, translation)
+  .then(() => {
+    if (!user || !user.id || !user.role) {
+      throw new ApiError('Incorrect authorization info')
     }
+    if (!(user.role === 'translator' && translation.translatorId === user.id) && user.role !== 'admin') {
+      throw new ApiError('Unpermitted access')
+    }
+    return findById(termId)
   })
-})
-  .then(data => {
-    let {translatorId, termId, translation, term} = data;
+  .then(term => {
     term.translations = term.translations || [];
-    let foundT = term.translations.find(t => t.translatorId === translatorId);
+    user.id = user.role === 'translator' ? user.id : translation.translatorId;
+    let foundT = term.translations.find(t => t.translatorId === user.id);
     let isEmpty = !(translation.meanings && translation.meanings.length);
     if (!foundT && !isEmpty) {
       term.translations.push(translation);
     } else if (foundT) {
       if (isEmpty) {
-        term.translations = term.translations.filter(t => t.translatorId !== translatorId);
+        term.translations = term.translations.filter(t => t.translatorId !== user.id);
       } else {
         foundT.meanings = translation.meanings;
       }
     }
     translation.meanings.forEach(m => m.versions_lower = m.versions.map(v => v.toLowerCase()));
-    return Promise.resolve({term, termId})
+    return Promise.resolve(term)
   })
-  .then(data => {
-    let {term, termId} = data;
+  .then(term =>
     elasticClient.index({
       index: config.db.index,
       type: 'terms',
       id: termId,
-      body: term
-    }).then(response => {
+      body: term,
+      refresh: true
+    }).then(() => {
       logger.info('Term was successfully updated');
-      term.id = termId; // add id field
+      term.id = termId;
       return Promise.resolve(term)
     }, error => {
-      logger.error('Update term error');
-      return new ApiError('Can\'t update term. Database error')
+      logger.error(error.message);
+      return new ApiError('Database error')
     })
-  });
+  )
+  .then(term => findById(term.id))
+  .then(term => findTranslations(user, term, term.translations));
 
 const removeById = termId => new Promise(resolve => {
   if (!termId || typeof termId !== 'string') {
@@ -185,7 +176,8 @@ const removeById = termId => new Promise(resolve => {
     elasticClient.delete({
       index: config.db.index,
       type: 'terms',
-      id: termId
+      id: termId,
+      refresh: true
     }).then(() => {
       logger.info('Term was successfully deleted');
       return Promise.resolve({
