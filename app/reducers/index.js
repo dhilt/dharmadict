@@ -24,13 +24,11 @@ import {
   ADD_TERM_END,
   GET_TRANSLATOR_INFO_START,
   GET_TRANSLATOR_INFO_END,
-  GET_TRANSLATOR_INFO_FOR_EDIT_START,
-  GET_TRANSLATOR_INFO_FOR_EDIT_END,
+  GET_ADMIN_USER_DATA_START,
+  GET_ADMIN_USER_DATA_END,
   CHANGE_USER_DATA_START,
   CHANGE_USER_DATA_END,
-  WRITE_USER_NAME,
-  WRITE_USER_LANGUAGE,
-  WRITE_USER_DESCRIPTION
+  UPDATE_USER_DATA
 } from '../actions/_constants'
 
 import initialState from './_initial'
@@ -250,7 +248,7 @@ function reducer(state = initialState, action) {
           data: action.result
         }
       }
-    case GET_TRANSLATOR_INFO_FOR_EDIT_START:
+    case GET_ADMIN_USER_DATA_START:
       return {...state,
         admin: {...state.admin,
           editUser: {...state.admin.editUser,
@@ -259,7 +257,7 @@ function reducer(state = initialState, action) {
           }
         }
       }
-    case GET_TRANSLATOR_INFO_FOR_EDIT_END:
+    case GET_ADMIN_USER_DATA_END:
       return {...state,
         admin: {...state.admin,
           editUser: {...state.admin.editUser,
@@ -267,6 +265,11 @@ function reducer(state = initialState, action) {
             pending: false,
             error: action.error,
             data: {
+              name: action.result.name,
+              language: action.result.language,
+              description: action.result.description
+            },
+            dataSource: {
               name: action.result.name,
               language: action.result.language,
               description: action.result.description
@@ -289,36 +292,23 @@ function reducer(state = initialState, action) {
           editUser: {...state.admin.editUser,
             result: action.result,
             error: action.error,
-            pending: false
-          }
-        }
-      }
-    case WRITE_USER_NAME:
-      return {...state,
-        admin: {...state.admin,
-          editUser: {...state.admin.editUser,
-            data: {...state.admin.editUser.data,
-              name: action.name
+            pending: false,
+            dataSource: action.error ? state.admin.editUser.dataSource : {
+              name: action.result.user.name,
+              language: action.result.user.language,
+              description: action.result.user.description
             }
           }
         }
       }
-    case WRITE_USER_LANGUAGE:
+    case UPDATE_USER_DATA:
       return {...state,
         admin: {...state.admin,
           editUser: {...state.admin.editUser,
             data: {...state.admin.editUser.data,
-              language: action.language
-            }
-          }
-        }
-      }
-    case WRITE_USER_DESCRIPTION:
-      return {...state,
-        admin: {...state.admin,
-          editUser: {...state.admin.editUser,
-            data: {...state.admin.editUser.data,
-              description: action.description
+              name: action.name ? action.name : state.admin.editUser.data.name,
+              language: action.language ? action.language : state.admin.editUser.data.language,
+              description: action.description ? action.description : state.admin.editUser.data.description
             }
           }
         }

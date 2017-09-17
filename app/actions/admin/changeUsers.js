@@ -3,22 +3,20 @@ import asyncRequest from '../../helpers/remote'
 import {
   CHANGE_USER_DATA_START,
   CHANGE_USER_DATA_END,
-  WRITE_USER_NAME,
-  WRITE_USER_LANGUAGE,
-  WRITE_USER_DESCRIPTION,
-  GET_TRANSLATOR_INFO_FOR_EDIT_START,
-  GET_TRANSLATOR_INFO_FOR_EDIT_END
+  UPDATE_USER_DATA,
+  GET_ADMIN_USER_DATA_START,
+  GET_ADMIN_USER_DATA_END
 } from '../_constants'
 
-export function getTranslatorInfoAsync(userId) {
+export function getAdminUserDataAsync(userId) {
   return (dispatch) => {
     const query = 'users/' + userId
     dispatch({
-      type: GET_TRANSLATOR_INFO_FOR_EDIT_START
+      type: GET_ADMIN_USER_DATA_START
     })
     asyncRequest(query, false, (data, error) =>
       dispatch({
-        type: GET_TRANSLATOR_INFO_FOR_EDIT_END,
+        type: GET_ADMIN_USER_DATA_END,
         error: error ? error : null,
         result: !error ? data.user : null
       })
@@ -46,23 +44,11 @@ export function changeUserDataAsync() {
   }
 }
 
-export function writeUserName(name) {
+export function updateUserData(dataObject) {
   return {
-    type: WRITE_USER_NAME,
-    name
-  }
-}
-
-export function writeUserLanguage(language) {
-  return {
-    type: WRITE_USER_LANGUAGE,
-    language
-  }
-}
-
-export function writeUserDescription(description) {
-  return {
-    type: WRITE_USER_DESCRIPTION,
-    description
+    type: UPDATE_USER_DATA,
+    name: dataObject.name,
+    language: dataObject.language,
+    description: dataObject.description
   }
 }

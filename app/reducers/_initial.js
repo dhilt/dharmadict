@@ -63,6 +63,11 @@ let initialState = {
     },
     editUser: {
       id: '',
+      dataSource: {
+        name: '',
+        language: '',
+        description: ''
+      },
       data: {
         name: '',
         language: '',

@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Link} from 'react-router'
 
-import {changeUserDataAsync, writeUserName, writeUserLanguage, writeUserDescription, getTranslatorInfoAsync} from '../../actions/admin/changeUsers'
+import {updateUserData, changeUserDataAsync, getAdminUserDataAsync} from '../../actions/admin/changeUsers'
 
 class EditUser extends Component {
 
@@ -15,19 +15,19 @@ class EditUser extends Component {
   }
 
   componentWillMount () {
-    this.props.dispatch(getTranslatorInfoAsync(this.props.params.id))
+    this.props.dispatch(getAdminUserDataAsync(this.props.params.id))
   }
 
   changeUserName (event) {
-    this.props.dispatch(writeUserName(event.target.value))
+    this.props.dispatch(updateUserData({name: event.target.value}))
   }
 
   changeUserLanguage (language) {
-    this.props.dispatch(writeUserLanguage(language))
+    this.props.dispatch(updateUserData({language}))
   }
 
   changeUserDescription (event) {
-    this.props.dispatch(writeUserDescription(event.target.value))
+    this.props.dispatch(updateUserData({description: event.target.value}))
   }
 
   sendNewUserData (event) {
