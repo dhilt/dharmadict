@@ -157,6 +157,21 @@ describe('Update user API', () => {
       )
   });
 
+  it('should not update user language (invalid language)', (done) => {
+    let _requestObj = JSON.parse(JSON.stringify(requestObj));
+    _requestObj.payload['language'] = 'russian';
+    request.post('/api/updateUser')
+      .set('Authorization', 'Bearer ' + testAdmin.token)
+      .send(_requestObj)
+      .end(
+        (err, res) => {
+          assert.notEqual(res.body.success, true);
+          assert.equal(res.body.message, "Can't update translator description. Invalid language");
+          done();
+        }
+      )
+  });
+
   it('should not update user description (invalid description)', (done) => {
     let _requestObj = JSON.parse(JSON.stringify(requestObj));
     _requestObj.payload['description'] = false;

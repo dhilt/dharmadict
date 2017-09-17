@@ -39,7 +39,7 @@ const update = (userId, payload) => new Promise(resolve => {
     payload.name = payload.name.trim();
   }
   if (payload.hasOwnProperty('language')) {
-    if (typeof payload.language !== 'string') {
+    if (payload.language !== 'rus' && payload.language !== 'eng') {
       throw new ApiError('Invalid language')
     }
     payload.language = payload.language.trim();
