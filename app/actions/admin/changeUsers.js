@@ -47,12 +47,18 @@ export function changeUserDataAsync() {
   }
 }
 
-export function updateUserData(dataObject) {
-  return {
-    type: UPDATE_USER_DATA,
-    name: dataObject.name,
-    language: dataObject.language,
-    description: dataObject.description
+export function updateUserData(_data) {
+  return (dispatch, getState) => {
+    const {data} = getState().admin.editUser
+    const payload = {
+      name: _data.hasOwnProperty('name') ? _data.name : data.name,
+      language: _data.hasOwnProperty('language') ? _data.language : data.language,
+      description: _data.hasOwnProperty('description') ? _data.description : data.description
+    }
+    dispatch({
+      type: UPDATE_USER_DATA,
+      payload
+    })
   }
 }
 

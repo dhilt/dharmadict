@@ -308,11 +308,7 @@ function reducer(state = initialState, action) {
       return {...state,
         admin: {...state.admin,
           editUser: {...state.admin.editUser,
-            data: {...state.admin.editUser.data,
-              name: action.name ? action.name : state.admin.editUser.data.name,
-              language: action.language ? action.language : state.admin.editUser.data.language,
-              description: action.description ? action.description : state.admin.editUser.data.description
-            }
+            data: action.payload
           }
         }
       }
