@@ -8,17 +8,26 @@ import {
   UPDATE_ADMIN_USER_DATA
 } from '../_constants'
 
+const getEditableUserDataObject = (user) => ({
+  name: user.name,
+  language: user.language,
+  description: user.description
+})
+
+
 export function getAdminUserDataAsync(userId) {
-  return (dispatch) => {
+  return (dispatch, getState) => {
     const query = 'users/' + userId
     dispatch({
       type: GET_ADMIN_USER_DATA_START
     })
+    const {id, dataSource} = getState().admin.editUser
     asyncRequest(query, false, (data, error) =>
       dispatch({
         type: GET_ADMIN_USER_DATA_END,
         error: error ? error : null,
-        result: !error ? data.user : null
+        data: error ? dataSource : getEditableUserDataObject(data.user),
+        id: error ? id : data.user.id
       })
     )
   }
@@ -34,11 +43,7 @@ export function changeAdminUserDataAsync() {
       dispatch({
         type: CHANGE_ADMIN_USER_DATA_END,
         error: error ? error : null,
-        result: error ? dataSource : {
-          name: data.user.name,
-          language: data.user.language,
-          description: data.user.description
-        }
+        data: error ? dataSource : getEditableUserDataObject(data.user)
       }))
   }
 }

@@ -261,19 +261,11 @@ function reducer(state = initialState, action) {
       return {...state,
         admin: {...state.admin,
           editUser: {...state.admin.editUser,
-            id: action.result.id,
+            id: action.id,
             pending: false,
             error: action.error,
-            data: {
-              name: action.result.name,
-              language: action.result.language,
-              description: action.result.description
-            },
-            dataSource: {
-              name: action.result.name,
-              language: action.result.language,
-              description: action.result.description
-            }
+            data: action.data,
+            dataSource: action.data
           }
         }
       }
@@ -292,7 +284,7 @@ function reducer(state = initialState, action) {
           editUser: {...state.admin.editUser,
             pending: false,
             error: action.error,
-            dataSource: action.result
+            dataSource: action.data
           }
         }
       }
