@@ -8,7 +8,7 @@ import NotFound from './components/NotFound'
 import Edit from './components/Edit'
 import TranslatorPage from './components/TranslatorPage'
 
-import NewTerm from './components/NewTerm'
+import NewTerm from './components/admin/NewTerm'
 import EditUser from './components/admin/EditUser'
 
 const Routes = props => {

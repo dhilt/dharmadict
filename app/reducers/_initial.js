@@ -44,11 +44,6 @@ let initialState = {
       error: null
     }
   },
-  newTerm: {
-    term: '',
-    pending: false,
-    error: null
-  },
   translatorInfo: {
     pending: false,
     error: null,
@@ -60,6 +55,12 @@ let initialState = {
     }
   },
   admin: {
+    newTerm: {
+      term: '',
+      termId: null,
+      pending: false,
+      error: null
+    },
     changeUserData: {
       id: '',
       name: '',

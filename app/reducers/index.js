@@ -212,21 +212,29 @@ function reducer(state = initialState, action) {
       }
     case CHANGE_NEW_TERM_NAME:
       return {...state,
-        newTerm: {...state.newTerm,
-          term: action.newTermString
+        admin: {...state.admin,
+          newTerm: {...state.admin.newTerm,
+            term: action.newTermString
+          }
         }
       }
     case ADD_TERM_START:
       return {...state,
-        newTerm: {...state.newTerm,
-          pending: true
+        admin: {...state.admin,
+          newTerm: {...state.admin.newTerm,
+            pending: true,
+            termId: null
+          }
         }
       }
     case ADD_TERM_END:
       return {...state,
-        newTerm: {...state.newTerm,
-          pending: false,
-          error: action.error
+        admin: {...state.admin,
+          newTerm: {...state.admin.newTerm,
+            pending: false,
+            termId: !action.error ? action.termId : null,
+            error: action.error
+          }
         }
       }
     case GET_TRANSLATOR_INFO_START:
