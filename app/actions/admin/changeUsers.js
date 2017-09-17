@@ -3,7 +3,6 @@ import asyncRequest from '../../helpers/remote'
 import {
   CHANGE_USER_DATA_START,
   CHANGE_USER_DATA_END,
-  WRITE_USER_ID,
   WRITE_USER_NAME,
   WRITE_USER_LANGUAGE,
   WRITE_USER_DESCRIPTION,
@@ -44,13 +43,6 @@ export function changeUserDataAsync() {
         result: !error ? data : null,
         error: error ? error : null
       }))
-  }
-}
-
-export function writeUserId (id) {
-  return {
-    type: WRITE_USER_ID,
-    id
   }
 }
 

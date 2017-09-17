@@ -28,7 +28,6 @@ import {
   GET_TRANSLATOR_INFO_FOR_EDIT_END,
   CHANGE_USER_DATA_START,
   CHANGE_USER_DATA_END,
-  WRITE_USER_ID,
   WRITE_USER_NAME,
   WRITE_USER_LANGUAGE,
   WRITE_USER_DESCRIPTION
@@ -291,14 +290,6 @@ function reducer(state = initialState, action) {
             result: action.result,
             error: action.error,
             pending: false
-          }
-        }
-      }
-    case WRITE_USER_ID:
-      return {...state,
-        admin: {...state.admin,
-          editUser: {...state.admin.editUser,
-            id: action.id
           }
         }
       }
