@@ -254,7 +254,7 @@ function reducer(state = initialState, action) {
     case GET_TRANSLATOR_INFO_FOR_EDIT_START:
       return {...state,
         admin: {...state.admin,
-          changeUserData: {...state.admin.changeUserData,
+          editUser: {...state.admin.editUser,
             pending: true,
             error: null
           }
@@ -263,20 +263,22 @@ function reducer(state = initialState, action) {
     case GET_TRANSLATOR_INFO_FOR_EDIT_END:
       return {...state,
         admin: {...state.admin,
-          changeUserData: {...state.admin.changeUserData,
+          editUser: {...state.admin.editUser,
             id: action.result.id,
-            name: action.result.name,
-            language: action.result.language,
-            description: action.result.description,
             pending: false,
-            error: null
+            error: action.error,
+            data: {
+              name: action.result.name,
+              language: action.result.language,
+              description: action.result.description
+            }
           }
         }
       }
     case CHANGE_USER_DATA_START:
       return {...state,
         admin: {...state.admin,
-          changeUserData: {...state.admin.changeUserData,
+          editUser: {...state.admin.editUser,
             pending: true,
             error: null
           }
@@ -285,17 +287,17 @@ function reducer(state = initialState, action) {
     case CHANGE_USER_DATA_END:
       return {...state,
         admin: {...state.admin,
-          changeUserData: {...state.admin.changeUserData,
+          editUser: {...state.admin.editUser,
             result: action.result,
-            pending: false,
-            error: action.error
+            error: action.error,
+            pending: false
           }
         }
       }
     case WRITE_USER_ID:
       return {...state,
         admin: {...state.admin,
-          changeUserData: {...state.admin.changeUserData,
+          editUser: {...state.admin.editUser,
             id: action.id
           }
         }
@@ -303,24 +305,30 @@ function reducer(state = initialState, action) {
     case WRITE_USER_NAME:
       return {...state,
         admin: {...state.admin,
-          changeUserData: {...state.admin.changeUserData,
-            name: action.name
+          editUser: {...state.admin.editUser,
+            data: {...state.admin.editUser.data,
+              name: action.name
+            }
           }
         }
       }
     case WRITE_USER_LANGUAGE:
       return {...state,
         admin: {...state.admin,
-          changeUserData: {...state.admin.changeUserData,
-            language: action.language
+          editUser: {...state.admin.editUser,
+            data: {...state.admin.editUser.data,
+              language: action.language
+            }
           }
         }
       }
     case WRITE_USER_DESCRIPTION:
       return {...state,
         admin: {...state.admin,
-          changeUserData: {...state.admin.changeUserData,
-            description: action.description
+          editUser: {...state.admin.editUser,
+            data: {...state.admin.editUser.data,
+              description: action.description
+            }
           }
         }
       }

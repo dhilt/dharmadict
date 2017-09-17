@@ -61,11 +61,13 @@ let initialState = {
       pending: false,
       error: null
     },
-    changeUserData: {
+    editUser: {
       id: '',
-      name: '',
-      language: '',
-      description: '',
+      data: {
+        name: '',
+        language: '',
+        description: ''
+      },
       pending: false,
       result: null,
       error: null

@@ -20,7 +20,7 @@ export function getTranslatorInfoAsync(userId) {
     asyncRequest(query, false, (data, error) =>
       dispatch({
         type: GET_TRANSLATOR_INFO_FOR_EDIT_END,
-        error: error,
+        error: error ? error : null,
         result: !error ? data.user : null
       })
     )
@@ -32,17 +32,17 @@ export function changeUserDataAsync() {
     dispatch({
       type: CHANGE_USER_DATA_START
     })
-    const userId = getState().admin.changeUserData.id
+    const userId = getState().admin.editUser.id
     const payload = {
-      name: getState().admin.changeUserData.name,
-      language: getState().admin.changeUserData.language,
-      description: getState().admin.changeUserData.description
+      name: getState().admin.editUser.data.name,
+      language: getState().admin.editUser.data.language,
+      description: getState().admin.editUser.data.description
     }
     return asyncRequest('updateUser', {userId, payload}, (data, error) =>
       dispatch({
         type: CHANGE_USER_DATA_END,
-        result: data,
-        error: error
+        result: !error ? data : null,
+        error: error ? error : null
       }))
   }
 }

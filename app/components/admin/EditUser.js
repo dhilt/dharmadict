@@ -15,16 +15,15 @@ class EditUser extends Component {
   }
 
   componentWillMount () {
-    const {id, name, language, description} = this.props.initTranslatorInfo
+    const {name, language, description} = this.props.initTranslatorInfo
     const {dispatch} = this.props
     if (name === '') {
       dispatch(getTranslatorInfoAsync(this.props.params.id))
     } else {
-      const {dispatch} = this.props
       dispatch(writeUserName(name))
       dispatch(writeUserLanguage(language))
       dispatch(writeUserDescription(description))
-      dispatch(writeUserId(id))
+      dispatch(writeUserId(this.props.params.id))
     }
   }
 
@@ -46,7 +45,8 @@ class EditUser extends Component {
   }
 
   render () {
-    const { pending, error, result, name, language, description } = this.props.newTranslatorInfo
+    const {pending, error, result} = this.props.newTranslatorInfo
+    const {name, language, description} = this.props.newTranslatorInfo.data
     return (
       <div className="wrapper">
         <h3>{'Admin page'}</h3>
@@ -116,7 +116,7 @@ class EditUser extends Component {
 
 function select (state, ownProps) {
   return {
-    newTranslatorInfo: state.admin.changeUserData,
+    newTranslatorInfo: state.admin.editUser,
     initTranslatorInfo: state.translatorInfo.data
   }
 }
