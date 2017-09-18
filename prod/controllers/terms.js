@@ -66,7 +66,7 @@ const searchByPattern = (pattern) => new Promise((resolve, reject) => {
           query: pattern,
           type: 'most_fields',
           operator: 'and',
-          fields: ['wylie', 'sanskrit_rus_lower', 'sanskrit_eng_lower', 'translation.meanings.versions_lower']
+          fields: ['wylie', 'sanskrit_rus_lower', 'sanskrit_eng_lower', 'translations.meanings.versions_lower']
         }
       }
     }
