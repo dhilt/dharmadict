@@ -220,6 +220,7 @@ const filterTranslators = users => {
   const translators = users.filter(elem => elem.role === 'translator');
   return translators.map(elem => ({
     id: elem.id,
+    name: elem.name,
     description: elem.description,
     language: elem.language
   }))

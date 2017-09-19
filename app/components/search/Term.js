@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import {Link} from 'react-router'
 
-import translators from '../../helpers/translators'
 import {toggleComment} from '../../actions/search'
 
 import editIcon from '../../styles/images/edit2.png'
@@ -16,6 +15,7 @@ class Term extends Component {
   }
 
   render () {
+    let translators = this.props.translators
     let term = this.props.data.term
     return (
       <div className="term">
@@ -32,7 +32,11 @@ class Term extends Component {
           term.translations.map((translation, translationIndex) =>
           <li key={translationIndex} className="translation">
             <div className="wrap-translator-ref">
-              <a href="" className="translator-ref">{translators.getTranslator(translation.translatorId)}</a>
+              <Link to={`translator/${translation.translatorId}`} className="translator=ref">
+                {translators &&
+                  translators.find(elem => elem.id === translation.translatorId).name
+                }
+              </Link>
               {
                 this.canEdit(translation.translatorId) ?
                 (
@@ -116,6 +120,7 @@ Term.propTypes = {
 
 function select (state) {
   return {
+    translators: state.common.translators,
     data: state.selected,
     userInfo: state.auth.userInfo ? state.auth.userInfo.data : null
   }
