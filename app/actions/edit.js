@@ -151,7 +151,15 @@ export function saveTranslationAsync(shouldClose) {
         type: TRANSLATION_UPDATE_END,
         error: error,
         searchResult: !error ? getState().search.result.map(r => r.id === data.term.id ? data.term : r) : null,
-        term: !error ? data.term : null
+        term: error ? null : {...getState().selected.term,
+          translations: getState().selected.term.translations.map(elem => {
+            if (elem.translatorId === data.term.translation.translatorId) {
+              return data.term.translation
+            } else {
+              return elem
+            }
+          })
+        }
       })
       if(shouldClose) {
         dispatch(goBack(true))

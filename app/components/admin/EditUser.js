@@ -101,7 +101,7 @@ class EditUser extends Component {
             onClick={this.resetChanges}
           >Сбросить
           </button>
-          <Link to={`/translator/${this.props.params.id}`}>
+          <Link to={`/translator/${id}`}>
             Отмена
           </Link>
           {error && <div className="alert alert-danger">{error.message}</div>}
