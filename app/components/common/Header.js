@@ -25,7 +25,7 @@ class Header extends Component {
     let userInfo = !this.props.data.userInfo.pending ? this.props.data.userInfo.data : {}
     let navButtons = this.props.data.loggedIn ? (
       <div>
-        <Link to={'/translator?' + userInfo.login}>{userInfo.name}</Link>
+        <Link to={`/translator/${userInfo.id}`}>{userInfo.name}</Link>
         <Logout doLogout={this.doLogout} />
         {userInfo.role === 'admin' ? <Link to={`/newTerm`}>New term</Link> : null}
       </div>
