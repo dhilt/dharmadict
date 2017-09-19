@@ -216,9 +216,19 @@ const getUserInfo = user => ({
   language: user.language
 });
 
+const filterTranslators = users => {
+  const translators = users.filter(elem => elem.role === 'translator');
+  return translators.map(elem => ({
+    id: elem.id,
+    description: elem.description,
+    language: elem.language
+  }))
+};
+
 module.exports = {
   isAdmin,
   getUserInfo,
+  filterTranslators,
   canLogin,
   findById,
   findByLogin,

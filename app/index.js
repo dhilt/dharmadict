@@ -11,6 +11,7 @@ import createLogger from 'redux-logger'
 import reducer from './reducers'
 import {changeRoute} from './actions/route'
 import {getUserInfoAsync} from './actions/auth'
+import {getCommonDataAsync} from './actions/translators'
 import {selectTermAsync} from './actions/search'
 
 import Routes from './routes'
@@ -31,6 +32,8 @@ let store = createStore(reducer, applyMiddleware(...middleware))
 if(store.getState().auth.token) {
   store.dispatch(getUserInfoAsync())
 }
+
+store.dispatch(getCommonDataAsync())
 
 let location = browserHistory.getCurrentLocation()
 if(location.query.term) {

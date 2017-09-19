@@ -31,6 +31,12 @@ app.get('/api/test', (req, res) => {
   res.send({success: true, param});
 });
 
+app.get('/api/common', (req, res) => {
+  usersController.findAll()
+    .then(users => res.send({success: true, translators: usersController.filterTranslators(users)}))
+    .catch(error => sendApiError(res, 'Can\'t get translators.', error))
+});
+
 app.get('/api/userInfo', (req, res) =>
   doAuthorize(req)
     .then(user => {

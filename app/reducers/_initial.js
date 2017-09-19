@@ -1,6 +1,9 @@
 import auth from '../helpers/auth'
 
 let initialState = {
+  common: {
+    translators: null
+  },
   route: {
     prevLocation: null,
     location: null
