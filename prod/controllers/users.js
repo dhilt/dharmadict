@@ -1,9 +1,10 @@
 const passwordHash = require('password-hash');
-const elasticClient = require('../db/client.js');
-const ApiError = require('./../helper.js').ApiError;
+const elasticClient = require('../db/client');
+const ApiError = require('./../helper').ApiError;
+const languages = require('./../helper').languages;
 const logger = require('../log/logger');
-const config = require('../config.js');
-const validator = require('./validators/users.js');
+const config = require('../config');
+const validator = require('./validators/users');
 
 const isAdmin = (user) => {
   if (user.role !== 'admin') {
@@ -222,7 +223,7 @@ const filterTranslators = users => {
     id: elem.id,
     name: elem.name,
     description: elem.description,
-    language: elem.language
+    language: languages.getLang(elem.language)
   }))
 };
 

@@ -43,14 +43,15 @@ class EditUser extends Component {
 
   render () {
     const {id} = this.props.params
+    const {languages} = this.props
     const {pending, error, result} = this.props.newTranslatorInfo
     const {name, language, description} = this.props.newTranslatorInfo.data
     return (
       <div>
         <form className="col-md-6">
-          <h3>Редактирование пользователя {id}</h3>
+          <h3>{'Редактирование пользователя ${id}'}</h3>
           <div className="form-group">
-            <label>Имя перерводчика</label>
+            <label>{'Имя перерводчика'}</label>
             <input
               type="text"
               value={name}
@@ -59,30 +60,22 @@ class EditUser extends Component {
             />
           </div>
           <div className="form-group">
-            <label>Язык переводов</label>
-            <div className="radio">
-              <label>
-                <input
-                  type="radio"
-                  name="lang_radio"
-                  onChange={() => this.changeUserLanguage('rus')}
-                  checked={language === 'rus'}
-                />Русский
-              </label>
-            </div>
-            <div className="radio">
-              <label>
-                <input
-                  type="radio"
-                  name="lang_radio"
-                  onChange={() => this.changeUserLanguage('eng')}
-                  checked={language === 'eng'}
-                />Английский
-              </label>
-            </div>
+            <label>{'Язык переводов'}</label>
+            {languages && languages.map((_language) =>
+              <div className="radio" key={_language.id}>
+                <label>
+                  <input
+                    type="radio"
+                    name="lang_radio"
+                    onChange={() => this.changeUserLanguage(_language.id)}
+                    checked={language === _language.id}
+                  />{_language.name_rus}
+                </label>
+              </div>
+            )}
           </div>
           <div className="form-group">
-            <label>Описание перерводчика</label>
+            <label>{'Описание перерводчика'}</label>
             <textarea
               type="text"
               value={description}
@@ -94,15 +87,15 @@ class EditUser extends Component {
             className="btn btn-primary"
             onClick={this.sendNewUserData}
             disabled={pending}
-            >Сохранить
+            >{'Сохранить'}
           </button>
           <button
             className="btn btn-default"
             onClick={this.resetChanges}
-          >Сбросить
+          >{'Сбросить'}
           </button>
           <Link to={`/translator/${id}`}>
-            Отмена
+            {'Отмена'}
           </Link>
           {error && <div className="alert alert-danger">{error.message}</div>}
         </form>
@@ -113,7 +106,8 @@ class EditUser extends Component {
 
 function select (state, ownProps) {
   return {
-    newTranslatorInfo: state.admin.editUser
+    newTranslatorInfo: state.admin.editUser,
+    languages: state.common.languages
   }
 }
 

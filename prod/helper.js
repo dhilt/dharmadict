@@ -19,9 +19,32 @@ const sendApiError = (res, text, error) => {
   })
 };
 
+const languages = {
+  data: [
+    {
+      id: 'rus',
+      name: 'русский',
+      name_rus: 'русский',
+      name_eng: 'russian',
+      default: true
+    },
+    {
+      id: 'eng',
+      name: 'english',
+      name_rus: 'английский',
+      name_eng: 'english'
+    }
+  ],
+  getLang: (id) => {
+    const lang = languages.data.find(lang => lang.id === id);
+    return lang ? lang.id : languages.data.find(lang => lang.default).id
+  }
+};
+
 // responseSuccess ???
 
 module.exports = {
   ApiError,
-  sendApiError
+  sendApiError,
+  languages
 };

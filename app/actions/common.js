@@ -14,7 +14,8 @@ export function getCommonDataAsync() {
     asyncRequest(query, false, (data, error) =>
       dispatch({
         type: GET_COMMON_DATA_END,
-        payload: data.translators
+        translators: data.translators,
+        languages: data.languages
       })
     )
   }

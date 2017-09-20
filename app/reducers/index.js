@@ -46,7 +46,8 @@ function reducer(state = initialState, action) {
     case GET_COMMON_DATA_END:
       return {...state,
         common: {...state.common,
-          translators: action.payload
+          translators: action.translators,
+          languages: action.languages
         }
       }
     case CHANGE_ROUTE:

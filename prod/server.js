@@ -7,6 +7,7 @@ const logger = require('./log/logger');
 
 const ApiError = require('./helper').ApiError;
 const sendApiError = require('./helper').sendApiError;
+const languages = require('./helper').languages;
 const authController = require('./controllers/auth');
 const termsController = require('./controllers/terms');
 const usersController = require('./controllers/users');
@@ -33,7 +34,11 @@ app.get('/api/test', (req, res) => {
 
 app.get('/api/common', (req, res) => {
   usersController.findAll()
-    .then(users => res.send({success: true, translators: usersController.filterTranslators(users)}))
+    .then(users => res.send({
+      success: true,
+      translators: usersController.filterTranslators(users),
+      languages: languages.data
+    }))
     .catch(error => sendApiError(res, 'Can\'t get translators.', error))
 });
 

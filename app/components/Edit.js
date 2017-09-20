@@ -14,8 +14,7 @@ class Edit extends Component {
   }
 
   componentWillMount() {
-    let translatorId = this.props.query.translatorId
-    let termId = this.props.query.termId
+    const {translatorId, termId} = this.props.query
     if (!translatorId || !termId) {
       this.blockMessage = 'You should select a term to edit.'
       return
