@@ -33,13 +33,13 @@ app.get('/api/test', (req, res) => {
 });
 
 app.get('/api/common', (req, res) => {
-  usersController.findAll()
-    .then(users => res.send({
+  usersController.findAll('translator', true)
+    .then(translators => res.send({
       success: true,
-      translators: usersController.filterTranslators(users),
+      translators,
       languages: languages.data
     }))
-    .catch(error => sendApiError(res, 'Can\'t get translators.', error))
+    .catch(error => sendApiError(res, 'Can\'t get common data.', error))
 });
 
 app.get('/api/userInfo', (req, res) =>

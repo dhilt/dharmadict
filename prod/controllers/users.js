@@ -6,6 +6,20 @@ const logger = require('../log/logger');
 const config = require('../config');
 const validator = require('./validators/users');
 
+const getUserInfo = (user, isPublic) => {
+ const result = {
+    id: user.id,
+    name: user.name,
+    login: user.login,
+    role: user.role,
+    description: user.description,
+    language: languages.getLang(user.language)
+  };
+  if (isPublic) {
+    delete result.login
+  }
+};
+
 const isAdmin = (user) => {
   if (user.role !== 'admin') {
     return Promise.reject(new ApiError('Admin only', 302));
@@ -89,32 +103,36 @@ const findByLogin = userLogin => new Promise((resolve, reject) => {
     throw new ApiError('Database error')
   });
 
-const findAll = () => new Promise((resolve, reject) => {
-  logger.info(`Find all users`);
+const findAll = (role, isPublic) => new Promise((resolve, reject) => {
+  logger.info('Find users' + (role ? ` with "${role}" role` : ''));
+  const body = !role ? {} : {
+    query: {
+      term: {
+        role
+      }
+    }
+  };
   elasticClient.search({
     index: config.db.index,
     type: 'users',
-    body: {}
+    body
   }).then(result => {
     let users = result.hits.hits;
     if (!users.length) {
-      return reject(new ApiError(`Can't find all users`, 404))
+      throw new ApiError(`No users found`, 404)
     }
-    logger.info('A users was found');
+    logger.info(`${users.length} users were found`);
+    users = users.map(user => {
+      let cleanUserInfo = user._source;
+      cleanUserInfo.id = user._id;
+      return getUserInfo(cleanUserInfo, isPublic)
+    });
     return resolve(users)
   }, error => {
     logger.error(error.message);
-    return reject(new ApiError('Database error'))
+    throw new ApiError('Database error')
   })
-})
-  .then(users => {  // perfection of data
-    users = users.map(elem => {
-      let cleanUserInfo = elem._source;
-      cleanUserInfo.id = elem._id;
-      return getUserInfo(cleanUserInfo)
-    });
-    return Promise.resolve(users)
-  });
+});
 
 const create = user => validator.create(user)
   .then(user => {
@@ -163,6 +181,27 @@ const create = user => validator.create(user)
     })
   );
 
+const update = (userId, payload) => validator.update(userId, payload)
+  .then(() => findById(userId))
+  .then(user => {
+    let body = Object.assign({}, user, payload);
+    delete body.id;
+    return elasticClient.index({
+      index: config.db.index,
+      type: 'users',
+      id: userId,
+      body,
+      refresh: true
+    }).then(() => {
+      logger.info('User description was successfully updated');
+      return Promise.resolve(userId)
+    }, error => {
+      logger.error(error.message);
+      throw new ApiError('DB error')
+    })
+  })
+  .then(findById);
+
 const removeById = userId => new Promise(resolve => {
   if (!userId || typeof userId !== 'string') {
     throw new ApiError('Invalid id')
@@ -187,50 +226,9 @@ const removeById = userId => new Promise(resolve => {
     })
   );
 
-const update = (userId, payload) => validator.update(userId, payload)
-  .then(() => findById(userId))
-  .then(user => {
-    let body = Object.assign({}, user, payload);
-    delete body.id;
-    return elasticClient.index({
-      index: config.db.index,
-      type: 'users',
-      id: userId,
-      body,
-      refresh: true
-    }).then(() => {
-      logger.info('User description was successfully updated');
-      return Promise.resolve(userId)
-    }, error => {
-      logger.error(error.message);
-      throw new ApiError('DB error')
-    })
-  })
-  .then(findById);
-
-const getUserInfo = user => ({
-  id: user.id,
-  name: user.name,
-  login: user.login,
-  role: user.role,
-  description: user.description,
-  language: user.language
-});
-
-const filterTranslators = users => {
-  const translators = users.filter(elem => elem.role === 'translator');
-  return translators.map(elem => ({
-    id: elem.id,
-    name: elem.name,
-    description: elem.description,
-    language: languages.getLang(elem.language)
-  }))
-};
-
 module.exports = {
-  isAdmin,
   getUserInfo,
-  filterTranslators,
+  isAdmin,
   canLogin,
   findById,
   findByLogin,
