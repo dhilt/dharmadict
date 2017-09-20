@@ -11,7 +11,7 @@ import createLogger from 'redux-logger'
 import reducer from './reducers'
 import {changeRoute} from './actions/route'
 import {getUserInfoAsync} from './actions/auth'
-import {getCommonDataAsync} from './actions/translators'
+import {getCommonDataAsync} from './actions/common'
 import {selectTermAsync} from './actions/search'
 
 import Routes from './routes'

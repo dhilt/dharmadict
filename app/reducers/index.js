@@ -22,8 +22,8 @@ import {
   CHANGE_NEW_TERM_NAME,
   ADD_TERM_START,
   ADD_TERM_END,
-  GET_ALL_TRANSLATORS_START,
-  GET_ALL_TRANSLATORS_END,
+  GET_COMMON_DATA_START,
+  GET_COMMON_DATA_END,
   GET_TRANSLATOR_INFO_START,
   GET_TRANSLATOR_INFO_END,
   GET_ADMIN_USER_DATA_START,
@@ -37,13 +37,13 @@ import initialState from './_initial'
 
 function reducer(state = initialState, action) {
   switch (action.type) {
-    case GET_ALL_TRANSLATORS_START:
+    case GET_COMMON_DATA_START:
       return {...state,
         common: {...state.common,
           translators: null
         }
       }
-    case GET_ALL_TRANSLATORS_END:
+    case GET_COMMON_DATA_END:
       return {...state,
         common: {...state.common,
           translators: action.payload
