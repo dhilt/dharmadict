@@ -51,7 +51,7 @@ export function selectTranslation(translatorId, termId) {
       })
       console.log('Let\'s start an async translation request to db! The term is "' + termId + '".')
       return asyncRequest(`translation?translatorId=${translatorId}&termId=${termId}`, null, (data, error) => {
-        let translation = data ? data.translation : null
+        let translation = data ? data.result.translation : null
         dispatchTranslationRequestEnd(dispatch, translatorId, translation, data ? data.termId : '', data ? data.termName : '', error)
       })
     }
