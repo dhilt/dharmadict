@@ -37,7 +37,7 @@ const languages = {
   ],
   getLang: (id) => {
     const lang = languages.data.find(lang => lang.id === id);
-    return lang ? lang.id : languages.data.find(lang => lang.default).id
+    return lang || languages.data.find(lang => lang.default)
   }
 };
 

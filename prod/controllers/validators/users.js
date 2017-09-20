@@ -1,4 +1,5 @@
 const ApiError = require('../../helper.js').ApiError;
+const languages = require('../../helper').languages;
 
 const create = (user) => new Promise(resolve => {
   if (!user) {
@@ -45,7 +46,7 @@ const update = (userId, payload) => new Promise(resolve => {
     throw new ApiError('Invalid name')
   }
   if (payload.hasOwnProperty('language')) {
-    if (payload.language !== 'rus' && payload.language !== 'eng') {
+    if (payload.language !== languages.getLang(payload.language).id) {
       throw new ApiError('Invalid language')
     }
   }

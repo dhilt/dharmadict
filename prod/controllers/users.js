@@ -13,7 +13,7 @@ const getUserInfo = (user, isPublic) => {
     login: user.login,
     role: user.role,
     description: user.description,
-    language: languages.getLang(user.language)
+    language: languages.getLang(user.language).id
   };
   if (isPublic) {
     delete result.login
