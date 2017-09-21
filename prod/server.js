@@ -32,7 +32,7 @@ app.get('/api/test', (req, res) => {
   res.send({success: true, param});
 });
 
-app.get('/api/common', (req, res) => {
+app.get('/api/common', (req, res) =>
   usersController.findAll('translator', true)
     .then(translators => res.send({
       success: true,
@@ -40,7 +40,7 @@ app.get('/api/common', (req, res) => {
       languages: languages.data
     }))
     .catch(error => sendApiError(res, 'Can\'t get common data.', error))
-});
+);
 
 app.get('/api/userInfo', (req, res) =>
   doAuthorize(req)
@@ -62,11 +62,11 @@ app.post('/api/login', (req, res) => {
     .catch(error => sendApiError(res, 'Can\'t login.', error))
 });
 
-app.get('/api/search', (req, res) => {
+app.get('/api/search', (req, res) =>
   termsController.searchByPattern(req.query.pattern)
     .then(result => res.json(result))
     .catch(error => sendApiError(res, 'Search error', error))
-});
+);
 
 app.get('/api/translation', (req, res) => {
   const {termId, translatorId} = req.query;
@@ -108,29 +108,29 @@ app.post('/api/update', (req, res) => {
     .catch(error => sendApiError(res, 'Can\'t update term.', error))
 });
 
-app.post('/api/newTerm', (req, res) => {
+app.post('/api/newTerm', (req, res) =>
   doAuthorize(req)
     .then(user => usersController.isAdmin(user))
     .then(() => termsController.create(req.body.term))
     .then(id => res.json({success: true, id: id}))
     .catch(error => sendApiError(res, 'Can\'t create new term.', error))
-});
+);
 
-app.put('/api/newUser', (req, res) => {
+app.put('/api/newUser', (req, res) =>
   doAuthorize(req)
     .then(user => usersController.isAdmin(user))
     .then(user => usersController.create(req.body.user))
     .then(result => res.json({success: true, user: result}))
     .catch(error => sendApiError(res, 'Can\'t create new user.', error))
-});
+);
 
-app.post('/api/updateUser', (req, res) => {
+app.post('/api/updateUser', (req, res) =>
   doAuthorize(req)
     .then(user => usersController.isAdmin(user))
     .then(user => usersController.update(req.body.userId, req.body.payload))
     .then(result => res.json({success: true, user: usersController.getUserInfo(result)}))
     .catch(error => sendApiError(res, 'Can\'t update translator description.', error))
-});
+);
 
 app.get('/api/users/:id', (req, res) =>
   usersController.findById(req.params.id)

@@ -15,8 +15,10 @@ class TranslatorPage extends Component {
     this.props.dispatch(getTranslatorInfoAsync(userId))
   }
 
-  getTranslatorContent (translator, languages) {
-    const userInfo = this.props.userInfo.data
+  getTranslatorContent (translator) {
+    const translatorId = this.props.params.id // translator.id ??
+    const userData = this.props.userInfo.data
+    const languages = this.props.languages
     return (
       <div>
         <h3>{translator.name}</h3>
@@ -25,8 +27,8 @@ class TranslatorPage extends Component {
         </h4>
         <pre>{translator.description}</pre>
         {
-          userInfo && userInfo.role === 'admin' &&
-          <Link className="btn btn-default" to={`/translator/${this.props.params.id}/edit`}>
+          userData && userData.role === 'admin' &&
+          <Link className="btn btn-default" to={`/translator/${translatorId}/edit`}>
             Редактировать
           </Link>
         }
@@ -35,14 +37,14 @@ class TranslatorPage extends Component {
   }
 
   render () {
-    const {data, languages} = this.props
-    let content = data.pending ? (
+    const {translatorInfo} = this.props
+    let content = translatorInfo.pending ? (
       <h3>{'Loading...'}</h3>
     ) : (
-      data.error ? (
-        <h3>{data.error.message}</h3>
+      translatorInfo.error ? (
+        <h3>{translatorInfo.error.message}</h3>
       ) :
-        this.getTranslatorContent(data.data, languages)
+        this.getTranslatorContent(translatorInfo.data)
     )
     return (
       <div>{content}</div>
@@ -52,7 +54,7 @@ class TranslatorPage extends Component {
 
 function select (state) {
   return {
-    data: state.translatorInfo,
+    translatorInfo: state.translatorInfo,
     userInfo: state.auth.userInfo,
     languages: state.common.languages
   }

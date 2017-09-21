@@ -61,15 +61,15 @@ class EditUser extends Component {
           </div>
           <div className="form-group">
             <label>{'Язык переводов'}</label>
-            {languages && languages.map((_language) =>
-              <div className="radio" key={_language.id}>
+            {languages && languages.map(lang =>
+              <div className="radio" key={lang.id}>
                 <label>
                   <input
                     type="radio"
                     name="lang_radio"
-                    onChange={() => this.changeUserLanguage(_language.id)}
-                    checked={language === _language.id}
-                  />{_language.name_rus}
+                    onChange={() => this.changeUserLanguage(lang.id)}
+                    checked={language === lang.id}
+                  />{lang.name_rus}
                 </label>
               </div>
             )}
