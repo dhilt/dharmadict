@@ -49,7 +49,7 @@ class EditUser extends Component {
     return (
       <div>
         <form className="col-md-6">
-          <h3>{'Редактирование пользователя ${id}'}</h3>
+          <h3>{`Редактирование пользователя ${id}`}</h3>
           <div className="form-group">
             <label>{'Имя перерводчика'}</label>
             <input

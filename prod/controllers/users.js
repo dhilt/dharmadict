@@ -6,7 +6,7 @@ const logger = require('../log/logger');
 const config = require('../config');
 const validator = require('./validators/users');
 
-const getUserInfo = (user, isPublic) => {
+const getUserInfo = (user, isPublic = true) => {
  const result = {
     id: user.id,
     name: user.name,
@@ -18,6 +18,7 @@ const getUserInfo = (user, isPublic) => {
   if (isPublic) {
     delete result.login
   }
+  return result
 };
 
 const isAdmin = (user) => {
@@ -103,7 +104,7 @@ const findByLogin = userLogin => new Promise((resolve, reject) => {
     throw new ApiError('Database error')
   });
 
-const findAll = (role, isPublic) => new Promise((resolve, reject) => {
+const findAll = (role) => new Promise((resolve, reject) => {
   logger.info('Find users' + (role ? ` with "${role}" role` : ''));
   const body = !role ? {} : {
     query: {
@@ -125,7 +126,7 @@ const findAll = (role, isPublic) => new Promise((resolve, reject) => {
     users = users.map(user => {
       let cleanUserInfo = user._source;
       cleanUserInfo.id = user._id;
-      return getUserInfo(cleanUserInfo, isPublic)
+      return getUserInfo(cleanUserInfo)
     });
     return resolve(users)
   }, error => {

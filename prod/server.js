@@ -33,7 +33,7 @@ app.get('/api/test', (req, res) => {
 });
 
 app.get('/api/common', (req, res) =>
-  usersController.findAll('translator', true)
+  usersController.findAll('translator')
     .then(translators => res.send({
       success: true,
       translators,
@@ -55,7 +55,7 @@ app.post('/api/login', (req, res) => {
   const {login, password} = req.body;
   usersController.canLogin(login, password)
     .then(user => {
-      const _user = usersController.getUserInfo(user);
+      const _user = usersController.getUserInfo(user, false);
       const token = authController.generateToken(_user);
       res.send({user: _user, token})
     })
