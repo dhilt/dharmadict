@@ -17,13 +17,17 @@ describe('Get common data API', () => {
   it('should take common translators and languages', (done) => {
     request.get('/api/common').end(
       (err, res) => {
-        assert.equal(res.body.success, true);
-        const translators = res.body.translators;
-        const languages = res.body.languages;
-        assert.notEqual(undefined, translators.find(elem => elem.id === testTranslator.id))
-        assert.notEqual(undefined, translators.find(elem => elem.id === testTranslator2.id))
-        assert.notEqual(undefined, languages.find(elem => elem.id === 'rus'))
-        assert.notEqual(undefined, languages.find(elem => elem.id === 'eng'))
+        assert.equal(res.body.success, true)
+        const translators = res.body.translators
+        const languages = res.body.languages
+        assert.equal(!!translators, true)
+        assert.equal(!!languages, true)
+        assert.equal(languages.length === 2, true)
+        assert.equal(translators.length >= 2, true)
+        assert.equal(true, !!translators.find(user => user.id === testTranslator.id))
+        assert.equal(true, !!translators.find(user => user.id === testTranslator2.id))
+        assert.equal(true, !!languages.find(lang => lang.id === 'rus'))
+        assert.equal(true, !!languages.find(lang => lang.id === 'eng'))
         done();
       }
     )
