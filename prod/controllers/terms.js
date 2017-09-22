@@ -55,9 +55,9 @@ const findTranslations = (translator, term, translations) => new Promise((resolv
   });
 });
 
-const searchByPattern = (pattern) => new Promise((resolve, reject) => {
+const searchByPattern = (pattern) => validator.search(pattern).then(pattern => {
   logger.info('Searching terms by "' + pattern + '" pattern');
-  elasticClient.search({
+  return elasticClient.search({
     index: config.db.index,
     type: 'terms',
     body: {
@@ -72,15 +72,15 @@ const searchByPattern = (pattern) => new Promise((resolve, reject) => {
     }
   }).then(response => {
     let result = [];
-    response.hits.hits.forEach((hit) => {
+    response.hits.hits.forEach(hit => {
       hit._source.id = hit._id; // add id field
       result.push(hit._source);
     });
     logger.info('Found items: ' + result.length);
-    return resolve(result);
+    return Promise.resolve(result);
   }, error => {
     logger.error('Search error:', error.message);
-    return reject(new ApiError('Database error'));
+    throw new ApiError('Database error');
   });
 });
 

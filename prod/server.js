@@ -65,7 +65,7 @@ app.post('/api/login', (req, res) => {
 app.get('/api/search', (req, res) =>
   termsController.searchByPattern(req.query.pattern)
     .then(result => res.json(result))
-    .catch(error => sendApiError(res, 'Search error', error))
+    .catch(error => sendApiError(res, 'Search error.', error))
 );
 
 app.get('/api/translation', (req, res) => {

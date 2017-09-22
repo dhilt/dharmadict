@@ -11,6 +11,13 @@ const create = (name) => new Promise(resolve => {
   resolve(name)
 });
 
+const search = (pattern) => new Promise(resolve => {
+  if (!pattern) {
+    throw new ApiError('Invalid pattern')
+  }
+  resolve(pattern)
+})
+
 const update = (termId, translation) => new Promise(resolve => {
   if (!termId || typeof termId !== 'string') {
     throw new ApiError('Incorrect termId')
@@ -45,5 +52,6 @@ const update = (termId, translation) => new Promise(resolve => {
 
 module.exports = {
   create,
-  update
+  update,
+  search
 };
