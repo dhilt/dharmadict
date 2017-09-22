@@ -4,6 +4,7 @@ const shouldLogIn = require('./_shared.js').shouldLogIn;
 const testAdmin = require('./_shared.js').testAdmin;
 const testTranslator = require('./_shared.js').testTranslator;
 const testTerm = require('./_shared.js').testTerm;
+const testTerm2 = require('./_shared.js').testTerm2;
 
 describe('New term API', () => {
 
@@ -81,6 +82,19 @@ describe('New term API', () => {
       )
   });
 
+  it('should create new term 2', (done) => {
+    request.post('/api/newTerm')
+      .set('Authorization', 'Bearer ' + testAdmin.token)
+      .send({term: testTerm2.name})
+      .end(
+        (err, res) => {
+          assert.equal(res.body.success, true);
+          assert.equal(res.body.id, testTerm2.id);
+          done();
+        }
+      )
+  });
+
   it('should not create duplicate term', (done) => {
     request.post('/api/newTerm')
       .set('Authorization', 'Bearer ' + testAdmin.token)
@@ -93,5 +107,4 @@ describe('New term API', () => {
         }
       )
   });
-
 });

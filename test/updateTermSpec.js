@@ -5,7 +5,9 @@ const testAdmin = require('./_shared.js').testAdmin;
 const testTranslator = require('./_shared.js').testTranslator;
 const testTranslator2 = require('./_shared.js').testTranslator2;
 const testTerm = require('./_shared.js').testTerm;
+const testTerm2 = require('./_shared.js').testTerm2;
 const testTermTranslation = require('./_shared.js').testTermTranslation;
+const testTermTranslation2 = require('./_shared.js').testTermTranslation2;
 
 describe('Update term API', () => {
 
@@ -166,7 +168,7 @@ describe('Update term API', () => {
       )
   });
 
-  const updateTranslation = (text, term, translator) => {
+  const updateTranslation = (text, term, translator, testTermTranslation) => {
     it(text, (done) => {
       let _term = JSON.parse(JSON.stringify(testTermTranslation));
       _term.termName = term;
@@ -191,7 +193,7 @@ describe('Update term API', () => {
     });
   };
 
-  updateTranslation('should update term', testTerm, testTranslator);
+  updateTranslation('should update term', testTerm, testTranslator, testTermTranslation);
 
   it('should update term (add 1 more meaning)', (done) => {
     let term = JSON.parse(JSON.stringify(testTermTranslation));
@@ -213,7 +215,7 @@ describe('Update term API', () => {
       )
   });
 
-  updateTranslation('should update term (remove meaning just added)', testTerm, testTranslator);
+  updateTranslation('should update term (remove meaning just added)', testTerm, testTranslator, testTermTranslation);
 
   it('should update term (remove all meanings)', (done) => {
     let term = JSON.parse(JSON.stringify(testTermTranslation));
@@ -231,7 +233,7 @@ describe('Update term API', () => {
       )
   });
 
-  updateTranslation('should update term (get initial meanings back)', testTerm, testTranslator);
+  updateTranslation('should update term (get initial meanings back)', testTerm, testTranslator, testTermTranslation);
 
   shouldLogIn(testAdmin);
 
@@ -269,5 +271,8 @@ describe('Update term API', () => {
       )
   });
 
-  updateTranslation('should update term by ' + testTranslator2.login, testTerm, testTranslator2);
+  updateTranslation('should update term by ' + testTranslator2.login, testTerm, testTranslator2, testTermTranslation);
+
+  updateTranslation('should update term 2 by ' + testTranslator.login, testTerm2, testTranslator, testTermTranslation2);
+  updateTranslation('should update term 2 by ' + testTranslator2.login, testTerm2, testTranslator2, testTermTranslation2);
 });

@@ -4,4 +4,5 @@ test/commonSpec.js
 test/loginSpec.js
 test/newTermSpec.js
 test/updateTermSpec.js
+test/searchTermSpec.js
 test/deleteUserSpec.js

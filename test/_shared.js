@@ -36,7 +36,7 @@ const testTranslator2 = {
   role: "translator",
   login: "test-translator-2",
   name: "Test Translator 2",
-  language: "eng",
+  language: "rus",
   description: "...",
   password: "test-translator-pass-2"
 };
@@ -46,13 +46,58 @@ const testTerm = {
   id: 'test_term'
 };
 
+const testTerm2 = {
+  name: 'test term two',
+  id: 'test_term_two'
+};
+
 const testTermTranslation = {
   termId: testTerm.id,
   translation: {
+    translatorId: testTranslator.id,
     meanings: [
-      {versions: ["a1", "b1", "c1"], comment: "comment1"},
-      {versions: ["a2", "b2", "c2"], comment: null}],
-    translatorId: testTranslator.id
+      {
+        versions: [
+          "Translation test term (1)",
+          "Translation test term (2)",
+          "Translation test term (3)"
+        ],
+        comment: "comment about test term"
+      },
+      {
+        versions: [
+          "Translation test term (4)",
+          "Translation test term (5)",
+          "Translation test term (6)"
+        ],
+        comment: null
+      }
+    ]
+  }
+};
+
+const testTermTranslation2 = {
+  termId: testTerm2.id,
+  translation: {
+    translatorId: testTranslator.id,
+    meanings: [
+      {
+        versions: [
+          "Translation test term 2 (1)",
+          "Translation test term 2 (2)",
+          "Translation test term 2 (3)"
+        ],
+        comment: "comment about test term 2"
+      },
+      {
+        versions: [
+          "Translation test term 2 (4)",
+          "Translation test term 2 (5)",
+          "Translation test term 2 (6)"
+        ],
+        comment: null
+      }
+    ]
   }
 };
 
@@ -93,6 +138,13 @@ const forceCleanUp = () => {
           _done();
         })
         .catch(_done);
+
+      termsController.removeById(testTerm2.id)
+        .then(() => {
+          console.log('Test term 2 was successfully deleted');
+          _done();
+        })
+        .catch(_done);
     });
   });
 };
@@ -121,6 +173,8 @@ module.exports = {
   testTranslator,
   testTranslator2,
   testTerm,
+  testTerm2,
   testTermTranslation,
+  testTermTranslation2,
   shouldLogIn
 };
