@@ -130,6 +130,9 @@ const update = (user, termId, translation) => validator.update(termId, translati
     return findById(termId)
   })
   .then(term => {
+    if (user.role === 'translator') {
+      translation.language = user.language
+    }
     term.translations = term.translations || [];
     user.id = user.role === 'translator' ? user.id : translation.translatorId;
     let foundT = term.translations.find(t => t.translatorId === user.id);
@@ -141,12 +144,10 @@ const update = (user, termId, translation) => validator.update(termId, translati
         term.translations = term.translations.filter(t => t.translatorId !== user.id);
       } else {
         foundT.meanings = translation.meanings;
-        if (user.role === 'translator') {
-          foundT.language = user.language
-        }
       }
     }
     translation.meanings.forEach(m => m.versions_lower = m.versions.map(v => v.toLowerCase()));
+    delete term.id
     return Promise.resolve(term)
   })
   .then(term =>
