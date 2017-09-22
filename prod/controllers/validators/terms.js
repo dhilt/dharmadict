@@ -1,6 +1,6 @@
 const ApiError = require('../../helper.js').ApiError;
 
-const create = (name) => new Promise(resolve => {
+const create = (name, sanskrit) => new Promise(resolve => {
   if (typeof name !== 'string') {
     throw new ApiError('Invalid params')
   }
@@ -8,7 +8,18 @@ const create = (name) => new Promise(resolve => {
   if (!name) {
     throw new ApiError('Invalid params')
   }
-  resolve(name)
+  if (typeof sanskrit !== 'object') {
+    throw new ApiError('Invalid sanskrit')
+  }
+  const keys = Object.keys(sanskrit);
+  keys.forEach(key => {
+    if (typeof sanskrit[key] !== 'string') {
+      throw new ApiError('Invalid ' + sanskrit[key])
+    }
+    sanskrit[key].trim();
+    sanskrit[key + '_lower'] = sanskrit[key].toLowerCase();
+  });
+  resolve({name, sanskrit})
 });
 
 const search = (pattern) => new Promise(resolve => {

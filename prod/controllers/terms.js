@@ -84,40 +84,38 @@ const searchByPattern = (pattern) => validator.search(pattern).then(pattern => {
   });
 });
 
-const create = (termName) => validator.create(termName)
-  .then(name => {
-    const id = name.replace(/ /g, '_');
-    logger.info(`Term adding: name "${name}", id "${id}"`);
-    return Promise.resolve({name, id})
+const create = (termName, sanskrit) => validator.create(termName, sanskrit)
+  .then(termInfo => {
+    const id = termInfo.name.replace(/ /g, '_');
+    logger.info(`Term adding: name "${termInfo.name}", id "${id}"`);
+    return Promise.resolve({name: termInfo.name, sanskrit: termInfo.sanskrit, id})
   })
-  .then(term =>
-    findById(term.id).then(() => {
+  .then(termInfo =>
+    findById(termInfo.id).then(() => {
       throw new ApiError('Already exists')
     }, error => {
       if (error.code === 404) {
-        return Promise.resolve(term)
+        return Promise.resolve(termInfo)
       }
       throw error
     })
   )
-  .then(term =>
-    elasticClient.index({
+  .then(termInfo => {
+    const payload = Object.assign(termInfo.sanskrit, {wylie: termInfo.name}, {translations: []});
+    return elasticClient.index({
       index: config.db.index,
       type: 'terms',
-      id: term.id,
-      body: {
-        wylie: term.name,
-        translations: []
-      },
+      id: termInfo.id,
+      body: payload,
       refresh: true
     }).then(() => {
       logger.info('Term was successfully created');
-      return Promise.resolve(term.id)
+      return Promise.resolve(termInfo.id)
     }, error => {
       logger.error(error.message);
       throw new ApiError('Database error')
     })
-  );
+  });
 
 const update = (user, termId, translation) => validator.update(termId, translation)
   .then(() => {

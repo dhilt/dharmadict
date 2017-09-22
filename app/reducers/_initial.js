@@ -61,6 +61,7 @@ let initialState = {
   admin: {
     newTerm: {
       term: '',
+      sanskrit: {},
       termId: null,
       pending: false,
       error: null

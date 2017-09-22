@@ -72,7 +72,7 @@ describe('New term API', () => {
   it('should create new term', (done) => {
     request.post('/api/newTerm')
       .set('Authorization', 'Bearer ' + testAdmin.token)
-      .send({term: testTerm.name})
+      .send({term: testTerm.name, sanskrit: testTerm.sanskrit})
       .end(
         (err, res) => {
           assert.equal(res.body.success, true);
@@ -85,7 +85,7 @@ describe('New term API', () => {
   it('should create new term 2', (done) => {
     request.post('/api/newTerm')
       .set('Authorization', 'Bearer ' + testAdmin.token)
-      .send({term: testTerm2.name})
+      .send({term: testTerm2.name, sanskrit: testTerm2.sanskrit})
       .end(
         (err, res) => {
           assert.equal(res.body.success, true);
@@ -98,7 +98,7 @@ describe('New term API', () => {
   it('should not create duplicate term', (done) => {
     request.post('/api/newTerm')
       .set('Authorization', 'Bearer ' + testAdmin.token)
-      .send({term: testTerm.name})
+      .send({term: testTerm.name, sanskrit: testTerm.sanskrit})
       .end(
         (err, res) => {
           assert.notEqual(res.body.success, true);

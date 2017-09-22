@@ -43,12 +43,20 @@ const testTranslator2 = {
 
 const testTerm = {
   name: 'test term',
-  id: 'test_term'
+  id: 'test_term',
+  sanskrit: {
+    sanskrit_rus: 'sanskrit of test term, russian',
+    sanskrit_eng: 'sanskrit of test term, english'
+  }
 };
 
 const testTerm2 = {
   name: 'test term two',
-  id: 'test_term_two'
+  id: 'test_term_two',
+  sanskrit: {
+    sanskrit_rus: 'sanskrit of test term two, russian',
+    sanskrit_eng: 'sanskrit of test term two, english'
+  }
 };
 
 const testTermTranslation = {

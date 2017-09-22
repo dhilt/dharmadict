@@ -19,7 +19,8 @@ import {
   CHANGE_TRANSLATION_LOCAL,
   TRANSLATION_UPDATE_START,
   TRANSLATION_UPDATE_END,
-  CHANGE_NEW_TERM_NAME,
+  CHANGE_NEW_TERM,
+  UPDATE_SANSKRIT,
   ADD_TERM_START,
   ADD_TERM_END,
   GET_COMMON_DATA_START,
@@ -214,11 +215,19 @@ function reducer(state = initialState, action) {
           }
         }
       }
-    case CHANGE_NEW_TERM_NAME:
+    case CHANGE_NEW_TERM:
       return {...state,
         admin: {...state.admin,
           newTerm: {...state.admin.newTerm,
             term: action.newTermString
+          }
+        }
+      }
+    case UPDATE_SANSKRIT:
+      return {...state,
+        admin: {...state.admin,
+          newTerm: {...state.admin.newTerm,
+            sanskrit: action.payload
           }
         }
       }

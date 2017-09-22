@@ -111,7 +111,7 @@ app.post('/api/update', (req, res) => {
 app.post('/api/newTerm', (req, res) =>
   doAuthorize(req)
     .then(user => usersController.isAdmin(user))
-    .then(() => termsController.create(req.body.term))
+    .then(() => termsController.create(req.body.term, req.body.sanskrit))
     .then(id => res.json({success: true, id: id}))
     .catch(error => sendApiError(res, 'Can\'t create new term.', error))
 );
