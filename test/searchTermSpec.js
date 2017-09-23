@@ -41,22 +41,24 @@ describe('Search term API', () => {
     assert.equal(testTranslator.language, _firstTranslation.language);
     assert.equal(testTranslator2.language, _secondTranslation.language);
     // Continue testing 'translations' in 'term'. Now, "meanings"
-    const _meanings = _firstTranslation.meanings;
-    assert.equal(true, !!_meanings);
-    assert.notEqual(undefined, _meanings.length);
-    assert.equal(true, _meanings.length === 2);
-    _meanings.forEach(meaning => {
-      assert.equal(true, !!meaning.comment || meaning.comment === null);
-      assert.equal(true, !!meaning.versions);
-      assert.equal(true, !!meaning.versions_lower);
-    });
-    _meanings.forEach((_meaning, index) => {
-      assert.equal(_meaning.comment, testTermTranslation.translation.meanings[index].comment);
-      assert.equal( _meaning.versions.length, _meaning.versions_lower.length);
-      for (let i = 0; i < _meaning.versions.length; i++) {
-        assert.equal(_meaning.versions[i], testTermTranslation.translation.meanings[index].versions[i]);
-        assert.equal(_meaning.versions_lower[i], testTermTranslation.translation.meanings[index].versions[i].toLowerCase());
-      }
+    [_firstTranslation, _secondTranslation].forEach(translation => {
+      const _meanings = translation.meanings;
+      assert.equal(true, !!_meanings);
+      assert.notEqual(undefined, _meanings.length);
+      assert.equal(true, _meanings.length === 2);
+      _meanings.forEach(meaning => {
+        assert.equal(true, !!meaning.comment || meaning.comment === null);
+        assert.equal(true, !!meaning.versions);
+        assert.equal(true, !!meaning.versions_lower);
+      });
+      _meanings.forEach((_meaning, index) => {
+        assert.equal(_meaning.comment, testTermTranslation.translation.meanings[index].comment);
+        assert.equal( _meaning.versions.length, _meaning.versions_lower.length);
+        for (let i = 0; i < _meaning.versions.length; i++) {
+          assert.equal(_meaning.versions[i], testTermTranslation.translation.meanings[index].versions[i]);
+          assert.equal(_meaning.versions_lower[i], testTermTranslation.translation.meanings[index].versions[i].toLowerCase());
+        }
+      });
     });
   };
 
