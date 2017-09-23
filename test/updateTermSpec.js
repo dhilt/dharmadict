@@ -271,6 +271,7 @@ describe('Update term API', () => {
       )
   });
 
+  updateTranslation('should update term by ' + testTranslator.login, testTerm, testTranslator, testTermTranslation);
   updateTranslation('should update term by ' + testTranslator2.login, testTerm, testTranslator2, testTermTranslation);
 
   updateTranslation('should update term 2 by ' + testTranslator.login, testTerm2, testTranslator, testTermTranslation2);

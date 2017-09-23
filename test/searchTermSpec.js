@@ -68,8 +68,7 @@ describe('Search term API', () => {
           for (let j = 0; j < _meanings[i].versions.length; j++) {
             assert.equal(_meanings[i].versions[j], testTermTranslation.translation.meanings[i].versions[j]);
             assert.equal(_meanings[i].versions_lower[j], testTermTranslation.translation.meanings[i].versions[j].toLowerCase());
-            // assert.equal(_meanings[i].comment, testTermTranslation.translation.meanings[i].comment);
-            // Should work. Some problem on updateTermSpec.js. Comments in _shared.js are rewrited.
+            assert.equal(_meanings[i].comment, testTermTranslation.translation.meanings[i].comment);
           }
         }
 
