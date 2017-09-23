@@ -77,40 +77,40 @@ const searchByPattern = (pattern) => validator.search(pattern).then(pattern => {
       result.push(hit._source);
     });
     logger.info('Found items: ' + result.length);
-    return Promise.resolve(result);
+    return result;
   }, error => {
     logger.error('Search error:', error.message);
     throw new ApiError('Database error');
   });
 });
 
-const create = (termName, sanskrit) => validator.create(termName, sanskrit)
-  .then(termInfo => {
-    const id = termInfo.name.replace(/ /g, '_');
-    logger.info(`Term adding: name "${termInfo.name}", id "${id}"`);
-    return Promise.resolve({name: termInfo.name, sanskrit: termInfo.sanskrit, id})
+const create = (wylie, sanskrit) => validator.create(wylie, sanskrit)
+  .then(term => {
+    term.id = term.wylie.replace(/ /g, '_');
+    logger.info(`Term adding: wylie name "${term.wylie}", id "${term.id}"`);
+    return term
   })
-  .then(termInfo =>
-    findById(termInfo.id).then(() => {
+  .then(term =>
+    findById(term.id).then(() => {
       throw new ApiError('Already exists')
     }, error => {
       if (error.code === 404) {
-        return Promise.resolve(termInfo)
+        return term
       }
       throw error
     })
   )
-  .then(termInfo => {
-    const payload = Object.assign(termInfo.sanskrit, {wylie: termInfo.name}, {translations: []});
+  .then(term => {
+    const payload = Object.assign(term.sanskrit, {wylie: term.wylie}, {translations: []});
     return elasticClient.index({
       index: config.db.index,
       type: 'terms',
-      id: termInfo.id,
+      id: term.id,
       body: payload,
       refresh: true
     }).then(() => {
       logger.info('Term was successfully created');
-      return Promise.resolve(termInfo.id)
+      return term.id
     }, error => {
       logger.error(error.message);
       throw new ApiError('Database error')
@@ -146,7 +146,7 @@ const update = (user, termId, translation) => validator.update(termId, translati
     }
     translation.meanings.forEach(m => m.versions_lower = m.versions.map(v => v.toLowerCase()));
     delete term.id
-    return Promise.resolve(term)
+    return term
   })
   .then(term =>
     elasticClient.index({
@@ -155,16 +155,14 @@ const update = (user, termId, translation) => validator.update(termId, translati
       id: termId,
       body: term,
       refresh: true
-    }).then(() => {
-      logger.info('Term was successfully updated');
-      term.id = termId;
-      return Promise.resolve(term)
-    }, error => {
+    }).then(() =>
+      logger.info('Term was successfully updated')
+    , error => {
       logger.error(error.message);
       return new ApiError('Database error')
     })
   )
-  .then(term => findById(term.id))
+  .then(() => findById(termId))
   .then(term => findTranslations(user, term, term.translations));
 
 const removeById = termId => new Promise(resolve => {
@@ -182,9 +180,9 @@ const removeById = termId => new Promise(resolve => {
       refresh: true
     }).then(() => {
       logger.info('Term was successfully deleted');
-      return Promise.resolve({
+      return {
         success: true
-      })
+      }
     }, error => {
       logger.error(error.message);
       throw new ApiError('DB error')
