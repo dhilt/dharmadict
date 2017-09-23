@@ -37,7 +37,7 @@ class NewTerm extends Component {
                   type="text"
                   placeholder={'sanskrit ' + lang.name}
                   value={sanskrit['sanskrit_' + lang.id] || ''}
-                  onChange={(event) => this._onSanskritChange(event, 'sanskrit_' + lang.id)}
+                  onChange={(event) => this._onSanskritChange(event, lang.id)}
                 />
               </div>
             )
@@ -74,8 +74,8 @@ class NewTerm extends Component {
     this.props.dispatch(changeWylie(event.target.value))
   }
 
-  _onSanskritChange (event, sanskritType) {
-    this.props.dispatch(changeSanskrit(sanskritType, event.target.value))
+  _onSanskritChange (event, lingId) {
+    this.props.dispatch(changeSanskrit('sanskrit_' + lingId, event.target.value))
   }
 
   _onTermSave (event) {

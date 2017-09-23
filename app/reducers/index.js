@@ -227,7 +227,9 @@ function reducer(state = initialState, action) {
       return {...state,
         admin: {...state.admin,
           newTerm: {...state.admin.newTerm,
-            sanskrit: action.payload
+            sanskrit: {...state.admin.newTerm.sanskrit,
+              [action.key]: action.value
+            }
           }
         }
       }

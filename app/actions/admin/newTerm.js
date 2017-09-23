@@ -13,14 +13,11 @@ export function changeWylie(newWylieString) {
   }
 }
 
-export function changeSanskrit(type, info) {
-  return (dispatch, getState) => {
-    let payload = getState().admin.newTerm.sanskrit
-    payload[type] = info
-    dispatch({
-      type: UPDATE_SANSKRIT,
-      payload
-    })
+export function changeSanskrit(key, value) {
+  return {
+    type: UPDATE_SANSKRIT,
+    key,
+    value
   }
 }
 
