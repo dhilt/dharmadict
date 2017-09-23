@@ -24,7 +24,7 @@ const Routes = props => {
   }
 
   function checkAuth (nextState, replace, callback, role) {
-    let {auth} = props
+    const auth = props.getAuthState()
     if(auth.loggedIn && (!role || (auth.userInfo.data && auth.userInfo.data.role === role))) {
       callback()
       return

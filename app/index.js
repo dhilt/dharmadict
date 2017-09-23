@@ -46,7 +46,7 @@ browserHistory.listenBefore((location) => {
 
 ReactDOM.render(
   <Provider store={store}>
-    <Routes auth={store.getState().auth} />
+    <Routes getAuthState={() => store.getState().auth} />
   </Provider>,
   document.getElementById('app')
 )
