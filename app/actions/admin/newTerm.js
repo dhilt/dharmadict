@@ -1,7 +1,7 @@
 import asyncRequest from '../../helpers/remote'
 import {
   CHANGE_NEW_TERM_WYLIE,
-  UPDATE_SANSKRIT,
+  CHANGE_NEW_TERM_SANSKRIT,
   ADD_TERM_START,
   ADD_TERM_END
 } from '../_constants'
@@ -15,7 +15,7 @@ export function changeWylie(newWylieString) {
 
 export function changeSanskrit(key, value) {
   return {
-    type: UPDATE_SANSKRIT,
+    type: CHANGE_NEW_TERM_SANSKRIT,
     key,
     value
   }

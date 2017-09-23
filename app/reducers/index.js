@@ -20,7 +20,7 @@ import {
   TRANSLATION_UPDATE_START,
   TRANSLATION_UPDATE_END,
   CHANGE_NEW_TERM_WYLIE,
-  UPDATE_SANSKRIT,
+  CHANGE_NEW_TERM_SANSKRIT,
   ADD_TERM_START,
   ADD_TERM_END,
   GET_COMMON_DATA_START,
@@ -223,7 +223,7 @@ function reducer(state = initialState, action) {
           }
         }
       }
-    case UPDATE_SANSKRIT:
+    case CHANGE_NEW_TERM_SANSKRIT:
       return {...state,
         admin: {...state.admin,
           newTerm: {...state.admin.newTerm,
