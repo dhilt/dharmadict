@@ -47,7 +47,7 @@ class NewTerm extends Component {
               bsStyle='primary'
               type="button"
               className={pending ? 'loader' : ''}
-              disabled={!term || pending}
+              disabled={this.disabled()}
               onClick={(event) => this._onTermSave(event)}
             >{'Сохранить'}</Button>
             <Link to={`/`}>{'Отмена'}</Link>
@@ -57,6 +57,17 @@ class NewTerm extends Component {
         </form>
       </div>
     )
+  }
+
+  isSanskritOk () {
+    const {sanskrit} = this.props.data
+    return this.props.languages.length ===
+      Object.keys(sanskrit).reduce((result, key) => result + !!sanskrit[key], 0)
+  }
+
+  disabled () {
+    const {pending, term} = this.props.data
+    return !term || pending || !this.isSanskritOk()
   }
 
   _onTermChange (event) {
