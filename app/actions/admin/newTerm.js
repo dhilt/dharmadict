@@ -33,7 +33,7 @@ export function saveTermAsync() {
       dispatch({
         type: ADD_TERM_END,
         error: error,
-        termId: !error ? data.id : null
+        termId: !error ? data.term.id : null
       })
     })
   }

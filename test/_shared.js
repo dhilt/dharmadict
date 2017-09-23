@@ -45,8 +45,8 @@ const testTerm = {
   name: 'test term',
   id: 'test_term',
   sanskrit: {
-    sanskrit_rus: 'sanskrit of test term, russian',
-    sanskrit_eng: 'sanskrit of test term, english'
+    sanskrit_rus: 'Sanskrit of test term, RUSSIAN',
+    sanskrit_eng: 'Sanskrit of test term, ENGLISH'
   }
 };
 
@@ -54,8 +54,8 @@ const testTerm2 = {
   name: 'test term two',
   id: 'test_term_two',
   sanskrit: {
-    sanskrit_rus: 'sanskrit of test term two, russian',
-    sanskrit_eng: 'sanskrit of test term two, english'
+    sanskrit_rus: 'Sanskrit of test term two, RUSSIAN',
+    sanskrit_eng: 'Sanskrit of test term two, ENGLISH'
   }
 };
 
@@ -108,6 +108,22 @@ const testTermTranslation2 = {
     ]
   }
 };
+
+const languages = [
+  {
+    id: 'rus',
+    name: 'русский',
+    name_rus: 'русский',
+    name_eng: 'russian',
+    default: true
+  },
+  {
+    id: 'eng',
+    name: 'english',
+    name_rus: 'английский',
+    name_eng: 'english'
+  }
+];
 
 const forceCleanUp = () => {
   describe('Force cleanup', () => {
@@ -184,5 +200,6 @@ module.exports = {
   testTerm2,
   testTermTranslation,
   testTermTranslation2,
-  shouldLogIn
+  shouldLogIn,
+  languages
 };

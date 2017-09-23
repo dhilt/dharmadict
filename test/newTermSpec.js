@@ -5,6 +5,7 @@ const testAdmin = require('./_shared.js').testAdmin;
 const testTranslator = require('./_shared.js').testTranslator;
 const testTerm = require('./_shared.js').testTerm;
 const testTerm2 = require('./_shared.js').testTerm2;
+const languages = require('./_shared.js').languages;
 
 describe('New term API', () => {
 
@@ -69,6 +70,34 @@ describe('New term API', () => {
       )
   });
 
+  it('should not create new term (no sanskrit)', (done) => {
+    request.post('/api/newTerm')
+      .set('Authorization', 'Bearer ' + testAdmin.token)
+      .send({term: testTerm.name})
+      .end(
+        (err, res) => {
+          assert.notEqual(res.body.success, true);
+          assert.equal(res.body.message, "Can't create new term. Invalid sanskrit");
+          done();
+        }
+      )
+  });
+
+  it('should not create new term (invalid sanskrits)', (done) => {
+    const sanskrit = JSON.parse(JSON.stringify(testTerm.sanskrit));
+    delete sanskrit.sanskrit_rus;
+    request.post('/api/newTerm')
+      .set('Authorization', 'Bearer ' + testAdmin.token)
+      .send({term: testTerm.name, sanskrit})
+      .end(
+        (err, res) => {
+          assert.notEqual(res.body.success, true);
+          assert.equal(res.body.message, "Can't create new term. Invalid sanskrits");
+          done();
+        }
+      )
+  });
+
   it('should create new term', (done) => {
     request.post('/api/newTerm')
       .set('Authorization', 'Bearer ' + testAdmin.token)
@@ -76,7 +105,11 @@ describe('New term API', () => {
       .end(
         (err, res) => {
           assert.equal(res.body.success, true);
-          assert.equal(res.body.id, testTerm.id);
+          assert.equal(res.body.term.id, testTerm.id);
+          languages.forEach(lang => {
+            assert.equal(res.body.term['sanskrit_' + lang.id], testTerm.sanskrit['sanskrit_' + lang.id]);
+            assert.equal(res.body.term['sanskrit_' + lang.id + '_lower'], testTerm.sanskrit['sanskrit_' + lang.id].toLowerCase());
+          });
           done();
         }
       )
@@ -89,7 +122,11 @@ describe('New term API', () => {
       .end(
         (err, res) => {
           assert.equal(res.body.success, true);
-          assert.equal(res.body.id, testTerm2.id);
+          assert.equal(res.body.term.id, testTerm2.id);
+          languages.forEach(lang => {
+            assert.equal(res.body.term['sanskrit_' + lang.id], testTerm2.sanskrit['sanskrit_' + lang.id]);
+            assert.equal(res.body.term['sanskrit_' + lang.id + '_lower'], testTerm2.sanskrit['sanskrit_' + lang.id].toLowerCase());
+          });
           done();
         }
       )

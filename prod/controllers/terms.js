@@ -115,6 +115,11 @@ const create = (wylie, sanskrit) => validator.create(wylie, sanskrit)
       logger.error(error.message);
       throw new ApiError('Database error')
     })
+  })
+  .then(termId => findById(termId))
+  .then(term => {
+    delete term.translations;
+    return term
   });
 
 const update = (user, termId, translation) => validator.update(termId, translation)

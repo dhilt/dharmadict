@@ -1,4 +1,5 @@
-const ApiError = require('../../helper.js').ApiError;
+const ApiError = require('../../helper').ApiError;
+const languages = require('../../helper').languages.data;
 
 const create = (wylie, sanskrit) => new Promise(resolve => {
   if (typeof wylie !== 'string') {
@@ -10,6 +11,9 @@ const create = (wylie, sanskrit) => new Promise(resolve => {
   }
   if (typeof sanskrit !== 'object') {
     throw new ApiError('Invalid sanskrit')
+  }
+  if (languages.length !== Object.keys(sanskrit).length) {
+    throw new ApiError('Invalid sanskrits')
   }
   Object.keys(sanskrit).forEach(key => {
     if (typeof sanskrit[key] !== 'string') {
