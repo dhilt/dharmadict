@@ -59,6 +59,16 @@ describe('Search term API', () => {
     }
   };
 
+  testSanskritsInTerm = (testTerm, initTerm) => {
+    const checkingSanskrits = Object.keys(initTerm.sanskrit);
+    checkingSanskrits.forEach(sanskritKey => {
+      assert.equal(true, testTerm.hasOwnProperty(sanskritKey));
+      assert.equal(true, testTerm.hasOwnProperty(sanskritKey + '_lower'));
+      assert.equal(testTerm[sanskritKey], initTerm.sanskrit[sanskritKey]);
+      assert.equal(testTerm[sanskritKey + '_lower'], initTerm.sanskrit[sanskritKey].toLowerCase());
+    });
+  };
+
   it('should search two test terms', (done) => {
     request.get('/api/search?pattern=' + testTerm.name).end(
       (err, res) => {
@@ -72,6 +82,9 @@ describe('Search term API', () => {
         assert.equal(true, !!_secondTerm);
         assert.equal(testTerm.id, _firstTerm.id);
         assert.equal(testTerm2.id, _secondTerm.id);
+
+        testSanskritsInTerm(_firstTerm, testTerm);
+        testSanskritsInTerm(_secondTerm, testTerm2);
 
         // Here testing translations in first term
         testTranslationsInTerm(_firstTerm.translations, testTerm, testTermTranslation);
@@ -94,6 +107,8 @@ describe('Search term API', () => {
         assert.equal(_term.wylie, testTerm2.name);
         assert.equal(true, !!_term);
         assert.equal(_term.id, testTerm2.id);
+
+        testSanskritsInTerm(_term, testTerm2);
 
         // Here testing translations in term
         testTranslationsInTerm(_term.translations, testTerm2, testTermTranslation2);
