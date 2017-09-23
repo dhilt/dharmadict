@@ -50,13 +50,14 @@ describe('Search term API', () => {
       assert.equal(true, !!meaning.versions);
       assert.equal(true, !!meaning.versions_lower);
     });
-    for (let i = 0; i < _meanings.length; i++) {
-      for (let j = 0; j < _meanings[i].versions.length; j++) {
-        assert.equal(_meanings[i].versions[j], testTermTranslation.translation.meanings[i].versions[j]);
-        assert.equal(_meanings[i].versions_lower[j], testTermTranslation.translation.meanings[i].versions[j].toLowerCase());
-        assert.equal(_meanings[i].comment, testTermTranslation.translation.meanings[i].comment);
+    _meanings.forEach((_meaning, index) => {
+      assert.equal(_meaning.comment, testTermTranslation.translation.meanings[index].comment);
+      assert.equal( _meaning.versions.length, _meaning.versions_lower.length);
+      for (let i = 0; i < _meaning.versions.length; i++) {
+        assert.equal(_meaning.versions[i], testTermTranslation.translation.meanings[index].versions[i]);
+        assert.equal(_meaning.versions_lower[i], testTermTranslation.translation.meanings[index].versions[i].toLowerCase());
       }
-    }
+    });
   };
 
   testSanskritsInTerm = (testTerm, initTerm) => {
