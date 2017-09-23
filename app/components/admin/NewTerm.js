@@ -3,18 +3,18 @@ import {connect} from 'react-redux'
 import {Button} from 'react-bootstrap'
 import {Link} from 'react-router'
 
-import {changeTerm, saveTermAsync, changeSanskrit} from '../../actions/admin/newTerm'
+import {changeWylie, saveTermAsync, changeSanskrit} from '../../actions/admin/newTerm'
 
 class NewTerm extends Component {
   constructor (props) {
     super(props)
-    this._onTermChange = this._onTermChange.bind(this)
+    this._onWylieChange = this._onWylieChange.bind(this)
     this._onSanskritChange = this._onSanskritChange.bind(this)
     this._onTermSave = this._onTermSave.bind(this)
   }
 
   render () {
-    const {error, pending, term, termId, sanskrit} = this.props.data
+    const {error, pending, wylie, termId, sanskrit} = this.props.data
     const {languages} = this.props
     return (
       <div>
@@ -22,11 +22,11 @@ class NewTerm extends Component {
         <form className="col-md-6">
           <div className="form-group">
             <input className="form-control"
-              name="term"
+              name="wylie"
               type="text"
               placeholder="wylie"
-              value={term}
-              onChange={this._onTermChange}/>
+              value={wylie}
+              onChange={this._onWylieChange}/>
           </div>
           {
             languages && languages.map(lang =>
@@ -66,12 +66,12 @@ class NewTerm extends Component {
   }
 
   disabled () {
-    const {pending, term} = this.props.data
-    return !term || pending || !this.isSanskritOk()
+    const {pending, wylie} = this.props.data
+    return !wylie || pending || !this.isSanskritOk()
   }
 
-  _onTermChange (event) {
-    this.props.dispatch(changeTerm(event.target.value))
+  _onWylieChange (event) {
+    this.props.dispatch(changeWylie(event.target.value))
   }
 
   _onSanskritChange (event, sanskritType) {

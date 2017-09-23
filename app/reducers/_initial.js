@@ -60,7 +60,7 @@ let initialState = {
   },
   admin: {
     newTerm: {
-      term: '',
+      wylie: '',
       sanskrit: {},
       termId: null,
       pending: false,

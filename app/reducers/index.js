@@ -19,7 +19,7 @@ import {
   CHANGE_TRANSLATION_LOCAL,
   TRANSLATION_UPDATE_START,
   TRANSLATION_UPDATE_END,
-  CHANGE_NEW_TERM,
+  CHANGE_NEW_TERM_WYLIE,
   UPDATE_SANSKRIT,
   ADD_TERM_START,
   ADD_TERM_END,
@@ -215,11 +215,11 @@ function reducer(state = initialState, action) {
           }
         }
       }
-    case CHANGE_NEW_TERM:
+    case CHANGE_NEW_TERM_WYLIE:
       return {...state,
         admin: {...state.admin,
           newTerm: {...state.admin.newTerm,
-            term: action.newTermString
+            wylie: action.newWylieString
           }
         }
       }
