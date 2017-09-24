@@ -1,7 +1,7 @@
 {
-  "name": "dharmadict-forntend",
-  "version": "0.0.1",
-  "description": "Dharma Dictionary",
+  "name": "dharmadict-frontend",
+  "version": "1.0.0",
+  "description": "Dharma Dictionary Front End",
   "scripts": {
     "start": "concurrently --kill-others \"npm run dev-server\" \"npm run prod-server\"",
     "build": "webpack --config webpack/prod.js --progress --colors -p",
@@ -10,7 +10,11 @@
     "test": "mocha -R spec --bail",
     "db-reset": "node prod/db/reset.js"
   },
-  "repository": "dhilt/dharmadict",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dhilt/dharmadict.git"
+  },
+  "author": "dhilt <d.alexanov@gmail.com>",
   "license": "MIT",
   "devDependencies": {
     "autoprefixer": "^6.3.6",

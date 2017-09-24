@@ -1,6 +1,7 @@
 {
-  "name": "dharmadict",
-  "version": "0.0.1",
+  "name": "dharmadict-backend",
+  "version": "1.0.0",
+  "description": "Dharma Dictionary Back End",
   "dependencies": {
     "body-parser": "^1.15.2",
     "csv-parse": "^1.2.1",
