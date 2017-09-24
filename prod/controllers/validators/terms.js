@@ -3,17 +3,17 @@ const languages = require('../../helper').languages.data;
 
 const create = (wylie, sanskrit) => new Promise(resolve => {
   if (typeof wylie !== 'string') {
-    throw new ApiError('Invalid params')
+    throw new ApiError('Invalid wylie')
   }
   wylie = wylie.trim();
   if (!wylie) {
-    throw new ApiError('Invalid params')
+    throw new ApiError('Invalid wylie')
   }
   if (typeof sanskrit !== 'object') {
     throw new ApiError('Invalid sanskrit')
   }
   if (languages.length !== Object.keys(sanskrit).length) {
-    throw new ApiError('Invalid sanskrits')
+    throw new ApiError('Invalid sanskrit')
   }
   Object.keys(sanskrit).forEach(key => {
     if (typeof sanskrit[key] !== 'string') {

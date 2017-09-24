@@ -51,7 +51,7 @@ describe('New term API', () => {
       .end(
         (err, res) => {
           assert.notEqual(res.body.success, true);
-          assert.equal(res.body.message, "Can't create new term. Invalid params");
+          assert.equal(res.body.message, "Can't create new term. Invalid wylie");
           done();
         }
       )
@@ -64,7 +64,7 @@ describe('New term API', () => {
       .end(
         (err, res) => {
           assert.notEqual(res.body.success, true);
-          assert.equal(res.body.message, "Can't create new term. Invalid params");
+          assert.equal(res.body.message, "Can't create new term. Invalid wylie");
           done();
         }
       )
@@ -92,7 +92,7 @@ describe('New term API', () => {
       .end(
         (err, res) => {
           assert.notEqual(res.body.success, true);
-          assert.equal(res.body.message, "Can't create new term. Invalid sanskrits");
+          assert.equal(res.body.message, "Can't create new term. Invalid sanskrit");
           done();
         }
       )
