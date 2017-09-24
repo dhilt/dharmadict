@@ -8,6 +8,7 @@ process.env.NODE_ENV = 'test';
 const server = require('../prod/server.js');
 const usersController = require('../prod/controllers/users.js');
 const termsController = require('../prod/controllers/terms.js');
+const languages = require('../prod/helper').languages;
 
 chai.use(chaiHttp);
 const request = chai.request(server);
@@ -35,7 +36,7 @@ const testTranslator2 = {
   id: "TEST-TRANSLATOR-2",
   role: "translator",
   login: "test-translator-2",
-  name: "Test Translator 2",
+  name: "Тестовый переводчик 2",
   language: "rus",
   description: "...",
   password: "test-translator-pass-2"
@@ -45,7 +46,7 @@ const testTerm = {
   name: 'test term',
   id: 'test_term',
   sanskrit: {
-    sanskrit_rus: 'Sanskrit of test term, RUSSIAN',
+    sanskrit_rus: 'Термин на санскрите, RUSSIAN',
     sanskrit_eng: 'Sanskrit of test term, ENGLISH'
   }
 };
@@ -54,8 +55,8 @@ const testTerm2 = {
   name: 'test term two',
   id: 'test_term_two',
   sanskrit: {
-    sanskrit_rus: 'Sanskrit of test term two, RUSSIAN',
-    sanskrit_eng: 'Sanskrit of test term two, ENGLISH'
+    sanskrit_rus: 'Термин 2 на санскрите, RUSSIAN',
+    sanskrit_eng: 'Sanskrit of test term 2, ENGLISH'
   }
 };
 
@@ -66,17 +67,17 @@ const testTermTranslation = {
     meanings: [
       {
         versions: [
-          "Translation test term (1)",
-          "Translation test term (2)",
-          "Translation test term (3)"
+          "Translation test term (1.1)",
+          "Translation test term (1.2)",
+          "Translation test term (1.3)"
         ],
-        comment: "comment about test term"
+        comment: "test term meaning 1 comment"
       },
       {
         versions: [
-          "Translation test term (4)",
-          "Translation test term (5)",
-          "Translation test term (6)"
+          "Translation test term (2.1)",
+          "Translation test term (2.2)",
+          "Translation test term (2.2)"
         ],
         comment: null
       }
@@ -91,39 +92,23 @@ const testTermTranslation2 = {
     meanings: [
       {
         versions: [
-          "Translation test term 2 (1)",
-          "Translation test term 2 (2)",
-          "Translation test term 2 (3)"
+          "Translation test term 2 (1.1)",
+          "Translation test term 2 (2.2)",
+          "Translation test term 2 (3.3)"
         ],
-        comment: "comment about test term 2"
+        comment: "test term 2 meaning 1 comment"
       },
       {
         versions: [
-          "Translation test term 2 (4)",
-          "Translation test term 2 (5)",
-          "Translation test term 2 (6)"
+          "Translation test term 2 (2.1)",
+          "Translation test term 2 (2.2)",
+          "Translation test term 2 (2.3)"
         ],
         comment: null
       }
     ]
   }
 };
-
-const languages = [
-  {
-    id: 'rus',
-    name: 'русский',
-    name_rus: 'русский',
-    name_eng: 'russian',
-    default: true
-  },
-  {
-    id: 'eng',
-    name: 'english',
-    name_rus: 'английский',
-    name_eng: 'english'
-  }
-];
 
 const forceCleanUp = () => {
   describe('Force cleanup', () => {
@@ -134,40 +119,24 @@ const forceCleanUp = () => {
           done();
         }
       };
-
+      const logAndDone = (text) => {
+        console.log(text);
+        _done();
+      };
       usersController.removeById(testAdmin.id)
-        .then(() => {
-          console.log('Test admin user was successfully deleted');
-          _done();
-        })
+        .then(() => logAndDone('Test admin user was successfully deleted'))
         .catch(_done);
-
       usersController.removeById(testTranslator.id)
-        .then(() => {
-          console.log('Test translator user was successfully deleted');
-          _done();
-        })
+        .then(() => logAndDone('Test translator user was successfully deleted'))
         .catch(_done);
-
       usersController.removeById(testTranslator2.id)
-        .then(() => {
-          console.log('Test translator-2 user was successfully deleted');
-          _done();
-        })
+        .then(() => logAndDone('Test translator-2 user was successfully deleted'))
         .catch(_done);
-
       termsController.removeById(testTerm.id)
-        .then(() => {
-          console.log('Test term was successfully deleted');
-          _done();
-        })
+        .then(() => logAndDone('Test term was successfully deleted'))
         .catch(_done);
-
       termsController.removeById(testTerm2.id)
-        .then(() => {
-          console.log('Test term 2 was successfully deleted');
-          _done();
-        })
+        .then(() => logAndDone('Test term 2 was successfully deleted'))
         .catch(_done);
     });
   });
