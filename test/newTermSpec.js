@@ -100,14 +100,15 @@ describe('New term API', () => {
 
   it('should not create new term (invalid sanskrit)', (done) => {
     const sanskrit = JSON.parse(JSON.stringify(testTerm.sanskrit));
-    sanskrit.sanskrit_rus = true;
+    const invalidKey = 'sanskrit_rus';
+    sanskrit[invalidKey] = true;
     request.post('/api/newTerm')
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .send({term: testTerm.name, sanskrit})
       .end(
         (err, res) => {
           assert.notEqual(res.body.success, true);
-          assert.equal(res.body.message, "Can't create new term. Invalid sanskrit");
+          assert.equal(res.body.message, "Can't create new term. Invalid " + invalidKey);
           done();
         }
       )

@@ -17,7 +17,7 @@ const create = (wylie, sanskrit) => new Promise(resolve => {
   }
   Object.keys(sanskrit).forEach(key => {
     if (typeof sanskrit[key] !== 'string') {
-      throw new ApiError('Invalid ' + sanskrit[key])
+      throw new ApiError('Invalid ' + key)
     }
     sanskrit[key].trim();
     sanskrit[key + '_lower'] = sanskrit[key].toLowerCase();
@@ -30,7 +30,7 @@ const search = (pattern) => new Promise(resolve => {
     throw new ApiError('Invalid pattern')
   }
   resolve(pattern)
-})
+});
 
 const update = (termId, translation) => new Promise(resolve => {
   if (!termId || typeof termId !== 'string') {
