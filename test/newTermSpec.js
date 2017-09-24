@@ -5,7 +5,7 @@ const testAdmin = require('./_shared.js').testAdmin;
 const testTranslator = require('./_shared.js').testTranslator;
 const testTerm = require('./_shared.js').testTerm;
 const testTerm2 = require('./_shared.js').testTerm2;
-const languages = require('./_shared.js').languages;
+const languages = require('./_shared.js').languages.data;
 
 describe('New term API', () => {
 
@@ -45,7 +45,7 @@ describe('New term API', () => {
 
   shouldLogIn(testAdmin);
 
-  it('should not create new term (no term name)', (done) => {
+  it('should not create new term (no wylie)', (done) => {
     request.post('/api/newTerm')
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .end(
@@ -57,7 +57,7 @@ describe('New term API', () => {
       )
   });
 
-  it('should not create new term (bad term name)', (done) => {
+  it('should not create new term (bad wylie)', (done) => {
     request.post('/api/newTerm')
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .send({term: 123})
@@ -83,9 +83,24 @@ describe('New term API', () => {
       )
   });
 
-  it('should not create new term (invalid sanskrits)', (done) => {
+  it('should not create new term (sanskrit versions amount does not match languagues amount)', (done) => {
     const sanskrit = JSON.parse(JSON.stringify(testTerm.sanskrit));
     delete sanskrit.sanskrit_rus;
+    request.post('/api/newTerm')
+      .set('Authorization', 'Bearer ' + testAdmin.token)
+      .send({term: testTerm.name, sanskrit})
+      .end(
+        (err, res) => {
+          assert.notEqual(res.body.success, true);
+          assert.equal(res.body.message, "Can't create new term. Invalid sanskrit");
+          done();
+        }
+      )
+  });
+
+  it('should not create new term (invalid sanskrit)', (done) => {
+    const sanskrit = JSON.parse(JSON.stringify(testTerm.sanskrit));
+    sanskrit.sanskrit_rus = true;
     request.post('/api/newTerm')
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .send({term: testTerm.name, sanskrit})
