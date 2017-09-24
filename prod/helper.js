@@ -1,3 +1,5 @@
+const logger = require('./log/logger');
+
 class ApiError {
   constructor(text, code = 500) {
     this.text = text;
@@ -10,6 +12,9 @@ const sendApiError = (res, text, error) => {
   if (error instanceof ApiError) {
     text = text + ' ' + error.text;
     code = error.code
+  }
+  else { // really need else ?
+    logger.error(error);
   }
   // res.statusCode = code ???
   res.send({

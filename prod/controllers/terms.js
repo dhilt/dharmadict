@@ -109,18 +109,14 @@ const create = (wylie, sanskrit) => validator.create(wylie, sanskrit)
       body: payload,
       refresh: true
     }).then(() => {
-      logger.info('Term was successfully created');
+      logger.info(`Term "${term.id}" was successfully created`);
       return term.id
     }, error => {
       logger.error(error.message);
       throw new ApiError('Database error')
     })
   })
-  .then(termId => findById(termId))
-  .then(term => {
-    delete term.translations;
-    return term
-  });
+  .then(termId => findById(termId));
 
 const update = (user, termId, translation) => validator.update(termId, translation)
   .then(() => {
@@ -141,16 +137,16 @@ const update = (user, termId, translation) => validator.update(termId, translati
     let foundT = term.translations.find(t => t.translatorId === user.id);
     let isEmpty = !(translation.meanings && translation.meanings.length);
     if (!foundT && !isEmpty) {
-      term.translations.push(translation);
+      term.translations.push(translation)
     } else if (foundT) {
       if (isEmpty) {
-        term.translations = term.translations.filter(t => t.translatorId !== user.id);
+        term.translations = term.translations.filter(t => t.translatorId !== user.id)
       } else {
-        foundT.meanings = translation.meanings;
+        foundT.meanings = translation.meanings
       }
     }
     translation.meanings.forEach(m => m.versions_lower = m.versions.map(v => v.toLowerCase()));
-    delete term.id
+    delete term.id;
     return term
   })
   .then(term =>
@@ -161,37 +157,29 @@ const update = (user, termId, translation) => validator.update(termId, translati
       body: term,
       refresh: true
     }).then(() =>
-      logger.info('Term was successfully updated')
-    , error => {
-      logger.error(error.message);
-      return new ApiError('Database error')
-    })
+        logger.info(`Term "${term.id}" was successfully updated`)
+      , error => {
+        logger.error(error.message);
+        throw new ApiError('Database error')
+      })
   )
   .then(() => findById(termId))
   .then(term => findTranslations(user, term, term.translations));
 
-const removeById = termId => new Promise(resolve => {
-  if (!termId || typeof termId !== 'string') {
-    throw new ApiError('Invalid id')
-  }
-  resolve()
-})
+const removeById = termId => validator.remove(termId)
   .then(() => findById(termId))
-  .then(() =>
+  .then((term) =>
     elasticClient.delete({
       index: config.db.index,
       type: 'terms',
       id: termId,
       refresh: true
-    }).then(() => {
-      logger.info('Term was successfully deleted');
-      return {
-        success: true
-      }
-    }, error => {
-      logger.error(error.message);
-      throw new ApiError('DB error')
-    })
+    }).then(() =>
+        logger.info(`Term "${term.id}" was successfully deleted`)
+      , error => {
+        logger.error(error.message);
+        throw new ApiError('DB error')
+      })
   );
 
 module.exports = {
