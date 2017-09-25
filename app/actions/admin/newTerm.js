@@ -29,7 +29,7 @@ export function saveTermAsync() {
       type: ADD_TERM_START
     })
     console.log('Let\'s start a new term add request to db! The term is "' + wylie + '".')
-    return asyncRequest(`newTerm`, 'post', {term: wylie, sanskrit}, (data, error) => {
+    return asyncRequest(`terms`, 'post', {term: wylie, sanskrit}, (data, error) => {
       dispatch({
         type: ADD_TERM_END,
         error: error,

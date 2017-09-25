@@ -12,7 +12,7 @@ const testTermTranslation2 = require('./_shared.js').testTermTranslation2;
 describe('Update term API', () => {
 
   it('should work', (done) => {
-    request.post('/api/update').end(
+    request.patch('/api/terms').end(
       (err, res) => {
         res.should.have.status(200);
         done();
@@ -21,7 +21,7 @@ describe('Update term API', () => {
   });
 
   it('should not update term (auth needed)', (done) => {
-    request.post('/api/update')
+    request.patch('/api/terms')
       .end(
         (err, res) => {
           assert.notEqual(res.body.success, true);
@@ -36,7 +36,7 @@ describe('Update term API', () => {
   it('should not update term (no termId)', (done) => {
     let term = JSON.parse(JSON.stringify(testTermTranslation));
     delete term['termId'];
-    request.post('/api/update')
+    request.patch('/api/terms')
       .set('Authorization', 'Bearer ' + testTranslator.token)
       .send(term)
       .end(
@@ -51,7 +51,7 @@ describe('Update term API', () => {
   it('should not update term (bad termId)', (done) => {
     let term = JSON.parse(JSON.stringify(testTermTranslation));
     term.termId = 123;
-    request.post('/api/update')
+    request.patch('/api/terms')
       .set('Authorization', 'Bearer ' + testTranslator.token)
       .send(term)
       .end(
@@ -66,7 +66,7 @@ describe('Update term API', () => {
   it('should not update term (no translation)', (done) => {
     let term = JSON.parse(JSON.stringify(testTermTranslation));
     delete term['translation'];
-    request.post('/api/update')
+    request.patch('/api/terms')
       .set('Authorization', 'Bearer ' + testTranslator.token)
       .send(term)
       .end(
@@ -81,7 +81,7 @@ describe('Update term API', () => {
   it('should not update term (no meanings)', (done) => {
     let term = JSON.parse(JSON.stringify(testTermTranslation));
     delete term['translation'].meanings;
-    request.post('/api/update')
+    request.patch('/api/terms')
       .set('Authorization', 'Bearer ' + testTranslator.token)
       .send(term)
       .end(
@@ -96,7 +96,7 @@ describe('Update term API', () => {
   it('should not update term (bad meanings)', (done) => {
     let term = JSON.parse(JSON.stringify(testTermTranslation));
     term.translation.meanings = 123;
-    request.post('/api/update')
+    request.patch('/api/terms')
       .set('Authorization', 'Bearer ' + testTranslator.token)
       .send(term)
       .end(
@@ -111,7 +111,7 @@ describe('Update term API', () => {
   it('should not update term (no versions)', (done) => {
     let term = JSON.parse(JSON.stringify(testTermTranslation));
     delete term.translation.meanings[0].versions;
-    request.post('/api/update')
+    request.patch('/api/terms')
       .set('Authorization', 'Bearer ' + testTranslator.token)
       .send(term)
       .end(
@@ -126,7 +126,7 @@ describe('Update term API', () => {
   it('should not update term (bad versions)', (done) => {
     let term = JSON.parse(JSON.stringify(testTermTranslation));
     term.translation.meanings[0].versions = 123;
-    request.post('/api/update')
+    request.patch('/api/terms')
       .set('Authorization', 'Bearer ' + testTranslator.token)
       .send(term)
       .end(
@@ -141,7 +141,7 @@ describe('Update term API', () => {
   it('should not update term (bad comment)', (done) => {
     let term = JSON.parse(JSON.stringify(testTermTranslation));
     term.translation.meanings[0].comment = 123;
-    request.post('/api/update')
+    request.patch('/api/terms')
       .set('Authorization', 'Bearer ' + testTranslator.token)
       .send(term)
       .end(
@@ -156,7 +156,7 @@ describe('Update term API', () => {
   it('should not update term (term not found)', (done) => {
     let term = JSON.parse(JSON.stringify(testTermTranslation));
     term.termId = testTerm.id + '___';
-    request.post('/api/update')
+    request.patch('/api/terms')
       .set('Authorization', 'Bearer ' + testTranslator.token)
       .send(term)
       .end(
@@ -173,7 +173,7 @@ describe('Update term API', () => {
       let _term = JSON.parse(JSON.stringify(testTermTranslation));
       _term.termName = term;
       _term.translation.translatorId = translator.id;
-      request.post('/api/update')
+      request.patch('/api/terms')
         .set('Authorization', 'Bearer ' + translator.token)
         .send(_term)
         .end(
@@ -199,7 +199,7 @@ describe('Update term API', () => {
     let term = JSON.parse(JSON.stringify(testTermTranslation));
     term.termName = testTerm.name;
     term.translation.meanings.push({versions: ["New test translation"], comment: "New test comment"});
-    request.post('/api/update')
+    request.patch('/api/terms')
       .set('Authorization', 'Bearer ' + testTranslator.token)
       .send(term)
       .end(
@@ -221,7 +221,7 @@ describe('Update term API', () => {
     let term = JSON.parse(JSON.stringify(testTermTranslation));
     term.termName = testTerm.name;
     term.translation.meanings = [];
-    request.post('/api/update')
+    request.patch('/api/terms')
       .set('Authorization', 'Bearer ' + testTranslator.token)
       .send(term)
       .end(
@@ -241,7 +241,7 @@ describe('Update term API', () => {
     let term = JSON.parse(JSON.stringify(testTermTranslation));
     term.termName = testTerm.name;
     term.translation.meanings[0].comment = "New test comment by admin";
-    request.post('/api/update')
+    request.patch('/api/terms')
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .send(term)
       .end(
@@ -259,7 +259,7 @@ describe('Update term API', () => {
   it('should not update term (unpermitted access)', (done) => {
     let term = JSON.parse(JSON.stringify(testTermTranslation));
     term.termName = testTerm.name;
-    request.post('/api/update')
+    request.patch('/api/terms')
       .set('Authorization', 'Bearer ' + testTranslator2.token)
       .send(term)
       .end(

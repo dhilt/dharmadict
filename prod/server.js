@@ -84,13 +84,13 @@ app.patch('/api/users/:id', (req, res) =>
     .catch(error => sendApiError(res, 'Can\'t update translator description.', error))
 );
 
-app.get('/api/search', (req, res) =>
+app.get('/api/terms', (req, res) =>
   termsController.searchByPattern(req.query.pattern)
     .then(result => res.json(result))
     .catch(error => sendApiError(res, 'Search error.', error))
 );
 
-app.get('/api/translation', (req, res) => {
+app.get('/api/terms/translation', (req, res) => {
   const {termId, translatorId} = req.query;
   if (!termId || !translatorId) {
     return sendApiError(res, 'Incorrect /api/term request params', null);
@@ -122,7 +122,7 @@ app.get('/api/translation', (req, res) => {
     })
 });
 
-app.post('/api/update', (req, res) => {
+app.patch('/api/terms', (req, res) => {
   const {termId, translation} = req.body;
   doAuthorize(req)
     .then(user => termsController.update(user, termId, translation))
@@ -130,7 +130,7 @@ app.post('/api/update', (req, res) => {
     .catch(error => sendApiError(res, 'Can\'t update term.', error))
 });
 
-app.post('/api/newTerm', (req, res) =>
+app.post('/api/terms', (req, res) =>
   doAuthorize(req)
     .then(user => usersController.isAdmin(user))
     .then(() => termsController.create(req.body.term, req.body.sanskrit))

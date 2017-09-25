@@ -10,7 +10,7 @@ const languages = require('./_shared.js').languages.data;
 describe('New term API', () => {
 
   it('should work', (done) => {
-    request.post('/api/newTerm').end(
+    request.post('/api/terms').end(
       (err, res) => {
         res.should.have.status(200);
         done();
@@ -19,7 +19,7 @@ describe('New term API', () => {
   });
 
   it('should not create new term (auth needed)', (done) => {
-    request.post('/api/newTerm')
+    request.post('/api/terms')
       .end(
         (err, res) => {
           assert.notEqual(res.body.success, true);
@@ -32,7 +32,7 @@ describe('New term API', () => {
   shouldLogIn(testTranslator);
 
   it('should not create new term (admin only)', (done) => {
-    request.post('/api/newTerm')
+    request.post('/api/terms')
       .set('Authorization', 'Bearer ' + testTranslator.token)
       .end(
         (err, res) => {
@@ -46,7 +46,7 @@ describe('New term API', () => {
   shouldLogIn(testAdmin);
 
   it('should not create new term (no wylie)', (done) => {
-    request.post('/api/newTerm')
+    request.post('/api/terms')
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .end(
         (err, res) => {
@@ -58,7 +58,7 @@ describe('New term API', () => {
   });
 
   it('should not create new term (bad wylie)', (done) => {
-    request.post('/api/newTerm')
+    request.post('/api/terms')
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .send({term: 123})
       .end(
@@ -71,7 +71,7 @@ describe('New term API', () => {
   });
 
   it('should not create new term (no sanskrit)', (done) => {
-    request.post('/api/newTerm')
+    request.post('/api/terms')
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .send({term: testTerm.name})
       .end(
@@ -86,7 +86,7 @@ describe('New term API', () => {
   it('should not create new term (sanskrit versions amount does not match languagues amount)', (done) => {
     const sanskrit = JSON.parse(JSON.stringify(testTerm.sanskrit));
     delete sanskrit.sanskrit_rus;
-    request.post('/api/newTerm')
+    request.post('/api/terms')
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .send({term: testTerm.name, sanskrit})
       .end(
@@ -102,7 +102,7 @@ describe('New term API', () => {
     const sanskrit = JSON.parse(JSON.stringify(testTerm.sanskrit));
     const invalidKey = 'sanskrit_rus';
     sanskrit[invalidKey] = true;
-    request.post('/api/newTerm')
+    request.post('/api/terms')
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .send({term: testTerm.name, sanskrit})
       .end(
@@ -115,7 +115,7 @@ describe('New term API', () => {
   });
 
   it('should create new term', (done) => {
-    request.post('/api/newTerm')
+    request.post('/api/terms')
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .send({term: testTerm.name, sanskrit: testTerm.sanskrit})
       .end(
@@ -132,7 +132,7 @@ describe('New term API', () => {
   });
 
   it('should create new term 2', (done) => {
-    request.post('/api/newTerm')
+    request.post('/api/terms')
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .send({term: testTerm2.name, sanskrit: testTerm2.sanskrit})
       .end(
@@ -149,7 +149,7 @@ describe('New term API', () => {
   });
 
   it('should not create duplicate term', (done) => {
-    request.post('/api/newTerm')
+    request.post('/api/terms')
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .send({term: testTerm.name, sanskrit: testTerm.sanskrit})
       .end(

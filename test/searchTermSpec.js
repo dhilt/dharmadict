@@ -10,7 +10,7 @@ const testTermTranslation2 = require('./_shared.js').testTermTranslation2;
 describe('Search term API', () => {
 
   it('should work', (done) => {
-    request.get('/api/search').end(
+    request.get('/api/terms').end(
       (err, res) => {
         res.should.have.status(200);
         done();
@@ -19,7 +19,7 @@ describe('Search term API', () => {
   });
 
   it('should not search term (no pattern)', (done) => {
-    request.get('/api/search').end(
+    request.get('/api/terms').end(
       (err, res) => {
         assert.equal(500, res.body.code);
         assert.equal(true, res.body.error);
@@ -73,7 +73,7 @@ describe('Search term API', () => {
   };
 
   it('should search two test terms', (done) => {
-    request.get('/api/search?pattern=' + testTerm.name).end(
+    request.get('/api/terms?pattern=' + testTerm.name).end(
       (err, res) => {
         const terms = res.body;
         assert.equal(true, !!terms);
@@ -100,7 +100,7 @@ describe('Search term API', () => {
   });
 
   it('should search one test term ("test term two")', (done) => {
-    request.get('/api/search?pattern=' + testTerm2.name).end(
+    request.get('/api/terms?pattern=' + testTerm2.name).end(
       (err, res) => {
         let _term = res.body;
         assert.equal(true, !!_term);

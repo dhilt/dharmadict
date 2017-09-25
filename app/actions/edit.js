@@ -50,7 +50,7 @@ export function selectTranslation(translatorId, termId) {
         type: TRANSLATION_REQUEST_START
       })
       console.log('Let\'s start an async translation request to db! The term is "' + termId + '".')
-      return asyncRequest(`translation?translatorId=${translatorId}&termId=${termId}`, 'get', null, (data, error) => {
+      return asyncRequest(`terms/translation?translatorId=${translatorId}&termId=${termId}`, 'get', null, (data, error) => {
         let translation = data ? data.result.translation : null
         dispatchTranslationRequestEnd(dispatch, translatorId, translation, data ? data.termId : '', data ? data.termName : '', error)
       })
@@ -143,7 +143,7 @@ export function saveTranslationAsync(shouldClose) {
       type: TRANSLATION_UPDATE_START
     })
     console.log('Let\'s start an async update translation request to db! The term is "' + termId + '".')
-    return asyncRequest(`update`, 'post', {
+    return asyncRequest(`terms`, 'PATCH', {
       termId: termId,
       translation
     }, (data, error) => {

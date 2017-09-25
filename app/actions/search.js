@@ -22,7 +22,7 @@ function searchRequestAsync(dispatch, getState, cb) {
     type: SEARCH_REQUEST_START
   })
   console.log('Let\'s start an async request to db! searchString is "' + searchString + '"')
-  return asyncRequest(`search?pattern=${searchString}`, 'get', null, (data, error) => {
+  return asyncRequest(`terms?pattern=${searchString}`, 'get', null, (data, error) => {
     let searchEnd = dispatch({
       type: SEARCH_REQUEST_END,
       result: data,
