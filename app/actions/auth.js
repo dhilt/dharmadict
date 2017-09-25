@@ -17,7 +17,7 @@ import {
 export function getUserInfoAsync() {
   return (dispatch, getState) => {
     let authState = getState().auth
-    let promise = asyncRequest('userInfo', false, (data, error) =>
+    let promise = asyncRequest('userInfo', 'get', false, (data, error) =>
       dispatch({
         type: USERINFO_REQUEST_END,
         result: data,
@@ -62,7 +62,7 @@ export function changePasswordString(password) {
 export function doLoginAsync() {
   return (dispatch, getState) => {
     let authState = getState().auth
-    let promise = asyncRequest('login', {
+    let promise = asyncRequest('login', 'post', {
       login: authState.login,
       password: authState.password
     }, (data, error) => {

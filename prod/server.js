@@ -76,10 +76,10 @@ app.post('/api/users', (req, res) =>
     .catch(error => sendApiError(res, 'Can\'t create new user.', error))
 );
 
-app.put('/api/users', (req, res) =>
+app.put('/api/users/:id', (req, res) =>
   doAuthorize(req)
     .then(user => usersController.isAdmin(user))
-    .then(user => usersController.update(req.body.userId, req.body.payload))
+    .then(user => usersController.update(req.params.id, req.body.payload))
     .then(result => res.json({success: true, user: usersController.getUserInfo(result)}))
     .catch(error => sendApiError(res, 'Can\'t update translator description.', error))
 );

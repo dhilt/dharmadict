@@ -11,7 +11,7 @@ export function getCommonDataAsync() {
       type: GET_COMMON_DATA_START
     })
     const query = 'common'
-    asyncRequest(query, false, (data, error) =>
+    asyncRequest(query, 'get', false, (data, error) =>
       dispatch({
         type: GET_COMMON_DATA_END,
         translators: data.translators,

@@ -22,7 +22,7 @@ export function getAdminUserDataAsync(userId) {
       type: GET_ADMIN_USER_DATA_START
     })
     const {id, dataSource} = getState().admin.editUser
-    asyncRequest(query, false, (data, error) =>
+    asyncRequest(query, 'get', false, (data, error) =>
       dispatch({
         type: GET_ADMIN_USER_DATA_END,
         error: error ? error : null,
@@ -39,7 +39,8 @@ export function changeAdminUserDataAsync() {
       type: CHANGE_ADMIN_USER_DATA_START
     })
     const {id, data, dataSource} = getState().admin.editUser
-    return asyncRequest('updateUser', {userId: id, payload: data}, (data, error) =>
+    const query = 'users/' + id
+    return asyncRequest(query, 'put', {payload: data}, (data, error) =>
       dispatch({
         type: CHANGE_ADMIN_USER_DATA_END,
         error: error ? error : null,

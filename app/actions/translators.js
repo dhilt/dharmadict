@@ -11,7 +11,7 @@ export function getTranslatorInfoAsync(userId) {
     dispatch({
       type: GET_TRANSLATOR_INFO_START
     })
-    asyncRequest(query, false, (data, error) =>
+    asyncRequest(query, 'get', false, (data, error) =>
       dispatch({
         type: GET_TRANSLATOR_INFO_END,
         error: error,

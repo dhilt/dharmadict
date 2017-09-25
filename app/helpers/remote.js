@@ -1,26 +1,24 @@
 import fetch from 'isomorphic-fetch'
 import auth from './auth'
 
-let getConfig = (payload) => {
+let getConfig = (payload, typeQuery) => {
   let config = {
     headers: {}
   };
   if (payload) {
-    config.method = 'post'
     config.body = JSON.stringify(payload)
     config.headers['Accept'] = 'application/json'
     config.headers['Content-Type'] = 'application/json'
-  } else {
-    config.method = 'get'
   }
+  config.method = typeQuery
   if (auth.loggedIn()) {
     config.headers['Authorization'] = `Bearer ${auth.getToken()}`
   }
   return config
 }
 
-let asyncRequest = (path, payload, cb) =>
-  fetch('api/' + path, getConfig(payload))
+let asyncRequest = (path, typeQuery, payload, cb) =>
+  fetch('api/' + path, getConfig(payload, typeQuery))
   .then(response => {
     if (!response.ok) {
       throw ({
