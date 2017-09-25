@@ -5,7 +5,6 @@ const testAdmin = require('./_shared.js').testAdmin;
 const testTranslator = require('./_shared.js').testTranslator;
 
 const requestObj = {
-  userId: testTranslator.id,
   payload: {
     name: 'Name of test-translator',
     language: 'eng',
@@ -15,8 +14,10 @@ const requestObj = {
 
 describe('Update user API', () => {
 
+  const queryUpdateUser = '/api/users/' + testTranslator.id;
+
   it('should work', (done) => {
-    request.put('/api/users').end(
+    request.patch(queryUpdateUser).end(
       (err, res) => {
         res.should.have.status(200);
         done();
@@ -25,7 +26,7 @@ describe('Update user API', () => {
   });
 
   it('should not update user information (auth needed)', (done) => {
-    request.put('/api/users')
+    request.patch(queryUpdateUser)
       .end(
         (err, res) => {
           assert.notEqual(res.body.success, true);
@@ -38,7 +39,7 @@ describe('Update user API', () => {
   shouldLogIn(testTranslator);
 
   it('should not update user information (admin only)', (done) => {
-    request.put('/api/users')
+    request.patch(queryUpdateUser)
       .set('Authorization', 'Bearer ' + testTranslator.token)
       .send(requestObj)
       .end(
@@ -55,7 +56,7 @@ describe('Update user API', () => {
   it('should not update user information (no payload)', (done) => {
     let _requestObj = Object.assign({}, requestObj);
     delete _requestObj.payload;
-    request.put('/api/users')
+    request.patch(queryUpdateUser)
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .send(_requestObj)
       .end(
@@ -70,7 +71,7 @@ describe('Update user API', () => {
   it('should not update user information (invalid payload)', (done) => {
     let _requestObj = Object.assign({}, requestObj);
     _requestObj.payload = false;
-    request.put('/api/users')
+    request.patch(queryUpdateUser)
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .send(_requestObj)
       .end(
@@ -84,29 +85,12 @@ describe('Update user API', () => {
 
   it('should not update user information (no id)', (done) => {
     let _requestObj = Object.assign({}, requestObj);
-    delete _requestObj['userId'];
-    request.put('/api/users')
+    request.patch('/api/users/')
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .send(_requestObj)
       .end(
         (err, res) => {
-          assert.notEqual(res.body.success, true);
-          assert.equal(res.body.message, "Can't update translator description. Invalid id");
-          done();
-        }
-      )
-  });
-
-  it('should not update user information (invalid id)', (done) => {
-    let _requestObj = Object.assign({}, requestObj);
-    _requestObj['userId'] = false;
-    request.put('/api/users')
-      .set('Authorization', 'Bearer ' + testAdmin.token)
-      .send(_requestObj)
-      .end(
-        (err, res) => {
-          assert.notEqual(res.body.success, true);
-          assert.equal(res.body.message, "Can't update translator description. Invalid id");
+          res.should.have.status(404);
           done();
         }
       )
@@ -114,8 +98,7 @@ describe('Update user API', () => {
 
   it('should not update user information (user not found)', (done) => {
     let _requestObj = Object.assign({}, requestObj);
-    _requestObj['userId'] += '-UNEXISTED!';
-    request.put('/api/users')
+    request.patch('/api/users/INEXISTENT_USER!')
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .send(_requestObj)
       .end(
@@ -130,7 +113,7 @@ describe('Update user API', () => {
   it('should not update user name (invalid name)', (done) => {
     let _requestObj = JSON.parse(JSON.stringify(requestObj));
     _requestObj.payload['name'] = false;
-    request.put('/api/users')
+    request.patch(queryUpdateUser)
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .send(_requestObj)
       .end(
@@ -145,7 +128,7 @@ describe('Update user API', () => {
   it('should not update user language (invalid language)', (done) => {
     let _requestObj = JSON.parse(JSON.stringify(requestObj));
     _requestObj.payload['language'] = false;
-    request.put('/api/users')
+    request.patch(queryUpdateUser)
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .send(_requestObj)
       .end(
@@ -160,7 +143,7 @@ describe('Update user API', () => {
   it('should not update user language (invalid language)', (done) => {
     let _requestObj = JSON.parse(JSON.stringify(requestObj));
     _requestObj.payload['language'] = 'russian';
-    request.put('/api/users')
+    request.patch(queryUpdateUser)
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .send(_requestObj)
       .end(
@@ -175,7 +158,7 @@ describe('Update user API', () => {
   it('should not update user description (invalid description)', (done) => {
     let _requestObj = JSON.parse(JSON.stringify(requestObj));
     _requestObj.payload['description'] = false;
-    request.put('/api/users')
+    request.patch(queryUpdateUser)
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .send(_requestObj)
       .end(
@@ -190,7 +173,7 @@ describe('Update user API', () => {
   it('should not update user if no name', (done) => {
     let _requestObj = JSON.parse(JSON.stringify(requestObj));
     delete _requestObj.payload['name'];
-    request.put('/api/users')
+    request.patch(queryUpdateUser)
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .send(_requestObj)
       .end(
@@ -205,7 +188,7 @@ describe('Update user API', () => {
   it('should not update user if no language', (done) => {
     let _requestObj = JSON.parse(JSON.stringify(requestObj));
     delete _requestObj.payload['language'];
-    request.put('/api/users')
+    request.patch(queryUpdateUser)
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .send(_requestObj)
       .end(
@@ -218,12 +201,14 @@ describe('Update user API', () => {
   });
 
   it('should update user information', (done) => {
-    request.put('/api/users')
+    request.patch(queryUpdateUser)
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .send(requestObj)
       .end(
         (err, res) => {
           assert.equal(res.body.success, true);
+          assert.equal(res.body.user.name, requestObj.payload.name);
+          assert.equal(res.body.user.language, requestObj.payload.language);
           assert.equal(res.body.user.description, requestObj.payload.description);
           done();
         }
@@ -233,7 +218,7 @@ describe('Update user API', () => {
   it('should not cleanup user name', (done) => {
     let _requestObj = JSON.parse(JSON.stringify(requestObj));
     _requestObj.payload['name'] = '  ';
-    request.put('/api/users')
+    request.patch(queryUpdateUser)
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .send(_requestObj)
       .end(
@@ -248,7 +233,7 @@ describe('Update user API', () => {
   it('should cleanup user description', (done) => {
     let _requestObj = JSON.parse(JSON.stringify(requestObj));
     _requestObj.payload['description'] = '  ';
-    request.put('/api/users')
+    request.patch(queryUpdateUser)
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .send(_requestObj)
       .end(
