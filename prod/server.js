@@ -76,7 +76,7 @@ app.post('/api/users', (req, res) =>
     .catch(error => sendApiError(res, 'Can\'t create new user.', error))
 );
 
-app.put('/api/users/:id', (req, res) =>
+app.patch('/api/users/:id', (req, res) =>
   doAuthorize(req)
     .then(user => usersController.isAdmin(user))
     .then(user => usersController.update(req.params.id, req.body.payload))
