@@ -32,16 +32,6 @@ app.get('/api/test', (req, res) => {
   res.send({success: true, param});
 });
 
-app.get('/api/common', (req, res) =>
-  usersController.findAll('translator')
-    .then(translators => res.send({
-      success: true,
-      translators,
-      languages: languages.data
-    }))
-    .catch(error => sendApiError(res, 'Can\'t get common data.', error))
-);
-
 app.get('/api/userInfo', (req, res) =>
   doAuthorize(req)
     .then(user => {
@@ -61,6 +51,38 @@ app.post('/api/login', (req, res) => {
     })
     .catch(error => sendApiError(res, 'Can\'t login.', error))
 });
+
+app.get('/api/common', (req, res) =>
+  usersController.findAll('translator')
+    .then(translators => res.send({
+      success: true,
+      translators,
+      languages: languages.data
+    }))
+    .catch(error => sendApiError(res, 'Can\'t get common data.', error))
+);
+
+app.put('/api/newUser', (req, res) =>
+  doAuthorize(req)
+    .then(user => usersController.isAdmin(user))
+    .then(user => usersController.create(req.body.user))
+    .then(result => res.json({success: true, user: result}))
+    .catch(error => sendApiError(res, 'Can\'t create new user.', error))
+);
+
+app.post('/api/updateUser', (req, res) =>
+  doAuthorize(req)
+    .then(user => usersController.isAdmin(user))
+    .then(user => usersController.update(req.body.userId, req.body.payload))
+    .then(result => res.json({success: true, user: usersController.getUserInfo(result)}))
+    .catch(error => sendApiError(res, 'Can\'t update translator description.', error))
+);
+
+app.get('/api/users/:id', (req, res) =>
+  usersController.findById(req.params.id)
+    .then(user => res.json({success: true, user: usersController.getUserInfo(user)}))
+    .catch(error => sendApiError(res, 'Can\'t find user', error))
+);
 
 app.get('/api/search', (req, res) =>
   termsController.searchByPattern(req.query.pattern)
@@ -122,28 +144,6 @@ app.delete('/api/terms/:id', (req, res) =>
     .then(() => termsController.removeById(req.params.id))
     .then(() => res.json({success: true}))
     .catch(error => sendApiError(res, 'Can\'t delete term.', error))
-);
-
-app.put('/api/newUser', (req, res) =>
-  doAuthorize(req)
-    .then(user => usersController.isAdmin(user))
-    .then(user => usersController.create(req.body.user))
-    .then(result => res.json({success: true, user: result}))
-    .catch(error => sendApiError(res, 'Can\'t create new user.', error))
-);
-
-app.post('/api/updateUser', (req, res) =>
-  doAuthorize(req)
-    .then(user => usersController.isAdmin(user))
-    .then(user => usersController.update(req.body.userId, req.body.payload))
-    .then(result => res.json({success: true, user: usersController.getUserInfo(result)}))
-    .catch(error => sendApiError(res, 'Can\'t update translator description.', error))
-);
-
-app.get('/api/users/:id', (req, res) =>
-  usersController.findById(req.params.id)
-    .then(user => res.json({success: true, user: usersController.getUserInfo(user)}))
-    .catch(error => sendApiError(res, 'Can\'t find user', error))
 );
 
 // serve static
