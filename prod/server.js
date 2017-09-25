@@ -62,7 +62,13 @@ app.get('/api/common', (req, res) =>
     .catch(error => sendApiError(res, 'Can\'t get common data.', error))
 );
 
-app.put('/api/newUser', (req, res) =>
+app.get('/api/users/:id', (req, res) =>
+  usersController.findById(req.params.id)
+    .then(user => res.json({success: true, user: usersController.getUserInfo(user)}))
+    .catch(error => sendApiError(res, 'Can\'t find user', error))
+);
+
+app.post('/api/users', (req, res) =>
   doAuthorize(req)
     .then(user => usersController.isAdmin(user))
     .then(user => usersController.create(req.body.user))
@@ -70,18 +76,12 @@ app.put('/api/newUser', (req, res) =>
     .catch(error => sendApiError(res, 'Can\'t create new user.', error))
 );
 
-app.post('/api/updateUser', (req, res) =>
+app.put('/api/users', (req, res) =>
   doAuthorize(req)
     .then(user => usersController.isAdmin(user))
     .then(user => usersController.update(req.body.userId, req.body.payload))
     .then(result => res.json({success: true, user: usersController.getUserInfo(result)}))
     .catch(error => sendApiError(res, 'Can\'t update translator description.', error))
-);
-
-app.get('/api/users/:id', (req, res) =>
-  usersController.findById(req.params.id)
-    .then(user => res.json({success: true, user: usersController.getUserInfo(user)}))
-    .catch(error => sendApiError(res, 'Can\'t find user', error))
 );
 
 app.get('/api/search', (req, res) =>

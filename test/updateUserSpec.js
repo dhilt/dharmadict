@@ -16,7 +16,7 @@ const requestObj = {
 describe('Update user API', () => {
 
   it('should work', (done) => {
-    request.post('/api/updateUser').end(
+    request.put('/api/users').end(
       (err, res) => {
         res.should.have.status(200);
         done();
@@ -25,7 +25,7 @@ describe('Update user API', () => {
   });
 
   it('should not update user information (auth needed)', (done) => {
-    request.post('/api/updateUser')
+    request.put('/api/users')
       .end(
         (err, res) => {
           assert.notEqual(res.body.success, true);
@@ -38,7 +38,7 @@ describe('Update user API', () => {
   shouldLogIn(testTranslator);
 
   it('should not update user information (admin only)', (done) => {
-    request.post('/api/updateUser')
+    request.put('/api/users')
       .set('Authorization', 'Bearer ' + testTranslator.token)
       .send(requestObj)
       .end(
@@ -55,7 +55,7 @@ describe('Update user API', () => {
   it('should not update user information (no payload)', (done) => {
     let _requestObj = Object.assign({}, requestObj);
     delete _requestObj.payload;
-    request.post('/api/updateUser')
+    request.put('/api/users')
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .send(_requestObj)
       .end(
@@ -70,7 +70,7 @@ describe('Update user API', () => {
   it('should not update user information (invalid payload)', (done) => {
     let _requestObj = Object.assign({}, requestObj);
     _requestObj.payload = false;
-    request.post('/api/updateUser')
+    request.put('/api/users')
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .send(_requestObj)
       .end(
@@ -85,7 +85,7 @@ describe('Update user API', () => {
   it('should not update user information (no id)', (done) => {
     let _requestObj = Object.assign({}, requestObj);
     delete _requestObj['userId'];
-    request.post('/api/updateUser')
+    request.put('/api/users')
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .send(_requestObj)
       .end(
@@ -100,7 +100,7 @@ describe('Update user API', () => {
   it('should not update user information (invalid id)', (done) => {
     let _requestObj = Object.assign({}, requestObj);
     _requestObj['userId'] = false;
-    request.post('/api/updateUser')
+    request.put('/api/users')
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .send(_requestObj)
       .end(
@@ -115,7 +115,7 @@ describe('Update user API', () => {
   it('should not update user information (user not found)', (done) => {
     let _requestObj = Object.assign({}, requestObj);
     _requestObj['userId'] += '-UNEXISTED!';
-    request.post('/api/updateUser')
+    request.put('/api/users')
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .send(_requestObj)
       .end(
@@ -130,7 +130,7 @@ describe('Update user API', () => {
   it('should not update user name (invalid name)', (done) => {
     let _requestObj = JSON.parse(JSON.stringify(requestObj));
     _requestObj.payload['name'] = false;
-    request.post('/api/updateUser')
+    request.put('/api/users')
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .send(_requestObj)
       .end(
@@ -145,7 +145,7 @@ describe('Update user API', () => {
   it('should not update user language (invalid language)', (done) => {
     let _requestObj = JSON.parse(JSON.stringify(requestObj));
     _requestObj.payload['language'] = false;
-    request.post('/api/updateUser')
+    request.put('/api/users')
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .send(_requestObj)
       .end(
@@ -160,7 +160,7 @@ describe('Update user API', () => {
   it('should not update user language (invalid language)', (done) => {
     let _requestObj = JSON.parse(JSON.stringify(requestObj));
     _requestObj.payload['language'] = 'russian';
-    request.post('/api/updateUser')
+    request.put('/api/users')
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .send(_requestObj)
       .end(
@@ -175,7 +175,7 @@ describe('Update user API', () => {
   it('should not update user description (invalid description)', (done) => {
     let _requestObj = JSON.parse(JSON.stringify(requestObj));
     _requestObj.payload['description'] = false;
-    request.post('/api/updateUser')
+    request.put('/api/users')
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .send(_requestObj)
       .end(
@@ -190,7 +190,7 @@ describe('Update user API', () => {
   it('should not update user if no name', (done) => {
     let _requestObj = JSON.parse(JSON.stringify(requestObj));
     delete _requestObj.payload['name'];
-    request.post('/api/updateUser')
+    request.put('/api/users')
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .send(_requestObj)
       .end(
@@ -205,7 +205,7 @@ describe('Update user API', () => {
   it('should not update user if no language', (done) => {
     let _requestObj = JSON.parse(JSON.stringify(requestObj));
     delete _requestObj.payload['language'];
-    request.post('/api/updateUser')
+    request.put('/api/users')
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .send(_requestObj)
       .end(
@@ -218,7 +218,7 @@ describe('Update user API', () => {
   });
 
   it('should update user information', (done) => {
-    request.post('/api/updateUser')
+    request.put('/api/users')
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .send(requestObj)
       .end(
@@ -233,7 +233,7 @@ describe('Update user API', () => {
   it('should not cleanup user name', (done) => {
     let _requestObj = JSON.parse(JSON.stringify(requestObj));
     _requestObj.payload['name'] = '  ';
-    request.post('/api/updateUser')
+    request.put('/api/users')
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .send(_requestObj)
       .end(
@@ -248,7 +248,7 @@ describe('Update user API', () => {
   it('should cleanup user description', (done) => {
     let _requestObj = JSON.parse(JSON.stringify(requestObj));
     _requestObj.payload['description'] = '  ';
-    request.post('/api/updateUser')
+    request.put('/api/users')
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .send(_requestObj)
       .end(
