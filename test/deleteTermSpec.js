@@ -8,12 +8,12 @@ const testTerm2 = require('./_shared.js').testTerm2;
 
 describe('Delete term API', () => {
 
-  const queryForFirstTerm = '/api/terms/' + testTerm.id;
-  const queryForSecondTerm = '/api/terms/' + testTerm2.id;
-  const queryForUnexistentTerm = '/api/terms/unexistent_term';
+  const removeTermUrl = '/api/terms/' + testTerm.id;
+  const removeTerm2Url = '/api/terms/' + testTerm2.id;
+  const removeInexistentTermUrl = '/api/terms/inexistent_term';
 
   it('should work', (done) => {
-    request.delete(queryForFirstTerm).end(
+    request.delete(removeTermUrl).end(
       (err, res) => {
         res.should.have.status(200);
         done();
@@ -22,7 +22,7 @@ describe('Delete term API', () => {
   });
 
   it('should not delete term (auth needed)', (done) => {
-    request.delete(queryForSecondTerm)
+    request.delete(removeTerm2Url)
       .end(
         (err, res) => {
           assert.notEqual(res.body.success, true);
@@ -35,7 +35,7 @@ describe('Delete term API', () => {
   shouldLogIn(testTranslator);
 
   it('should not delete term (admin only)', (done) => {
-    request.delete(queryForFirstTerm)
+    request.delete(removeTermUrl)
       .set('Authorization', 'Bearer ' + testTranslator.token)
       .end(
         (err, res) => {
@@ -53,7 +53,6 @@ describe('Delete term API', () => {
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .end(
         (err, res) => {
-          assert.notEqual(res.body.success, true);
           res.should.have.status(404);
           done();
         }
@@ -61,7 +60,7 @@ describe('Delete term API', () => {
   });
 
   it('should not delete term (term with that id doesn\'t exist)', (done) => {
-    request.delete(queryForUnexistentTerm)
+    request.delete(removeInexistentTermUrl)
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .end(
         (err, res) => {
@@ -72,8 +71,8 @@ describe('Delete term API', () => {
       )
   });
 
-  it('should delete term: "test_term"', (done) => {
-    request.delete(queryForFirstTerm)
+  it('should delete "' + testTerm.id + '" term', (done) => {
+    request.delete(removeTermUrl)
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .end(
         (err, res) => {
@@ -83,8 +82,8 @@ describe('Delete term API', () => {
       )
   });
 
-  it('should delete term: "test_term_two"', (done) => {
-    request.delete(queryForSecondTerm)
+  it('should delete "' + testTerm2.id + '" term', (done) => {
+    request.delete(removeTerm2Url)
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .end(
         (err, res) => {

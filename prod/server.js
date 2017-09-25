@@ -120,7 +120,7 @@ app.delete('/api/terms/:id', (req, res) =>
   doAuthorize(req)
     .then(user => usersController.isAdmin(user))
     .then(() => termsController.removeById(req.params.id))
-    .then(result => res.json({success: true, result}))
+    .then(() => res.json({success: true}))
     .catch(error => sendApiError(res, 'Can\'t delete term.', error))
 );
 
