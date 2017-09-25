@@ -168,18 +168,18 @@ const update = (user, termId, translation) => validator.update(termId, translati
 
 const removeById = termId => validator.remove(termId)
   .then(() => findById(termId))
-  .then((term) =>
+  .then(term =>
     elasticClient.delete({
       index: config.db.index,
       type: 'terms',
       id: termId,
       refresh: true
     }).then(() =>
-        logger.info(`Term "${term.id}" was successfully deleted`)
-      , error => {
-        logger.error(error.message);
-        throw new ApiError('DB error')
-      })
+      logger.info(`Term "${term.id}" was successfully deleted`)
+    , error => {
+      logger.error(error.message);
+      throw new ApiError('DB error')
+    })
   );
 
 module.exports = {

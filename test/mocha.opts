@@ -5,4 +5,5 @@ test/loginSpec.js
 test/newTermSpec.js
 test/updateTermSpec.js
 test/searchTermSpec.js
+test/deleteTermSpec.js
 test/deleteUserSpec.js

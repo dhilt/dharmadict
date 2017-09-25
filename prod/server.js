@@ -116,6 +116,14 @@ app.post('/api/newTerm', (req, res) =>
     .catch(error => sendApiError(res, 'Can\'t create new term.', error))
 );
 
+app.delete('/api/terms/:id', (req, res) =>
+  doAuthorize(req)
+    .then(user => usersController.isAdmin(user))
+    .then(() => termsController.removeById(req.params.id))
+    .then(result => res.json({success: true, result}))
+    .catch(error => sendApiError(res, 'Can\'t delete term.', error))
+);
+
 app.put('/api/newUser', (req, res) =>
   doAuthorize(req)
     .then(user => usersController.isAdmin(user))
