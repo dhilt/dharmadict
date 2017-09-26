@@ -79,6 +79,16 @@ const users = [{
     language: 'eng',
     description: ''
   }
+}, {
+  id: 'MM',
+  body: {
+    role: 'translator',
+    login: 'mm',
+    name: 'М. Малыгина',
+    hash: 'sha1$18cbc60d$1$48da07d81b01164028c0eb727df7fa2b6ed57b3a',
+    language: 'rus',
+    description: ''
+  }
 }];
 
 const script = {
