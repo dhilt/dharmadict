@@ -10,7 +10,7 @@ let getConfig = (payload, typeQuery) => {
     config.headers['Accept'] = 'application/json'
     config.headers['Content-Type'] = 'application/json'
   }
-  config.method = typeQuery
+  config.method = typeQuery.toUpperCase()
   if (auth.loggedIn()) {
     config.headers['Authorization'] = `Bearer ${auth.getToken()}`
   }

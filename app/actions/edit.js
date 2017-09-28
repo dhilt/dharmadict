@@ -143,7 +143,7 @@ export function saveTranslationAsync(shouldClose) {
       type: TRANSLATION_UPDATE_START
     })
     console.log('Let\'s start an async update translation request to db! The term is "' + termId + '".')
-    return asyncRequest(`terms`, 'PATCH', {
+    return asyncRequest(`terms`, 'patch', {
       termId: termId,
       translation
     }, (data, error) => {
