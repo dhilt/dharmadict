@@ -17,7 +17,7 @@ class Edit extends Component {
   componentWillMount() {
     const {translatorId, termId} = this.props.query
     if (!translatorId || !termId) {
-      this.blockMessage = <h1><FormattedMessage id="Edit.should_select_term" /></h1>
+      this.blockMessage = <FormattedMessage id="Edit.should_select_term" />
       return
     }
     this.props.dispatch(selectTranslation(translatorId, termId))
