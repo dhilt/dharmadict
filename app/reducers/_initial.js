@@ -2,6 +2,7 @@ import auth from '../helpers/auth'
 
 let initialState = {
   common: {
+    userLanguage: 'en',
     translators: null,
     languages: null
   },

@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import {Link} from 'react-router'
+import {FormattedMessage} from 'react-intl'
 
 import {openLoginModal, closeLoginModal, changeLoginString, changePasswordString, doLoginAsync, doLogout} from '../../actions/auth'
 
@@ -27,7 +28,7 @@ class Header extends Component {
       <div>
         <Link to={`/translator/${userInfo.id}`}>{userInfo.name}</Link>
         <Logout doLogout={this.doLogout} />
-        {userInfo.role === 'admin' ? <Link to={`/newTerm`}>New term</Link> : null}
+        {userInfo.role === 'admin' ? <Link to={`/newTerm`}><FormattedMessage id="Header.create_new_term" /></Link> : null}
       </div>
     ) : (
       <div>
@@ -49,7 +50,7 @@ class Header extends Component {
     return (
       <div className='nav'>
         <div className='nav__wrapper'>
-          <Link to={'/about'}>О проекте</Link>
+          <Link to={'/about'}><FormattedMessage id="Header.about_project" /></Link>
           {navButtons}
         </div>
       </div>

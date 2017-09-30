@@ -25,6 +25,7 @@ import {
   ADD_TERM_END,
   GET_COMMON_DATA_START,
   GET_COMMON_DATA_END,
+  CHANGE_USER_LANGUAGE,
   GET_TRANSLATOR_INFO_START,
   GET_TRANSLATOR_INFO_END,
   GET_ADMIN_USER_DATA_START,
@@ -49,6 +50,12 @@ function reducer(state = initialState, action) {
         common: {...state.common,
           translators: action.translators,
           languages: action.languages
+        }
+      }
+    case CHANGE_USER_LANGUAGE:
+      return {...state,
+        common: {...state.common,
+          userLanguage: action.language
         }
       }
     case CHANGE_ROUTE:

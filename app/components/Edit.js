@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
+import {FormattedMessage} from 'react-intl'
 
 import Meanings from './edit/Meanings'
 
@@ -16,7 +17,7 @@ class Edit extends Component {
   componentWillMount() {
     const {translatorId, termId} = this.props.query
     if (!translatorId || !termId) {
-      this.blockMessage = 'You should select a term to edit.'
+      this.blockMessage = <h1><FormattedMessage id="Edit.should_select_term" /></h1>
       return
     }
     this.props.dispatch(selectTranslation(translatorId, termId))
@@ -32,7 +33,7 @@ class Edit extends Component {
     return (
       <div>
         <a className="back-link" onClick={() => this._goBack()}>
-          Назад
+          <FormattedMessage id="Edit.go_back" />
         </a>
         {
           this.blockMessage ? (
@@ -44,14 +45,14 @@ class Edit extends Component {
         {
           editState.pending ? (
             <div>
-              Запрос выполняется. Пожалуйста, подождите...
+              <FormattedMessage id="Edit.query_is_performed" />
             </div>
           ) : ( null )
         }
         {
           editState.error ? (
             <div>
-              Ошибка запроса.
+              <FormattedMessage id="Edit.request_error" />
               <div className="error">{editState.error.message}</div>
             </div>
           ) : ( null )

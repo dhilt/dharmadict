@@ -1,5 +1,6 @@
 import React from 'react'
 import Modal from 'react-modal'
+import {FormattedMessage} from 'react-intl'
 
 const customStyles = {
   content : {
@@ -16,13 +17,13 @@ const Login = props => {
 
   return (
     <span>
-      <a href="/login" onClick={openModal}>{'Login'}</a>
+      <a href="/login" onClick={openModal}><FormattedMessage id="Login.header_button_log_in" /></a>
       <Modal
         contentLabel="Log In Dialog"
         isOpen={props.data.modalIsOpen}
         onRequestClose={closeModal}
         style={customStyles}>
-        <h1>{'Please Log In'}</h1>
+        <h1><FormattedMessage id="Login.please_log_in"/></h1>
         <div className="login-modal-content">
           <form>
             <div className="form-group">
@@ -47,12 +48,12 @@ const Login = props => {
               onClick={doLogin} type="submit"
               disabled={!props.data.login || !props.data.password || props.data.pending}>
               <span className={props.data.pending ? "invisible" : ""}>
-                {'Log in!'}
+                <FormattedMessage id="Login.button_log_in" />
               </span>
             </button>
             <button className="btn btn-default"
               onClick={closeModal}>
-                {'Cancel'}
+              <FormattedMessage id="Login.button_cancel" />
             </button>
           </form>
         </div>

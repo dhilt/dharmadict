@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
+import {FormattedMessage} from 'react-intl'
 
 import EditControls from './EditControls'
 
@@ -25,7 +26,7 @@ class Meanings extends Component {
           <li key={meaningIndex}>
             <div className="meaning">
               <div className="title">
-                Значение {meaningIndex + 1}
+                <FormattedMessage id="Meanings.number_of_meaning" values={{indexOfMeaning: meaningIndex +1}} />
               </div>
               <ul className="versionList">
               {
@@ -44,7 +45,9 @@ class Meanings extends Component {
               </ul>
             </div>
             <div className="comment">
-              <span className="title">Комментарий к значению {meaningIndex + 1}</span>
+              <span className="title">
+                <FormattedMessage id="Meanings.comment_for_meaning" values={{indexOfMeaning: meaningIndex + 1}} />
+              </span>
               <div className="form-group form-inline">
                 <textarea className="form-control" name="comment"
                   value={meaning.comment || ''}
@@ -54,7 +57,7 @@ class Meanings extends Component {
             <div className="remove">
               <a className="remove-link"
                 onClick={(event) => this._onMeaningRemoved(event, meaningIndex)}>
-                Удалить значение {meaningIndex + 1}
+                <FormattedMessage id="Meanings.button_delete_meaning" values={{indexOfMeaning: meaningIndex + 1}} />
               </a>
             </div>
           </li>
@@ -64,12 +67,12 @@ class Meanings extends Component {
             {
               !this.props.data.change.meanings.length ? (
                 <div className="no-meanings">
-                  Нет ни одного значения
+                  <FormattedMessage id="Meanings.have_no_one_meaning" />
                 </div>
               ) : ( null )
             }
             <a className="add-new-meaning" onClick={this._addNewMeaning}>
-              Добавить новое значение
+              <FormattedMessage id="Meanings.add_new_meaning" />
             </a>
           </li>
         </ul>

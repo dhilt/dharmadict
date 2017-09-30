@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import {Button} from 'react-bootstrap'
+import {FormattedMessage} from 'react-intl'
 
 import {changeSearchString, doSearchRequestAsync} from '../../actions/search'
 
@@ -34,7 +35,7 @@ class SearchInput extends Component {
                 disabled={!search.searchString || search.pending}
                 onClick={this._onSubmit}>
                 <span className={search.pending ? 'invisible' : ''}>
-                  Найти
+                  <FormattedMessage id="SearchInput.button_find" />
                 </span>
               </Button>
             </div>

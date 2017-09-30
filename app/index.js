@@ -7,6 +7,7 @@ import {createStore, applyMiddleware} from 'redux'
 import {Provider} from 'react-redux'
 import thunkMiddleware from 'redux-thunk'
 import createLogger from 'redux-logger'
+import ConnectedIntlProvider from './helpers/ConnectedIntlProvider'
 
 import reducer from './reducers'
 import {changeRoute} from './actions/route'
@@ -46,7 +47,9 @@ browserHistory.listenBefore((location) => {
 
 ReactDOM.render(
   <Provider store={store}>
-    <Routes getAuthState={() => store.getState().auth} />
+    <ConnectedIntlProvider>
+      <Routes getAuthState={() => store.getState().auth} />
+    </ConnectedIntlProvider>
   </Provider>,
   document.getElementById('app')
 )

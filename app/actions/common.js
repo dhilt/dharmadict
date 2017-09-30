@@ -2,7 +2,8 @@ import asyncRequest from '../helpers/remote'
 
 import {
   GET_COMMON_DATA_START,
-  GET_COMMON_DATA_END
+  GET_COMMON_DATA_END,
+  CHANGE_USER_LANGUAGE
 } from './_constants'
 
 export function getCommonDataAsync() {
@@ -18,5 +19,12 @@ export function getCommonDataAsync() {
         languages: data.languages
       })
     )
+  }
+}
+
+export function changeUserLanguage(language) {
+  return {
+    type: CHANGE_USER_LANGUAGE,
+    language
   }
 }
