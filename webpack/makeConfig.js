@@ -71,6 +71,9 @@ function makeWebpackConfig (options) {
           loader: 'babel', // ...with the specified loaders...
           exclude: path.join(__dirname, '../', '/node_modules/') // ...except for the node_modules folder.
         }, {
+          test: /\.json$/,
+          loader: 'json-loader'
+        }, {
           test: /\.css$/, // Transform all .css files required somewhere within an entry point...
           loaders: ['style-loader', 'css-loader', 'postcss-loader'] // ...with PostCSS
         }, {

@@ -7,7 +7,7 @@ addLocaleData([...en, ...ru])
 
 function mapStateToProps(state) {
   const userLanguage = state.common.userLanguage
-  const messages = require('./i18n/' + userLanguage).default
+  const messages = require('./i18n/' + userLanguage)
   return { locale: userLanguage, messages }
 }
 
