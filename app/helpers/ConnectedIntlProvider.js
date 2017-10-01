@@ -6,7 +6,7 @@ import ru from 'react-intl/locale-data/ru'
 addLocaleData([...en, ...ru])
 
 function mapStateToProps(state) {
-  const userLanguage = state.common.userLanguage
+  const userLanguage = localStorage.getItem('userLanguage') || 'en'
   const messages = require('./i18n/' + userLanguage)
   return { locale: userLanguage, messages }
 }
