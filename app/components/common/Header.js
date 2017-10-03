@@ -10,6 +10,7 @@ import {changeUserLanguage} from '../../actions/common'
 import LoadingButton from './LoadingButton'
 import Login from './header/Login'
 import Logout from './header/Logout'
+import Languages from './header/Languages'
 
 class Header extends Component {
 
@@ -21,29 +22,17 @@ class Header extends Component {
     this.doLogin = this.doLogin.bind(this)
     this.onLoginChange = this.onLoginChange.bind(this)
     this.onPasswordChange = this.onPasswordChange.bind(this)
-    this.showLanguageMenu = this.showLanguageMenu.bind(this)
-    this._changeUserLanguage = this._changeUserLanguage.bind(this)
-    this.state = {languagesMenuIsShowed: false}
+    this.doChangeLang = this.doChangeLang.bind(this)
   }
 
   render () {
     let userInfo = !this.props.data.userInfo.pending ? this.props.data.userInfo.data : {}
-    let languageBar =
-      <span className="dropdown" style={{cursor: 'pointer'}} onClick={this.showLanguageMenu}>{'  Change language'}
-        <ul className="dropdown-menu" style={{display: this.state.languagesMenuIsShowed ? 'block' : 'none'}}>
-        {
-          this.props.languages && this.props.languages.length && this.props.languages.map(lang =>
-            <li key={lang.id} onClick={() => this._changeUserLanguage(lang.id)}>{lang.name}</li>
-          )
-        }
-        </ul>
-      </span>
     let navButtons = this.props.data.loggedIn ? (
       <div>
         <Link to={`/translator/${userInfo.id}`}>{userInfo.name}</Link>
         <Logout doLogout={this.doLogout} />
         {userInfo.role === 'admin' ? <Link to={`/newTerm`}><FormattedMessage id="Header.create_new_term" /></Link> : null}
-        {languageBar}
+        <Languages languages={this.props.languages} doChangeLang={this.doChangeLang} />
       </div>
     ) : (
       <div>
@@ -59,7 +48,7 @@ class Header extends Component {
             onPasswordChange={this.onPasswordChange}
           />
         }
-        {languageBar}
+        <Languages languages={this.props.languages} doChangeLang={this.doChangeLang} />
       </div>
     )
 
@@ -97,11 +86,7 @@ class Header extends Component {
     this.props.dispatch(doLoginAsync())
   }
 
-  showLanguageMenu () {
-    this.setState({languagesMenuIsShowed: !this.state.languagesMenuIsShowed})
-  }
-
-  _changeUserLanguage (langId) {
+  doChangeLang (langId) {
     this.props.dispatch(changeUserLanguage(langId))
   }
 }
