@@ -25,9 +25,9 @@ export function getCommonDataAsync() {
 
 export function changeUserLanguage(language) {
   language = lang.get(language)
-  localStorage.setItem('userLanguage', language)
+  lang.setUserLanguage(language)
   return {
     type: SET_LANGUAGE,
-    language: language
+    language
   }
 }

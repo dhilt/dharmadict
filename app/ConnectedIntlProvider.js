@@ -9,7 +9,7 @@ import lang from './helpers/lang'
 addLocaleData([...en, ...ru])
 
 function mapStateToProps(state) {
-  const language = lang.get(localStorage.getItem('userLanguage'))
+  const language = lang.getUserLanguage()
   const messages = require('./i18n/' + language)
   return { locale: language, messages }
 }

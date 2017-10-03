@@ -57,7 +57,8 @@ class SearchInput extends Component {
 
 function select (state) {
   return {
-    data: state.search
+    data: state.search,
+    lang: state.common.userLang
   }
 }
 

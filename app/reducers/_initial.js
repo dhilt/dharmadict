@@ -3,7 +3,7 @@ import lang from '../helpers/lang'
 
 let initialState = {
   common: {
-    userLanguage: lang.defaultLang,
+    userLanguage: '',
     translators: null,
     languages: null
   },
@@ -87,5 +87,6 @@ let initialState = {
 }
 
 auth.initialize(initialState.auth)
+lang.initialize(initialState.common)
 
 export default initialState
