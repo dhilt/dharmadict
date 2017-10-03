@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import {FormattedMessage} from 'react-intl'
 
 class Languages extends Component {
 
@@ -13,8 +14,8 @@ class Languages extends Component {
     const {isMenuOpen} = this.state
 
     return (
-      <span className="dropdown" style={{cursor: 'pointer'}} onClick={this.toggleMenu}>
-        {' Change language '}
+      <span className="dropdown" onClick={this.toggleMenu}>
+        <FormattedMessage id="Header.change_language" />
         <ul className="dropdown-menu" style={{display: isMenuOpen ? 'block' : 'none'}}>
         {
           languages && languages.length && languages.map(lang =>

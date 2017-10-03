@@ -38,9 +38,13 @@
   margin-left: 1em;
 }
 
+.nav a, .nav .dropdown {
+  cursor: pointer;
+  margin-left: 10px;
+}
+
 .nav a {
   color: #fff;
-  margin-left: 10px;
 }
 
 .nav a:hover {
