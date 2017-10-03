@@ -1,4 +1,5 @@
 import asyncRequest from '../helpers/remote'
+import lang from '../helpers/lang'
 
 import {
   GET_COMMON_DATA_START,
@@ -23,9 +24,10 @@ export function getCommonDataAsync() {
 }
 
 export function changeUserLanguage(language) {
-  localStorage.setItem('userLanguage', language.slice(0, 2))
+  language = lang.get(language)
+  localStorage.setItem('userLanguage', language)
   return {
     type: CHANGE_USER_LANGUAGE,
-    language: language.slice(0, 2)
+    language: language
   }
 }

@@ -7,7 +7,7 @@ import {createStore, applyMiddleware} from 'redux'
 import {Provider} from 'react-redux'
 import thunkMiddleware from 'redux-thunk'
 import createLogger from 'redux-logger'
-import ConnectedIntlProvider from './helpers/ConnectedIntlProvider'
+import ConnectedIntlProvider from './ConnectedIntlProvider'
 
 import App from './components/App'
 import Home from './components/Home'
