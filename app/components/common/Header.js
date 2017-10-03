@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import {Link} from 'react-router'
 import {FormattedMessage} from 'react-intl'
+import lang from '../../helpers/lang'
 
 import {openLoginModal, closeLoginModal, changeLoginString, changePasswordString, doLoginAsync, doLogout} from '../../actions/auth'
 import {changeUserLanguage} from '../../actions/common'
@@ -26,13 +27,15 @@ class Header extends Component {
   }
 
   render () {
-    let userInfo = !this.props.data.userInfo.pending ? this.props.data.userInfo.data : {}
-    let navButtons = this.props.data.loggedIn ? (
+    const languages = this.props.common.languages
+    const userInfo = !this.props.data.userInfo.pending ? this.props.data.userInfo.data : {}
+
+    const navButtons = this.props.data.loggedIn ? (
       <div>
         <Link to={`/translator/${userInfo.id}`}>{userInfo.name}</Link>
         <Logout doLogout={this.doLogout} />
         {userInfo.role === 'admin' ? <Link to={`/newTerm`}><FormattedMessage id="Header.create_new_term" /></Link> : null}
-        <Languages languages={this.props.languages} doChangeLang={this.doChangeLang} />
+        <Languages languages={languages} doChangeLang={this.doChangeLang} />
       </div>
     ) : (
       <div>
@@ -48,7 +51,7 @@ class Header extends Component {
             onPasswordChange={this.onPasswordChange}
           />
         }
-        <Languages languages={this.props.languages} doChangeLang={this.doChangeLang} />
+        <Languages languages={languages} doChangeLang={this.doChangeLang} />
       </div>
     )
 
@@ -87,6 +90,9 @@ class Header extends Component {
   }
 
   doChangeLang (langId) {
+    if(this.props.common.userLanguage === lang.get(langId)) {
+      return;
+    }
     this.props.dispatch(changeUserLanguage(langId))
   }
 }
@@ -98,7 +104,7 @@ Header.propTypes = {
 function select (state) {
   return {
     data: state.auth,
-    languages: state.common.languages
+    common: state.common,
   }
 }
 

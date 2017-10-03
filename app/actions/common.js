@@ -4,7 +4,7 @@ import lang from '../helpers/lang'
 import {
   GET_COMMON_DATA_START,
   GET_COMMON_DATA_END,
-  CHANGE_USER_LANGUAGE
+  SET_LANGUAGE
 } from './_constants'
 
 export function getCommonDataAsync() {
@@ -27,7 +27,7 @@ export function changeUserLanguage(language) {
   language = lang.get(language)
   localStorage.setItem('userLanguage', language)
   return {
-    type: CHANGE_USER_LANGUAGE,
+    type: SET_LANGUAGE,
     language: language
   }
 }
