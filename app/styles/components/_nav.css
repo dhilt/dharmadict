@@ -2,8 +2,7 @@
   margin-top: 1.2em;
   height: $nav-height;
   box-shadow: 0 0 2px rgba(0,0,0,.5);
-  /*padding: 1em;*/
-  padding: 0.5em;
+  padding: 1em;
   align-items: center;
   background-color: #37b893;
   z-index: 1;
@@ -80,4 +79,9 @@
 
 .login-modal-content input {
   margin-bottom: 10px;
+}
+
+.languages-bar-header {
+  float: right;
+  margin-top: -2.0em;
 }

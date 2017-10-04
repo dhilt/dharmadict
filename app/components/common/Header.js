@@ -35,7 +35,6 @@ class Header extends Component {
         <Link to={`/translator/${userInfo.id}`}>{userInfo.name}</Link>
         <Logout doLogout={this.doLogout} />
         {userInfo.role === 'admin' ? <Link to={`/newTerm`}><FormattedMessage id="Header.create_new_term" /></Link> : null}
-        <Languages languages={languages} current={userLanguage} doChangeLang={this.doChangeLang} />
       </div>
     ) : (
       <div>
@@ -51,7 +50,6 @@ class Header extends Component {
             onPasswordChange={this.onPasswordChange}
           />
         }
-        <Languages languages={languages} current={userLanguage} doChangeLang={this.doChangeLang} />
       </div>
     )
 
@@ -61,6 +59,7 @@ class Header extends Component {
           <Link to={'/about'}><FormattedMessage id="Header.about_project" /></Link>
           {navButtons}
         </div>
+        <Languages languages={languages} current={userLanguage} doChangeLang={this.doChangeLang} />
       </div>
     )
   }

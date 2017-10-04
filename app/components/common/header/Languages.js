@@ -38,15 +38,17 @@ class Languages extends Component {
     )
 
     return (
-      <DropdownButton title={title} id={`languagesDropdown`}>
-      {
-        languages.map(item =>
-          <MenuItem key={item.id} onSelect={() => doChangeLang(item.id)}>
-            {showLangId(item.id)} - {item.name}
-          </MenuItem>
-        )
-      }
-      </DropdownButton>
+      <div className="languages-bar-header">
+        <DropdownButton title={title} id={`languagesDropdown`}>
+        {
+          languages.map(item =>
+            <MenuItem key={item.id} onSelect={() => doChangeLang(item.id)}>
+              {showLangId(item.id)} - {item.name}
+            </MenuItem>
+          )
+        }
+        </DropdownButton>
+      </div>
     )
   }
 
