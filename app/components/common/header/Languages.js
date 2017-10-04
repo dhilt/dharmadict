@@ -39,7 +39,7 @@ class Languages extends Component {
 
     return (
       <div className="languages-bar-header">
-        <DropdownButton title={title} id={`languagesDropdown`}>
+        <DropdownButton title={title} pullRight id={`languagesDropdown`}>
         {
           languages.map(item =>
             <MenuItem key={item.id} onSelect={() => doChangeLang(item.id)}>
