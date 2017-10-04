@@ -18,7 +18,7 @@ class Languages extends Component {
       <DropdownButton bsStyle={'info'} title={<FormattedMessage id="Header.change_language" />}>
       {
         languages && languages.length && languages.map(lang =>
-          <li key={lang.id} onClick={() => doChangeLang(lang.id)}>{lang.name}</li>
+          <MenuItem key={lang.id} eventKey={() => doChangeLang(lang.id)}>{lang.name}</MenuItem>
         )
       }
       </DropdownButton>
