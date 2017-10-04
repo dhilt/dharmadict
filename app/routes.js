@@ -21,8 +21,8 @@ function unpermittedAccess (replace) {
   browserHistory.replace('/not_permitted')
 }
 
-function checkAuth (nextState, replace, callback, role) {
-  const auth = props.getAuthState() // ???
+function checkAuth (nextState, replace, callback, store, role) {
+  const auth = store.getState().auth
   if(auth.loggedIn && (!role || (auth.userInfo.data && auth.userInfo.data.role === role))) {
     callback()
     return
@@ -43,7 +43,7 @@ function checkAuth (nextState, replace, callback, role) {
   }
 }
 
-const routes = {
+const getRoutes = (store) => ({
   component: App,
   childRoutes: [
     { path: '/', exactly: true, component: Home },
@@ -53,19 +53,19 @@ const routes = {
       path: '/newTerm',
       exactly: true,
       component: NewTerm,
-      onEnter: (...args) => checkAuth(...args, 'admin')
+      onEnter: (...args) => checkAuth(...args, store, 'admin')
     },
     { path: '/translator/:id', exactly: true, component: TranslatorPage },
     {
       path: '/translator/:id/edit',
       exactly: true,
       component: EditUser,
-      onEnter: (...args) => checkAuth(...args, 'admin')
+      onEnter: (...args) => checkAuth(...args, store, 'admin')
     },
     { path: '/not_authorized', exactly: true, component: NotFound },
     { path: '/not_permitted', exactly: true, component: NotFound },
     { path: '*', component: NotFound }
   ]
-};
+});
 
-export default routes
+export default getRoutes

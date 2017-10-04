@@ -40,7 +40,7 @@ class Languages extends Component {
     return (
       <DropdownButton title={title} id={`languagesDropdown`}>
       {
-        languages.map((item, index) =>
+        languages.map(item =>
           <MenuItem key={item.id} onSelect={() => doChangeLang(item.id)}>
             {showLangId(item.id)} - {item.name}
           </MenuItem>

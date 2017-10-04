@@ -15,7 +15,7 @@ import {getUserInfoAsync} from './actions/auth'
 import {getCommonDataAsync} from './actions/common'
 import {selectTermAsync} from './actions/search'
 
-import routes from './routes'
+import getRoutes from './routes'
 import './styles/main.css'
 import './styles/images/favicon.ico';
 
@@ -48,7 +48,7 @@ browserHistory.listenBefore((location) => {
 ReactDOM.render(
   <Provider store={store}>
     <ConnectedIntlProvider>
-      <Router history={browserHistory} routes={routes} />
+      <Router history={browserHistory} routes={getRoutes(store)} />
     </ConnectedIntlProvider>
   </Provider>,
   document.getElementById('app')
