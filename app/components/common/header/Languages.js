@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {FormattedMessage} from 'react-intl'
 import {DropdownButton, MenuItem} from 'react-bootstrap'
+import lang from '../../../helpers/lang'
 
 class Languages extends Component {
 
@@ -11,14 +12,38 @@ class Languages extends Component {
   }
 
   render () {
-    const {languages, doChangeLang} = this.props
+    const {languages, current, doChangeLang} = this.props
     const {isMenuOpen} = this.state
 
-    return (
-      <DropdownButton bsStyle={'info'} title={<FormattedMessage id="Header.change_language" />} id={`DropdownButton-languages`}>
+    if(!languages || !languages.length) {
+      return (null)
+    }
+
+    const showLangId = (langId) => (
+      <span className={lang.get(langId) === current ? 'selected': ''}>
+        {lang.get(langId)}
+      </span>
+    )
+
+    const title = (
+      <span>
       {
-        languages && languages.length && languages.map(lang =>
-          <MenuItem key={lang.id} eventKey={() => doChangeLang(lang.id)}>{lang.name}</MenuItem>
+        languages.map((item, index) =>
+          <span key={item.id}>
+            {showLangId(item.id)}{index < languages.length - 1 ? '/': ''}
+          </span>
+        )
+      }
+      </span>
+    )
+
+    return (
+      <DropdownButton title={title} id={`languagesDropdown`}>
+      {
+        languages.map((item, index) =>
+          <MenuItem key={item.id} onSelect={() => doChangeLang(item.id)}>
+            {showLangId(item.id)} - {item.name}
+          </MenuItem>
         )
       }
       </DropdownButton>

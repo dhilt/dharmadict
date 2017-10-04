@@ -56,6 +56,14 @@
   color: #fff;
 }
 
+.nav .dropdown .btn {
+  padding: 0.4em
+}
+
+.nav .selected {
+  font-weight: bolder;
+}
+
 @media screen and (max-width: 400px) {
   .nav__wrapper {
     justify-content: none;

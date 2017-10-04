@@ -27,7 +27,7 @@ class Header extends Component {
   }
 
   render () {
-    const languages = this.props.common.languages
+    const {languages, userLanguage} = this.props.common
     const userInfo = !this.props.data.userInfo.pending ? this.props.data.userInfo.data : {}
 
     const navButtons = this.props.data.loggedIn ? (
@@ -35,7 +35,7 @@ class Header extends Component {
         <Link to={`/translator/${userInfo.id}`}>{userInfo.name}</Link>
         <Logout doLogout={this.doLogout} />
         {userInfo.role === 'admin' ? <Link to={`/newTerm`}><FormattedMessage id="Header.create_new_term" /></Link> : null}
-        <Languages languages={languages} doChangeLang={this.doChangeLang} />
+        <Languages languages={languages} current={userLanguage} doChangeLang={this.doChangeLang} />
       </div>
     ) : (
       <div>
@@ -51,7 +51,7 @@ class Header extends Component {
             onPasswordChange={this.onPasswordChange}
           />
         }
-        <Languages languages={languages} doChangeLang={this.doChangeLang} />
+        <Languages languages={languages} current={userLanguage} doChangeLang={this.doChangeLang} />
       </div>
     )
 
