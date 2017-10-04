@@ -15,7 +15,7 @@ class Languages extends Component {
     const {isMenuOpen} = this.state
 
     return (
-      <DropdownButton bsStyle={'info'} title={<FormattedMessage id="Header.change_language" />}>
+      <DropdownButton bsStyle={'info'} title={<FormattedMessage id="Header.change_language" />} id={`DropdownButton-languages`}>
       {
         languages && languages.length && languages.map(lang =>
           <MenuItem key={lang.id} eventKey={() => doChangeLang(lang.id)}>{lang.name}</MenuItem>
