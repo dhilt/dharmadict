@@ -27,7 +27,7 @@ const testTranslator = {
   role: "translator",
   login: "test-translator",
   name: "Test Translator",
-  language: "eng",
+  language: "en",
   description: "...",
   password: "test-translator-pass"
 };
@@ -37,7 +37,7 @@ const testTranslator2 = {
   role: "translator",
   login: "test-translator-2",
   name: "Тестовый переводчик 2",
-  language: "rus",
+  language: "ru",
   description: "...",
   password: "test-translator-pass-2"
 };
@@ -46,8 +46,8 @@ const testTerm = {
   name: 'test term',
   id: 'test_term',
   sanskrit: {
-    sanskrit_rus: 'Термин на санскрите, RUSSIAN',
-    sanskrit_eng: 'Sanskrit of test term, ENGLISH'
+    sanskrit_ru: 'Термин на санскрите, RUSSIAN',
+    sanskrit_en: 'Sanskrit of test term, ENGLISH'
   }
 };
 
@@ -55,8 +55,8 @@ const testTerm2 = {
   name: 'test term two',
   id: 'test_term_two',
   sanskrit: {
-    sanskrit_rus: 'Термин 2 на санскрите, RUSSIAN',
-    sanskrit_eng: 'Sanskrit of test term 2, ENGLISH'
+    sanskrit_ru: 'Термин 2 на санскрите, RUSSIAN',
+    sanskrit_en: 'Sanskrit of test term 2, ENGLISH'
   }
 };
 

@@ -1,13 +1,13 @@
 {
     "results": [{
         "wylie": "chos mngon",
-        "sanskrit_rus": "Абхидхарма",
-        "sanskrit_rus_lower": "абхидхарма",
-        "sanskrit_eng": "abhidharma",
-        "sanskrit_eng_lower": "abhidharma",
+        "sanskrit_ru": "Абхидхарма",
+        "sanskrit_ru_lower": "абхидхарма",
+        "sanskrit_en": "abhidharma",
+        "sanskrit_en_lower": "abhidharma",
         "translations": [{
             "translatorId": "DON",
-            "language": "rus",
+            "language": "ru",
             "meanings": [{
                 "versions": [
                     "Абхидхарма"
@@ -19,7 +19,7 @@
             }]
         }, {
             "translatorId": "MK",
-            "language": "rus",
+            "language": "ru",
             "meanings": [{
                 "versions": [
                     "теория элементов бытия (Абхидхарма)"
@@ -31,7 +31,7 @@
             }]
         }, {
             "translatorId": "AKT",
-            "language": "rus",
+            "language": "ru",
             "meanings": [{
                 "versions": [
                     "Абхидхарма"
@@ -43,7 +43,7 @@
             }]
         }, {
             "translatorId": "HOP",
-            "language": "eng",
+            "language": "en",
             "meanings": [{
                 "versions": [
                     "knowledge",
@@ -60,13 +60,13 @@
         }]
     }, {
         "wylie": "chos",
-        "sanskrit_rus": "дхамма, дхарма",
-        "sanskrit_rus_lower": "дхамма, дхарма",
-        "sanskrit_eng": "Dharma",
-        "sanskrit_eng_lower": "dharma",
+        "sanskrit_ru": "дхамма, дхарма",
+        "sanskrit_ru_lower": "дхамма, дхарма",
+        "sanskrit_en": "Dharma",
+        "sanskrit_en_lower": "dharma",
         "translations": [{
             "translatorId": "DON",
-            "language": "rus",
+            "language": "ru",
             "meanings": [{
                 "versions": [
                     "Учение",
@@ -88,7 +88,7 @@
             }]
         }, {
             "translatorId": "ZAG",
-            "language": "rus",
+            "language": "ru",
             "meanings": [{
                 "versions": [
                     "Учение Будды",
@@ -126,7 +126,7 @@
             }]
         }, {
             "translatorId": "MK",
-            "language": "rus",
+            "language": "ru",
             "meanings": [{
                 "versions": [
                     "Дхарма",
@@ -158,7 +158,7 @@
             }]
         }, {
             "translatorId": "AKT",
-            "language": "rus",
+            "language": "ru",
             "meanings": [{
                 "versions": [
                     "Учение",
@@ -184,7 +184,7 @@
             }]
         }, {
             "translatorId": "HOP",
-            "language": "eng",
+            "language": "en",
             "meanings": [{
                 "versions": [
                     "doctrine",
@@ -224,7 +224,7 @@
             }]
         }, {
             "translatorId": "BRZ",
-            "language": "eng",
+            "language": "en",
             "meanings": [{
                 "versions": [
                     "dharma"
@@ -245,13 +245,13 @@
         }]
     }, {
         "wylie": "chos nyid",
-        "sanskrit_rus": "дхармата",
-        "sanskrit_rus_lower": "дхармата",
-        "sanskrit_eng": "dharmata",
-        "sanskrit_eng_lower": "dharmata",
+        "sanskrit_ru": "дхармата",
+        "sanskrit_ru_lower": "дхармата",
+        "sanskrit_en": "dharmata",
+        "sanskrit_en_lower": "dharmata",
         "translations": [{
             "translatorId": "DON",
-            "language": "rus",
+            "language": "ru",
             "meanings": [{
                 "versions": [
                     "истинная природа (сущего)"
@@ -263,7 +263,7 @@
             }]
         }, {
             "translatorId": "ZAG",
-            "language": "rus",
+            "language": "ru",
             "meanings": [{
                 "versions": [
                     "дхармата",
@@ -277,7 +277,7 @@
             }]
         }, {
             "translatorId": "MK",
-            "language": "rus",
+            "language": "ru",
             "meanings": [{
                 "versions": [
                     "подлинное-бытие"
@@ -289,7 +289,7 @@
             }]
         }, {
             "translatorId": "AKT",
-            "language": "rus",
+            "language": "ru",
             "meanings": [{
                 "versions": [
                     "сущность",
@@ -309,7 +309,7 @@
             }]
         }, {
             "translatorId": "HOP",
-            "language": "eng",
+            "language": "en",
             "meanings": [{
                 "versions": [
                     "reality",
@@ -337,7 +337,7 @@
             }]
         }, {
             "translatorId": "BRZ",
-            "language": "eng",
+            "language": "en",
             "meanings": [{
                 "versions": [
                     "actual nature"
@@ -350,13 +350,13 @@
         }]
     }, {
         "wylie": "chos sku",
-        "sanskrit_rus": "Дхармакая",
-        "sanskrit_rus_lower": "дхармакая",
-        "sanskrit_eng": "dharmakaya",
-        "sanskrit_eng_lower": "dharmakaya",
+        "sanskrit_ru": "Дхармакая",
+        "sanskrit_ru_lower": "дхармакая",
+        "sanskrit_en": "dharmakaya",
+        "sanskrit_en_lower": "dharmakaya",
         "translations": [{
             "translatorId": "ZAG",
-            "language": "rus",
+            "language": "ru",
             "meanings": [{
                 "versions": [
                     "Дхармакая (\"тело Истины\")"
@@ -368,7 +368,7 @@
             }]
         }, {
             "translatorId": "MK",
-            "language": "rus",
+            "language": "ru",
             "meanings": [{
                 "versions": [
                     "Тело учения",
@@ -382,7 +382,7 @@
             }]
         }, {
             "translatorId": "AKT",
-            "language": "rus",
+            "language": "ru",
             "meanings": [{
                 "versions": [
                     "Дхармакая"
@@ -394,7 +394,7 @@
             }]
         }, {
             "translatorId": "BRZ",
-            "language": "eng",
+            "language": "en",
             "meanings": [{
                 "versions": [
                     "Corpus Encompassing Everything"
@@ -407,13 +407,13 @@
         }]
     }, {
         "wylie": "chos [kyi] dbyings",
-        "sanskrit_rus": "дхармадхату",
-        "sanskrit_rus_lower": "дхармадхату",
-        "sanskrit_eng": "dharmadhatu",
-        "sanskrit_eng_lower": "dharmadhatu",
+        "sanskrit_ru": "дхармадхату",
+        "sanskrit_ru_lower": "дхармадхату",
+        "sanskrit_en": "dharmadhatu",
+        "sanskrit_en_lower": "dharmadhatu",
         "translations": [{
             "translatorId": "ZAG",
-            "language": "rus",
+            "language": "ru",
             "meanings": [{
                 "versions": [
                     "Высшая Реальность"
@@ -425,7 +425,7 @@
             }]
         }, {
             "translatorId": "AKT",
-            "language": "rus",
+            "language": "ru",
             "meanings": [{
                 "versions": [
                     "дхармадхату"
@@ -437,7 +437,7 @@
             }]
         }, {
             "translatorId": "HOP",
-            "language": "eng",
+            "language": "en",
             "meanings": [{
                 "versions": [
                     "sphere of reality",

@@ -2,7 +2,7 @@
   "Home.search_title_em": "Buddhist terminology",
   "Home.search_title_h1": " in english translations",
 
-  "TranslatorPage.translations_language": "Language of translations: {translatorLanguage}",
+  "TranslatorPage.translations_language": "Translations language: {translatorLanguage}",
   "TranslatorPage.button_edit": "Edit",
   "TranslatorPage.loading_text": "Loading...",
 
@@ -17,7 +17,7 @@
   "SearchInput.button_find": "Find",
 
   "Term.add_translation": "Add translation...",
-  "Term.sanskrit_term": "Sanskrit: {sanskrit_eng}",
+  "Term.sanskrit_term": "Sanskrit: {sanskrit_en}",
 
   "EditControls.button_save_and_close": "Save and close",
   "EditControls.button_save": "Save changes",
@@ -32,7 +32,7 @@
   "LoadingIndicator.main_text": "Loading...",
 
   "Header.create_new_term": "Create new term",
-  "Header.about_project": "About project",
+  "Header.about_project": "About",
   "Header.change_language": "Change language",
 
   "Logout.button_logout": "Log out",

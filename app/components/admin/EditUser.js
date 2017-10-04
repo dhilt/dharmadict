@@ -70,7 +70,7 @@ class EditUser extends Component {
                     name="lang_radio"
                     onChange={() => this.changeUserLanguage(lang.id)}
                     checked={language === lang.id}
-                  />{lang.name_rus}
+                  />{lang.name_ru}
                 </label>
               </div>
             )}

@@ -26,7 +26,7 @@ const users = [{
     login: 'mk',
     name: 'М.Н. Кожевникова',
     hash: 'sha1$ce4a9ca0$1$ef1aabb5804cf7e7b397344720224f33a5a788c6',
-    language: 'rus',
+    language: 'ru',
     description: ''
   }
 }, {
@@ -36,7 +36,7 @@ const users = [{
     login: 'akt',
     name: 'А. Кугявичус - А.А. Терентьев',
     hash: 'sha1$b4089de2$1$3fc5af2bf791224f1316fe2e2b0a530dc8aa4ba0',
-    language: 'rus',
+    language: 'ru',
     description: ''
   }
 }, {
@@ -46,7 +46,7 @@ const users = [{
     login: 'zag',
     name: 'Б.И. Загуменнов',
     hash: 'sha1$26f87429$1$af2f2de31509fc6da7432f70773ed529288c1daa',
-    language: 'rus',
+    language: 'ru',
     description: ''
   }
 }, {
@@ -56,7 +56,7 @@ const users = [{
     login: 'don',
     name: 'А.М. Донец',
     hash: 'sha1$81db2f3b$1$8580e47f134905fbe6885f6e7aed31ac283d21a6',
-    language: 'rus',
+    language: 'ru',
     description: ''
   }
 }, {
@@ -66,7 +66,7 @@ const users = [{
     login: 'hop',
     name: 'J. Hopkins',
     hash: 'sha1$7c4a6e42$1$1fe059bfe474c38bcc74f6d44f54928d12fa27d5',
-    language: 'eng',
+    language: 'en',
     description: ''
   }
 }, {
@@ -76,7 +76,7 @@ const users = [{
     login: 'brz',
     name: 'A. Berzin',
     hash: 'sha1$ec042dac$1$e88e2babfc1730d1ba4ae8da16fc5f624f9bc858',
-    language: 'eng',
+    language: 'en',
     description: ''
   }
 }, {
@@ -86,7 +86,7 @@ const users = [{
     login: 'mm',
     name: 'М. Малыгина',
     hash: 'sha1$18cbc60d$1$48da07d81b01164028c0eb727df7fa2b6ed57b3a',
-    language: 'rus',
+    language: 'ru',
     description: ''
   }
 }];
@@ -104,6 +104,7 @@ const script = {
       else {
         count++;
       }
+
       if (count + countError === users.length) {
         if (countError) {
           lastError.text = countError + ' errors have been occurred. Last error:';

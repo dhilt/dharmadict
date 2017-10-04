@@ -20,13 +20,13 @@ class TranslatorPage extends Component {
     const translatorId = this.props.params.id // translator.id ??
     const userData = this.props.userInfo.data
     const languages = this.props.languages
+    const translatorLang = languages && languages.find(elem => elem.id === translator.language)
     return (
       <div>
         <h3>{translator.name}</h3>
         <h4><FormattedMessage
           id="TranslatorPage.translations_language"
-          values={{translatorLanguage: (translator.language && languages) ?
-            languages.find(elem => elem.id === translator.language).name_rus : ''}}
+          values={{translatorLanguage: translatorLang ? translatorLang.name_ru : ''}}
         /></h4>
         <pre>{translator.description}</pre>
         {

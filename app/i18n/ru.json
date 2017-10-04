@@ -17,7 +17,7 @@
   "SearchInput.button_find": "Найти",
 
   "Term.add_translation": "Добавить перевод...",
-  "Term.sanskrit_term": "Санскрит: {sanskrit_rus}",
+  "Term.sanskrit_term": "Санскрит: {sanskrit_ru}",
 
   "EditControls.button_save_and_close": "Сохранить и закрыть",
   "EditControls.button_save": "Сохранить изменения",

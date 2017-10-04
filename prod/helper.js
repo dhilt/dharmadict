@@ -27,17 +27,17 @@ const sendApiError = (res, text, error) => {
 const languages = {
   data: [
     {
-      id: 'rus',
+      id: 'ru',
       name: 'русский',
-      name_rus: 'русский',
-      name_eng: 'russian',
+      name_ru: 'русский',
+      name_en: 'russian',
       default: true
     },
     {
-      id: 'eng',
+      id: 'en',
       name: 'english',
-      name_rus: 'английский',
-      name_eng: 'english'
+      name_ru: 'английский',
+      name_en: 'english'
     }
   ],
   getLang: (id) => {

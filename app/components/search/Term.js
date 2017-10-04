@@ -23,11 +23,11 @@ class Term extends Component {
         <div className="term-header">
           <div className="wylie">{term.wylie}</div>
           {
-            term.sanskrit_rus ? (
+            term.sanskrit_ru ? (
               <div className="sanskrit">
                 <FormattedMessage
                   id="Term.sanskrit_term"
-                  values={{sanskrit_rus: term.sanskrit_rus, sanskrit_eng: term.sanskrit_eng}}
+                  values={{sanskrit_ru: term.sanskrit_ru, sanskrit_en: term.sanskrit_en}}
                 />
               </div>
             ) : ( null )
@@ -128,7 +128,8 @@ function select (state) {
   return {
     translators: state.common.translators,
     data: state.selected,
-    userInfo: state.auth.userInfo ? state.auth.userInfo.data : null
+    userInfo: state.auth.userInfo ? state.auth.userInfo.data : null,
+    lang: state.common.userLanguage
   }
 }
 

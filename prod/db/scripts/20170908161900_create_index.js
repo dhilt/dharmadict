@@ -28,16 +28,16 @@ const script = {
           },
           "terms": {
             "properties": {
-              "sanskrit_eng": {
+              "sanskrit_en": {
                 "type": "text"
               },
-              "sanskrit_eng_lower": {
+              "sanskrit_en_lower": {
                 "type": "text"
               },
-              "sanskrit_rus": {
+              "sanskrit_ru": {
                 "type": "text"
               },
-              "sanskrit_rus_lower": {
+              "sanskrit_ru_lower": {
                 "type": "text"
               },
               "translation": {

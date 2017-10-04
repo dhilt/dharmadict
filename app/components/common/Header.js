@@ -104,7 +104,7 @@ Header.propTypes = {
 function select (state) {
   return {
     data: state.auth,
-    common: state.common,
+    common: state.common
   }
 }
 
