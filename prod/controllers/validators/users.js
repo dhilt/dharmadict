@@ -66,6 +66,9 @@ const update = (userId, payload) => new Promise(resolve => {
     if (typeof payload.confirmPassword !== 'string') {
       throw new ApiError('Invalid confirm password')
     }
+    if (payload.password.length < 6) {
+      throw new ApiError('Password is too short')
+    }
     if (payload.password !== payload.confirmPassword) {
       throw new ApiError('Password not confirmed')
     }
