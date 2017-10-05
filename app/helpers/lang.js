@@ -12,7 +12,7 @@ if (global.process && process.env.NODE_ENV === 'test') {
 const lang = {
   list: ['en', 'ru'],
 
-  defaultLang: 'en',
+  defaultLang: 'ru',
 
   get: (value) => {
     if(typeof value !== 'string') {
