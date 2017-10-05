@@ -215,6 +215,77 @@ describe('Update user API', () => {
       )
   });
 
+  it('should not update user information (short password)', (done) => {
+    let _requestObj = JSON.parse(JSON.stringify(requestObj));
+    _requestObj.payload['password'] = 'short';
+    _requestObj.payload['confirmPassword'] = 'short';
+    request.patch(queryUpdateUser)
+      .set('Authorization', 'Bearer ' + testAdmin.token)
+      .send(_requestObj)
+      .end(
+        (err, res) => {
+          assert.notEqual(res.body.success, true);
+          assert.equal(res.body.code, 500);
+          assert.equal(res.body.message, 'Can\'t update translator description. Password is too short');
+          done();
+        }
+      )
+  });
+
+  it('should not update user information (Invalid password)', (done) => {
+    let _requestObj = JSON.parse(JSON.stringify(requestObj));
+    _requestObj.payload['password'] = 123;
+    _requestObj.payload['confirmPassword'] = 123;
+    request.patch(queryUpdateUser)
+      .set('Authorization', 'Bearer ' + testAdmin.token)
+      .send(_requestObj)
+      .end(
+        (err, res) => {
+          assert.notEqual(res.body.success, true);
+          assert.equal(res.body.code, 500);
+          assert.equal(res.body.message, 'Can\'t update translator description. Invalid password');
+          done();
+        }
+      )
+  });
+
+  it('should not update user information (Password not confirmed)', (done) => {
+    let _requestObj = JSON.parse(JSON.stringify(requestObj));
+    _requestObj.payload['password'] = 'new_password';
+    _requestObj.payload['confirmPassword'] = 'new_password____';
+    request.patch(queryUpdateUser)
+      .set('Authorization', 'Bearer ' + testAdmin.token)
+      .send(_requestObj)
+      .end(
+        (err, res) => {
+          assert.notEqual(res.body.success, true);
+          assert.equal(res.body.code, 500);
+          assert.equal(res.body.message, 'Can\'t update translator description. Password not confirmed');
+          done();
+        }
+      )
+  });
+
+  it('should update user information (with new password)', (done) => {
+    let _requestObj = JSON.parse(JSON.stringify(requestObj));
+    _requestObj.payload['password'] = 'new_password';
+    _requestObj.payload['confirmPassword'] = 'new_password';
+    request.patch(queryUpdateUser)
+      .set('Authorization', 'Bearer ' + testAdmin.token)
+      .send(_requestObj)
+      .end(
+        (err, res) => {
+          assert.equal(res.body.success, true);
+          assert.equal(res.body.user.name, requestObj.payload.name);
+          assert.equal(res.body.user.language, requestObj.payload.language);
+          assert.equal(res.body.user.description, requestObj.payload.description);
+          done();
+        }
+      )
+  });
+
+  shouldLogIn(Object.assign(testTranslator, {password: 'new_password'}));
+
   it('should not cleanup user name', (done) => {
     let _requestObj = JSON.parse(JSON.stringify(requestObj));
     _requestObj.payload['name'] = '  ';
