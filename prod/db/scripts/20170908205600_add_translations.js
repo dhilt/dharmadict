@@ -30,6 +30,10 @@ const list = [{
   id: 'MM',
   file: 'MM.csv',
   lang: 'ru'
+}, {
+  id: 'RAG',
+  file: 'RAG.csv',
+  lang: 'ru'
 }];
 
 const processListItem = (client, listItem) => {

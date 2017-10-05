@@ -89,6 +89,16 @@ const users = [{
     language: 'ru',
     description: ''
   }
+}, {
+  id: 'RAG',
+  body: {
+    role: 'translator',
+    login: 'rag',
+    name: 'В.К. Рагимов',
+    hash: 'sha1$a81da821$1$713b00c1960eaa33e1a8b4aabe5155f64755cab6',
+    language: 'ru',
+    description: ''
+  }
 }];
 
 const script = {
