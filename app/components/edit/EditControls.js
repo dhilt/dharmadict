@@ -52,7 +52,8 @@ class EditControls extends Component {
 
 function select (state) {
   return {
-    data: state.edit.update
+    data: state.edit.update,
+    userLang: state.common.userLanguage
   }
 }
 

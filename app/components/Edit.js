@@ -70,7 +70,8 @@ class Edit extends Component {
 function select (state, ownProps) {
   return {
     editState: state.edit,
-    query: ownProps.location.query
+    query: ownProps.location.query,
+    userLang: state.common.userLanguage
   }
 }
 

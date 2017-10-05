@@ -30,15 +30,14 @@ class NewTerm extends Component {
               onChange={this._onWylieChange}/>
           </div>
           {
-            languages && languages.map(lang =>
-              <div className="form-group" key={lang.id}>
+            languages && languages.map(langItem =>
+              <div className="form-group" key={langItem.id}>
                 <input
                   className="form-control"
-                  name={lang.id}
+                  name={langItem.id}
                   type="text"
-                  placeholder={'sanskrit ' + lang.name}
-                  value={sanskrit['sanskrit_' + lang.id] || ''}
-                  onChange={(event) => this._onSanskritChange(event, lang.id)}
+                  placeholder={'sanskrit_' + langItem.id + ' (' + langItem.name + ')'}
+                  onChange={(event) => this._onSanskritChange(event, langItem.id)}
                 />
               </div>
             )

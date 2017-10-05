@@ -25,7 +25,7 @@
 
   "Meanings.number_of_meaning": "Meaning {indexOfMeaning}",
   "Meanings.comment_for_meaning": "Comment on the meaning {indexOfMeaning}",
-  "Meanings.button_delete_meaning": "Delete value {indexOfMeaning}",
+  "Meanings.button_delete_meaning": "Delete meaning {indexOfMeaning}",
   "Meanings.have_no_one_meaning": "There is no meaning",
   "Meanings.add_new_meaning": "Add new meaning",
 

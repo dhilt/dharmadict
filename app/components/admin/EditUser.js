@@ -3,6 +3,7 @@ import {connect} from 'react-redux'
 import {Link} from 'react-router'
 import {FormattedMessage} from 'react-intl'
 
+import lang from '../../helpers/lang'
 import {updateAdminUserData, resetAdminUserData, changeAdminUserDataAsync, getAdminUserDataAsync} from '../../actions/admin/changeUsers'
 
 class EditUser extends Component {
@@ -44,7 +45,7 @@ class EditUser extends Component {
 
   render () {
     const {id} = this.props.params
-    const {languages} = this.props
+    const {languages, userLanguage} = this.props.common
     const {pending, error, result} = this.props.newTranslatorInfo
     const {name, language, description} = this.props.newTranslatorInfo.data
     return (
@@ -62,15 +63,15 @@ class EditUser extends Component {
           </div>
           <div className="form-group">
             <label><FormattedMessage id="EditUser.language_of_translations" /></label>
-            {languages && languages.map(lang =>
-              <div className="radio" key={lang.id}>
+            {languages && languages.map(langItem =>
+              <div className="radio" key={langItem.id}>
                 <label>
                   <input
                     type="radio"
                     name="lang_radio"
-                    onChange={() => this.changeUserLanguage(lang.id)}
-                    checked={language === lang.id}
-                  />{lang.name_ru}
+                    onChange={() => this.changeUserLanguage(langItem.id)}
+                    checked={language === langItem.id}
+                  />{langItem['name_' + lang.get(userLanguage)]}
                 </label>
               </div>
             )}
@@ -108,7 +109,7 @@ class EditUser extends Component {
 function select (state, ownProps) {
   return {
     newTranslatorInfo: state.admin.editUser,
-    languages: state.common.languages
+    common: state.common
   }
 }
 

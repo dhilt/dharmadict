@@ -108,7 +108,8 @@ class Meanings extends Component {
 
 function select (state) {
   return {
-    data: state.edit
+    data: state.edit,
+    userLang: state.common.userLanguage
   }
 }
 
