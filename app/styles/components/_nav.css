@@ -55,8 +55,18 @@
   color: #fff;
 }
 
+.nav .dropdown  {
+  margin-top: 5px;
+}
+
 .nav .dropdown .btn {
-  padding: 0.4em
+  padding: 0.4em;
+  font-size: x-small;
+}
+
+.nav .dropdown-menu>li>a {
+  font-size: small;
+  padding: 3px 5px;
 }
 
 .nav .selected {
