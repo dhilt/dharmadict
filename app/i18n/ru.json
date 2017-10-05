@@ -50,8 +50,10 @@
   "EditUser.title_edit_user": "Редактирование пользователя {id}",
   "EditUser.name_of_translator": "Имя переводчика",
   "EditUser.language_of_translations": "Язык переводов",
-  "EditUser.description_of_translator": "Описание перерводчика",
+  "EditUser.description_of_translator": "Описание переводчика",
   "EditUser.button_save": "Сохранить",
   "EditUser.button_reset_changes": "Сбросить",
-  "EditUser.button_cancel": "Отмена"
+  "EditUser.button_cancel": "Отмена",
+  "EditUser.password_of_translator": "Пароль переводчика",
+  "EditUser.confirm_password_of_translator": "Подтверждение пароля"
 }

@@ -53,5 +53,7 @@
   "EditUser.description_of_translator": "Description of the translator",
   "EditUser.button_save": "Save",
   "EditUser.button_reset_changes": "Reset",
-  "EditUser.button_cancel": "Cancel"
+  "EditUser.button_cancel": "Cancel",
+  "EditUser.password_of_translator": "Password of the translator",
+  "EditUser.confirm_password_of_translator": "Confirm password"
 }

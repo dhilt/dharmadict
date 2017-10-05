@@ -11,7 +11,9 @@ import {
 const getEditableUserDataObject = (user) => ({
   name: user.name,
   language: user.language,
-  description: user.description
+  description: user.description,
+  password: '',
+  confirmPassword: ''
 })
 
 
@@ -55,7 +57,9 @@ export function updateAdminUserData(_data) {
     const payload = {
       name: _data.hasOwnProperty('name') ? _data.name : data.name,
       language: _data.hasOwnProperty('language') ? _data.language : data.language,
-      description: _data.hasOwnProperty('description') ? _data.description : data.description
+      description: _data.hasOwnProperty('description') ? _data.description : data.description,
+      password: _data.hasOwnProperty('password') ? _data.password : data.password,
+      confirmPassword: _data.hasOwnProperty('confirmPassword') ? _data.confirmPassword : data.confirmPassword
     }
     dispatch({
       type: UPDATE_ADMIN_USER_DATA,

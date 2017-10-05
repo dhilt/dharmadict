@@ -59,6 +59,17 @@ const update = (userId, payload) => new Promise(resolve => {
     }
     payload.description = payload.description.trim();
   }
+  if (payload.hasOwnProperty('password') && payload.hasOwnProperty('confirmPassword')) {
+    if (typeof payload.password !== 'string') {
+      throw new ApiError('Invalid password')
+    }
+    if (typeof payload.confirmPassword !== 'string') {
+      throw new ApiError('Invalid confirm password')
+    }
+    if (payload.password !== payload.confirmPassword) {
+      throw new ApiError('Password not confirmed')
+    }
+  }
   resolve(userId, payload)
 });
 

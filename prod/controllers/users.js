@@ -186,7 +186,10 @@ const update = (userId, payload) => validator.update(userId, payload)
   .then(() => findById(userId))
   .then(user => {
     let body = Object.assign({}, user, payload);
+    body.hash = passwordHash.generate(body.password);
     delete body.id;
+    delete body.password;
+    delete body.confirmPassword;
     return elasticClient.index({
       index: config.db.index,
       type: 'users',

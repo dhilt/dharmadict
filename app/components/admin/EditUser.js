@@ -15,6 +15,8 @@ class EditUser extends Component {
     this.changeUserLanguage = this.changeUserLanguage.bind(this)
     this.changeUserDescription = this.changeUserDescription.bind(this)
     this.resetChanges = this.resetChanges.bind(this)
+    this.changeUserPassword = this.changeUserPassword.bind(this)
+    this.changeUserConfirmPassword = this.changeUserConfirmPassword.bind(this)
   }
 
   componentWillMount () {
@@ -33,6 +35,14 @@ class EditUser extends Component {
     this.props.dispatch(updateAdminUserData({description: event.target.value}))
   }
 
+  changeUserPassword (event) {
+    this.props.dispatch(updateAdminUserData({password: event.target.value}))
+  }
+
+  changeUserConfirmPassword (event) {
+    this.props.dispatch(updateAdminUserData({confirmPassword: event.target.value}))
+  }
+
   resetChanges (event) {
     event.preventDefault()
     this.props.dispatch(resetAdminUserData())
@@ -47,7 +57,7 @@ class EditUser extends Component {
     const {id} = this.props.params
     const {languages, userLanguage} = this.props.common
     const {pending, error, result} = this.props.newTranslatorInfo
-    const {name, language, description} = this.props.newTranslatorInfo.data
+    const {name, language, description, password, confirmPassword} = this.props.newTranslatorInfo.data
     return (
       <div>
         <form className="col-md-6">
@@ -83,6 +93,24 @@ class EditUser extends Component {
               value={description}
               className="form-control"
               onChange={this.changeUserDescription}
+            />
+          </div>
+          <div className="form-group">
+            <label><FormattedMessage id="EditUser.password_of_translator" /></label>
+            <input
+              type="password"
+              value={password}
+              className="form-control"
+              onChange={this.changeUserPassword}
+            />
+          </div>
+          <div className="form-group">
+            <label><FormattedMessage id="EditUser.confirm_password_of_translator" /></label>
+            <input
+              type="password"
+              value={confirmPassword}
+              className="form-control"
+              onChange={this.changeUserConfirmPassword}
             />
           </div>
           <button

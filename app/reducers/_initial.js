@@ -78,7 +78,9 @@ let initialState = {
       data: {
         name: '',
         language: '',
-        description: ''
+        description: '',
+        password: '',
+        confirmPassword: ''
       },
       pending: false,
       error: null
