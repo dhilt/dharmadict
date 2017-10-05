@@ -33,10 +33,10 @@ const readParser = () => {
     }
     results.push(addTerm({
       wylie: record.wylie.toLowerCase(),
-      sanskrit_rus: record.sanskrit_rus,
-      sanskrit_rus_lower: record.sanskrit_rus.toLowerCase(),
-      sanskrit_eng: record.sanskrit_eng,
-      sanskrit_eng_lower: record.sanskrit_eng.toLowerCase()
+      sanskrit_ru: record.sanskrit_ru,
+      sanskrit_ru_lower: record.sanskrit_ru.toLowerCase(),
+      sanskrit_en: record.sanskrit_en,
+      sanskrit_en_lower: record.sanskrit_en.toLowerCase()
     }));
   }
 };

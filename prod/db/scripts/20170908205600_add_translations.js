@@ -5,43 +5,42 @@ const parse = require('csv-parse');
 const list = [{
   id: 'MK',
   file: 'MK.csv',
-  lang: 'rus'
+  lang: 'ru'
 }, {
   id: 'AKT',
   file: 'AKT.csv',
-  lang: 'rus'
+  lang: 'ru'
 }, {
   id: 'ZAG',
   file: 'ZAG.csv',
-  lang: 'rus'
+  lang: 'ru'
 }, {
   id: 'DON',
   file: 'DON.csv',
-  lang: 'rus'
+  lang: 'ru'
 }, {
   id: 'HOP',
   file: 'HOP.csv',
-  lang: 'eng'
+  lang: 'en'
 }, {
   id: 'BRZ',
   file: 'BRZ.csv',
-  lang: 'eng'
+  lang: 'en'
 }, {
   id: 'MM',
   file: 'MM.csv',
-  lang: 'rus'
+  lang: 'ru'
 }, {
   id: 'RAG',
   file: 'RAG.csv',
-  lang: 'rus'
+  lang: 'ru'
 }];
 
 const processListItem = (client, listItem) => {
   const inputStream = fs.createReadStream(__dirname + '/../data/' + listItem.file);
   const parser = parse({columns: true, delimiter: ','});
 
-  let authorId = 'DON';
-  let lang = 'rus';
+  let lang = 'ru';
 
   const bulkObject = {
     body: []

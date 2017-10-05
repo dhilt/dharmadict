@@ -40,7 +40,7 @@ export function changeAdminUserDataAsync() {
     })
     const {id, data, dataSource} = getState().admin.editUser
     const query = 'users/' + id
-    asyncRequest(query, 'PATCH', {payload: data}, (data, error) =>
+    asyncRequest(query, 'patch', {payload: data}, (data, error) =>
       dispatch({
         type: CHANGE_ADMIN_USER_DATA_END,
         error: error ? error : null,

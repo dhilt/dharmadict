@@ -4,13 +4,13 @@ import auth from './auth'
 let getConfig = (payload, typeQuery) => {
   let config = {
     headers: {}
-  };
+  }
   if (payload) {
     config.body = JSON.stringify(payload)
     config.headers['Accept'] = 'application/json'
     config.headers['Content-Type'] = 'application/json'
   }
-  config.method = typeQuery
+  config.method = typeQuery.toUpperCase()
   if (auth.loggedIn()) {
     config.headers['Authorization'] = `Bearer ${auth.getToken()}`
   }

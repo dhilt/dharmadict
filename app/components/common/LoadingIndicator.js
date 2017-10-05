@@ -1,9 +1,10 @@
 import React from 'react'
+import {FormattedMessage} from 'react-intl'
 
 function LoadingIndicator () {
   return (
     <div>
-      {'Loading'}
+      <FormattedMessage id="LoadingIndicator.main_text" />
       <div className='sk-fading-circle'>
         <div className='sk-circle1 sk-circle' />
         <div className='sk-circle2 sk-circle' />

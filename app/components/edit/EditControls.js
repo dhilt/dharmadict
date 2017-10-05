@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Button} from 'react-bootstrap'
+import {FormattedMessage} from 'react-intl'
 
 import {resetTranslation, saveTranslationAsync} from '../../actions/edit'
 
@@ -20,7 +21,7 @@ class EditControls extends Component {
           className={this.props.data.pending ? 'loader' : ''}
           disabled={this.props.data.pending}
           onClick={(event) => this._onSave(event, true)}>
-          Сохранить и закрыть
+          <FormattedMessage id="EditControls.button_save_and_close" />
         </Button>
         <Button
           bsStyle='primary'
@@ -28,12 +29,12 @@ class EditControls extends Component {
           className={this.props.data.pending ? 'loader' : ''}
           disabled={this.props.data.pending}
           onClick={this._onSave}>
-          Сохранить
+          <FormattedMessage id="EditControls.button_save" />
         </Button>
         <a
           className="cancel-link"
           onClick={this._onCancel}>
-          Сбросить
+          <FormattedMessage id="EditControls.button_reset" />
         </a>
       </div>
     )
@@ -51,7 +52,8 @@ class EditControls extends Component {
 
 function select (state) {
   return {
-    data: state.edit.update
+    data: state.edit.update,
+    userLang: state.common.userLanguage
   }
 }
 

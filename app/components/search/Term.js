@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import {Link} from 'react-router'
+import {FormattedMessage} from 'react-intl'
 
 import {toggleComment} from '../../actions/search'
 
@@ -22,8 +23,13 @@ class Term extends Component {
         <div className="term-header">
           <div className="wylie">{term.wylie}</div>
           {
-            term.sanskrit_rus ? (
-              <div className="sanskrit">Санскрит: {term.sanskrit_rus}</div>
+            term.sanskrit_ru ? (
+              <div className="sanskrit">
+                <FormattedMessage
+                  id="Term.sanskrit_term"
+                  values={{sanskrit_ru: term.sanskrit_ru, sanskrit_en: term.sanskrit_en}}
+                />
+              </div>
             ) : ( null )
           }
         </div>
@@ -85,7 +91,7 @@ class Term extends Component {
                 pathname: '/edit',
                 query: { termId: term.id, translatorId: this.userInfo.id }
               }}>
-                Добавить перевод...
+                <FormattedMessage id="Term.add_translation" />
               </Link>
             </div>
           ) : ( null )
@@ -122,7 +128,8 @@ function select (state) {
   return {
     translators: state.common.translators,
     data: state.selected,
-    userInfo: state.auth.userInfo ? state.auth.userInfo.data : null
+    userInfo: state.auth.userInfo ? state.auth.userInfo.data : null,
+    lang: state.common.userLanguage
   }
 }
 

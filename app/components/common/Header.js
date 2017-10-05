@@ -2,12 +2,16 @@ import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import {Link} from 'react-router'
+import {FormattedMessage} from 'react-intl'
+import lang from '../../helpers/lang'
 
 import {openLoginModal, closeLoginModal, changeLoginString, changePasswordString, doLoginAsync, doLogout} from '../../actions/auth'
+import {changeUserLanguage} from '../../actions/common'
 
 import LoadingButton from './LoadingButton'
 import Login from './header/Login'
 import Logout from './header/Logout'
+import Languages from './header/Languages'
 
 class Header extends Component {
 
@@ -19,15 +23,18 @@ class Header extends Component {
     this.doLogin = this.doLogin.bind(this)
     this.onLoginChange = this.onLoginChange.bind(this)
     this.onPasswordChange = this.onPasswordChange.bind(this)
+    this.doChangeLang = this.doChangeLang.bind(this)
   }
 
   render () {
-    let userInfo = !this.props.data.userInfo.pending ? this.props.data.userInfo.data : {}
-    let navButtons = this.props.data.loggedIn ? (
+    const {languages, userLanguage} = this.props.common
+    const userInfo = !this.props.data.userInfo.pending ? this.props.data.userInfo.data : {}
+
+    const navButtons = this.props.data.loggedIn ? (
       <div>
         <Link to={`/translator/${userInfo.id}`}>{userInfo.name}</Link>
         <Logout doLogout={this.doLogout} />
-        {userInfo.role === 'admin' ? <Link to={`/newTerm`}>New term</Link> : null}
+        {userInfo.role === 'admin' ? <Link to={`/newTerm`}><FormattedMessage id="Header.create_new_term" /></Link> : null}
       </div>
     ) : (
       <div>
@@ -49,9 +56,10 @@ class Header extends Component {
     return (
       <div className='nav'>
         <div className='nav__wrapper'>
-          <Link to={'/about'}>О проекте</Link>
+          <Link to={'/about'}><FormattedMessage id="Header.about_project" /></Link>
           {navButtons}
         </div>
+        <Languages languages={languages} current={userLanguage} doChangeLang={this.doChangeLang} />
       </div>
     )
   }
@@ -79,6 +87,13 @@ class Header extends Component {
   doLogin (event) {
     this.props.dispatch(doLoginAsync())
   }
+
+  doChangeLang (langId) {
+    if(this.props.common.userLanguage === lang.get(langId)) {
+      return;
+    }
+    this.props.dispatch(changeUserLanguage(langId))
+  }
 }
 
 Header.propTypes = {
@@ -87,7 +102,8 @@ Header.propTypes = {
 
 function select (state) {
   return {
-    data: state.auth
+    data: state.auth,
+    common: state.common
   }
 }
 

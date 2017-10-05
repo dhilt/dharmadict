@@ -38,9 +38,13 @@
   margin-left: 1em;
 }
 
+.nav a, .nav .dropdown {
+  cursor: pointer;
+  margin-left: 10px;
+}
+
 .nav a {
   color: #fff;
-  margin-left: 10px;
 }
 
 .nav a:hover {
@@ -49,6 +53,24 @@
 
 .nav a:active {
   color: #fff;
+}
+
+.nav .dropdown  {
+  margin-top: 5px;
+}
+
+.nav .dropdown .btn {
+  padding: 0.4em;
+  font-size: x-small;
+}
+
+.nav .dropdown-menu>li>a {
+  font-size: small;
+  padding: 3px 5px;
+}
+
+.nav .selected {
+  font-weight: bolder;
 }
 
 @media screen and (max-width: 400px) {
@@ -67,4 +89,9 @@
 
 .login-modal-content input {
   margin-bottom: 10px;
+}
+
+.languages-bar-header {
+  float: right;
+  margin-top: -2.0em;
 }

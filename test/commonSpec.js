@@ -26,8 +26,8 @@ describe('Get common data API', () => {
         assert.equal(translators.length >= 2, true)
         assert.equal(true, !!translators.find(user => user.id === testTranslator.id))
         assert.equal(true, !!translators.find(user => user.id === testTranslator2.id))
-        assert.equal(true, !!languages.find(lang => lang.id === 'rus'))
-        assert.equal(true, !!languages.find(lang => lang.id === 'eng'))
+        assert.equal(true, !!languages.find(lang => lang.id === 'ru'))
+        assert.equal(true, !!languages.find(lang => lang.id === 'en'))
         done();
       }
     )

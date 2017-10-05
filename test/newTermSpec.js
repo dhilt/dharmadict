@@ -85,7 +85,7 @@ describe('New term API', () => {
 
   it('should not create new term (sanskrit versions amount does not match languagues amount)', (done) => {
     const sanskrit = JSON.parse(JSON.stringify(testTerm.sanskrit));
-    delete sanskrit.sanskrit_rus;
+    delete sanskrit.sanskrit_ru;
     request.post('/api/terms')
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .send({term: testTerm.name, sanskrit})
@@ -100,7 +100,7 @@ describe('New term API', () => {
 
   it('should not create new term (invalid sanskrit)', (done) => {
     const sanskrit = JSON.parse(JSON.stringify(testTerm.sanskrit));
-    const invalidKey = 'sanskrit_rus';
+    const invalidKey = 'sanskrit_ru';
     sanskrit[invalidKey] = true;
     request.post('/api/terms')
       .set('Authorization', 'Bearer ' + testAdmin.token)

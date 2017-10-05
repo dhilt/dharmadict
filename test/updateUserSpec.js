@@ -7,7 +7,7 @@ const testTranslator = require('./_shared.js').testTranslator;
 const requestObj = {
   payload: {
     name: 'Name of test-translator',
-    language: 'eng',
+    language: 'en',
     description: 'New description written by admin'
   }
 };

@@ -65,7 +65,7 @@ app.get('/api/common', (req, res) =>
 app.get('/api/users/:id', (req, res) =>
   usersController.findById(req.params.id)
     .then(user => res.json({success: true, user: usersController.getUserInfo(user)}))
-    .catch(error => sendApiError(res, 'Can\'t find user', error))
+    .catch(error => sendApiError(res, 'Can\'t find user.', error))
 );
 
 app.post('/api/users', (req, res) =>

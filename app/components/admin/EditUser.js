@@ -1,7 +1,9 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Link} from 'react-router'
+import {FormattedMessage} from 'react-intl'
 
+import lang from '../../helpers/lang'
 import {updateAdminUserData, resetAdminUserData, changeAdminUserDataAsync, getAdminUserDataAsync} from '../../actions/admin/changeUsers'
 
 class EditUser extends Component {
@@ -43,15 +45,15 @@ class EditUser extends Component {
 
   render () {
     const {id} = this.props.params
-    const {languages} = this.props
+    const {languages, userLanguage} = this.props.common
     const {pending, error, result} = this.props.newTranslatorInfo
     const {name, language, description} = this.props.newTranslatorInfo.data
     return (
       <div>
         <form className="col-md-6">
-          <h3>{`Редактирование пользователя ${id}`}</h3>
+          <h3><FormattedMessage id="EditUser.title_edit_user" values={{id}} /></h3>
           <div className="form-group">
-            <label>{'Имя перерводчика'}</label>
+            <label><FormattedMessage id="EditUser.name_of_translator" /></label>
             <input
               type="text"
               value={name}
@@ -60,22 +62,22 @@ class EditUser extends Component {
             />
           </div>
           <div className="form-group">
-            <label>{'Язык переводов'}</label>
-            {languages && languages.map(lang =>
-              <div className="radio" key={lang.id}>
+            <label><FormattedMessage id="EditUser.language_of_translations" /></label>
+            {languages && languages.map(langItem =>
+              <div className="radio" key={langItem.id}>
                 <label>
                   <input
                     type="radio"
                     name="lang_radio"
-                    onChange={() => this.changeUserLanguage(lang.id)}
-                    checked={language === lang.id}
-                  />{lang.name_rus}
+                    onChange={() => this.changeUserLanguage(langItem.id)}
+                    checked={language === langItem.id}
+                  />{langItem['name_' + lang.get(userLanguage)]}
                 </label>
               </div>
             )}
           </div>
           <div className="form-group">
-            <label>{'Описание перерводчика'}</label>
+            <label><FormattedMessage id="EditUser.description_of_translator" /></label>
             <textarea
               type="text"
               value={description}
@@ -87,15 +89,15 @@ class EditUser extends Component {
             className="btn btn-primary"
             onClick={this.sendNewUserData}
             disabled={pending}
-            >{'Сохранить'}
+            ><FormattedMessage id="EditUser.button_save" />
           </button>
           <button
             className="btn btn-default"
             onClick={this.resetChanges}
-          >{'Сбросить'}
+          ><FormattedMessage id="EditUser.button_reset_changes" />
           </button>
           <Link to={`/translator/${id}`}>
-            {'Отмена'}
+            <FormattedMessage id="EditUser.button_cancel" />
           </Link>
           {error && <div className="alert alert-danger">{error.message}</div>}
         </form>
@@ -107,7 +109,7 @@ class EditUser extends Component {
 function select (state, ownProps) {
   return {
     newTranslatorInfo: state.admin.editUser,
-    languages: state.common.languages
+    common: state.common
   }
 }
 

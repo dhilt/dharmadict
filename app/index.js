@@ -2,11 +2,12 @@ import 'babel-polyfill'
 
 import React, {Component} from 'react'
 import ReactDOM from 'react-dom'
-import {browserHistory} from 'react-router'
+import {browserHistory, Router} from 'react-router'
 import {createStore, applyMiddleware} from 'redux'
 import {Provider} from 'react-redux'
 import thunkMiddleware from 'redux-thunk'
 import createLogger from 'redux-logger'
+import ConnectedIntlProvider from './ConnectedIntlProvider'
 
 import reducer from './reducers'
 import {changeRoute} from './actions/route'
@@ -14,7 +15,7 @@ import {getUserInfoAsync} from './actions/auth'
 import {getCommonDataAsync} from './actions/common'
 import {selectTermAsync} from './actions/search'
 
-import Routes from './routes'
+import getRoutes from './routes'
 import './styles/main.css'
 import './styles/images/favicon.ico';
 
@@ -46,7 +47,9 @@ browserHistory.listenBefore((location) => {
 
 ReactDOM.render(
   <Provider store={store}>
-    <Routes getAuthState={() => store.getState().auth} />
+    <ConnectedIntlProvider>
+      <Router history={browserHistory} routes={getRoutes(store)} />
+    </ConnectedIntlProvider>
   </Provider>,
   document.getElementById('app')
 )

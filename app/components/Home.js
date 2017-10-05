@@ -1,4 +1,6 @@
 import React, {Component} from 'react'
+import {FormattedMessage} from 'react-intl'
+
 import SearchInput from './search/SearchInput'
 import SearchResults from './search/SearchResults'
 
@@ -14,7 +16,10 @@ class Home extends Component {
         <div className="col-md-10">
           <div className="row header-row">
             <div className="col-md-12">
-              <h1><em>Буддийская терминология</em> в русских переводах</h1>
+              <h1>
+                <em><FormattedMessage id="Home.search_title_em" /></em>
+                <FormattedMessage id="Home.search_title_h1" />
+              </h1>
             </div>
           </div>
           <div className="row search-row">
