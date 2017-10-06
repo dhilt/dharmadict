@@ -344,8 +344,7 @@ function reducer(state = initialState, action) {
     case UPDATE_ADMIN_USER_PASSWORD_END:
       return {...state,
         admin: {...state.admin,
-          editUserPassword: {...state.admin.editUserPassword,
-            pending: false,
+          editUserPassword: {...initialState.admin.editUserPassword,
             error: action.error,
             result: action.result
           }
