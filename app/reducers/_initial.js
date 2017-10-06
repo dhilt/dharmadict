@@ -78,11 +78,17 @@ let initialState = {
       data: {
         name: '',
         language: '',
-        description: '',
-        password: '',
-        confirmPassword: ''
+        description: ''
       },
       pending: false,
+      error: null
+    },
+    editUserPassword: {
+      id: '',
+      password: '',
+      confirmPassword: '',
+      pending: false,
+      result: null,
       error: null
     }
   }

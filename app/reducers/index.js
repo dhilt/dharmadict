@@ -32,7 +32,11 @@ import {
   GET_ADMIN_USER_DATA_END,
   CHANGE_ADMIN_USER_DATA_START,
   CHANGE_ADMIN_USER_DATA_END,
-  UPDATE_ADMIN_USER_DATA
+  UPDATE_ADMIN_USER_DATA,
+  GET_ADMIN_USER_PASSWORD_ID,
+  CHANGE_ADMIN_USER_PASSWORD_START,
+  CHANGE_ADMIN_USER_PASSWORD_END,
+  UPDATE_ADMIN_USER_PASSWORD
 } from '../actions/_constants'
 
 import initialState from './_initial'
@@ -318,6 +322,41 @@ function reducer(state = initialState, action) {
         admin: {...state.admin,
           editUser: {...state.admin.editUser,
             data: action.payload
+          }
+        }
+      }
+    case GET_ADMIN_USER_PASSWORD_ID:
+      return {...state,
+        admin: {...state.admin,
+          editUserPassword: {...state.admin.editUserPassword,
+            id: action.id
+          }
+        }
+      }
+    case CHANGE_ADMIN_USER_PASSWORD_START:
+      return {...state,
+        admin: {...state.admin,
+          editUserPassword: {...state.admin.editUserPassword,
+            pending: true
+          }
+        }
+      }
+    case CHANGE_ADMIN_USER_PASSWORD_END:
+      return {...state,
+        admin: {...state.admin,
+          editUserPassword: {...state.admin.editUserPassword,
+            pending: false,
+            error: action.error,
+            result: action.result
+          }
+        }
+      }
+    case UPDATE_ADMIN_USER_PASSWORD:
+      return {...state,
+        admin: {...state.admin,
+          editUserPassword: {...state.admin.editUserPassword,
+            password: action.password,
+            confirmPassword: action.confirmPassword
           }
         }
       }

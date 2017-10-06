@@ -54,6 +54,9 @@
   "EditUser.button_save": "Save",
   "EditUser.button_reset_changes": "Reset",
   "EditUser.button_cancel": "Cancel",
-  "EditUser.password_of_translator": "Password of the translator",
-  "EditUser.confirm_password_of_translator": "Confirm password"
+
+  "EditUserPassword.title_edit_user": "Editing password of user {id}",
+  "EditUserPassword.password_of_translator": "Password of the translator",
+  "EditUserPassword.confirm_password_of_translator": "Confirm password",
+  "EditUserPassword.alert_success_of_changing_password": "Password was successfully changed"
 }

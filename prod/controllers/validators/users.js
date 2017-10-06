@@ -33,6 +33,7 @@ const update = (userId, payload) => new Promise(resolve => {
   if (!payload || typeof payload !== 'object') {
     throw new ApiError('Invalid payload')
   }
+
   if (payload.hasOwnProperty('name')) {
     if (typeof payload.name !== 'string') {
       throw new ApiError('Invalid name')
@@ -42,16 +43,10 @@ const update = (userId, payload) => new Promise(resolve => {
       throw new ApiError('Invalid name')
     }
   }
-  else {
-    throw new ApiError('Invalid name')
-  }
   if (payload.hasOwnProperty('language')) {
     if (payload.language !== languages.getLang(payload.language).id) {
       throw new ApiError('Invalid language')
     }
-  }
-  else {
-    throw new ApiError('Invalid language')
   }
   if (payload.hasOwnProperty('description')) {
     if (typeof payload.description !== 'string') {
@@ -59,6 +54,7 @@ const update = (userId, payload) => new Promise(resolve => {
     }
     payload.description = payload.description.trim();
   }
+
   if (payload.hasOwnProperty('password') && payload.hasOwnProperty('confirmPassword')) {
     if (typeof payload.password !== 'string') {
       throw new ApiError('Invalid password')
