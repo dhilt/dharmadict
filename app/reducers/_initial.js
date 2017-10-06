@@ -7,6 +7,10 @@ let initialState = {
     translators: null,
     languages: null
   },
+  notifications: {
+    data: [],
+    mock: false
+  },
   route: {
     prevLocation: null,
     location: null

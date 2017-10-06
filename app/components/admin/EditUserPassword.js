@@ -96,14 +96,6 @@ class EditUserPassword extends Component {
               <FormattedMessage id="EditUser.button_cancel" />
             </Link>
           </div>
-          <div className="form-group">
-            {error && <div className="alert alert-danger">{error.message}</div>}
-            {result &&
-              <div className="alert alert-success">
-                <FormattedMessage id="EditUserPassword.new_password_success" />
-              </div>
-            }
-          </div>
         </form>
       </div>
     )

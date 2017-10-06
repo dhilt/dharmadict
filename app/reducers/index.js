@@ -2,6 +2,8 @@ import {
   CHANGE_ROUTE,
   USERINFO_REQUEST_START,
   USERINFO_REQUEST_END,
+  CREATE_NOTIFY,
+  REMOVE_NOTIFY,
   OPEN_LOGIN_MODAL,
   CLOSE_LOGIN_MODAL,
   CHANGE_LOGIN_STRING,
@@ -54,6 +56,20 @@ function reducer(state = initialState, action) {
         common: {...state.common,
           translators: action.translators,
           languages: action.languages
+        }
+      }
+    case CREATE_NOTIFY:
+      return {...state,
+        notifications: {...state.notifications,
+          data: action.notifications,
+          mock: !state.notifications.mock
+        }
+      }
+    case REMOVE_NOTIFY:
+      return {...state,
+        notifications: {...state.notifications,
+          data: action.notifications,
+          mock: !state.notifications.mock
         }
       }
     case SET_LANGUAGE:

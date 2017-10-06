@@ -1,4 +1,7 @@
+import React from 'react'
+import {FormattedMessage} from 'react-intl'
 import asyncRequest from '../../helpers/remote'
+import {notify} from '../notifier'
 
 import {
   SET_ADMIN_USER_ID,
@@ -22,13 +25,18 @@ export function updateAdminUserPasswordAsync() {
     const {id, password, confirmPassword} = getState().admin.editUserPassword
     const data = {password, confirmPassword}
     const query = 'users/' + id
-    asyncRequest(query, 'patch', {payload: data}, (data, error) =>
+    asyncRequest(query, 'patch', {payload: data}, (data, error) => {
       dispatch({
         type: UPDATE_ADMIN_USER_PASSWORD_END,
         error: error ? error : null,
         result: error ? false : true
       })
-    )
+      if (!error) {
+        dispatch(notify({ttl: 5000, type: 'success', text: <FormattedMessage id="EditUserPassword.new_password_success" />}))
+      } else {
+        dispatch(notify({ttl: 5000, type: 'danger', text: error.message}))
+      }
+    })
   }
 }
 
