@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {Link} from 'react-router'
 import {FormattedMessage} from 'react-intl'
 
-import {updateAdminUserPassword, resetAdminUserPassword, changeAdminUserPasswordAsync, getAdminUserPasswordId} from '../../actions/admin/changeUsers'
+import {changeAdminUserPassword, resetAdminUserPassword, updateAdminUserPasswordAsync, getAdminUserPasswordId} from '../../actions/admin/changeUsers'
 
 class EditUserPassword extends Component {
 
@@ -20,11 +20,11 @@ class EditUserPassword extends Component {
   }
 
   changeUserPassword (event) {
-    this.props.dispatch(updateAdminUserPassword({password: event.target.value}))
+    this.props.dispatch(changeAdminUserPassword({password: event.target.value}))
   }
 
   changeUserConfirmPassword (event) {
-    this.props.dispatch(updateAdminUserPassword({confirmPassword: event.target.value}))
+    this.props.dispatch(changeAdminUserPassword({confirmPassword: event.target.value}))
   }
 
   resetChanges (event) {
@@ -34,7 +34,7 @@ class EditUserPassword extends Component {
 
   sendNewUserData (event) {
     event.preventDefault()
-    this.props.dispatch(changeAdminUserPasswordAsync())
+    this.props.dispatch(updateAdminUserPasswordAsync())
   }
 
   render () {

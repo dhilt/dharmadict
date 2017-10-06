@@ -30,13 +30,13 @@ import {
   GET_TRANSLATOR_INFO_END,
   GET_ADMIN_USER_DATA_START,
   GET_ADMIN_USER_DATA_END,
-  CHANGE_ADMIN_USER_DATA_START,
-  CHANGE_ADMIN_USER_DATA_END,
-  UPDATE_ADMIN_USER_DATA,
+  UPDATE_ADMIN_USER_DATA_START,
+  UPDATE_ADMIN_USER_DATA_END,
+  CHANGE_ADMIN_USER_DATA,
   GET_ADMIN_USER_PASSWORD_ID,
-  CHANGE_ADMIN_USER_PASSWORD_START,
-  CHANGE_ADMIN_USER_PASSWORD_END,
-  UPDATE_ADMIN_USER_PASSWORD
+  UPDATE_ADMIN_USER_PASSWORD_START,
+  UPDATE_ADMIN_USER_PASSWORD_END,
+  CHANGE_ADMIN_USER_PASSWORD
 } from '../actions/_constants'
 
 import initialState from './_initial'
@@ -298,7 +298,7 @@ function reducer(state = initialState, action) {
           }
         }
       }
-    case CHANGE_ADMIN_USER_DATA_START:
+    case UPDATE_ADMIN_USER_DATA_START:
       return {...state,
         admin: {...state.admin,
           editUser: {...state.admin.editUser,
@@ -307,7 +307,7 @@ function reducer(state = initialState, action) {
           }
         }
       }
-    case CHANGE_ADMIN_USER_DATA_END:
+    case UPDATE_ADMIN_USER_DATA_END:
       return {...state,
         admin: {...state.admin,
           editUser: {...state.admin.editUser,
@@ -317,7 +317,7 @@ function reducer(state = initialState, action) {
           }
         }
       }
-    case UPDATE_ADMIN_USER_DATA:
+    case CHANGE_ADMIN_USER_DATA:
       return {...state,
         admin: {...state.admin,
           editUser: {...state.admin.editUser,
@@ -333,7 +333,7 @@ function reducer(state = initialState, action) {
           }
         }
       }
-    case CHANGE_ADMIN_USER_PASSWORD_START:
+    case UPDATE_ADMIN_USER_PASSWORD_START:
       return {...state,
         admin: {...state.admin,
           editUserPassword: {...state.admin.editUserPassword,
@@ -341,7 +341,7 @@ function reducer(state = initialState, action) {
           }
         }
       }
-    case CHANGE_ADMIN_USER_PASSWORD_END:
+    case UPDATE_ADMIN_USER_PASSWORD_END:
       return {...state,
         admin: {...state.admin,
           editUserPassword: {...state.admin.editUserPassword,
@@ -351,7 +351,7 @@ function reducer(state = initialState, action) {
           }
         }
       }
-    case UPDATE_ADMIN_USER_PASSWORD:
+    case CHANGE_ADMIN_USER_PASSWORD:
       return {...state,
         admin: {...state.admin,
           editUserPassword: {...state.admin.editUserPassword,

@@ -4,7 +4,7 @@ import {Link} from 'react-router'
 import {FormattedMessage} from 'react-intl'
 
 import lang from '../../helpers/lang'
-import {updateAdminUserData, resetAdminUserData, changeAdminUserDataAsync, getAdminUserDataAsync} from '../../actions/admin/changeUsers'
+import {changeAdminUserData, resetAdminUserData, updateAdminUserDataAsync, getAdminUserDataAsync} from '../../actions/admin/changeUsers'
 
 class EditUser extends Component {
 
@@ -22,15 +22,15 @@ class EditUser extends Component {
   }
 
   changeUserName (event) {
-    this.props.dispatch(updateAdminUserData({name: event.target.value}))
+    this.props.dispatch(changeAdminUserData({name: event.target.value}))
   }
 
   changeUserLanguage (language) {
-    this.props.dispatch(updateAdminUserData({language}))
+    this.props.dispatch(changeAdminUserData({language}))
   }
 
   changeUserDescription (event) {
-    this.props.dispatch(updateAdminUserData({description: event.target.value}))
+    this.props.dispatch(changeAdminUserData({description: event.target.value}))
   }
 
   resetChanges (event) {
@@ -40,7 +40,7 @@ class EditUser extends Component {
 
   sendNewUserData (event) {
     event.preventDefault()
-    this.props.dispatch(changeAdminUserDataAsync())
+    this.props.dispatch(updateAdminUserDataAsync())
   }
 
   render () {
