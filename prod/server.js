@@ -81,7 +81,7 @@ app.patch('/api/users/:id', (req, res) =>
     .then(user => usersController.isAdmin(user))
     .then(user => usersController.update(req.params.id, req.body.payload))
     .then(result => res.json({success: true, user: usersController.getUserInfo(result)}))
-    .catch(error => sendApiError(res, 'Can\'t update translator description.', error))
+    .catch(error => sendApiError(res, 'Can\'t update user data.', error))
 );
 
 app.get('/api/terms', (req, res) =>

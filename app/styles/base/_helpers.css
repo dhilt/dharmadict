@@ -36,3 +36,9 @@
   position: absolute;
   width: 1px;
 }
+
+.hint {
+  margin-left: 5px;
+  font-weight: normal;
+  color: #444;
+}

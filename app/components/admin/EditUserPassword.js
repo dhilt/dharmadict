@@ -37,15 +37,33 @@ class EditUserPassword extends Component {
     this.props.dispatch(updateAdminUserPasswordAsync())
   }
 
+  disabled () {
+    const {pending, password, confirmPassword} = this.props.stateData
+    if (pending) {
+      return true;
+    }
+    if(!password || !confirmPassword || password !== confirmPassword) {
+      return true;
+    }
+    if(password.length < 6) {
+      return true;
+    }
+  }
+
   render () {
     const {id} = this.props.params
-    const {pending, result, error, password, confirmPassword} = this.props.newTranslatorInfo
+    const {result, error, password, confirmPassword} = this.props.stateData
     return (
       <div>
         <form className="col-md-6">
           <h3><FormattedMessage id="EditUserPassword.title" values={{id}} /></h3>
           <div className="form-group">
-            <label><FormattedMessage id="EditUserPassword.new_password" /></label>
+            <label>
+              <FormattedMessage id="EditUserPassword.new_password" />
+              <span className="hint">
+                <FormattedMessage id="EditUserPassword.new_password_hint" />
+              </span>
+            </label>
             <input
               type="password"
               value={password}
@@ -66,7 +84,7 @@ class EditUserPassword extends Component {
             <button
               className="btn btn-primary"
               onClick={this.sendNewUserData}
-              disabled={pending}
+              disabled={this.disabled()}
               ><FormattedMessage id="EditUser.button_save" />
             </button>
             <button
@@ -77,10 +95,12 @@ class EditUserPassword extends Component {
             <Link to={`/translator/${id}/edit`}>
               <FormattedMessage id="EditUser.button_cancel" />
             </Link>
+          </div>
+          <div className="form-group">
             {error && <div className="alert alert-danger">{error.message}</div>}
             {result &&
               <div className="alert alert-success">
-                {<FormattedMessage id="EditUserPassword.new_password_success" />}
+                <FormattedMessage id="EditUserPassword.new_password_success" />
               </div>
             }
           </div>
@@ -92,7 +112,7 @@ class EditUserPassword extends Component {
 
 function select (state, ownProps) {
   return {
-    newTranslatorInfo: state.admin.editUserPassword
+    stateData: state.admin.editUserPassword
   }
 }
 

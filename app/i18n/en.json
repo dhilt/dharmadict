@@ -58,6 +58,7 @@
 
   "EditUserPassword.title": "Reset password of user {id}",
   "EditUserPassword.new_password": "New password",
+  "EditUserPassword.new_password_hint": "(at least 6 symbols)",
   "EditUserPassword.new_password_confirm": "Confirm password",
   "EditUserPassword.new_password_success": "Password was successfully changed"
 }

@@ -58,6 +58,7 @@
 
   "EditUserPassword.title": "Сброс пароля пользователя {id}",
   "EditUserPassword.new_password": "Новый пароль",
+  "EditUserPassword.new_password_hint": "(не менее 6 символов)",
   "EditUserPassword.new_password_confirm": "Подтверждение пароля",
   "EditUserPassword.new_password_success": "Пароль был успешно изменен"
 }
