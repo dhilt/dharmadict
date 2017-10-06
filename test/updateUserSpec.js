@@ -25,12 +25,12 @@ describe('Update user API', () => {
     )
   });
 
-  it('should not update user information (auth needed)', (done) => {
+  it('should not update user data (auth needed)', (done) => {
     request.patch(queryUpdateUser)
       .end(
         (err, res) => {
           assert.notEqual(res.body.success, true);
-          assert.equal(res.body.message, "Can't update translator description. Authorization needed");
+          assert.equal(res.body.message, "Can't update user data. Authorization needed");
           done();
         }
       )
@@ -38,14 +38,14 @@ describe('Update user API', () => {
 
   shouldLogIn(testTranslator);
 
-  it('should not update user information (admin only)', (done) => {
+  it('should not update user data (admin only)', (done) => {
     request.patch(queryUpdateUser)
       .set('Authorization', 'Bearer ' + testTranslator.token)
       .send(requestObj)
       .end(
         (err, res) => {
           assert.notEqual(res.body.success, true);
-          assert.equal(res.body.message, "Can't update translator description. Admin only");
+          assert.equal(res.body.message, "Can't update user data. Admin only");
           done();
         }
       )
@@ -53,7 +53,7 @@ describe('Update user API', () => {
 
   shouldLogIn(testAdmin);
 
-  it('should not update user information (no payload)', (done) => {
+  it('should not update user data (no payload)', (done) => {
     let _requestObj = Object.assign({}, requestObj);
     delete _requestObj.payload;
     request.patch(queryUpdateUser)
@@ -62,13 +62,13 @@ describe('Update user API', () => {
       .end(
         (err, res) => {
           assert.notEqual(res.body.success, true);
-          assert.equal(res.body.message, "Can't update translator description. Invalid payload");
+          assert.equal(res.body.message, "Can't update user data. Invalid payload");
           done();
         }
       )
   });
 
-  it('should not update user information (invalid payload)', (done) => {
+  it('should not update user data (invalid payload)', (done) => {
     let _requestObj = Object.assign({}, requestObj);
     _requestObj.payload = false;
     request.patch(queryUpdateUser)
@@ -77,13 +77,13 @@ describe('Update user API', () => {
       .end(
         (err, res) => {
           assert.notEqual(res.body.success, true);
-          assert.equal(res.body.message, "Can't update translator description. Invalid payload");
+          assert.equal(res.body.message, "Can't update user data. Invalid payload");
           done();
         }
       )
   });
 
-  it('should not update user information (no id)', (done) => {
+  it('should not update user data (no id)', (done) => {
     let _requestObj = Object.assign({}, requestObj);
     request.patch('/api/users/')
       .set('Authorization', 'Bearer ' + testAdmin.token)
@@ -96,7 +96,7 @@ describe('Update user API', () => {
       )
   });
 
-  it('should not update user information (user not found)', (done) => {
+  it('should not update user data (user not found)', (done) => {
     let _requestObj = Object.assign({}, requestObj);
     request.patch('/api/users/INEXISTENT_USER!')
       .set('Authorization', 'Bearer ' + testAdmin.token)
@@ -104,7 +104,7 @@ describe('Update user API', () => {
       .end(
         (err, res) => {
           assert.notEqual(res.body.success, true);
-          assert.equal(res.body.message, "Can't update translator description. No user found");
+          assert.equal(res.body.message, "Can't update user data. No user found");
           done();
         }
       )
@@ -119,7 +119,7 @@ describe('Update user API', () => {
       .end(
         (err, res) => {
           assert.notEqual(res.body.success, true);
-          assert.equal(res.body.message, "Can't update translator description. Invalid name");
+          assert.equal(res.body.message, "Can't update user data. Invalid name");
           done();
         }
       )
@@ -134,7 +134,7 @@ describe('Update user API', () => {
       .end(
         (err, res) => {
           assert.notEqual(res.body.success, true);
-          assert.equal(res.body.message, "Can't update translator description. Invalid language");
+          assert.equal(res.body.message, "Can't update user data. Invalid language");
           done();
         }
       )
@@ -149,7 +149,7 @@ describe('Update user API', () => {
       .end(
         (err, res) => {
           assert.notEqual(res.body.success, true);
-          assert.equal(res.body.message, "Can't update translator description. Invalid language");
+          assert.equal(res.body.message, "Can't update user data. Invalid language");
           done();
         }
       )
@@ -164,13 +164,13 @@ describe('Update user API', () => {
       .end(
         (err, res) => {
           assert.notEqual(res.body.success, true);
-          assert.equal(res.body.message, "Can't update translator description. Invalid description");
+          assert.equal(res.body.message, "Can't update user data. Invalid description");
           done();
         }
       )
   });
 
-  it('should update user information', (done) => {
+  it('should update user data', (done) => {
     request.patch(queryUpdateUser)
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .send(requestObj)
@@ -185,7 +185,7 @@ describe('Update user API', () => {
       )
   });
 
-  it('should not update user information (short password)', (done) => {
+  it('should not update user data (short password)', (done) => {
     let _requestObj = JSON.parse(JSON.stringify(requestObj));
     _requestObj.payload['password'] = 'short';
     _requestObj.payload['confirmPassword'] = 'short';
@@ -196,13 +196,13 @@ describe('Update user API', () => {
         (err, res) => {
           assert.notEqual(res.body.success, true);
           assert.equal(res.body.code, 500);
-          assert.equal(res.body.message, 'Can\'t update translator description. Password is too short');
+          assert.equal(res.body.message, "Can't update user data. Password is too short");
           done();
         }
       )
   });
 
-  it('should not update user information (Invalid password)', (done) => {
+  it('should not update user data (Invalid password)', (done) => {
     let _requestObj = JSON.parse(JSON.stringify(requestObj));
     _requestObj.payload['password'] = 123;
     _requestObj.payload['confirmPassword'] = 123;
@@ -213,13 +213,13 @@ describe('Update user API', () => {
         (err, res) => {
           assert.notEqual(res.body.success, true);
           assert.equal(res.body.code, 500);
-          assert.equal(res.body.message, 'Can\'t update translator description. Invalid password');
+          assert.equal(res.body.message, "Can't update user data. Invalid password");
           done();
         }
       )
   });
 
-  it('should not update user information (Password not confirmed)', (done) => {
+  it('should not update user data (Password not confirmed)', (done) => {
     let _requestObj = JSON.parse(JSON.stringify(requestObj));
     _requestObj.payload['password'] = 'new_password';
     _requestObj.payload['confirmPassword'] = 'new_password____';
@@ -230,13 +230,13 @@ describe('Update user API', () => {
         (err, res) => {
           assert.notEqual(res.body.success, true);
           assert.equal(res.body.code, 500);
-          assert.equal(res.body.message, 'Can\'t update translator description. Password not confirmed');
+          assert.equal(res.body.message, "Can't update user data. Password not confirmed");
           done();
         }
       )
   });
 
-  it('should update user information (with new password)', (done) => {
+  it('should update user data (with new password)', (done) => {
     let _requestObj = JSON.parse(JSON.stringify(requestObj));
     _requestObj.payload['password'] = 'new_password';
     _requestObj.payload['confirmPassword'] = 'new_password';
@@ -265,7 +265,7 @@ describe('Update user API', () => {
       .end(
         (err, res) => {
           assert.notEqual(res.body.success, true);
-          assert.equal(res.body.message, "Can't update translator description. Invalid name");
+          assert.equal(res.body.message, "Can't update user data. Invalid name");
           done();
         }
       )

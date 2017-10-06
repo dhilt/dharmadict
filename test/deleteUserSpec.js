@@ -27,28 +27,19 @@ describe('Delete user ctrl method', () => {
 
   it('should delete admin user', (done) => {
     usersController.removeById(testAdmin.id)
-      .then(result => {
-        assert.equal(result.success, true);
-        done();
-      })
+      .then(result => done())
       .catch(error => done(error))
   });
 
   it('should delete translator user', (done) => {
     usersController.removeById(testTranslator.id)
-      .then(result => {
-        assert.equal(result.success, true);
-        done();
-      })
+      .then(result => done())
       .catch(error => done(error))
   });
 
   it('should delete translator-2 user', (done) => {
     usersController.removeById(testTranslator2.id)
-      .then(result => {
-        assert.equal(result.success, true);
-        done();
-      })
+      .then(result => done())
       .catch(error => done(error))
   });
 });

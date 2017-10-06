@@ -37,28 +37,19 @@ describe('Create user ctrl method', () => {
 
   it('should create admin user', (done) => {
     usersController.create(testAdmin)
-      .then(result => {
-        assert.equal(result.success, true);
-        done();
-      })
+      .then(result => done())
       .catch(error => done(error))
   });
 
   it('should create translator user', (done) => {
     usersController.create(testTranslator)
-      .then(result => {
-        assert.equal(result.success, true);
-        done();
-      })
+      .then(result => done())
       .catch(error => done(error))
   });
 
   it('should create translator-2 user', (done) => {
     usersController.create(testTranslator2)
-      .then(result => {
-        assert.equal(result.success, true);
-        done();
-      })
+      .then(result => done())
       .catch(error => done(error))
   });
 
