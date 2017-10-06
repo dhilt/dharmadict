@@ -144,21 +144,28 @@ const forceCleanUp = () => {
 
 forceCleanUp();
 
-const shouldLogIn = (user) => {
-  it(`should log in as ${user.login}`, (done) => {
+const shouldLogIn = (user, shouldFail) => {
+  it(`should ${shouldFail ? 'not ' : ''}log in as ${user.login}`, (done) => {
     request.post('/api/login').send({
       login: user.login,
       password: user.password
     }).end(
       (err, res) => {
         user.token = res.body.token;
-        assert.notEqual(res.body.success, true);
-        assert.equal(res.body.user.login, user.login);
+        if(shouldFail) {
+          assert.equal(res.body.error, true);
+          assert.equal(res.body.message, "Can't login. Wrong credentials");
+        }
+        else {
+          assert.equal(res.body.user.login, user.login);
+        }
         done();
       }
     )
   });
 };
+
+const shouldNotLogIn = (user) => shouldLogIn(user, true);
 
 module.exports = {
   request,
@@ -170,5 +177,6 @@ module.exports = {
   testTermTranslation,
   testTermTranslation2,
   shouldLogIn,
+  shouldNotLogIn,
   languages
 };

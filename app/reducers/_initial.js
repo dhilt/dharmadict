@@ -82,6 +82,14 @@ let initialState = {
       },
       pending: false,
       error: null
+    },
+    editUserPassword: {
+      id: '',
+      password: '',
+      confirmPassword: '',
+      pending: false,
+      result: null,
+      error: null
     }
   }
 }

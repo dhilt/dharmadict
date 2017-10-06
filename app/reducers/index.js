@@ -30,9 +30,13 @@ import {
   GET_TRANSLATOR_INFO_END,
   GET_ADMIN_USER_DATA_START,
   GET_ADMIN_USER_DATA_END,
-  CHANGE_ADMIN_USER_DATA_START,
-  CHANGE_ADMIN_USER_DATA_END,
-  UPDATE_ADMIN_USER_DATA
+  UPDATE_ADMIN_USER_DATA_START,
+  UPDATE_ADMIN_USER_DATA_END,
+  CHANGE_ADMIN_USER_DATA,
+  SET_ADMIN_USER_ID,
+  UPDATE_ADMIN_USER_PASSWORD_START,
+  UPDATE_ADMIN_USER_PASSWORD_END,
+  CHANGE_ADMIN_USER_PASSWORD
 } from '../actions/_constants'
 
 import initialState from './_initial'
@@ -294,7 +298,7 @@ function reducer(state = initialState, action) {
           }
         }
       }
-    case CHANGE_ADMIN_USER_DATA_START:
+    case UPDATE_ADMIN_USER_DATA_START:
       return {...state,
         admin: {...state.admin,
           editUser: {...state.admin.editUser,
@@ -303,7 +307,7 @@ function reducer(state = initialState, action) {
           }
         }
       }
-    case CHANGE_ADMIN_USER_DATA_END:
+    case UPDATE_ADMIN_USER_DATA_END:
       return {...state,
         admin: {...state.admin,
           editUser: {...state.admin.editUser,
@@ -313,11 +317,45 @@ function reducer(state = initialState, action) {
           }
         }
       }
-    case UPDATE_ADMIN_USER_DATA:
+    case CHANGE_ADMIN_USER_DATA:
       return {...state,
         admin: {...state.admin,
           editUser: {...state.admin.editUser,
             data: action.payload
+          }
+        }
+      }
+    case SET_ADMIN_USER_ID:
+      return {...state,
+        admin: {...state.admin,
+          editUserPassword: {...initialState.admin.editUserPassword,
+            id: action.id
+          }
+        }
+      }
+    case UPDATE_ADMIN_USER_PASSWORD_START:
+      return {...state,
+        admin: {...state.admin,
+          editUserPassword: {...state.admin.editUserPassword,
+            pending: true
+          }
+        }
+      }
+    case UPDATE_ADMIN_USER_PASSWORD_END:
+      return {...state,
+        admin: {...state.admin,
+          editUserPassword: {...initialState.admin.editUserPassword,
+            error: action.error,
+            result: action.result
+          }
+        }
+      }
+    case CHANGE_ADMIN_USER_PASSWORD:
+      return {...state,
+        admin: {...state.admin,
+          editUserPassword: {...state.admin.editUserPassword,
+            password: action.password,
+            confirmPassword: action.confirmPassword
           }
         }
       }

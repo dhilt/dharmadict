@@ -33,6 +33,7 @@ const update = (userId, payload) => new Promise(resolve => {
   if (!payload || typeof payload !== 'object') {
     throw new ApiError('Invalid payload')
   }
+
   if (payload.hasOwnProperty('name')) {
     if (typeof payload.name !== 'string') {
       throw new ApiError('Invalid name')
@@ -42,22 +43,34 @@ const update = (userId, payload) => new Promise(resolve => {
       throw new ApiError('Invalid name')
     }
   }
-  else {
-    throw new ApiError('Invalid name')
-  }
   if (payload.hasOwnProperty('language')) {
     if (payload.language !== languages.getLang(payload.language).id) {
       throw new ApiError('Invalid language')
     }
-  }
-  else {
-    throw new ApiError('Invalid language')
   }
   if (payload.hasOwnProperty('description')) {
     if (typeof payload.description !== 'string') {
       throw new ApiError('Invalid description')
     }
     payload.description = payload.description.trim();
+  }
+
+  if (payload.hasOwnProperty('password')) {
+    if(!payload.hasOwnProperty('confirmPassword')) {
+      throw new ApiError('No password confirmation')
+    }
+    if (typeof payload.password !== 'string') {
+      throw new ApiError('Invalid password')
+    }
+    if (typeof payload.confirmPassword !== 'string') {
+      throw new ApiError('Invalid password confirmation')
+    }
+    if (payload.password.length < 6) {
+      throw new ApiError('Password is too short')
+    }
+    if (payload.password !== payload.confirmPassword) {
+      throw new ApiError('Password not confirmed')
+    }
   }
   resolve(userId, payload)
 });

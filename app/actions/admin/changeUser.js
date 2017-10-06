@@ -1,11 +1,11 @@
 import asyncRequest from '../../helpers/remote'
 
 import {
-  CHANGE_ADMIN_USER_DATA_START,
-  CHANGE_ADMIN_USER_DATA_END,
   GET_ADMIN_USER_DATA_START,
   GET_ADMIN_USER_DATA_END,
-  UPDATE_ADMIN_USER_DATA
+  UPDATE_ADMIN_USER_DATA_START,
+  UPDATE_ADMIN_USER_DATA_END,
+  CHANGE_ADMIN_USER_DATA
 } from '../_constants'
 
 const getEditableUserDataObject = (user) => ({
@@ -13,7 +13,6 @@ const getEditableUserDataObject = (user) => ({
   language: user.language,
   description: user.description
 })
-
 
 export function getAdminUserDataAsync(userId) {
   return (dispatch, getState) => {
@@ -33,23 +32,7 @@ export function getAdminUserDataAsync(userId) {
   }
 }
 
-export function changeAdminUserDataAsync() {
-  return (dispatch, getState) => {
-    dispatch({
-      type: CHANGE_ADMIN_USER_DATA_START
-    })
-    const {id, data, dataSource} = getState().admin.editUser
-    const query = 'users/' + id
-    asyncRequest(query, 'patch', {payload: data}, (data, error) =>
-      dispatch({
-        type: CHANGE_ADMIN_USER_DATA_END,
-        error: error ? error : null,
-        data: error ? dataSource : getEditableUserDataObject(data.user)
-      }))
-  }
-}
-
-export function updateAdminUserData(_data) {
+export function changeAdminUserData(_data) {
   return (dispatch, getState) => {
     const {data} = getState().admin.editUser
     const payload = {
@@ -58,16 +41,32 @@ export function updateAdminUserData(_data) {
       description: _data.hasOwnProperty('description') ? _data.description : data.description
     }
     dispatch({
-      type: UPDATE_ADMIN_USER_DATA,
+      type: CHANGE_ADMIN_USER_DATA,
       payload
     })
+  }
+}
+
+export function updateAdminUserDataAsync() {
+  return (dispatch, getState) => {
+    dispatch({
+      type: UPDATE_ADMIN_USER_DATA_START
+    })
+    const {id, data, dataSource} = getState().admin.editUser
+    const query = 'users/' + id
+    asyncRequest(query, 'patch', {payload: data}, (data, error) =>
+      dispatch({
+        type: UPDATE_ADMIN_USER_DATA_END,
+        error: error ? error : null,
+        data: error ? dataSource : getEditableUserDataObject(data.user)
+      }))
   }
 }
 
 export function resetAdminUserData() {
   return (dispatch, getState) => {
     dispatch({
-      type: UPDATE_ADMIN_USER_DATA,
+      type: CHANGE_ADMIN_USER_DATA,
       payload: getState().admin.editUser.dataSource
     })
   }

@@ -4,7 +4,7 @@ import {Link} from 'react-router'
 import {FormattedMessage} from 'react-intl'
 
 import lang from '../../helpers/lang'
-import {updateAdminUserData, resetAdminUserData, changeAdminUserDataAsync, getAdminUserDataAsync} from '../../actions/admin/changeUsers'
+import {changeAdminUserData, resetAdminUserData, updateAdminUserDataAsync, getAdminUserDataAsync} from '../../actions/admin/changeUser'
 
 class EditUser extends Component {
 
@@ -22,15 +22,15 @@ class EditUser extends Component {
   }
 
   changeUserName (event) {
-    this.props.dispatch(updateAdminUserData({name: event.target.value}))
+    this.props.dispatch(changeAdminUserData({name: event.target.value}))
   }
 
   changeUserLanguage (language) {
-    this.props.dispatch(updateAdminUserData({language}))
+    this.props.dispatch(changeAdminUserData({language}))
   }
 
   changeUserDescription (event) {
-    this.props.dispatch(updateAdminUserData({description: event.target.value}))
+    this.props.dispatch(changeAdminUserData({description: event.target.value}))
   }
 
   resetChanges (event) {
@@ -40,7 +40,7 @@ class EditUser extends Component {
 
   sendNewUserData (event) {
     event.preventDefault()
-    this.props.dispatch(changeAdminUserDataAsync())
+    this.props.dispatch(updateAdminUserDataAsync())
   }
 
   render () {
@@ -85,20 +85,27 @@ class EditUser extends Component {
               onChange={this.changeUserDescription}
             />
           </div>
-          <button
-            className="btn btn-primary"
-            onClick={this.sendNewUserData}
-            disabled={pending}
-            ><FormattedMessage id="EditUser.button_save" />
-          </button>
-          <button
-            className="btn btn-default"
-            onClick={this.resetChanges}
-          ><FormattedMessage id="EditUser.button_reset_changes" />
-          </button>
-          <Link to={`/translator/${id}`}>
-            <FormattedMessage id="EditUser.button_cancel" />
-          </Link>
+          <div className="form-group">
+            <button
+              className="btn btn-primary"
+              onClick={this.sendNewUserData}
+              disabled={pending}
+              ><FormattedMessage id="EditUser.button_save" />
+            </button>
+            <button
+              className="btn btn-default"
+              onClick={this.resetChanges}
+            ><FormattedMessage id="EditUser.button_reset_changes" />
+            </button>
+            <Link to={`/translator/${id}`}>
+              <FormattedMessage id="EditUser.button_cancel" />
+            </Link>
+          </div>
+          <div className="form-group">
+            <Link to={`/translator/${id}/edit/password`}>
+              <FormattedMessage id="EditUser.link_reset_password" />
+            </Link>
+          </div>
           {error && <div className="alert alert-danger">{error.message}</div>}
         </form>
       </div>

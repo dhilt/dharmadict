@@ -10,6 +10,7 @@ import TranslatorPage from './components/TranslatorPage'
 
 import NewTerm from './components/admin/NewTerm'
 import EditUser from './components/admin/EditUser'
+import EditUserPassword from './components/admin/EditUserPassword'
 
 function unauthorizedAccess (replace) {
   replace('/not_authorized')
@@ -60,6 +61,12 @@ const getRoutes = (store) => ({
       path: '/translator/:id/edit',
       exactly: true,
       component: EditUser,
+      onEnter: (...args) => checkAuth(...args, store, 'admin')
+    },
+    {
+      path: '/translator/:id/edit/password',
+      exactly: true,
+      component: EditUserPassword,
       onEnter: (...args) => checkAuth(...args, store, 'admin')
     },
     { path: '/not_authorized', exactly: true, component: NotFound },
