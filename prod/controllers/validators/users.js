@@ -55,12 +55,15 @@ const update = (userId, payload) => new Promise(resolve => {
     payload.description = payload.description.trim();
   }
 
-  if (payload.hasOwnProperty('password') && payload.hasOwnProperty('confirmPassword')) {
+  if (payload.hasOwnProperty('password')) {
+    if(!payload.hasOwnProperty('confirmPassword')) {
+      throw new ApiError('No password confirmation')
+    }
     if (typeof payload.password !== 'string') {
       throw new ApiError('Invalid password')
     }
     if (typeof payload.confirmPassword !== 'string') {
-      throw new ApiError('Invalid confirm password')
+      throw new ApiError('Invalid password confirmation')
     }
     if (payload.password.length < 6) {
       throw new ApiError('Password is too short')

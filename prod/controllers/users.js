@@ -40,7 +40,7 @@ const canLogin = (login, password) => new Promise(resolve => {
     if (!passwordHash.verify(password, user.hash)) {
       throw new ApiError('Wrong credentials')
     }
-    return Promise.resolve(user)
+    return user
   });
 
 const findById = userId => new Promise((resolve, reject) => {
@@ -98,7 +98,7 @@ const findByLogin = userLogin => new Promise((resolve, reject) => {
       throw new ApiError('No user found', 404)
     }
     result._source.id = result._id;
-    return Promise.resolve(result._source)
+    return result._source
   }, error => {
     logger.error(error.message);
     throw new ApiError('Database error')
@@ -142,14 +142,14 @@ const create = user => validator.create(user)
     const userId = newUser.id;
     delete newUser.password;
     delete newUser.id;
-    return Promise.resolve({user: newUser, userId})
+    return { user: newUser, userId }
   })
   .then(data =>  // check login uniqueness
     findByLogin(data.user.login).then(() => {
       throw new ApiError('Login not unique')
     }, error => {
       if (error.code === 404) {
-        return Promise.resolve(data)
+        return data
       }
       throw error
     })
@@ -159,7 +159,7 @@ const create = user => validator.create(user)
       throw new ApiError('Id not unique')
     }, error => {
       if (error.code === 404) {
-        return Promise.resolve(data)
+        return data
       }
       throw error
     })
@@ -171,12 +171,9 @@ const create = user => validator.create(user)
       id: data.userId,
       body: data.user,
       refresh: true
-    }).then(() => {
-      logger.info('User was successfully created');
-      return Promise.resolve({
-        success: true
-      })
-    }, error => {
+    }).then(() =>
+      logger.info('User was successfully created')
+    , error => {
       logger.error(error.message);
       throw new ApiError('Database error')
     })
@@ -185,27 +182,30 @@ const create = user => validator.create(user)
 const update = (userId, payload) => validator.update(userId, payload)
   .then(() => findById(userId))
   .then(user => {
-    let body = Object.assign({}, user, payload);
-    if (body.hasOwnProperty('password')) {
-      body.hash = passwordHash.generate(body.password);
-      delete body.password;
-      delete body.confirmPassword;
+    let result = Object.assign({}, user, payload);
+    if (result.password) {
+      result.hash = passwordHash.generate(result.password);
+      delete result.password;
+      delete result.confirmPassword;
     }
-    delete body.id;
-    return elasticClient.index({
+    delete result.id;
+    return result
+  })
+  .then(body =>
+    elasticClient.index({
       index: config.db.index,
       type: 'users',
       id: userId,
       body,
       refresh: true
     }).then(() => {
-      logger.info('User description was successfully updated');
-      return Promise.resolve(userId)
+      logger.info('User data was successfully updated');
+      return userId
     }, error => {
       logger.error(error.message);
       throw new ApiError('DB error')
     })
-  })
+  )
   .then(findById);
 
 const removeById = userId => new Promise(resolve => {
@@ -221,12 +221,9 @@ const removeById = userId => new Promise(resolve => {
       type: 'users',
       id: userId,
       refresh: true
-    }).then(() => {
-      logger.info('User was successfully deleted');
-      return Promise.resolve({
-        success: true
-      })
-    }, error => {
+    }).then(() =>
+      logger.info('User was successfully deleted')
+    , error => {
       logger.error(error.message);
       throw new ApiError('DB error')
     })
