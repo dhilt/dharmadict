@@ -170,36 +170,6 @@ describe('Update user API', () => {
       )
   });
 
-  it('should not update user if no name', (done) => {
-    let _requestObj = JSON.parse(JSON.stringify(requestObj));
-    delete _requestObj.payload['name'];
-    request.patch(queryUpdateUser)
-      .set('Authorization', 'Bearer ' + testAdmin.token)
-      .send(_requestObj)
-      .end(
-        (err, res) => {
-          assert.notEqual(res.body.success, true);
-          assert.equal(res.body.message, "Can't update translator description. Invalid name");
-          done();
-        }
-      )
-  });
-
-  it('should not update user if no language', (done) => {
-    let _requestObj = JSON.parse(JSON.stringify(requestObj));
-    delete _requestObj.payload['language'];
-    request.patch(queryUpdateUser)
-      .set('Authorization', 'Bearer ' + testAdmin.token)
-      .send(_requestObj)
-      .end(
-        (err, res) => {
-          assert.notEqual(res.body.success, true);
-          assert.equal(res.body.message, "Can't update translator description. Invalid language");
-          done();
-        }
-      )
-  });
-
   it('should update user information', (done) => {
     request.patch(queryUpdateUser)
       .set('Authorization', 'Bearer ' + testAdmin.token)
