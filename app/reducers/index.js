@@ -328,7 +328,7 @@ function reducer(state = initialState, action) {
     case SET_ADMIN_USER_ID:
       return {...state,
         admin: {...state.admin,
-          editUserPassword: {...state.admin.editUserPassword,
+          editUserPassword: {...initialState.admin.editUserPassword,
             id: action.id
           }
         }
