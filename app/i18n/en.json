@@ -54,9 +54,10 @@
   "EditUser.button_save": "Save",
   "EditUser.button_reset_changes": "Reset",
   "EditUser.button_cancel": "Cancel",
+  "EditUser.link_reset_password": "Change password",
 
-  "EditUserPassword.title_edit_user": "Editing password of user {id}",
-  "EditUserPassword.password_of_translator": "Password of the translator",
-  "EditUserPassword.confirm_password_of_translator": "Confirm password",
-  "EditUserPassword.alert_success_of_changing_password": "Password was successfully changed"
+  "EditUserPassword.title": "Reset password of user {id}",
+  "EditUserPassword.new_password": "New password",
+  "EditUserPassword.new_password_confirm": "Confirm password",
+  "EditUserPassword.new_password_success": "Password was successfully changed"
 }

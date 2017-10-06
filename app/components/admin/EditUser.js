@@ -85,20 +85,27 @@ class EditUser extends Component {
               onChange={this.changeUserDescription}
             />
           </div>
-          <button
-            className="btn btn-primary"
-            onClick={this.sendNewUserData}
-            disabled={pending}
-            ><FormattedMessage id="EditUser.button_save" />
-          </button>
-          <button
-            className="btn btn-default"
-            onClick={this.resetChanges}
-          ><FormattedMessage id="EditUser.button_reset_changes" />
-          </button>
-          <Link to={`/translator/${id}`}>
-            <FormattedMessage id="EditUser.button_cancel" />
-          </Link>
+          <div className="form-group">
+            <button
+              className="btn btn-primary"
+              onClick={this.sendNewUserData}
+              disabled={pending}
+              ><FormattedMessage id="EditUser.button_save" />
+            </button>
+            <button
+              className="btn btn-default"
+              onClick={this.resetChanges}
+            ><FormattedMessage id="EditUser.button_reset_changes" />
+            </button>
+            <Link to={`/translator/${id}`}>
+              <FormattedMessage id="EditUser.button_cancel" />
+            </Link>
+          </div>
+          <div className="form-group">
+            <Link to={`/translator/${id}/edit/password`}>
+              <FormattedMessage id="EditUser.link_reset_password" />
+            </Link>
+          </div>
           {error && <div className="alert alert-danger">{error.message}</div>}
         </form>
       </div>

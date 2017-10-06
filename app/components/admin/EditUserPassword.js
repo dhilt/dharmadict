@@ -43,9 +43,9 @@ class EditUserPassword extends Component {
     return (
       <div>
         <form className="col-md-6">
-          <h3><FormattedMessage id="EditUserPassword.title_edit_user" values={{id}} /></h3>
+          <h3><FormattedMessage id="EditUserPassword.title" values={{id}} /></h3>
           <div className="form-group">
-            <label><FormattedMessage id="EditUserPassword.password_of_translator" /></label>
+            <label><FormattedMessage id="EditUserPassword.new_password" /></label>
             <input
               type="password"
               value={password}
@@ -54,7 +54,7 @@ class EditUserPassword extends Component {
             />
           </div>
           <div className="form-group">
-            <label><FormattedMessage id="EditUserPassword.confirm_password_of_translator" /></label>
+            <label><FormattedMessage id="EditUserPassword.new_password_confirm" /></label>
             <input
               type="password"
               value={confirmPassword}
@@ -62,26 +62,28 @@ class EditUserPassword extends Component {
               onChange={this.changeUserConfirmPassword}
             />
           </div>
-          <button
-            className="btn btn-primary"
-            onClick={this.sendNewUserData}
-            disabled={pending}
-            ><FormattedMessage id="EditUser.button_save" />
-          </button>
-          <button
-            className="btn btn-default"
-            onClick={this.resetChanges}
-          ><FormattedMessage id="EditUser.button_reset_changes" />
-          </button>
-          <Link to={`/translator/${id}`}>
-            <FormattedMessage id="EditUser.button_cancel" />
-          </Link>
-          {error && <div className="alert alert-danger">{error.message}</div>}
-          {result &&
-            <div className="alert alert-success">
-              {<FormattedMessage id="EditUserPassword.alert_success_of_changing_password" />}
-            </div>
-          }
+          <div className="form-group">
+            <button
+              className="btn btn-primary"
+              onClick={this.sendNewUserData}
+              disabled={pending}
+              ><FormattedMessage id="EditUser.button_save" />
+            </button>
+            <button
+              className="btn btn-default"
+              onClick={this.resetChanges}
+            ><FormattedMessage id="EditUser.button_reset_changes" />
+            </button>
+            <Link to={`/translator/${id}/edit`}>
+              <FormattedMessage id="EditUser.button_cancel" />
+            </Link>
+            {error && <div className="alert alert-danger">{error.message}</div>}
+            {result &&
+              <div className="alert alert-success">
+                {<FormattedMessage id="EditUserPassword.new_password_success" />}
+              </div>
+            }
+          </div>
         </form>
       </div>
     )
