@@ -1,8 +1,6 @@
 const assert = require('assert');
-const request = require('./_shared.js').request;
-const shouldLogIn = require('./_shared.js').shouldLogIn;
-const testAdmin = require('./_shared.js').testAdmin;
-const testTranslator = require('./_shared.js').testTranslator;
+const { request, shouldLogIn, shouldNotLogIn } = require('./_shared.js');
+const { testAdmin, testTranslator } = require('./_shared.js');
 
 const requestObj = {
   payload: {
@@ -12,6 +10,7 @@ const requestObj = {
   }
 };
 
+const oldPassword = testTranslator.password;
 const newPassword = 'new_password';
 
 describe('Update user API', () => {
@@ -303,11 +302,14 @@ describe('Update user API', () => {
         (err, res) => {
           assert.equal(res.body.success, true);
           assert.equal(res.body.user.name, requestObj.payload.name);
+          // save new password
+          Object.assign(testTranslator, { password: newPassword });
           done();
         }
       )
   });
 
-  shouldLogIn(Object.assign(testTranslator, { password: newPassword }));
+  shouldNotLogIn(Object.assign({}, testTranslator, { password: oldPassword }));
+  shouldLogIn(testTranslator);
 
 });
