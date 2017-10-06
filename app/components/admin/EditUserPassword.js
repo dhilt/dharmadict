@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {Link} from 'react-router'
 import {FormattedMessage} from 'react-intl'
 
-import {changeAdminUserPassword, resetAdminUserPassword, updateAdminUserPasswordAsync, getAdminUserPasswordId} from '../../actions/admin/changeUsers'
+import {setUserId, changeAdminUserPassword, resetAdminUserPassword, updateAdminUserPasswordAsync} from '../../actions/admin/changeUserPassword'
 
 class EditUserPassword extends Component {
 
@@ -16,7 +16,7 @@ class EditUserPassword extends Component {
   }
 
   componentWillMount() {
-    this.props.dispatch(getAdminUserPasswordId(this.props.params.id))
+    this.props.dispatch(setUserId(this.props.params.id))
   }
 
   changeUserPassword (event) {

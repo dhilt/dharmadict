@@ -4,7 +4,7 @@ import {Link} from 'react-router'
 import {FormattedMessage} from 'react-intl'
 
 import lang from '../../helpers/lang'
-import {changeAdminUserData, resetAdminUserData, updateAdminUserDataAsync, getAdminUserDataAsync} from '../../actions/admin/changeUsers'
+import {changeAdminUserData, resetAdminUserData, updateAdminUserDataAsync, getAdminUserDataAsync} from '../../actions/admin/changeUser'
 
 class EditUser extends Component {
 

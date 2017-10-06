@@ -33,7 +33,7 @@ import {
   UPDATE_ADMIN_USER_DATA_START,
   UPDATE_ADMIN_USER_DATA_END,
   CHANGE_ADMIN_USER_DATA,
-  GET_ADMIN_USER_PASSWORD_ID,
+  SET_ADMIN_USER_ID,
   UPDATE_ADMIN_USER_PASSWORD_START,
   UPDATE_ADMIN_USER_PASSWORD_END,
   CHANGE_ADMIN_USER_PASSWORD
@@ -325,7 +325,7 @@ function reducer(state = initialState, action) {
           }
         }
       }
-    case GET_ADMIN_USER_PASSWORD_ID:
+    case SET_ADMIN_USER_ID:
       return {...state,
         admin: {...state.admin,
           editUserPassword: {...state.admin.editUserPassword,
