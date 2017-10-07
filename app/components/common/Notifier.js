@@ -12,18 +12,8 @@ class Notifier extends Component {
     this.closeAlert = this.closeAlert.bind(this)
   }
 
-  componentWillReceiveProps (nextProps) {
-    const {notifications} = nextProps
-    if (notifications.length && notifications[notifications.length - 1].hasOwnProperty('ttl')) {
-      const {id, ttl} = notifications[notifications.length - 1]
-      setTimeout(() => {
-        this.props.dispatch(removeNotify(id))
-      }, ttl);
-    }
-  }
-
   closeAlert (id) {
-    this.props.dispatch(removeNotify(id))
+    this.props.dispatch(removeNotify(id, true))
   }
 
   render () {

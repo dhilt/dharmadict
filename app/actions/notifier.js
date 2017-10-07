@@ -7,6 +7,11 @@ export function notify(notification) {
   return (dispatch, getState) => {
     const idLast = getState().notifications.idLast + 1
     notification.id = idLast
+    if(notification.ttl) {
+      notification.timer = setTimeout(() =>
+        dispatch(removeNotify(idLast))
+      , notification.ttl)
+    }
     dispatch({
       type: CREATE_NOTIFICATION,
       idLast,
@@ -15,10 +20,17 @@ export function notify(notification) {
   }
 }
 
-export function removeNotify(id) {
+export function removeNotify(id, force) {
   return (dispatch, getState) => {
     let notifications = getState().notifications.list
-    notifications = notifications.filter(elem => elem.id !== id)
+    notifications = notifications.filter(elem => {
+      if(elem.id !== id) {
+        return true
+      }
+      if(force) {
+        clearTimeout(elem.timer)
+      }
+    })
     dispatch({
       type: REMOVE_NOTIFICATION,
       notifications
