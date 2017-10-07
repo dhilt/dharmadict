@@ -2,8 +2,8 @@ import {
   CHANGE_ROUTE,
   USERINFO_REQUEST_START,
   USERINFO_REQUEST_END,
-  CREATE_NOTIFY,
-  REMOVE_NOTIFY,
+  CREATE_NOTIFICATION,
+  REMOVE_NOTIFICATION,
   OPEN_LOGIN_MODAL,
   CLOSE_LOGIN_MODAL,
   CHANGE_LOGIN_STRING,
@@ -58,18 +58,17 @@ function reducer(state = initialState, action) {
           languages: action.languages
         }
       }
-    case CREATE_NOTIFY:
+    case CREATE_NOTIFICATION:
       return {...state,
         notifications: {...state.notifications,
-          data: action.notifications,
-          mock: !state.notifications.mock
+          idLast: action.idLast,
+          list: [...state.notifications.list, action.notification]
         }
       }
-    case REMOVE_NOTIFY:
+    case REMOVE_NOTIFICATION:
       return {...state,
         notifications: {...state.notifications,
-          data: action.notifications,
-          mock: !state.notifications.mock
+          list: action.notifications
         }
       }
     case SET_LANGUAGE:
@@ -274,7 +273,7 @@ function reducer(state = initialState, action) {
         admin: {...state.admin,
           newTerm: {...state.admin.newTerm,
             pending: false,
-            termId: !action.error ? action.termId : null,
+            termId: action.termId,
             error: action.error
           }
         }

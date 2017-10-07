@@ -45,8 +45,7 @@ class Notifier extends Component {
 
 function select (state, ownProps) {
   return {
-    notifications: state.notifications.data,
-    mock: state.notifications.mock
+    notifications: state.notifications.list
   }
 }
 

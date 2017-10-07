@@ -1,26 +1,26 @@
 import {
-  CREATE_NOTIFY,
-  REMOVE_NOTIFY
+  CREATE_NOTIFICATION,
+  REMOVE_NOTIFICATION
 } from './_constants'
 
-export function notify(notice) {
+export function notify(notification) {
   return (dispatch, getState) => {
-    const notifications = getState().notifications.data
-    notice.id = notifications.length
-    notifications.push(notice)
+    const idLast = getState().notifications.idLast + 1
+    notification.id = idLast
     dispatch({
-      type: CREATE_NOTIFY,
-      notifications
+      type: CREATE_NOTIFICATION,
+      idLast,
+      notification
     })
   }
 }
 
 export function removeNotify(id) {
   return (dispatch, getState) => {
-    let notifications = getState().notifications.data
+    let notifications = getState().notifications.list
     notifications = notifications.filter(elem => elem.id !== id)
     dispatch({
-      type: REMOVE_NOTIFY,
+      type: REMOVE_NOTIFICATION,
       notifications
     })
   }

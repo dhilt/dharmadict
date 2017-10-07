@@ -8,8 +8,8 @@ let initialState = {
     languages: null
   },
   notifications: {
-    data: [],
-    mock: false
+    idLast: 0,
+    list: []
   },
   route: {
     prevLocation: null,
