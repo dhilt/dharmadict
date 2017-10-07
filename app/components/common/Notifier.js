@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
+import {FormattedMessage} from 'react-intl'
 import {Alert, Button} from 'react-bootstrap'
 
 import {removeNotify} from '../../actions/notifier'
@@ -22,9 +23,11 @@ class Notifier extends Component {
       <div className="alert-column">
         {
           notifications.length !== 0 && notifications.map((elem, index) =>
-            <Alert key={index} bsStyle={elem.type}>
-              {elem.text}
-              <Button className="alert-close-button" onClick={() => this.closeAlert(elem.id)}>{'Hide'}</Button>
+            <Alert
+              key={index}
+              bsStyle={elem.type}
+              onDismiss={() => this.closeAlert(elem.id)}
+            ><FormattedMessage id={elem.text} />
             </Alert>
           )
         }

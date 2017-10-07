@@ -3,15 +3,24 @@ import {
   REMOVE_NOTIFICATION
 } from './_constants'
 
+const defaultNotification = {
+  type: 'info',
+  ttl: 2000
+}
+
 export function notify(notification) {
   return (dispatch, getState) => {
     const idLast = getState().notifications.idLast + 1
     notification.id = idLast
-    if(notification.ttl) {
-      notification.timer = setTimeout(() =>
-        dispatch(removeNotify(idLast))
-      , notification.ttl)
+    if (!notification.hasOwnProperty('type')) {
+      notification.type = defaultNotification.type
     }
+    if (!notification.hasOwnProperty('ttl')) {
+      notification.ttl = defaultNotification.ttl
+    }
+    notification.timer = setTimeout(() =>
+      dispatch(removeNotify(idLast)), notification.ttl
+    )
     dispatch({
       type: CREATE_NOTIFICATION,
       idLast,

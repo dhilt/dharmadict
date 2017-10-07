@@ -1,5 +1,3 @@
-import React from 'react'
-import {FormattedMessage} from 'react-intl'
 import asyncRequest from '../../helpers/remote'
 import {notify} from '../notifier'
 
@@ -32,7 +30,7 @@ export function updateAdminUserPasswordAsync() {
         result: error ? false : true
       })
       if (!error) {
-        dispatch(notify({ttl: 5000, type: 'success', text: <FormattedMessage id="EditUserPassword.new_password_success" />}))
+        dispatch(notify({ttl: 5000, type: 'success', text: 'EditUserPassword.new_password_success'}))
       } else {
         dispatch(notify({ttl: 5000, type: 'danger', text: error.message}))
       }
