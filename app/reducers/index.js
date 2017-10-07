@@ -360,6 +360,7 @@ function reducer(state = initialState, action) {
       return {...state,
         admin: {...state.admin,
           editUserPassword: {...initialState.admin.editUserPassword,
+            id: state.admin.editUserPassword.id,
             error: action.error,
             result: action.result
           }
