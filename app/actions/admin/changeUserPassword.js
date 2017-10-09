@@ -1,5 +1,5 @@
 import asyncRequest from '../../helpers/remote'
-import {notifyOnResponse} from '../notifier'
+import notifier from '../../helpers/notifier'
 
 import {
   SET_ADMIN_USER_ID,
@@ -29,7 +29,7 @@ export function updateAdminUserPasswordAsync() {
         error: error ? error : null,
         result: error ? false : true
       })
-      notifyOnResponse(dispatch, 'EditUserPassword.new_password_success', error)
+      dispatch(notifier.onResponse('EditUserPassword.new_password_success', error))
     })
   }
 }

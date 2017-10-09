@@ -1,5 +1,5 @@
 import asyncRequest from '../../helpers/remote'
-import {notifyOnResponse, notifyOnErrorResponse} from '../notifier'
+import notifier from '../../helpers/notifier'
 
 import {
   GET_ADMIN_USER_DATA_START,
@@ -29,7 +29,7 @@ export function getAdminUserDataAsync(userId) {
         data: error ? dataSource : getEditableUserDataObject(data.user),
         id: error ? id : data.user.id
       })
-      notifyOnErrorResponse(dispatch, error)
+      error && dispatch(notifier.onErrorResponse(error))
     })
   }
 }
@@ -62,7 +62,7 @@ export function updateAdminUserDataAsync() {
         error: error ? error : null,
         data: error ? dataSource : getEditableUserDataObject(data.user)
       })
-      notifyOnResponse(dispatch, 'EditUser.success', error)
+      dispatch(notifier.onResponse('EditUser.success', error))
     })
   }
 }

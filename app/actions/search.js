@@ -1,6 +1,6 @@
 import { browserHistory } from 'react-router'
 import asyncRequest from '../helpers/remote'
-import {notifyOnErrorResponse} from './notifier'
+import notifier from '../helpers/notifier'
 
 import {
   CHANGE_SEARCH_STRING,
@@ -27,10 +27,10 @@ function searchRequestAsync(dispatch, getState, cb) {
     let searchEnd = dispatch({
       type: SEARCH_REQUEST_END,
       result: data,
-      error: error
+      error
     })
     cb(data)
-    error && notifyOnErrorResponse(dispatch, 'SearchInput.request_error')
+    error && dispatch(notifier.onErrorResponse('SearchInput.request_error'))
     return searchEnd
   })
 }

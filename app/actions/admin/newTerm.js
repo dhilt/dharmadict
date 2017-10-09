@@ -1,5 +1,5 @@
 import asyncRequest from '../../helpers/remote'
-import {notifyOnResponse} from '../notifier'
+import notifier from '../../helpers/notifier'
 
 import {
   CHANGE_NEW_TERM_WYLIE,
@@ -37,7 +37,7 @@ export function saveTermAsync() {
         error: error,
         termId: !error ? data.term.id : null
       })
-      notifyOnResponse(dispatch, 'NewTerm.alert_success', error)
+      dispatch(notifier.onResponse('NewTerm.alert_success', error))
     })
   }
 }
