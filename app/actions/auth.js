@@ -17,14 +17,13 @@ import {
 
 export function getUserInfoAsync() {
   return (dispatch, getState) => {
-    let authState = getState().auth
-    let promise = asyncRequest('userInfo', 'get', false, (data, error) => {
+    const promise = asyncRequest('userInfo', 'get', false, (data, error) => {
+      const authState = getState().auth
       dispatch({
         type: USERINFO_REQUEST_END,
         result: data,
         error: error,
-        loggedIn: !error,
-        promise: error ? authState.userInfo.promise : null
+        loggedIn: !error
       })
       if (error) {
         error.message = 'Login.authorization_error'
@@ -33,7 +32,7 @@ export function getUserInfoAsync() {
     })
     dispatch({
       type: USERINFO_REQUEST_START,
-      promise: promise
+      promise
     })
     return promise
   }
