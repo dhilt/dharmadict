@@ -1,5 +1,7 @@
 import asyncRequest from '../helpers/remote'
 import { goBack } from './route'
+import {notifyOnResponse} from './notifier'
+
 import {
   TRANSLATION_REQUEST_START,
   TRANSLATION_REQUEST_END,
@@ -53,6 +55,9 @@ export function selectTranslation(translatorId, termId) {
       return asyncRequest(`terms/translation?translatorId=${translatorId}&termId=${termId}`, 'get', null, (data, error) => {
         let translation = data ? data.result.translation : null
         dispatchTranslationRequestEnd(dispatch, translatorId, translation, data ? data.termId : '', data ? data.termName : '', error)
+        if (error) {
+          notifyOnResponse(dispatch, '', error)
+        }
       })
     }
   }
@@ -163,6 +168,9 @@ export function saveTranslationAsync(shouldClose) {
       })
       if(shouldClose) {
         dispatch(goBack(true))
+      }
+      if (error) {
+        notifyOnResponse(dispatch, '', error)
       }
     })
   }

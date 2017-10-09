@@ -1,5 +1,6 @@
 import asyncRequest from '../helpers/remote'
 import lang from '../helpers/lang'
+import {notifyOnResponse} from './notifier'
 
 import {
   GET_COMMON_DATA_START,
@@ -13,13 +14,17 @@ export function getCommonDataAsync() {
       type: GET_COMMON_DATA_START
     })
     const query = 'common'
-    asyncRequest(query, 'get', false, (data, error) =>
+    asyncRequest(query, 'get', false, (data, error) => {
       dispatch({
         type: GET_COMMON_DATA_END,
         translators: data.translators,
         languages: data.languages
       })
-    )
+      if (error) {
+        error.message = 'App.get_languages_error'
+        notifyOnResponse(dispatch, '', error)
+      }
+    })
   }
 }
 

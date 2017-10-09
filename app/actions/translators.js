@@ -1,4 +1,5 @@
 import asyncRequest from '../helpers/remote'
+import {notifyOnResponse} from './notifier'
 
 import {
   GET_TRANSLATOR_INFO_START,
@@ -11,12 +12,16 @@ export function getTranslatorInfoAsync(userId) {
     dispatch({
       type: GET_TRANSLATOR_INFO_START
     })
-    asyncRequest(query, 'get', false, (data, error) =>
+    asyncRequest(query, 'get', false, (data, error) => {
       dispatch({
         type: GET_TRANSLATOR_INFO_END,
         error: error,
         result: !error ? data.user : null
       })
-    )
+      if (error) {
+        error.message = 'TranslatorPage.request_error'
+        notifyOnResponse(dispatch, '', error)
+      }
+    })
   }
 }
