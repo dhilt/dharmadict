@@ -9,10 +9,16 @@ const defaultNotification = {
 }
 
 export function notifyOnResponse(dispatch, successMessage, error) {
-  if (!error) {
+  if (typeof successMessage === 'string') {
     dispatch(notify({type: 'success', text: successMessage}))
-  } else {
-    dispatch(notify({type: 'danger', text: error.message, ttl: -1}))
+  } else if(error) {
+    if(typeof error !== 'string') {
+      error = error.message
+    }
+    if(typeof error !== 'string') {
+      error = 'Common.unknown_error'
+    }
+    dispatch(notify({type: 'danger', text: error, ttl: -1}))
   }
 }
 

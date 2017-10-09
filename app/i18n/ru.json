@@ -1,4 +1,6 @@
 {
+  "Common.unknown_error": "Неизвестная ошибка",
+
   "App.get_languages_error": "Ошибка получения языков",
 
   "Home.search_title_em": "Буддийская терминология",
