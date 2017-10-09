@@ -101,7 +101,6 @@ function reducer(state = initialState, action) {
           loggedIn: action.loggedIn,
           userInfo: {...state.auth.userInfo,
             pending: false,
-            promise: action.promise,
             data: action.result,
             error: action.error
           }
@@ -296,7 +295,7 @@ function reducer(state = initialState, action) {
       return {...state,
         admin: {...state.admin,
           editUser: {...state.admin.editUser,
-            pending: true,
+            sourcePending: true,
             error: null
           }
         }
@@ -306,7 +305,7 @@ function reducer(state = initialState, action) {
         admin: {...state.admin,
           editUser: {...state.admin.editUser,
             id: action.id,
-            pending: false,
+            sourcePending: false,
             error: action.error,
             data: action.data,
             dataSource: action.data

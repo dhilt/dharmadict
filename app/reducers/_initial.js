@@ -84,6 +84,7 @@ let initialState = {
         language: '',
         description: ''
       },
+      sourcePending: false,
       pending: false,
       error: null
     },
