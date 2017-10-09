@@ -1,4 +1,5 @@
 import asyncRequest from '../../helpers/remote'
+import {notifyOnResponse} from '../notifier'
 
 import {
   GET_ADMIN_USER_DATA_START,
@@ -21,14 +22,17 @@ export function getAdminUserDataAsync(userId) {
       type: GET_ADMIN_USER_DATA_START
     })
     const {id, dataSource} = getState().admin.editUser
-    asyncRequest(query, 'get', false, (data, error) =>
+    asyncRequest(query, 'get', false, (data, error) => {
       dispatch({
         type: GET_ADMIN_USER_DATA_END,
         error: error ? error : null,
         data: error ? dataSource : getEditableUserDataObject(data.user),
         id: error ? id : data.user.id
       })
-    )
+      if (error) {
+        notifyOnResponse(dispatch, '', error)
+      }
+    })
   }
 }
 
@@ -54,12 +58,14 @@ export function updateAdminUserDataAsync() {
     })
     const {id, data, dataSource} = getState().admin.editUser
     const query = 'users/' + id
-    asyncRequest(query, 'patch', {payload: data}, (data, error) =>
+    asyncRequest(query, 'patch', {payload: data}, (data, error) => {
       dispatch({
         type: UPDATE_ADMIN_USER_DATA_END,
         error: error ? error : null,
         data: error ? dataSource : getEditableUserDataObject(data.user)
-      }))
+      })
+      notifyOnResponse(dispatch, 'EditUser.success', error)
+    })
   }
 }
 

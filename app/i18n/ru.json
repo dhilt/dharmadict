@@ -55,6 +55,7 @@
   "EditUser.button_reset_changes": "Сбросить",
   "EditUser.button_cancel": "Отмена",
   "EditUser.link_reset_password": "Изменить пароль",
+  "EditUser.success": "Информация о пользователе была успешно изменена",
 
   "EditUserPassword.title": "Сброс пароля пользователя {id}",
   "EditUserPassword.new_password": "Новый пароль",

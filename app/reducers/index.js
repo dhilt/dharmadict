@@ -361,8 +361,7 @@ function reducer(state = initialState, action) {
         admin: {...state.admin,
           editUserPassword: {...initialState.admin.editUserPassword,
             id: state.admin.editUserPassword.id,
-            error: action.error,
-            result: action.result
+            error: action.error
           }
         }
       }

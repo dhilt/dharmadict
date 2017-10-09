@@ -55,6 +55,7 @@
   "EditUser.button_reset_changes": "Reset",
   "EditUser.button_cancel": "Cancel",
   "EditUser.link_reset_password": "Change password",
+  "EditUser.success": "User information was successfully changed",
 
   "EditUserPassword.title": "Reset password of user {id}",
   "EditUserPassword.new_password": "New password",

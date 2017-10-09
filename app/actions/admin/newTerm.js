@@ -1,4 +1,6 @@
 import asyncRequest from '../../helpers/remote'
+import {notifyOnResponse} from '../notifier'
+
 import {
   CHANGE_NEW_TERM_WYLIE,
   CHANGE_NEW_TERM_SANSKRIT,
@@ -35,6 +37,7 @@ export function saveTermAsync() {
         error: error,
         termId: !error ? data.term.id : null
       })
+      notifyOnResponse(dispatch, 'NewTerm.alert_success', error)
     })
   }
 }

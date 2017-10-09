@@ -46,7 +46,7 @@ class EditUser extends Component {
   render () {
     const {id} = this.props.params
     const {languages, userLanguage} = this.props.common
-    const {pending, error, result} = this.props.newTranslatorInfo
+    const {pending} = this.props.newTranslatorInfo
     const {name, language, description} = this.props.newTranslatorInfo.data
     return (
       <div>
@@ -106,7 +106,6 @@ class EditUser extends Component {
               <FormattedMessage id="EditUser.link_reset_password" />
             </Link>
           </div>
-          {error && <div className="alert alert-danger">{error.message}</div>}
         </form>
       </div>
     )

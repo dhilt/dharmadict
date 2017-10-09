@@ -15,7 +15,7 @@ class NewTerm extends Component {
   }
 
   render () {
-    const {error, pending, wylie, termId, sanskrit} = this.props.data
+    const {pending, wylie, termId, sanskrit} = this.props.data
     const {languages} = this.props
     return (
       <div>
@@ -52,8 +52,6 @@ class NewTerm extends Component {
             ><FormattedMessage id="NewTerm.button_save_term" /></Button>
             <Link to={`/`}><FormattedMessage id="NewTerm.button_cancel" /></Link>
           </div>
-          {error && <div className="alert alert-danger col-md-6">{error.message}</div>}
-          {!error && termId && <div className="alert alert-success col-md-6"><FormattedMessage id="NewTerm.alert_success" values={{termId}} /></div>}
         </form>
       </div>
     )

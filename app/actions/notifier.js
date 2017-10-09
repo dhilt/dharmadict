@@ -10,7 +10,7 @@ const defaultNotification = {
 
 export function notifyOnResponse(dispatch, successMessage, error) {
   if (!error) {
-    dispatch(notify({type: 'success', text: 'EditUserPassword.new_password_success'}))
+    dispatch(notify({type: 'success', text: successMessage}))
   } else {
     dispatch(notify({type: 'danger', text: error.message, ttl: -1}))
   }

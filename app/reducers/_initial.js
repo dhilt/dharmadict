@@ -92,7 +92,6 @@ let initialState = {
       password: '',
       confirmPassword: '',
       pending: false,
-      result: null,
       error: null
     }
   }
