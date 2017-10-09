@@ -8,10 +8,8 @@ const defaultNotification = {
   ttl: 3000
 }
 
-export function notifyOnResponse(dispatch, successMessage, error) {
-  if (typeof successMessage === 'string') {
-    dispatch(notify({type: 'success', text: successMessage}))
-  } else if(error) {
+export function notifyOnErrorResponse(dispatch, error) {
+  if(error) {
     if(typeof error !== 'string') {
       error = error.message
     }
@@ -19,6 +17,14 @@ export function notifyOnResponse(dispatch, successMessage, error) {
       error = 'Common.unknown_error'
     }
     dispatch(notify({type: 'danger', text: error, ttl: -1}))
+  }
+}
+
+export function notifyOnResponse(dispatch, successMessage, error) {
+  if (typeof successMessage === 'string') {
+    dispatch(notify({type: 'success', text: successMessage}))
+  } else {
+    notifyOnErrorResponse(dispatch, error)
   }
 }
 

@@ -1,5 +1,5 @@
 import asyncRequest from '../../helpers/remote'
-import {notifyOnResponse} from '../notifier'
+import {notifyOnResponse, notifyOnErrorResponse} from '../notifier'
 
 import {
   GET_ADMIN_USER_DATA_START,
@@ -29,9 +29,7 @@ export function getAdminUserDataAsync(userId) {
         data: error ? dataSource : getEditableUserDataObject(data.user),
         id: error ? id : data.user.id
       })
-      if (error) {
-        notifyOnResponse(dispatch, null, error)
-      }
+      notifyOnErrorResponse(dispatch, error)
     })
   }
 }
