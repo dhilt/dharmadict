@@ -5,7 +5,15 @@ import {
 
 const defaultNotification = {
   type: 'info',
-  ttl: 2000
+  ttl: 3000
+}
+
+export function notifyOnResponse(dispatch, successMessage, error) {
+  if (!error) {
+    dispatch(notify({type: 'success', text: 'EditUserPassword.new_password_success'}))
+  } else {
+    dispatch(notify({type: 'danger', text: error.message, ttl: -1}))
+  }
 }
 
 export function notify(notification) {
@@ -18,9 +26,11 @@ export function notify(notification) {
     if (!notification.hasOwnProperty('ttl')) {
       notification.ttl = defaultNotification.ttl
     }
-    notification.timer = setTimeout(() =>
-      dispatch(removeNotify(idLast)), notification.ttl
-    )
+    if(notification.ttl > 0) {
+      notification.timer = setTimeout(() =>
+        dispatch(removeNotify(idLast)), notification.ttl
+      )
+    }
     dispatch({
       type: CREATE_NOTIFICATION,
       idLast,
