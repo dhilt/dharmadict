@@ -30,7 +30,7 @@ function searchRequestAsync(dispatch, getState, cb) {
       error: error
     })
     cb(data)
-    notifyOnErrorResponse(dispatch, 'SearchInput.request_error')
+    error && notifyOnErrorResponse(dispatch, 'SearchInput.request_error')
     return searchEnd
   })
 }

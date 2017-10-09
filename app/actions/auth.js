@@ -85,9 +85,7 @@ export function doLoginAsync() {
         loggedIn: !error,
         promise: !error ? authState.userInfo.promise : null
       })
-      if (error) {
-        notifyOnErrorResponse(dispatch, 'Login.authorization_error')
-      }
+      error && notifyOnErrorResponse(dispatch, 'Login.authorization_error')
     })
 
     dispatch({
