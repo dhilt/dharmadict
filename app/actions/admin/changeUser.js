@@ -30,7 +30,7 @@ export function getAdminUserDataAsync(userId) {
         id: error ? id : data.user.id
       })
       if (error) {
-        notifyOnResponse(dispatch, '', error)
+        notifyOnResponse(dispatch, null, error)
       }
     })
   }

@@ -31,8 +31,7 @@ function searchRequestAsync(dispatch, getState, cb) {
     })
     cb(data)
     if (error) {
-      error.message = 'SearchInput.request_error'
-      notifyOnResponse(dispatch, '', error)
+      notifyOnResponse(dispatch, null, 'SearchInput.request_error')
     }
     return searchEnd
   })

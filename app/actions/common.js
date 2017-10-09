@@ -21,8 +21,7 @@ export function getCommonDataAsync() {
         languages: data.languages
       })
       if (error) {
-        error.message = 'App.get_languages_error'
-        notifyOnResponse(dispatch, '', error)
+        notifyOnResponse(dispatch, null, 'App.get_languages_error')
       }
     })
   }

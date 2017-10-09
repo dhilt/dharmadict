@@ -28,13 +28,16 @@ function dispatchTranslationRequestEnd(dispatch, translatorId, translation, term
       translatorId
     }
   }
+  if (error) {
+    notifyOnResponse(dispatch, null, error)
+  }
   return dispatch({
     type: TRANSLATION_REQUEST_END,
-    termId: termId,
-    termName: termName,
+    termId,
+    termName,
     translation,
     translationCopy: getTranslationCopy(translation),
-    error: error
+    error
   })
 }
 
@@ -55,9 +58,6 @@ export function selectTranslation(translatorId, termId) {
       return asyncRequest(`terms/translation?translatorId=${translatorId}&termId=${termId}`, 'get', null, (data, error) => {
         let translation = data ? data.result.translation : null
         dispatchTranslationRequestEnd(dispatch, translatorId, translation, data ? data.termId : '', data ? data.termName : '', error)
-        if (error) {
-          notifyOnResponse(dispatch, '', error)
-        }
       })
     }
   }
@@ -166,11 +166,11 @@ export function saveTranslationAsync(shouldClose) {
           })
         }
       })
+      if (error) {
+        notifyOnResponse(dispatch, null, error)
+      }
       if(shouldClose) {
         dispatch(goBack(true))
-      }
-      if (error) {
-        notifyOnResponse(dispatch, '', error)
       }
     })
   }

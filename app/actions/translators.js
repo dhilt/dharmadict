@@ -19,8 +19,7 @@ export function getTranslatorInfoAsync(userId) {
         result: !error ? data.user : null
       })
       if (error) {
-        error.message = 'TranslatorPage.request_error'
-        notifyOnResponse(dispatch, '', error)
+        notifyOnResponse(dispatch, null, 'TranslatorPage.request_error')
       }
     })
   }
