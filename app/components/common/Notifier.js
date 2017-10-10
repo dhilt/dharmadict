@@ -27,7 +27,7 @@ class Notifier extends Component {
               key={index}
               bsStyle={elem.type}
               onDismiss={() => this.closeAlert(elem.id)}
-            ><FormattedMessage id={elem.text} />
+            ><FormattedMessage id={elem.text} values={elem.values} />
             </Alert>
           )
         }

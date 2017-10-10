@@ -37,7 +37,11 @@ export function saveTermAsync() {
         error: error,
         termId: !error ? data.term.id : null
       })
-      dispatch(notifier.onResponse('NewTerm.alert_success', error))
+      let values = {}
+      if (!error) {
+        values.termId = data.term.id
+      }
+      dispatch(notifier.onResponse('NewTerm.alert_success', error, values))
     })
   }
 }
