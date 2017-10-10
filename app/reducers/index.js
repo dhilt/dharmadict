@@ -2,6 +2,8 @@ import {
   CHANGE_ROUTE,
   USERINFO_REQUEST_START,
   USERINFO_REQUEST_END,
+  CREATE_NOTIFICATION,
+  REMOVE_NOTIFICATION,
   OPEN_LOGIN_MODAL,
   CLOSE_LOGIN_MODAL,
   CHANGE_LOGIN_STRING,
@@ -56,6 +58,19 @@ function reducer(state = initialState, action) {
           languages: action.languages
         }
       }
+    case CREATE_NOTIFICATION:
+      return {...state,
+        notifications: {...state.notifications,
+          idLast: action.idLast,
+          list: [...state.notifications.list, action.notification]
+        }
+      }
+    case REMOVE_NOTIFICATION:
+      return {...state,
+        notifications: {...state.notifications,
+          list: action.notifications
+        }
+      }
     case SET_LANGUAGE:
       return {...state,
         common: {...state.common,
@@ -86,7 +101,6 @@ function reducer(state = initialState, action) {
           loggedIn: action.loggedIn,
           userInfo: {...state.auth.userInfo,
             pending: false,
-            promise: action.promise,
             data: action.result,
             error: action.error
           }
@@ -258,7 +272,7 @@ function reducer(state = initialState, action) {
         admin: {...state.admin,
           newTerm: {...state.admin.newTerm,
             pending: false,
-            termId: !action.error ? action.termId : null,
+            termId: action.termId,
             error: action.error
           }
         }
@@ -281,7 +295,7 @@ function reducer(state = initialState, action) {
       return {...state,
         admin: {...state.admin,
           editUser: {...state.admin.editUser,
-            pending: true,
+            sourcePending: true,
             error: null
           }
         }
@@ -291,7 +305,7 @@ function reducer(state = initialState, action) {
         admin: {...state.admin,
           editUser: {...state.admin.editUser,
             id: action.id,
-            pending: false,
+            sourcePending: false,
             error: action.error,
             data: action.data,
             dataSource: action.data
@@ -345,8 +359,8 @@ function reducer(state = initialState, action) {
       return {...state,
         admin: {...state.admin,
           editUserPassword: {...initialState.admin.editUserPassword,
-            error: action.error,
-            result: action.result
+            id: state.admin.editUserPassword.id,
+            error: action.error
           }
         }
       }

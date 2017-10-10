@@ -5,13 +5,13 @@ import en from 'react-intl/locale-data/en'
 import ru from 'react-intl/locale-data/ru'
 
 import lang from './helpers/lang'
+import i18n from './helpers/i18n'
 
 addLocaleData([...en, ...ru])
 
 function mapStateToProps(state) {
   const language = lang.getUserLanguage()
-  const messages = require('./i18n/' + language)
-  return { locale: language, messages }
+  return { locale: language, messages: i18n.data[language] }
 }
 
 export default connect(mapStateToProps)(IntlProvider)

@@ -1,6 +1,7 @@
 import { browserHistory } from 'react-router'
 import auth from '../helpers/auth'
 import asyncRequest from '../helpers/remote'
+import notifier from '../helpers/notifier'
 
 import {
   USERINFO_REQUEST_START,
@@ -16,18 +17,19 @@ import {
 
 export function getUserInfoAsync() {
   return (dispatch, getState) => {
-    let authState = getState().auth
-    let promise = asyncRequest('userInfo', 'get', false, (data, error) =>
+    const promise = asyncRequest('userInfo', 'get', false, (data, error) => {
+      const authState = getState().auth
       dispatch({
         type: USERINFO_REQUEST_END,
         result: data,
         error: error,
-        loggedIn: !error,
-        promise: error ? authState.userInfo.promise : null
-      }))
+        loggedIn: !error
+      })
+      error && dispatch(notifier.onErrorResponse(error))
+    })
     dispatch({
       type: USERINFO_REQUEST_START,
-      promise: promise
+      promise
     })
     return promise
   }
@@ -83,6 +85,7 @@ export function doLoginAsync() {
         loggedIn: !error,
         promise: !error ? authState.userInfo.promise : null
       })
+      error && dispatch(notifier.onErrorResponse('Login.authorization_error'))
     })
 
     dispatch({

@@ -1,10 +1,15 @@
 {
+  "Common.unknown_error": "Unknown error",
+
+  "App.get_languages_error": "Error getting languages",
+
   "Home.search_title_em": "Buddhist terminology",
   "Home.search_title_h1": " in english translations",
 
   "TranslatorPage.translations_language": "Translations language: {translatorLanguage}",
   "TranslatorPage.button_edit": "Edit",
   "TranslatorPage.loading_text": "Loading...",
+  "TranslatorPage.request_error": "The request failed",
 
   "NotFound.main_text": "Page not found",
   "NotFound.go_home": "Go home page",
@@ -15,6 +20,7 @@
   "Edit.request_error": "The request failed",
 
   "SearchInput.button_find": "Find",
+  "SearchInput.request_error": "The request failed",
 
   "Term.add_translation": "Add translation...",
   "Term.sanskrit_term": "Sanskrit: {sanskrit_en}",
@@ -41,6 +47,7 @@
   "Login.please_log_in": "Please, Log In",
   "Login.button_log_in": "Log in!",
   "Login.button_cancel": "Cancel",
+  "Login.authorization_error": "Authorization failed",
 
   "NewTerm.title_new_term": "New term",
   "NewTerm.button_save_term": "Save",
@@ -55,6 +62,7 @@
   "EditUser.button_reset_changes": "Reset",
   "EditUser.button_cancel": "Cancel",
   "EditUser.link_reset_password": "Change password",
+  "EditUser.success": "User information was successfully changed",
 
   "EditUserPassword.title": "Reset password of user {id}",
   "EditUserPassword.new_password": "New password",

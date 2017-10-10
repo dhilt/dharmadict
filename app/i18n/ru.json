@@ -1,10 +1,15 @@
 {
+  "Common.unknown_error": "Неизвестная ошибка",
+
+  "App.get_languages_error": "Ошибка получения языков",
+
   "Home.search_title_em": "Буддийская терминология",
   "Home.search_title_h1": " в русских переводах",
 
   "TranslatorPage.translations_language": "Язык переводов: {translatorLanguage}",
   "TranslatorPage.button_edit": "Редактировать",
   "TranslatorPage.loading_text": "Идет загрузка...",
+  "TranslatorPage.request_error": "Ошибка запроса",
 
   "NotFound.main_text": "Страница не найдена",
   "NotFound.go_home": "На главную страницу",
@@ -15,6 +20,7 @@
   "Edit.request_error": "Ошибка запроса",
 
   "SearchInput.button_find": "Найти",
+  "SearchInput.request_error": "Ошибка запроса",
 
   "Term.add_translation": "Добавить перевод...",
   "Term.sanskrit_term": "Санскрит: {sanskrit_ru}",
@@ -41,6 +47,7 @@
   "Login.please_log_in": "Пожалуйста, войдите",
   "Login.button_log_in": "Войти",
   "Login.button_cancel": "Отмена",
+  "Login.authorization_error": "Ошибка авторизации",
 
   "NewTerm.title_new_term": "Новый термин",
   "NewTerm.button_save_term": "Сохранить",
@@ -55,6 +62,7 @@
   "EditUser.button_reset_changes": "Сбросить",
   "EditUser.button_cancel": "Отмена",
   "EditUser.link_reset_password": "Изменить пароль",
+  "EditUser.success": "Информация о пользователе была успешно изменена",
 
   "EditUserPassword.title": "Сброс пароля пользователя {id}",
   "EditUserPassword.new_password": "Новый пароль",

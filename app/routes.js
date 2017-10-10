@@ -23,17 +23,19 @@ function unpermittedAccess (replace) {
 }
 
 function checkAuth (nextState, replace, callback, store, role) {
-  const auth = store.getState().auth
+  let auth = store.getState().auth
   if(auth.loggedIn && (!role || (auth.userInfo.data && auth.userInfo.data.role === role))) {
     callback()
     return
   }
   if(auth.userInfo.promise) {
-    auth.userInfo.promise.then(response => {
+    auth.userInfo.promise.then(() => {
+      auth = store.getState().auth
+      const userInfo = auth.userInfo.data
       if (!auth.loggedIn) {
         unauthorizedAccess(replace)
       }
-      if (role && (!response || !response.result || response.result.role !== role)) {
+      if (role && (!userInfo || userInfo.role !== role)) {
         unpermittedAccess(replace)
       }
       callback()

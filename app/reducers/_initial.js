@@ -7,6 +7,10 @@ let initialState = {
     translators: null,
     languages: null
   },
+  notifications: {
+    idLast: 0,
+    list: []
+  },
   route: {
     prevLocation: null,
     location: null
@@ -80,6 +84,7 @@ let initialState = {
         language: '',
         description: ''
       },
+      sourcePending: false,
       pending: false,
       error: null
     },
@@ -88,7 +93,6 @@ let initialState = {
       password: '',
       confirmPassword: '',
       pending: false,
-      result: null,
       error: null
     }
   }

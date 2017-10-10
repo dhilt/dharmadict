@@ -1,4 +1,5 @@
 import asyncRequest from '../../helpers/remote'
+import notifier from '../../helpers/notifier'
 
 import {
   SET_ADMIN_USER_ID,
@@ -22,13 +23,14 @@ export function updateAdminUserPasswordAsync() {
     const {id, password, confirmPassword} = getState().admin.editUserPassword
     const data = {password, confirmPassword}
     const query = 'users/' + id
-    asyncRequest(query, 'patch', {payload: data}, (data, error) =>
+    asyncRequest(query, 'patch', {payload: data}, (data, error) => {
       dispatch({
         type: UPDATE_ADMIN_USER_PASSWORD_END,
         error: error ? error : null,
         result: error ? false : true
       })
-    )
+      dispatch(notifier.onResponse('EditUserPassword.new_password_success', error))
+    })
   }
 }
 

@@ -46,9 +46,9 @@ class EditUser extends Component {
   render () {
     const {id} = this.props.params
     const {languages, userLanguage} = this.props.common
-    const {pending, error, result} = this.props.newTranslatorInfo
-    const {name, language, description} = this.props.newTranslatorInfo.data
-    return (
+    const {sourcePending, pending} = this.props.editUser
+    const {name, language, description} = this.props.editUser.data
+    return !sourcePending ? (
       <div>
         <form className="col-md-6">
           <h3><FormattedMessage id="EditUser.title_edit_user" values={{id}} /></h3>
@@ -106,16 +106,15 @@ class EditUser extends Component {
               <FormattedMessage id="EditUser.link_reset_password" />
             </Link>
           </div>
-          {error && <div className="alert alert-danger">{error.message}</div>}
         </form>
       </div>
-    )
+    ) : (null)
   }
 }
 
 function select (state, ownProps) {
   return {
-    newTranslatorInfo: state.admin.editUser,
+    editUser: state.admin.editUser,
     common: state.common
   }
 }

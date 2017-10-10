@@ -1,5 +1,7 @@
 import asyncRequest from '../helpers/remote'
+import notifier from '../helpers/notifier'
 import { goBack } from './route'
+
 import {
   TRANSLATION_REQUEST_START,
   TRANSLATION_REQUEST_END,
@@ -26,13 +28,14 @@ function dispatchTranslationRequestEnd(dispatch, translatorId, translation, term
       translatorId
     }
   }
+  error && dispatch(notifier.onErrorResponse(error))
   return dispatch({
     type: TRANSLATION_REQUEST_END,
-    termId: termId,
-    termName: termName,
+    termId,
+    termName,
     translation,
     translationCopy: getTranslationCopy(translation),
-    error: error
+    error
   })
 }
 
@@ -161,6 +164,7 @@ export function saveTranslationAsync(shouldClose) {
           })
         }
       })
+      error && dispatch(notifier.onErrorResponse(error))
       if(shouldClose) {
         dispatch(goBack(true))
       }
