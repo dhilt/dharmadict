@@ -89,15 +89,16 @@ describe('admin/newTerm actions', () => {
           id: 1,
           text: 'NewTerm.alert_success',
           ttl: 3000,
+          timer: 17,
           type: 'success',
-          values: {}
+          values: {termId: expectedSuccessResponse.term.id}
         },
         type: 'CREATE_NOTIFICATION'
       }
     ];
 
-    nock('http://localhost/api')
-      .post('/terms', {term: wylie, sanskrit})
+    nock('http://localhost')
+      .post('/api/terms')
       .reply(200, expectedSuccessResponse);
 
     store.dispatch(actions.saveTermAsync()).then(() => {
