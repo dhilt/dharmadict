@@ -11,7 +11,6 @@ import initialState from '../../../../app/reducers/_initial';
 
 let middlewares = [thunk];
 let mockStore = configureMockStore(middlewares);
-let store = mockStore(initialState);
 
 describe('admin/newTerm actions', () => {
   beforeEach(() => {
@@ -59,22 +58,17 @@ describe('admin/newTerm actions', () => {
   });
 
   it('should save term async', () => {
-    const wylie = 'New Term';
-    const sanskrit = {};
-    languages.list.forEach(elem => {
-      sanskrit['sanskrit_' + elem] = 'Sanskrit on ' + elem
-    });
     const expectedSuccessResponse = {
       success: true,
       term:	{
-        wylie: wylie,
+        wylie: 'New Term',
         translations: [],
         id: 'New_Term'
       }
     };
     languages.list.forEach(elem => {
-      expectedSuccessResponse.term['sanskrit_' + elem] = sanskrit['sanskrit_' + elem];
-      expectedSuccessResponse.term['sanskrit_' + elem + '_lower'] = sanskrit['sanskrit_' + elem].toLowerCase();
+      expectedSuccessResponse.term['sanskrit_' + elem] = 'Sanskrit on ' + elem;
+      expectedSuccessResponse.term['sanskrit_' + elem + '_lower'] = ('Sanskrit on ' + elem).toLowerCase();
     });
     const expectedSuccessActions = [
       { type: types.ADD_TERM_START },
@@ -89,7 +83,7 @@ describe('admin/newTerm actions', () => {
           id: 1,
           text: 'NewTerm.alert_success',
           ttl: 3000,
-          timer: 17,
+          timer: 16,  // ???
           type: 'success',
           values: {termId: expectedSuccessResponse.term.id}
         },
@@ -97,13 +91,53 @@ describe('admin/newTerm actions', () => {
       }
     ];
 
+    let store = mockStore(initialState);
+
     nock('http://localhost')
       .post('/api/terms')
       .reply(200, expectedSuccessResponse);
 
-    store.dispatch(actions.saveTermAsync()).then(() => {
+    return store.dispatch(actions.saveTermAsync()).then(() => {
       // return of async actions
       expect(store.getActions()).toEqual(expectedSuccessActions)
+    });
+  });
+
+  it('should not save term async', () => {
+    const expectedErrorResponse = {
+      error: true,
+      code: 500,
+      message: 'Can\'t create new term. Unauthorized access. Database error'
+    };
+    const expectedErrorActions = [
+      { type: types.ADD_TERM_START },
+      {
+        type: types.ADD_TERM_END,
+        termId: null,
+        error: expectedErrorResponse
+      },
+      {
+        idLast: 1,
+        notification: {
+          id: 1,
+          text: expectedErrorResponse.message,
+          ttl: -1,
+          type: 'danger',
+          values: {}
+        },
+        type: 'CREATE_NOTIFICATION'
+      }
+    ];
+
+    let store = mockStore(initialState);
+
+    nock('http://localhost')
+      .post('/api/terms')
+      .reply(200, expectedErrorResponse);
+
+    return store.dispatch(actions.saveTermAsync()).then(() => {
+      // return of async actions
+      expect(store.getActions()).toEqual(expectedErrorActions)
     });
   });
 })
