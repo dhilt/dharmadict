@@ -87,7 +87,7 @@ describe('admin/newTerm actions', () => {
           type: 'success',
           values: {termId: expectedSuccessResponse.term.id}
         },
-        type: 'CREATE_NOTIFICATION'
+        type: types.CREATE_NOTIFICATION
       }
     ];
 
@@ -125,7 +125,7 @@ describe('admin/newTerm actions', () => {
           type: 'danger',
           values: {}
         },
-        type: 'CREATE_NOTIFICATION'
+        type: types.CREATE_NOTIFICATION
       }
     ];
 
