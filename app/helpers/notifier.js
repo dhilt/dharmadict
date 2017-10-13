@@ -13,7 +13,7 @@ const notifier = {
     }
   },
 
-  onResponse: (successMessage, error, values) => {
+  onResponse: (successMessage, error, values = {}) => {
     if (!error && typeof successMessage === 'string') {
       return notify({type: 'success', text: successMessage, values})
     }
