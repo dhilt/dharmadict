@@ -1,13 +1,13 @@
-import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
-import nock from 'nock';
-import expect from 'expect';
+const configureMockStore = require('redux-mock-store').default;
+const thunk = require('redux-thunk').default;
+const nock = require('nock');
+const expect = require('expect');
 
-import languages from '../../../../app/helpers/lang';
-import * as actions from '../../../../app/actions/admin/newTerm';
-import * as types from '../../../../app/actions/_constants';
-import reducer from '../../../../app/reducers';
-import initialState from '../../../../app/reducers/_initial';
+const actions = require('../../../../app/actions/admin/newTerm');
+const types = require('../../../../app/actions/_constants');
+const reducer = require('../../../../app/reducers').default;
+const initialState = require('../../../../app/reducers/_initial').default;
+const languages = require('../../../../app/helpers/lang').default;
 
 let middlewares = [thunk];
 let mockStore = configureMockStore(middlewares);
