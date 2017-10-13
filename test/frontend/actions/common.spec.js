@@ -19,6 +19,7 @@ describe('common actions', () => {
   beforeEach(() => {
     nock.disableNetConnect();
     nock.enableNetConnect('127.0.0.1');
+    console.log = jest.fn();
   });
 
   afterEach(() => {
