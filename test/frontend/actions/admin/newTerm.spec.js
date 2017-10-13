@@ -36,8 +36,10 @@ describe('admin/newTerm actions', () => {
     let expectedState = JSON.parse(JSON.stringify(initialState));
     expectedState.admin.newTerm.wylie = newWylieString;
 
-    expect(actions.changeWylie(newWylieString)).toEqual(expectedAction);
+    // test reducers
     expect(reducer(initialState, expectedAction)).toEqual(expectedState);
+    // test actions
+    expect(actions.changeWylie(newWylieString)).toEqual(expectedAction);
   });
 
   it('should change sanskrit', () => {
@@ -52,8 +54,10 @@ describe('admin/newTerm actions', () => {
       let expectedState = JSON.parse(JSON.stringify(initialState));
       expectedState.admin.newTerm.sanskrit[key] = value;
 
-      expect(actions.changeSanskrit(key, value)).toEqual(expectedAction);
+      // test reducers
       expect(reducer(initialState, expectedAction)).toEqual(expectedState);
+      // test actions
+      expect(actions.changeSanskrit(key, value)).toEqual(expectedAction);
     });
   });
 
@@ -83,7 +87,7 @@ describe('admin/newTerm actions', () => {
           id: 1,
           text: 'NewTerm.alert_success',
           ttl: 3000,
-          timer: 16,  // ???
+          // timer: 16,  // it will be removed further
           type: 'success',
           values: {termId: expectedSuccessResponse.term.id}
         },
@@ -91,14 +95,23 @@ describe('admin/newTerm actions', () => {
       }
     ];
 
-    let store = mockStore(initialState);
+    // test reducers
+    let expectedState = JSON.parse(JSON.stringify(initialState));
+    expectedState.admin.newTerm.termId = expectedSuccessActions[1].termId;
+    expect(reducer(initialState, expectedSuccessActions[1])).toEqual(expectedState);
+    let nextState = JSON.parse(JSON.stringify(expectedState));
+    expectedState.notifications.list.push(expectedSuccessActions[2].notification);
+    expectedState.notifications.idLast = expectedSuccessActions[2].idLast;
+    expect(reducer(nextState, expectedSuccessActions[2])).toEqual(expectedState);
 
+    // test async actions
+    let store = mockStore(initialState);
     nock('http://localhost')
       .post('/api/terms')
       .reply(200, expectedSuccessResponse);
-
     return store.dispatch(actions.saveTermAsync()).then(() => {
-      // return of async actions
+      let storeActions = store.getActions();
+      delete storeActions[2].notification.timer;  // remove function-property
       expect(store.getActions()).toEqual(expectedSuccessActions)
     });
   });
@@ -129,14 +142,17 @@ describe('admin/newTerm actions', () => {
       }
     ];
 
-    let store = mockStore(initialState);
+    // test reducers
+    let expectedState = JSON.parse(JSON.stringify(initialState));
+    expectedState.admin.newTerm.error = expectedErrorActions[1].error;
+    expect(reducer(initialState, expectedErrorActions[1])).toEqual(expectedState);
 
+    // test async actions
+    let store = mockStore(initialState);
     nock('http://localhost')
       .post('/api/terms')
       .reply(200, expectedErrorResponse);
-
     return store.dispatch(actions.saveTermAsync()).then(() => {
-      // return of async actions
       expect(store.getActions()).toEqual(expectedErrorActions)
     });
   });
