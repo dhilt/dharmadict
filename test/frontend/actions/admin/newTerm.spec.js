@@ -63,10 +63,11 @@ describe('admin/newTerm actions', () => {
   });
 
   it('should save term async', () => {
+    const wylie = 'New Term';
     const expectedSuccessResponse = {
       success: true,
       term:	{
-        wylie: 'New Term',
+        wylie,
         translations: [],
         id: 'New_Term'
       }
@@ -83,6 +84,7 @@ describe('admin/newTerm actions', () => {
         termId: expectedSuccessResponse.term.id
       },
       {
+        type: types.CREATE_NOTIFICATION,
         idLast: 1,
         notification: {
           id: 1,
@@ -92,7 +94,6 @@ describe('admin/newTerm actions', () => {
           type: 'success',
           values: {termId: expectedSuccessResponse.term.id}
         },
-        type: types.CREATE_NOTIFICATION
       }
     ];
 
@@ -107,17 +108,29 @@ describe('admin/newTerm actions', () => {
 
     // test async actions
     let store = mockStore(initialState);
+    store.dispatch(actions.changeWylie(wylie));
+    languages.list.forEach(elem =>
+      store.dispatch(actions.changeSanskrit('sanskrit_' + elem, 'value on language' + elem))
+    );
+
     nock('http://localhost')
-      .post('/api/terms')
+      .post('/api/terms', {
+        term: store.getState().admin.newTerm.wylie,
+        sanskrit: store.getState().admin.newTerm.sanskrit
+      })
       .reply(200, expectedSuccessResponse);
+
     return store.dispatch(actions.saveTermAsync()).then(() => {
-      let storeActions = store.getActions();
-      delete storeActions[2].notification.timer;  // remove function-property
-      expect(store.getActions()).toEqual(expectedSuccessActions)
+      const successAction = store.getActions().find(elem => elem.type === types.ADD_TERM_END);
+      let successNotification = store.getActions().find(elem => elem.type === types.CREATE_NOTIFICATION);
+      delete successNotification.notification.timer;  // remove function-property
+      expect(successAction).toEqual(expectedSuccessActions[1]);
+      expect(successNotification).toEqual(expectedSuccessActions[2]);
     });
   });
 
   it('should not save term async', () => {
+    const wylie = 'New Term';
     const expectedErrorResponse = {
       error: true,
       code: 500,
@@ -150,11 +163,23 @@ describe('admin/newTerm actions', () => {
 
     // test async actions
     let store = mockStore(initialState);
+    store.dispatch(actions.changeWylie(wylie));
+    languages.list.forEach(elem =>
+      store.dispatch(actions.changeSanskrit('sanskrit_' + elem, 'value on language' + elem))
+    );
+
     nock('http://localhost')
-      .post('/api/terms')
+      .post('/api/terms', {
+        term: store.getState().admin.newTerm.wylie,
+        sanskrit: store.getState().admin.newTerm.sanskrit
+      })
       .reply(200, expectedErrorResponse);
+
     return store.dispatch(actions.saveTermAsync()).then(() => {
-      expect(store.getActions()).toEqual(expectedErrorActions)
+      const errorAction = store.getActions().find(elem => elem.type === types.ADD_TERM_END);
+      let errorNotification = store.getActions().find(elem => elem.type === types.CREATE_NOTIFICATION);
+      expect(errorAction).toEqual(expectedErrorActions[1]);
+      expect(errorNotification).toEqual(expectedErrorActions[2]);
     });
   });
 })
