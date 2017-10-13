@@ -23,7 +23,7 @@ export function updateAdminUserPasswordAsync() {
     const {id, password, confirmPassword} = getState().admin.editUserPassword
     const data = {password, confirmPassword}
     const query = 'users/' + id
-    asyncRequest(query, 'patch', {payload: data}, (data, error) => {
+    return asyncRequest(query, 'patch', {payload: data}, (data, error) => {
       dispatch({
         type: UPDATE_ADMIN_USER_PASSWORD_END,
         error: error ? error : null,

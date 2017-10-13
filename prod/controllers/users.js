@@ -104,7 +104,7 @@ const findByLogin = userLogin => new Promise((resolve, reject) => {
     throw new ApiError('Database error')
   });
 
-const findAll = (role) => new Promise((resolve, reject) => {
+const findAll = (role) => new Promise(resolve => {
   logger.info('Find users' + (role ? ` with "${role}" role` : ''));
   const body = !role ? {} : {
     query: {
@@ -113,6 +113,8 @@ const findAll = (role) => new Promise((resolve, reject) => {
       }
     }
   };
+  resolve(body);
+.then(
   elasticClient.search({
     index: config.db.index,
     type: 'users',
@@ -133,7 +135,7 @@ const findAll = (role) => new Promise((resolve, reject) => {
     logger.error(error.message);
     throw new ApiError('Database error')
   })
-});
+);
 
 const create = user => validator.create(user)
   .then(user => {

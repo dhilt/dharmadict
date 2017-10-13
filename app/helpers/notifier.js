@@ -1,7 +1,7 @@
 import {notify} from '../actions/notifier'
 
 const notifier = {
-  onErrorResponse: (error, values) => {
+  onErrorResponse: (error, values = {}) => {
     if(error) {
       if(typeof error !== 'string') {
         error = error.message
