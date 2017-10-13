@@ -55,34 +55,35 @@ const findTranslations = (translator, term, translations) => new Promise((resolv
   });
 });
 
-const searchByPattern = (pattern) => validator.search(pattern).then(pattern => {
-  logger.info('Searching terms by "' + pattern + '" pattern');
-  return elasticClient.search({
-    index: config.db.index,
-    type: 'terms',
-    body: {
-      query: {
-        multi_match: {
-          query: pattern,
-          type: 'most_fields',
-          operator: 'and',
-          fields: ['wylie', 'sanskrit_rus_lower', 'sanskrit_eng_lower', 'translations.meanings.versions_lower']
+const searchByPattern = (pattern) => validator.search(pattern)
+  .then(pattern => {
+    logger.info('Searching terms by "' + pattern + '" pattern');
+    return elasticClient.search({
+      index: config.db.index,
+      type: 'terms',
+      body: {
+        query: {
+          multi_match: {
+            query: pattern,
+            type: 'most_fields',
+            operator: 'and',
+            fields: ['wylie', 'sanskrit_rus_lower', 'sanskrit_eng_lower', 'translations.meanings.versions_lower']
+          }
         }
       }
-    }
-  }).then(response => {
-    let result = [];
-    response.hits.hits.forEach(hit => {
-      hit._source.id = hit._id; // add id field
-      result.push(hit._source);
+    }).then(response => {
+      let result = [];
+      response.hits.hits.forEach(hit => {
+        hit._source.id = hit._id; // add id field
+        result.push(hit._source);
+      });
+      logger.info('Found items: ' + result.length);
+      return result;
+    }, error => {
+      logger.error('Search error:', error.message);
+      throw new ApiError('Database error');
     });
-    logger.info('Found items: ' + result.length);
-    return result;
-  }, error => {
-    logger.error('Search error:', error.message);
-    throw new ApiError('Database error');
   });
-});
 
 const create = (wylie, sanskrit) => validator.create(wylie, sanskrit)
   .then(term => {

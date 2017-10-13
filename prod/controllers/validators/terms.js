@@ -2,6 +2,10 @@ const ApiError = require('../../helper').ApiError;
 const languages = require('../../helper').languages.data;
 
 const search = (pattern) => new Promise(resolve => {
+  if (typeof pattern !== 'string') {
+    throw new ApiError('Invalid pattern')
+  }
+  pattern = pattern.trim();
   if (!pattern) {
     throw new ApiError('Invalid pattern')
   }
@@ -27,7 +31,7 @@ const create = (wylie, sanskrit) => new Promise(resolve => {
       throw new ApiError('Invalid ' + key)
     }
     sanskrit[key].trim();
-    sanskrit[key + '_lower'] = sanskrit[key].toLowerCase();
+    sanskrit[key + '_lower'] = sanskrit[key].toLowerCase()
   });
   resolve({wylie, sanskrit})
 });
