@@ -31,7 +31,7 @@ describe('common actions', () => {
   });
 
   it('should get translator info async', () => {
-    const userId = 'ZAG';
+    const userId = translators[0].id;
     const expectedSuccessResponse = {
       success: true,
       user: translators.find(elem => elem.id === userId)
@@ -61,7 +61,7 @@ describe('common actions', () => {
   });
 
   it('should not get translator info async', () => {
-    const userId = 'ZAG';
+    const userId = translators[0].id;
     const expectedErrorResponse = {
       error: true,
       code: 500,
