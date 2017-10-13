@@ -2,7 +2,7 @@ const translators = [{
   id: 'ZAG',
   name: 'Б.И. Загуменнов',
   role: 'translator',
-  description: 'qqqqqq',
+  description: 'desc',
   language: 'ru'
 }, {
   id: 'AKT',
@@ -36,7 +36,7 @@ const translators = [{
   language: 'ru'
 }, {
   id: 'MK',
-  name: 'czxcМ.Н. Кожевникова',
+  name: 'М.Н. Кожевникова',
   role: 'translator',
   description: '',
   language: 'en'
