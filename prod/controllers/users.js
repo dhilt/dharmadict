@@ -114,7 +114,8 @@ const findAll = (role) => new Promise(resolve => {
     }
   };
   resolve(body);
-.then(
+})
+.then(body =>
   elasticClient.search({
     index: config.db.index,
     type: 'users',
@@ -130,7 +131,7 @@ const findAll = (role) => new Promise(resolve => {
       cleanUserInfo.id = user._id;
       return getUserInfo(cleanUserInfo)
     });
-    return resolve(users)
+    return Promise.resolve(users)
   }, error => {
     logger.error(error.message);
     throw new ApiError('Database error')
