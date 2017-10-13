@@ -49,12 +49,11 @@ describe('common actions', () => {
     expectedState.translatorInfo.data = expectedSuccessResponse.user;
     expect(reducer(initialState, expectedSuccessActions[1])).toEqual(expectedState);
 
+    // test async actions
     let store = mockStore(initialState);
-
     nock('http://localhost')
       .get('/api/users/' + userId)
       .reply(200, expectedSuccessResponse);
-
     return store.dispatch(actions.getTranslatorInfoAsync(userId)).then(() => {
       expect(store.getActions()).toEqual(expectedSuccessActions)
     });
@@ -93,12 +92,11 @@ describe('common actions', () => {
     expectedState.translatorInfo.data = expectedErrorActions[1].result;
     expect(reducer(initialState, expectedErrorActions[1])).toEqual(expectedState);
 
+    // test async actions
     let store = mockStore(initialState);
-
     nock('http://localhost')
       .get('/api/users/' + userId)
       .reply(200, expectedErrorResponse);
-
     return store.dispatch(actions.getTranslatorInfoAsync(userId)).then(() => {
       expect(store.getActions()).toEqual(expectedErrorActions)
     });
