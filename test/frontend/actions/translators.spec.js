@@ -9,7 +9,6 @@ const reducer = require('../../../app/reducers').default;
 const initialState = require('../../../app/reducers/_initial').default;
 const lang = require('../../../app/helpers/lang').default;
 
-const languages = require('../_shared.js').languages;
 const translators = require('../_shared.js').translators;
 
 let middlewares = [thunk];
@@ -44,6 +43,11 @@ describe('common actions', () => {
         result: expectedSuccessResponse.user
       }
     ];
+
+    // test reducers
+    let expectedState = JSON.parse(JSON.stringify(initialState));
+    expectedState.translatorInfo.data = expectedSuccessResponse.user;
+    expect(reducer(initialState, expectedSuccessActions[1])).toEqual(expectedState);
 
     let store = mockStore(initialState);
 
@@ -82,6 +86,12 @@ describe('common actions', () => {
         }
       }
     ];
+
+    // test reducers
+    let expectedState = JSON.parse(JSON.stringify(initialState));
+    expectedState.translatorInfo.error = expectedErrorActions[1].error;
+    expectedState.translatorInfo.data = expectedErrorActions[1].result;
+    expect(reducer(initialState, expectedErrorActions[1])).toEqual(expectedState);
 
     let store = mockStore(initialState);
 
