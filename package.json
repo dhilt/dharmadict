@@ -8,7 +8,7 @@
     "dev-server": "node webpack/server.js",
     "prod-server": "node prod/server.js",
     "test": "mocha -R spec --bail",
-    "test-frontend": "set NODE_ENV=\"test\" && jest --watch",
+    "test-frontend": "cross-env NODE_ENV=test jest --watch",
     "db-reset": "node prod/db/reset.js"
   },
   "repository": {
@@ -31,6 +31,7 @@
     "chai": "^4.1.2",
     "chai-http": "^3.0.0",
     "concurrently": "^3.1.0",
+    "cross-env": "^5.0.5",
     "css-loader": "^0.24.0",
     "enzyme": "^3.1.0",
     "enzyme-adapter-react-15": "^1.0.1",
