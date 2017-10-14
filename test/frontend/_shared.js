@@ -1,3 +1,5 @@
+global.window.localStorage = {};
+
 const translators = [{
   id: 'ZAG',
   name: 'Б.И. Загуменнов',

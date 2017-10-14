@@ -3,6 +3,8 @@ const thunk = require('redux-thunk').default;
 const nock = require('nock');
 const expect = require('expect');
 
+const {translators} = require('../../_shared.js');
+
 const actions = require('../../../../app/actions/admin/newTerm');
 const types = require('../../../../app/actions/_constants');
 const reducer = require('../../../../app/reducers').default;

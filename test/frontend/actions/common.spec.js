@@ -3,14 +3,13 @@ const thunk = require('redux-thunk').default;
 const nock = require('nock');
 const expect = require('expect');
 
+const {languages, translators} = require('../_shared.js');
+
 const actions = require('../../../app/actions/common');
 const types = require('../../../app/actions/_constants');
 const reducer = require('../../../app/reducers').default;
 const initialState = require('../../../app/reducers/_initial').default;
 const lang = require('../../../app/helpers/lang').default;
-
-const languages = require('../_shared.js').languages;
-const translators = require('../_shared.js').translators;
 
 let middlewares = [thunk];
 let mockStore = configureMockStore(middlewares);
@@ -18,8 +17,8 @@ let mockStore = configureMockStore(middlewares);
 describe('common actions', () => {
   beforeEach(() => {
     nock.disableNetConnect();
-    nock.enableNetConnect('127.0.0.1');
-    console.log = jest.fn();
+    nock.enableNetConnect('localhost');
+    //console.log = jest.fn();
   });
 
   afterEach(() => {
@@ -52,11 +51,14 @@ describe('common actions', () => {
     expectedState.common.translators = expectedSuccessActions[1].translators;
     expect(reducer(initialState, expectedSuccessActions[1])).toEqual(expectedState);
 
+
     // test async actions
     let store = mockStore(initialState);
     nock('http://localhost')
       .get('/api/common')
-      .reply(200, expectedSuccessResponse);
+      .reply((uri, requestBody, cb) => {
+        cb(null, [200, expectedSuccessResponse])
+      });
     return store.dispatch(actions.getCommonDataAsync()).then(() => {
       expect(store.getActions()).toEqual(expectedSuccessActions)
     });

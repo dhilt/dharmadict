@@ -3,14 +3,13 @@ const thunk = require('redux-thunk').default;
 const nock = require('nock');
 const expect = require('expect');
 
+const {terms, translators} = require('../_shared.js');
+
 const actions = require('../../../app/actions/search');
 const types = require('../../../app/actions/_constants');
 const reducer = require('../../../app/reducers').default;
 const initialState = require('../../../app/reducers/_initial').default;
 const lang = require('../../../app/helpers/lang').default;
-
-const translators = require('../_shared.js').translators;
-const terms = require('../_shared.js').terms;
 
 let middlewares = [thunk];
 let mockStore = configureMockStore(middlewares);
