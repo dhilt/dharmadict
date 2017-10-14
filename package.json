@@ -8,7 +8,7 @@
     "dev-server": "node webpack/server.js",
     "prod-server": "node prod/server.js",
     "test": "mocha -R spec --bail",
-    "test-frontend": "cross-env NODE_ENV=test jest --watch",
+    "test-frontend": "cross-env NODE_ENV=test jest --runInBand --watch",
     "db-reset": "node prod/db/reset.js"
   },
   "repository": {
@@ -89,5 +89,9 @@
     "require": [
       "babel-register"
     ]
+  },
+  "jest": {
+    "bail": true,
+    "verbose": true
   }
 }
