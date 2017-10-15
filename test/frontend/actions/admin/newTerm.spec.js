@@ -17,7 +17,7 @@ let mockStore = configureMockStore(middlewares);
 describe('admin/newTerm actions', () => {
   beforeEach(() => {
     nock.disableNetConnect();
-    nock.enableNetConnect('127.0.0.1');
+    nock.enableNetConnect('localhost');
     console.log = jest.fn();
   });
 
@@ -30,7 +30,7 @@ describe('admin/newTerm actions', () => {
     expect(reducer(undefined, {})).toEqual(initialState);
   });
 
-  it('should change wylie', () => {
+  it('should work correctly: function changeWylie', () => {
     const newWylieString = 'wylie';
     const expectedAction = {
       type: types.CHANGE_NEW_TERM_WYLIE,
@@ -39,13 +39,14 @@ describe('admin/newTerm actions', () => {
     let expectedState = JSON.parse(JSON.stringify(initialState));
     expectedState.admin.newTerm.wylie = newWylieString;
 
-    // test reducers
+    // test types.CHANGE_NEW_TERM_WYLIE
     expect(reducer(initialState, expectedAction)).toEqual(expectedState);
-    // test actions
+    // test action
     expect(actions.changeWylie(newWylieString)).toEqual(expectedAction);
   });
 
-  it('should change sanskrit', () => {
+  it('should work correctly: function changeSanskrit', () => {
+    let lastState = JSON.parse(JSON.stringify(initialState));
     languages.list.forEach(elem => {
       const key = 'sanskrit_' + elem;
       const value = 'new_sanskrit on language ' + elem;
@@ -56,15 +57,26 @@ describe('admin/newTerm actions', () => {
       };
       let expectedState = JSON.parse(JSON.stringify(initialState));
       expectedState.admin.newTerm.sanskrit[key] = value;
+      lastState.admin.newTerm.sanskrit[key] = value;
 
-      // test reducers
+      // test types.CHANGE_NEW_TERM_SANSKRIT
       expect(reducer(initialState, expectedAction)).toEqual(expectedState);
-      // test actions
+      // test action
       expect(actions.changeSanskrit(key, value)).toEqual(expectedAction);
     });
+
+    const lastExpectedAction = {
+      type: types.CHANGE_NEW_TERM_SANSKRIT,
+      key: 'sanskrit_' + languages.list[0],
+      value: 'new_new_new_term'
+    }
+    const lastExpectedState = JSON.parse(JSON.stringify(lastState));
+    lastExpectedState.admin.newTerm.sanskrit[lastExpectedAction.key] = lastExpectedAction.value;
+    expect(reducer(lastState, lastExpectedAction)).toEqual(lastExpectedState);
+    expect(actions.changeSanskrit(lastExpectedAction.key, lastExpectedAction.value)).toEqual(lastExpectedAction);
   });
 
-  it('should save term async', () => {
+  it('should work correctly: function saveTermAsync', () => {
     const wylie = 'New Term';
     const expectedSuccessResponse = {
       success: true,
@@ -92,28 +104,31 @@ describe('admin/newTerm actions', () => {
           id: 1,
           text: 'NewTerm.alert_success',
           ttl: 3000,
-          // timer: 16,  // it will be removed further
           type: 'success',
           values: {termId: expectedSuccessResponse.term.id}
         },
       }
     ];
 
-    // test reducers
+    // test types.ADD_TERM_START
     let expectedState = JSON.parse(JSON.stringify(initialState));
-    expectedState.admin.newTerm.termId = expectedSuccessActions[1].termId;
+    expectedState.admin.newTerm.pending = true;
+    expectedState.admin.newTerm.error = null;
+    expect(reducer(initialState, expectedSuccessActions[0])).toEqual(expectedState);
+
+    // test types.ADD_TERM_END
+    expectedState = JSON.parse(JSON.stringify(initialState));
+    expectedState.admin.newTerm.termId = expectedSuccessResponse.term.id;
+    expectedState.admin.newTerm.error = null;
     expect(reducer(initialState, expectedSuccessActions[1])).toEqual(expectedState);
-    let nextState = JSON.parse(JSON.stringify(expectedState));
-    expectedState.notifications.list.push(expectedSuccessActions[2].notification);
-    expectedState.notifications.idLast = expectedSuccessActions[2].idLast;
-    expect(reducer(nextState, expectedSuccessActions[2])).toEqual(expectedState);
 
     // test async actions
-    let store = mockStore(initialState);
-    store.dispatch(actions.changeWylie(wylie));
+    let _initialState = JSON.parse(JSON.stringify(initialState));
+    _initialState.admin.newTerm.wylie = wylie;
     languages.list.forEach(elem =>
-      store.dispatch(actions.changeSanskrit('sanskrit_' + elem, 'value on language' + elem))
+      _initialState.admin.newTerm.sanskrit['sanskrit_' + elem] = 'Sanskrit on ' + elem
     );
+    let store = mockStore(_initialState);
 
     nock('http://localhost')
       .post('/api/terms', {
@@ -123,15 +138,13 @@ describe('admin/newTerm actions', () => {
       .reply(200, expectedSuccessResponse);
 
     return store.dispatch(actions.saveTermAsync()).then(() => {
-      const successAction = store.getActions().find(elem => elem.type === types.ADD_TERM_END);
       let successNotification = store.getActions().find(elem => elem.type === types.CREATE_NOTIFICATION);
       delete successNotification.notification.timer;  // remove function-property
-      expect(successAction).toEqual(expectedSuccessActions[1]);
-      expect(successNotification).toEqual(expectedSuccessActions[2]);
+      expect(store.getActions()).toEqual(expectedSuccessActions);
     });
   });
 
-  it('should not save term async', () => {
+  it('should handle error correctly: function saveTermAsync', () => {
     const wylie = 'New Term';
     const expectedErrorResponse = {
       error: true,
@@ -158,17 +171,24 @@ describe('admin/newTerm actions', () => {
       }
     ];
 
-    // test reducers
+    // test types.ADD_TERM_START
     let expectedState = JSON.parse(JSON.stringify(initialState));
+    expectedState.admin.newTerm.pending = true;
+    expect(reducer(initialState, expectedErrorActions[0])).toEqual(expectedState);
+
+    // test types.ADD_TERM_END
+    expectedState = JSON.parse(JSON.stringify(initialState));
     expectedState.admin.newTerm.error = expectedErrorActions[1].error;
+    expectedState.admin.newTerm.termId = null;
     expect(reducer(initialState, expectedErrorActions[1])).toEqual(expectedState);
 
     // test async actions
-    let store = mockStore(initialState);
-    store.dispatch(actions.changeWylie(wylie));
+    let _initialState = JSON.parse(JSON.stringify(initialState));
+    _initialState.admin.newTerm.wylie = wylie;
     languages.list.forEach(elem =>
-      store.dispatch(actions.changeSanskrit('sanskrit_' + elem, 'value on language' + elem))
+      _initialState.admin.newTerm.sanskrit['sanskrit_' + elem] = 'Sanskrit on ' + elem
     );
+    let store = mockStore(_initialState);
 
     nock('http://localhost')
       .post('/api/terms', {
@@ -178,10 +198,7 @@ describe('admin/newTerm actions', () => {
       .reply(200, expectedErrorResponse);
 
     return store.dispatch(actions.saveTermAsync()).then(() => {
-      const errorAction = store.getActions().find(elem => elem.type === types.ADD_TERM_END);
-      let errorNotification = store.getActions().find(elem => elem.type === types.CREATE_NOTIFICATION);
-      expect(errorAction).toEqual(expectedErrorActions[1]);
-      expect(errorNotification).toEqual(expectedErrorActions[2]);
+      expect(store.getActions()).toEqual(expectedErrorActions);
     });
   });
 })

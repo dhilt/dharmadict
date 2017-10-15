@@ -13,7 +13,7 @@ const initialState = require('../../../../app/reducers/_initial').default;
 let middlewares = [thunk];
 let mockStore = configureMockStore(middlewares);
 
-describe('common actions', () => {
+describe('admin/changeUserPassword actions', () => {
   beforeEach(() => {
     nock.disableNetConnect();
     nock.enableNetConnect('localhost');
@@ -85,7 +85,7 @@ describe('common actions', () => {
       confirmPassword: ''
     };
 
-    // test reducers
+    // test types.CHANGE_ADMIN_USER_PASSWORD
     let expectedState = JSON.parse(JSON.stringify(initialState));
     let _initialState = JSON.parse(JSON.stringify(initialState));
     _initialState.admin.editUserPassword.password = 'password';

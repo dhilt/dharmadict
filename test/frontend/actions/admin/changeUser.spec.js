@@ -20,7 +20,7 @@ const getEditableUserDataObject = (user) => ({
   description: user.description
 });
 
-describe('common actions', () => {
+describe('admin/changeUser actions', () => {
   beforeEach(() => {
     nock.disableNetConnect();
     nock.enableNetConnect('localhost');
