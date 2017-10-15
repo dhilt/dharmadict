@@ -91,7 +91,6 @@
     ]
   },
   "jest": {
-    "bail": true,
-    "verbose": true
+    "bail": true
   }
 }
