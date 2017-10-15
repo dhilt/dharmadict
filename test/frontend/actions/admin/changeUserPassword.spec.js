@@ -38,16 +38,19 @@ describe('common actions', () => {
     let expectedState = JSON.parse(JSON.stringify(initialState));
     expectedState.admin.editUserPassword.id = userId;
 
-    // test reducers
+    // test types.SET_ADMIN_USER_ID
     expect(reducer(initialState, expectedAction)).toEqual(expectedState);
-    // test actions
+    // test action
     expect(actions.setUserId(userId)).toEqual(expectedAction);
   });
 
   it('should work correctly: function changeAdminUserPassword', () => {
     const password = 'new_password';
-    const confirmPassword = 'new_password';
-    let store = mockStore(initialState);
+    const confirmPassword = 'confirm_password';
+    let _initialState = JSON.parse(JSON.stringify(initialState));
+    _initialState.admin.editUserPassword.password = password;
+    _initialState.admin.editUserPassword.confirmPassword = confirmPassword;
+    let store = mockStore(_initialState);
     const expectedActionWithPassword = {
       type: types.CHANGE_ADMIN_USER_PASSWORD,
       password,
@@ -59,12 +62,12 @@ describe('common actions', () => {
       confirmPassword
     };
 
-    // test reducers
-    let expectedState = JSON.parse(JSON.stringify(initialState));
+    // test types.CHANGE_ADMIN_USER_PASSWORD with property - password
+    let expectedState = JSON.parse(JSON.stringify(_initialState));
     expectedState.admin.editUserPassword.password = password;
     expect(reducer(initialState, expectedActionWithPassword)).toEqual(expectedState);
 
-    expectedState = JSON.parse(JSON.stringify(initialState));
+    // test types.CHANGE_ADMIN_USER_PASSWORD with property - confirmPassword
     expectedState.admin.editUserPassword.confirmPassword = confirmPassword;
     expect(reducer(initialState, expectedActionWithConfirmPassword)).toEqual(expectedState);
 
@@ -84,13 +87,13 @@ describe('common actions', () => {
 
     // test reducers
     let expectedState = JSON.parse(JSON.stringify(initialState));
-    let storeState = JSON.parse(JSON.stringify(initialState));
-    storeState.admin.editUserPassword.password = 'password';
-    storeState.admin.editUserPassword.confirmPassword = 'password';
-    expect(reducer(storeState, expectedAction)).toEqual(expectedState);
+    let _initialState = JSON.parse(JSON.stringify(initialState));
+    _initialState.admin.editUserPassword.password = 'password';
+    _initialState.admin.editUserPassword.confirmPassword = 'password';
+    expect(reducer(_initialState, expectedAction)).toEqual(expectedState);
 
     // test actions
-    let store = mockStore(initialState);
+    let store = mockStore(_initialState);
     store.dispatch(actions.resetAdminUserPassword());
     expect(store.getActions()[0]).toEqual(expectedAction);
   });
