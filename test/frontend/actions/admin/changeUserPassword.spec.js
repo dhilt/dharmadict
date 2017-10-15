@@ -9,7 +9,6 @@ const actions = require('../../../../app/actions/admin/changeUserPassword');
 const types = require('../../../../app/actions/_constants');
 const reducer = require('../../../../app/reducers').default;
 const initialState = require('../../../../app/reducers/_initial').default;
-const lang = require('../../../../app/helpers/lang').default;
 
 let middlewares = [thunk];
 let mockStore = configureMockStore(middlewares);
@@ -154,11 +153,9 @@ describe('common actions', () => {
       .reply(200, expectedSuccessResponse);
 
     return store.dispatch(actions.updateAdminUserPasswordAsync()).then(() => {
-      const successAction = store.getActions().find(elem => elem.type === types.UPDATE_ADMIN_USER_PASSWORD_END);
       let successNotification = store.getActions().find(elem => elem.type === types.CREATE_NOTIFICATION);
       delete successNotification.notification.timer;
-      expect(successAction).toEqual(expectedSuccessActions[1]);
-      expect(successNotification).toEqual(expectedSuccessActions[2]);
+      expect(store.getActions()).toEqual(expectedSuccessActions);
     });
   });
 
