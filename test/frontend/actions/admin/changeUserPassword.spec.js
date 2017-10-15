@@ -129,6 +129,8 @@ describe('common actions', () => {
     let changedInitialState = JSON.parse(JSON.stringify(initialState));
     changedInitialState.admin.editUserPassword.password = password;
     changedInitialState.admin.editUserPassword.confirmPassword = confirmPassword;
+    expectedState.admin.editUserPassword.error = null;
+    expectedState.admin.editUserPassword.pending = false;
     expectedState.admin.editUserPassword.password = '';
     expectedState.admin.editUserPassword.confirmPassword = '';
     expect(reducer(changedInitialState, expectedSuccessActions[1])).toEqual(expectedState);
