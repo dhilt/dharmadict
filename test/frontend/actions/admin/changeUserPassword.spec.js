@@ -17,7 +17,7 @@ let mockStore = configureMockStore(middlewares);
 describe('common actions', () => {
   beforeEach(() => {
     nock.disableNetConnect();
-    nock.enableNetConnect('127.0.0.1');
+    nock.enableNetConnect('localhost');
     console.log = jest.fn();
   });
 
@@ -133,25 +133,29 @@ describe('common actions', () => {
     expectedState.admin.editUserPassword.confirmPassword = '';
     expect(reducer(changedInitialState, expectedSuccessActions[1])).toEqual(expectedState);
 
-    // does not work yet
-    // // test async actions
-    // let store = mockStore(initialState);
-    // store.dispatch(actions.setUserId(userId));
-    // store.dispatch(actions.changeAdminUserPassword({password: password}));
-    // store.dispatch(actions.changeAdminUserPassword({confirmPassword: confirmPassword}));
-    //
-    // nock('http://localhost/')
-    //   .patch('/api/users/' + userId, {
-    //     payload: {
-    //       password: store.getState().admin.editUserPassword.password,
-    //       confirmPassword: store.getState().admin.editUserPassword.confirmPassword
-    //     }
-    //   })
-    //   .reply(200, expectedSuccessResponse);
-    //
-    // return store.dispatch(actions.updateAdminUserPasswordAsync()).then(() => {
-    //   expect(store.getActions()).toEqual(expectedSuccessActions);
-    // });
+    // test async actions
+    let expectedStateBeforeRequest = JSON.parse(JSON.stringify(initialState));
+    expectedStateBeforeRequest.admin.editUserPassword.id = userId;
+    expectedStateBeforeRequest.admin.editUserPassword.password = password;
+    expectedStateBeforeRequest.admin.editUserPassword.confirmPassword = confirmPassword;
+    let store = mockStore(expectedStateBeforeRequest);
+
+    nock('http://localhost')
+      .patch('/api/users/' + userId, {
+        payload: {
+          password: store.getState().admin.editUserPassword.password,
+          confirmPassword: store.getState().admin.editUserPassword.confirmPassword
+        }
+      })
+      .reply(200, expectedSuccessResponse);
+
+    return store.dispatch(actions.updateAdminUserPasswordAsync()).then(() => {
+      const successAction = store.getActions().find(elem => elem.type === types.UPDATE_ADMIN_USER_PASSWORD_END);
+      let successNotification = store.getActions().find(elem => elem.type === types.CREATE_NOTIFICATION);
+      delete successNotification.notification.timer;
+      expect(successAction).toEqual(expectedSuccessActions[1]);
+      expect(successNotification).toEqual(expectedSuccessActions[2]);
+    });
   });
 
   it('should handle error correctly: function updateAdminUserPasswordAsync', () => {
