@@ -154,6 +154,7 @@ describe('common actions', () => {
     _initialState.admin.editUser.dataSource = getEditableUserDataObject(user);
     _initialState.admin.editUser.data = getEditableUserDataObject(user);
     let expectedState = JSON.parse(JSON.stringify(_initialState));
+    let store = mockStore(_initialState);
 
     // test types.CHANGE_ADMIN_USER_DATA with property - name
     expectedPayload.name = new_name;
@@ -163,6 +164,10 @@ describe('common actions', () => {
     };
     expectedState.admin.editUser.data.name = new_name;
     expect(reducer(_initialState, expectedAction)).toEqual(expectedState);
+    // test action
+    store.dispatch(actions.changeAdminUserData({name: new_name}));
+    expect(store.getActions()[0]).toEqual(expectedAction);
+    store = mockStore(expectedState);
 
     // test types.CHANGE_ADMIN_USER_DATA with property - description
     expectedPayload.description = new_description;
@@ -172,6 +177,10 @@ describe('common actions', () => {
     };
     expectedState.admin.editUser.data.description = new_description;
     expect(reducer(_initialState, expectedAction)).toEqual(expectedState);
+    // test action
+    store.dispatch(actions.changeAdminUserData({description: new_description}));
+    expect(store.getActions()[0]).toEqual(expectedAction);
+    store = mockStore(expectedState);
 
     // test types.CHANGE_ADMIN_USER_DATA with property - language
     expectedPayload.language = new_language;
@@ -181,6 +190,10 @@ describe('common actions', () => {
     };
     expectedState.admin.editUser.data.language = new_language;
     expect(reducer(_initialState, expectedAction)).toEqual(expectedState);
+    // test action
+    store.dispatch(actions.changeAdminUserData({language: new_language}));
+    expect(store.getActions()[0]).toEqual(expectedAction);
+    store = mockStore(expectedState);
   });
 
   it('should work correctly: function updateAdminUserDataAsync', () => {
@@ -323,5 +336,8 @@ describe('common actions', () => {
       payload: store.getState().admin.editUser.dataSource
     };
     expect(reducer(_initialState, expectedAction)).toEqual(expectedState);
+    // test action
+    store.dispatch(actions.resetAdminUserData());
+    expect(store.getActions()[0]).toEqual(expectedAction);
   });
 })
