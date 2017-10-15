@@ -127,8 +127,10 @@ describe('common actions', () => {
     // test reducers
     let expectedState = JSON.parse(JSON.stringify(initialState));
     let changedInitialState = JSON.parse(JSON.stringify(initialState));
+    changedInitialState.admin.editUserPassword.id = userId;
     changedInitialState.admin.editUserPassword.password = password;
     changedInitialState.admin.editUserPassword.confirmPassword = confirmPassword;
+    expectedState.admin.editUserPassword.id = userId;
     expectedState.admin.editUserPassword.error = null;
     expectedState.admin.editUserPassword.pending = false;
     expectedState.admin.editUserPassword.password = '';
@@ -165,16 +167,15 @@ describe('common actions', () => {
     const password = 'new_password';
     const confirmPassword = 'new_password';
     const expectedErrorResponse = {
-      success: true,
-      user: {
-        id: translators[0].id
-      }
+      error: true,
+      code: 500,
+      message: 'Can\'t update user data. Database error'
     };
     const expectedErrorActions = [
       { type: types.UPDATE_ADMIN_USER_PASSWORD_START },
       {
         type: types.UPDATE_ADMIN_USER_PASSWORD_END,
-        error: 'Can\'t update user data. Database error',
+        error: expectedErrorResponse,
         result: false
       },
       {
@@ -193,31 +194,34 @@ describe('common actions', () => {
     // test reducers
     let expectedState = JSON.parse(JSON.stringify(initialState));
     let changedInitialState = JSON.parse(JSON.stringify(initialState));
+    changedInitialState.admin.editUserPassword.id = userId;
     changedInitialState.admin.editUserPassword.password = password;
     changedInitialState.admin.editUserPassword.confirmPassword = confirmPassword;
+    expectedState.admin.editUserPassword.id = userId;
+    expectedState.admin.editUserPassword.pending = false;
     expectedState.admin.editUserPassword.password = '';
     expectedState.admin.editUserPassword.confirmPassword = '';
-    expectedState.admin.editUserPassword.error = 'Can\'t update user data. Database error';
+    expectedState.admin.editUserPassword.error = expectedErrorResponse;
     expect(reducer(changedInitialState, expectedErrorActions[1])).toEqual(expectedState);
 
-    // does not work yet
-    // // test async actions
-    // let store = mockStore(initialState);
-    // store.dispatch(actions.setUserId(userId));
-    // store.dispatch(actions.changeAdminUserPassword({password: password}));
-    // store.dispatch(actions.changeAdminUserPassword({confirmPassword: confirmPassword}));
-    //
-    // nock('http://localhost/')
-    //   .patch('/api/users/' + userId, {
-    //     payload: {
-    //       password: store.getState().admin.editUserPassword.password,
-    //       confirmPassword: store.getState().admin.editUserPassword.confirmPassword
-    //     }
-    //   })
-    //   .reply(500, expectedErrorResponse);
-    //
-    // return store.dispatch(actions.updateAdminUserPasswordAsync()).then(() => {
-    //   expect(store.getActions()).toEqual(expectedErrorActions);
-    // });
+    // test async actions
+    let expectedStateBeforeRequest = JSON.parse(JSON.stringify(initialState));
+    expectedStateBeforeRequest.admin.editUserPassword.id = userId;
+    expectedStateBeforeRequest.admin.editUserPassword.password = password;
+    expectedStateBeforeRequest.admin.editUserPassword.confirmPassword = confirmPassword;
+    let store = mockStore(expectedStateBeforeRequest);
+
+    nock('http://localhost/')
+      .patch('/api/users/' + userId, {
+        payload: {
+          password: store.getState().admin.editUserPassword.password,
+          confirmPassword: store.getState().admin.editUserPassword.confirmPassword
+        }
+      })
+      .reply(200, expectedErrorResponse);
+
+    return store.dispatch(actions.updateAdminUserPasswordAsync()).then(() => {
+      expect(store.getActions()).toEqual(expectedErrorActions);
+    });
   });
 })
