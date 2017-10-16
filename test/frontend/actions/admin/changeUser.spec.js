@@ -29,21 +29,19 @@ describe('admin/changeUser actions', () => {
     expect(reducer()).toEqual(initialState);
   });
 
-  it('should work correctly: function getAdminUserDataAsync', () => {
+  const getAdminUserDataAsyncActions = (user) => ([
+    { type: types.GET_ADMIN_USER_DATA_START },
+    {
+      type: types.GET_ADMIN_USER_DATA_END,
+      error: null,
+      data: getEditableUserDataObject(user),
+      id: user.id
+    }
+  ]);
+
+  it('should work: getAdminUserDataAsync, reducer', () => {
     const user = translators[0];
-    const expectedSuccessResponse = {
-      success: true,
-      user
-    };
-    const expectedSuccessActions = [
-      { type: types.GET_ADMIN_USER_DATA_START },
-      {
-        type: types.GET_ADMIN_USER_DATA_END,
-        error: null,
-        data: getEditableUserDataObject(expectedSuccessResponse.user),
-        id: expectedSuccessResponse.user.id
-      }
-    ];
+    const actions = getAdminUserDataAsyncActions(user);
 
     // test types.GET_ADMIN_USER_DATA_START
     let expectedState = cloneState();
@@ -51,7 +49,7 @@ describe('admin/changeUser actions', () => {
       sourcePending: true,
       error: null
     });
-    expect(reducer(initialState, expectedSuccessActions[0])).toEqual(expectedState);
+    expect(reducer(initialState, actions[0])).toEqual(expectedState);
 
     // test types.GET_ADMIN_USER_DATA_END
     expectedState = cloneState();
@@ -59,25 +57,33 @@ describe('admin/changeUser actions', () => {
       error: null,
       id: user.id,
       sourcePending: false,
-      data: getEditableUserDataObject(expectedSuccessResponse.user),
-      dataSource: getEditableUserDataObject(expectedSuccessResponse.user)
+      data: getEditableUserDataObject(user),
+      dataSource: getEditableUserDataObject(user)
     });
-    expect(reducer(initialState, expectedSuccessActions[1])).toEqual(expectedState);
+    expect(reducer(initialState, actions[1])).toEqual(expectedState);
+  });
 
-    // test async actions
+  it('should work: getAdminUserDataAsync, action', () => {
+    const user = translators[0];
+    const expectedActions = getAdminUserDataAsyncActions(user);
+    const expectedResponse = {
+      success: true,
+      user
+    };
+
     let expectedStateBeforeRequest = cloneState();
     Object.assign(expectedStateBeforeRequest.admin.editUser, {
       id: user.id,
-      dataSource: getEditableUserDataObject(expectedSuccessResponse.user)
+      dataSource: getEditableUserDataObject(user)
     });
     let store = mockStore(expectedStateBeforeRequest);
 
     nock('http://localhost')
       .get('/api/users/' + user.id)
-      .reply(200, expectedSuccessResponse);
+      .reply(200, expectedResponse);
 
     return store.dispatch(actions.getAdminUserDataAsync(user.id))
-      .then(() => expect(store.getActions()).toEqual(expectedSuccessActions));
+      .then(() => expect(store.getActions()).toEqual(expectedActions));
   });
 
   it('should handle error correctly: function getAdminUserDataAsync', () => {
