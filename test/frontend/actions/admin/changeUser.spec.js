@@ -161,8 +161,8 @@ describe('admin/changeUser actions', () => {
 
     const testChangeAdminUserData = (obj) => {
       const user = translators[0];
-      const property = Object.keys(obj)[0];
-      const value = obj[property];
+      const key = Object.keys(obj)[0];
+      const value = obj[key];
       let _initialState = cloneState();
       Object.assign(_initialState.admin.editUser, {
         data: getEditableUserDataObject(user),
@@ -170,18 +170,18 @@ describe('admin/changeUser actions', () => {
       });
       let expectedState = cloneState(_initialState);
       Object.assign(expectedState.admin.editUser.data, {
-        [property]: value
+        [key]: value
       });
       let store = mockStore(_initialState);
       const expectedAction = {
         type: types.CHANGE_ADMIN_USER_DATA,
         payload: expectedState.admin.editUser.data
       };
-      it('should change ${property}, reducer', () =>
+      it(`should change ${key}, reducer`, () =>
         // test types.CHANGE_ADMIN_USER_DATA
         expect(reducer(_initialState, expectedAction)).toEqual(expectedState)
       );
-      it('should change ${property}, action', () => {
+      it(`should change ${key}, action`, () => {
         store.dispatch(actions.changeAdminUserData(obj));
         expect(store.getActions()[0]).toEqual(expectedAction);
       });
