@@ -26,7 +26,7 @@ describe('admin/changeUserPassword actions', () => {
   });
 
   it('should return the initial state', () => {
-    expect(reducer(undefined, {})).toEqual(initialState);
+    expect(reducer()).toEqual(initialState);
   });
 
   it('should work correctly: function setUserId', () => {

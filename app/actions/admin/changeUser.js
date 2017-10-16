@@ -9,7 +9,7 @@ import {
   CHANGE_ADMIN_USER_DATA
 } from '../_constants'
 
-const getEditableUserDataObject = (user) => ({
+export const getEditableUserDataObject = (user) => ({
   name: user.name,
   language: user.language,
   description: user.description

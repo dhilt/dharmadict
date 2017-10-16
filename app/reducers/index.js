@@ -43,7 +43,7 @@ import {
 
 import initialState from './_initial'
 
-function reducer(state = initialState, action) {
+function reducer(state = initialState, action = {}) {
   switch (action.type) {
     case GET_COMMON_DATA_START:
       return {...state,

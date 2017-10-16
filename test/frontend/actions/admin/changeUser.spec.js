@@ -9,16 +9,10 @@ const actions = require('../../../../app/actions/admin/changeUser');
 const types = require('../../../../app/actions/_constants');
 const reducer = require('../../../../app/reducers').default;
 const initialState = require('../../../../app/reducers/_initial').default;
+const {getEditableUserDataObject} = require('../../../../app/actions/admin/changeUser');
 
 let middlewares = [thunk];
 let mockStore = configureMockStore(middlewares);
-
-/* from actions/admin/changeUser.js */
-const getEditableUserDataObject = (user) => ({
-  name: user.name,
-  language: user.language,
-  description: user.description
-});
 
 describe('admin/changeUser actions', () => {
   beforeEach(() => {
@@ -33,7 +27,7 @@ describe('admin/changeUser actions', () => {
   });
 
   it('should return the initial state', () => {
-    expect(reducer(undefined, {})).toEqual(initialState);
+    expect(reducer()).toEqual(initialState);
   });
 
   it('should work correctly: function getAdminUserDataAsync', () => {
@@ -54,42 +48,48 @@ describe('admin/changeUser actions', () => {
 
     // test types.GET_ADMIN_USER_DATA_START
     let expectedState = JSON.parse(JSON.stringify(initialState));
-    expectedState.admin.editUser.sourcePending = true;
-    expectedState.admin.editUser.error = null;
+    Object.assign(expectedState.admin.editUser, {
+      sourcePending: true,
+      error: null
+    });
     expect(reducer(initialState, expectedSuccessActions[0])).toEqual(expectedState);
 
     // test types.GET_ADMIN_USER_DATA_END
     expectedState = JSON.parse(JSON.stringify(initialState));
-    expectedState.admin.editUser.error = null;
-    expectedState.admin.editUser.id = user.id;
-    expectedState.admin.editUser.sourcePending = false;
-    expectedState.admin.editUser.data = getEditableUserDataObject(expectedSuccessResponse.user);
-    expectedState.admin.editUser.dataSource = getEditableUserDataObject(expectedSuccessResponse.user);
+    Object.assign(expectedState.admin.editUser, {
+      error: null,
+      id: user.id,
+      sourcePending: false,
+      data: getEditableUserDataObject(expectedSuccessResponse.user),
+      dataSource: getEditableUserDataObject(expectedSuccessResponse.user)
+    });
     expect(reducer(initialState, expectedSuccessActions[1])).toEqual(expectedState);
 
     // test async actions
     let expectedStateBeforeRequest = JSON.parse(JSON.stringify(initialState));
-    expectedStateBeforeRequest.admin.editUser.id = user.id;
-    expectedStateBeforeRequest.admin.editUser.dataSource = getEditableUserDataObject(user);
+    Object.assign(expectedStateBeforeRequest.admin.editUser, {
+      id: user.id,
+      dataSource: getEditableUserDataObject(expectedSuccessResponse.user)
+    });
     let store = mockStore(expectedStateBeforeRequest);
 
     nock('http://localhost')
       .get('/api/users/' + user.id)
       .reply(200, expectedSuccessResponse);
 
-    return store.dispatch(actions.getAdminUserDataAsync(user.id)).then(() => {
-      expect(store.getActions()).toEqual(expectedSuccessActions);
-    });
+    return store.dispatch(actions.getAdminUserDataAsync(user.id))
+      .then(() => expect(store.getActions()).toEqual(expectedSuccessActions));
   });
 
   it('should handle error correctly: function getAdminUserDataAsync', () => {
     const user = translators[0];
     let expectedStateBeforeRequest = JSON.parse(JSON.stringify(initialState));
-    expectedStateBeforeRequest.admin.editUser.id = user.id;
-    expectedStateBeforeRequest.admin.editUser.dataSource = getEditableUserDataObject(user);
-    expectedStateBeforeRequest.admin.editUser.data = getEditableUserDataObject(user);
-    expectedStateBeforeRequest.admin.editUser.data.description = 'New description!';
-    // function should take data about user from own redux-store
+    Object.assign(expectedStateBeforeRequest.admin.editUser, {
+      id: user.id,
+      dataSource: getEditableUserDataObject(user),
+      // function should take data about user from own redux-store
+      data: Object.assign(getEditableUserDataObject(user), {description: 'New description'})
+    });
     let store = mockStore(expectedStateBeforeRequest);
 
     const expectedErrorResponse = {
@@ -120,90 +120,76 @@ describe('admin/changeUser actions', () => {
 
     // test types.GET_ADMIN_USER_DATA_START
     let expectedState = JSON.parse(JSON.stringify(initialState));
-    expectedState.admin.editUser.sourcePending = true;
-    expectedState.admin.editUser.error = null;
+    Object.assign(expectedState.admin.editUser, {
+      sourcePending: true,
+      error: null
+    });
     expect(reducer(initialState, expectedErrorActions[0])).toEqual(expectedState);
 
     // test types.GET_ADMIN_USER_DATA_END
     expectedState = JSON.parse(JSON.stringify(initialState));
-    expectedState.admin.editUser.error = expectedErrorResponse;
-    expectedState.admin.editUser.id = user.id;
-    expectedState.admin.editUser.sourcePending = false;
-    expectedState.admin.editUser.data = getEditableUserDataObject(user);
-    expectedState.admin.editUser.dataSource = getEditableUserDataObject(user);
-    expect(reducer(initialState, expectedErrorActions[1])).toEqual(expectedState);
+    Object.assign(expectedState.admin.editUser, {
+      error: expectedErrorResponse,
+      id: user.id,
+      sourcePending: false,
+      data: getEditableUserDataObject(user),
+      dataSource: getEditableUserDataObject(user)
+    });
+    expect(reducer(expectedStateBeforeRequest, expectedErrorActions[1])).toEqual(expectedState);
 
     // test async actions
     nock('http://localhost')
       .get('/api/users/' + user.id)
       .reply(200, expectedErrorResponse);
 
-    return store.dispatch(actions.getAdminUserDataAsync(user.id)).then(() => {
-      expect(store.getActions()).toEqual(expectedErrorActions);
-    });
+    return store.dispatch(actions.getAdminUserDataAsync(user.id))
+      .then(() => expect(store.getActions()).toEqual(expectedErrorActions));
   });
 
-  it('should work correctly: function changeAdminUserData', () => {
+  const testChangeAdminUserData = (obj) => {
     const user = translators[0];
-    const new_name = 'new name of user';
-    const new_language = 'en';  // The correctness of the language selection is checked on the server
-    const new_description = 'new description of user';
-
+    const property = Object.keys(obj)[0];
+    const value = obj[property];
     let _initialState = JSON.parse(JSON.stringify(initialState));
-    let expectedPayload = getEditableUserDataObject(user);
-    _initialState.admin.editUser.dataSource = getEditableUserDataObject(user);
-    _initialState.admin.editUser.data = getEditableUserDataObject(user);
+    Object.assign(_initialState.admin.editUser, {
+      data: getEditableUserDataObject(user),
+      dataSource: getEditableUserDataObject(user)
+    });
     let expectedState = JSON.parse(JSON.stringify(_initialState));
+    Object.assign(expectedState.admin.editUser.data, {
+      [property]: value
+    });
     let store = mockStore(_initialState);
-
-    // test types.CHANGE_ADMIN_USER_DATA with property - name
-    expectedPayload.name = new_name;
-    let expectedAction = {
+    const expectedAction = {
       type: types.CHANGE_ADMIN_USER_DATA,
-      payload: expectedPayload,
+      payload: expectedState.admin.editUser.data
     };
-    expectedState.admin.editUser.data.name = new_name;
+
+    // test types.CHANGE_ADMIN_USER_DATA
     expect(reducer(_initialState, expectedAction)).toEqual(expectedState);
     // test action
-    store.dispatch(actions.changeAdminUserData({name: new_name}));
+    store.dispatch(actions.changeAdminUserData(obj));
     expect(store.getActions()[0]).toEqual(expectedAction);
-    store = mockStore(expectedState);
+  };
 
-    // test types.CHANGE_ADMIN_USER_DATA with property - description
-    expectedPayload.description = new_description;
-    expectedAction = {
-      type: types.CHANGE_ADMIN_USER_DATA,
-      payload: expectedPayload
-    };
-    expectedState.admin.editUser.data.description = new_description;
-    expect(reducer(_initialState, expectedAction)).toEqual(expectedState);
-    // test action
-    store.dispatch(actions.changeAdminUserData({description: new_description}));
-    expect(store.getActions()[0]).toEqual(expectedAction);
-    store = mockStore(expectedState);
+  it('should change name correctly: function changeAdminUserData', () =>
+    testChangeAdminUserData({name: 'new name of user/translator'})
+  );
 
-    // test types.CHANGE_ADMIN_USER_DATA with property - language
-    expectedPayload.language = new_language;
-    expectedAction = {
-      type: types.CHANGE_ADMIN_USER_DATA,
-      payload: expectedPayload
-    };
-    expectedState.admin.editUser.data.language = new_language;
-    expect(reducer(_initialState, expectedAction)).toEqual(expectedState);
-    // test action
-    store.dispatch(actions.changeAdminUserData({language: new_language}));
-    expect(store.getActions()[0]).toEqual(expectedAction);
-    store = mockStore(expectedState);
-  });
+  it('should change language correctly: function changeAdminUserData', () =>
+    testChangeAdminUserData({language: 'new language of user/translator'})
+  );
+
+  it('should change description correctly: function changeAdminUserData', () =>
+    testChangeAdminUserData({description: 'new description of user/translator'})
+  );
 
   it('should work correctly: function updateAdminUserDataAsync', () => {
     const user = translators[0];
     const expectedSuccessResponse = {
       success: true,
-      user: {
-        name: 'New name of user/translator',
-        language: user.language,
-        description: user.description
+      user: {...user,
+        name: 'New name of user/translator'
       }
     };
     const expectedSuccessActions = [
@@ -227,22 +213,28 @@ describe('admin/changeUser actions', () => {
     ];
 
     let _initialState = JSON.parse(JSON.stringify(initialState));
-    _initialState.admin.editUser.id = user.id;
-    _initialState.admin.editUser.dataSource = getEditableUserDataObject(user);
-    _initialState.admin.editUser.data = getEditableUserDataObject(user);
-    // below string should be in 'data' and 'dataSource'
-    _initialState.admin.editUser.data.name = expectedSuccessResponse.user.name;
+    Object.assign(_initialState.admin.editUser, {
+      id: user.id,
+      dataSource: getEditableUserDataObject(user),
+      data: getEditableUserDataObject(expectedSuccessResponse.user)
+    });
 
     // test types.UPDATE_ADMIN_USER_DATA_START
     let expectedState = JSON.parse(JSON.stringify(_initialState));
-    expectedState.admin.editUser.pending = true;
+    Object.assign(expectedState.admin.editUser, {
+      pending: true
+    });
     expect(reducer(_initialState, expectedSuccessActions[0])).toEqual(expectedState);
 
     // test types.UPDATE_ADMIN_USER_DATA_END
     expectedState = JSON.parse(JSON.stringify(_initialState));
-    expectedState.admin.editUser.pending = false;
-    expectedState.admin.editUser.error = null;
-    expectedState.admin.editUser.dataSource.name = expectedSuccessResponse.user.name;
+    Object.assign(expectedState.admin.editUser, {
+      pending: false,
+      error: null,
+      dataSource: {...expectedState.admin.editUser.dataSource,
+        name: expectedSuccessResponse.user.name
+      }
+    });
     expect(reducer(_initialState, expectedSuccessActions[1])).toEqual(expectedState);
 
     // test async actions
@@ -264,10 +256,11 @@ describe('admin/changeUser actions', () => {
   it('should handle error correctly: function updateAdminUserDataAsync', () => {
     const user = translators[0];
     let _initialState = JSON.parse(JSON.stringify(initialState));
-    _initialState.admin.editUser.id = user.id;
-    _initialState.admin.editUser.dataSource = getEditableUserDataObject(user);
-    _initialState.admin.editUser.data = getEditableUserDataObject(user);
-    _initialState.admin.editUser.data.name = 'New name of user/translator';
+    Object.assign(_initialState.admin.editUser, {
+      id: user.id,
+      dataSource: getEditableUserDataObject(user),
+      data: Object.assign(getEditableUserDataObject(user), {name: 'New name of user/translator'}),
+    });
     let store = mockStore(_initialState);
 
     const expectedErrorResponse = {
@@ -297,14 +290,18 @@ describe('admin/changeUser actions', () => {
 
     // test types.UPDATE_ADMIN_USER_DATA_START
     let expectedState = JSON.parse(JSON.stringify(_initialState));
-    expectedState.admin.editUser.pending = true;
+    Object.assign(expectedState.admin.editUser, {
+      pending: true
+    });
     expect(reducer(_initialState, expectedErrorActions[0])).toEqual(expectedState);
 
     // test types.UPDATE_ADMIN_USER_DATA_END
     expectedState = JSON.parse(JSON.stringify(_initialState));
-    expectedState.admin.editUser.pending = false;
-    expectedState.admin.editUser.error = expectedErrorResponse;
-    expectedState.admin.editUser.dataSource = store.getState().admin.editUser.dataSource;
+    Object.assign(expectedState.admin.editUser, {
+      pending: false,
+      error: expectedErrorResponse,
+      dataSource: store.getState().admin.editUser.dataSource
+    });
     expect(reducer(_initialState, expectedErrorActions[1])).toEqual(expectedState);
 
     // test async actions
@@ -314,20 +311,23 @@ describe('admin/changeUser actions', () => {
       })
       .reply(200, expectedErrorResponse);
 
-    return store.dispatch(actions.updateAdminUserDataAsync()).then(() => {
-      expect(store.getActions()).toEqual(expectedErrorActions);
-    });
+    return store.dispatch(actions.updateAdminUserDataAsync())
+      .then(() => expect(store.getActions()).toEqual(expectedErrorActions));
   });
 
   it('should work correctly: function resetAdminUserData', () => {
     const user = translators[0];
     let _initialState = JSON.parse(JSON.stringify(initialState));
-    _initialState.admin.editSource = getEditableUserDataObject(user);
-    _initialState.admin.data = getEditableUserDataObject(user);
+    Object.assign(_initialState.admin.editUser, {
+      dataSource: getEditableUserDataObject(user),
+      data: getEditableUserDataObject(user)
+    });
     let expectedState = JSON.parse(JSON.stringify(_initialState));
 
-    _initialState.admin.editUser.data.name = 'New name!';
-    _initialState.admin.editUser.data.description = 'New description';
+    Object.assign(_initialState.admin.editUser.data, {
+      name: 'New name!',
+      description: 'New description'
+    });
     let store = mockStore(_initialState);
 
     // test types.CHANGE_ADMIN_USER_DATA
@@ -336,6 +336,7 @@ describe('admin/changeUser actions', () => {
       payload: store.getState().admin.editUser.dataSource
     };
     expect(reducer(_initialState, expectedAction)).toEqual(expectedState);
+
     // test action
     store.dispatch(actions.resetAdminUserData());
     expect(store.getActions()[0]).toEqual(expectedAction);
