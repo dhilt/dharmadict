@@ -3,7 +3,7 @@ const thunk = require('redux-thunk').default;
 const nock = require('nock');
 const expect = require('expect');
 
-const {initialState, cloneInitialState, terms, translators} = require('../_shared.js');
+const {initialState, cloneState, terms, translators} = require('../_shared.js');
 
 const actions = require('../../../app/actions/search');
 const types = require('../../../app/actions/_constants');
@@ -37,7 +37,7 @@ describe('common actions', () => {
     }];
 
     // test reducers
-    let expectedState = cloneInitialState();
+    let expectedState = cloneState();
     expectedState.search.searchString = newSearchString;
     expect(reducer(initialState, expectedAction[0])).toEqual(expectedState);
 

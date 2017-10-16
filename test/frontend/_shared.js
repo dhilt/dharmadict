@@ -402,11 +402,11 @@ const translations = [
 
 ];
 
-const cloneInitialState = (state = initialState) => JSON.parse(JSON.stringify(state));
+const cloneState = (state = initialState) => JSON.parse(JSON.stringify(state));
 
 module.exports = {
   initialState,
-  cloneInitialState,
+  cloneState,
   getNotificationAction,
   translators,
   languages,

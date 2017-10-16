@@ -3,7 +3,7 @@ const thunk = require('redux-thunk').default;
 const nock = require('nock');
 const expect = require('expect');
 
-const {initialState, cloneInitialState, translators, getNotificationAction} = require('../_shared.js');
+const {initialState, cloneState, translators, getNotificationAction} = require('../_shared.js');
 
 const actions = require('../../../app/actions/translators');
 const types = require('../../../app/actions/_constants');
@@ -45,7 +45,7 @@ describe('common actions', () => {
     ];
 
     // test reducers
-    let expectedState = cloneInitialState();
+    let expectedState = cloneState();
     expectedState.translatorInfo.data = expectedSuccessResponse.user;
     expect(reducer(initialState, expectedSuccessActions[1])).toEqual(expectedState);
 
@@ -76,7 +76,7 @@ describe('common actions', () => {
     ];
 
     // test reducers
-    let expectedState = cloneInitialState();
+    let expectedState = cloneState();
     expectedState.translatorInfo.error = expectedErrorActions[1].error;
     expectedState.translatorInfo.data = expectedErrorActions[1].result;
     expect(reducer(initialState, expectedErrorActions[1])).toEqual(expectedState);

@@ -3,7 +3,7 @@ const thunk = require('redux-thunk').default;
 const nock = require('nock');
 const expect = require('expect');
 
-const {translators, initialState, cloneInitialState, getNotificationAction} = require('../../_shared.js');
+const {translators, initialState, cloneState, getNotificationAction} = require('../../_shared.js');
 
 const actions = require('../../../../app/actions/admin/changeUserPassword');
 const types = require('../../../../app/actions/_constants');
@@ -34,7 +34,7 @@ describe('admin/changeUserPassword actions', () => {
       type: types.SET_ADMIN_USER_ID,
       id: userId
     };
-    let expectedState = cloneInitialState();
+    let expectedState = cloneState();
     expectedState.admin.editUserPassword.id = userId;
 
     // test types.SET_ADMIN_USER_ID
@@ -46,7 +46,7 @@ describe('admin/changeUserPassword actions', () => {
   it('should work correctly: function changeAdminUserPassword', () => {
     const password = 'new_password';
     const confirmPassword = 'confirm_password';
-    let _initialState = cloneInitialState();
+    let _initialState = cloneState();
     _initialState.admin.editUserPassword.password = password;
     _initialState.admin.editUserPassword.confirmPassword = confirmPassword;
     let store = mockStore(_initialState);
@@ -62,7 +62,7 @@ describe('admin/changeUserPassword actions', () => {
     };
 
     // test types.CHANGE_ADMIN_USER_PASSWORD with property - password
-    let expectedState = cloneInitialState(_initialState);
+    let expectedState = cloneState(_initialState);
     expectedState.admin.editUserPassword.password = password;
     expect(reducer(initialState, expectedActionWithPassword)).toEqual(expectedState);
 
@@ -85,8 +85,8 @@ describe('admin/changeUserPassword actions', () => {
     };
 
     // test types.CHANGE_ADMIN_USER_PASSWORD
-    let expectedState = cloneInitialState();
-    let _initialState = cloneInitialState();
+    let expectedState = cloneState();
+    let _initialState = cloneState();
     _initialState.admin.editUserPassword.password = 'password';
     _initialState.admin.editUserPassword.confirmPassword = 'password';
     expect(reducer(_initialState, expectedAction)).toEqual(expectedState);
@@ -116,14 +116,14 @@ describe('admin/changeUserPassword actions', () => {
     ];
 
     // test types.UPDATE_ADMIN_USER_PASSWORD_START
-    let expectedState = cloneInitialState();
+    let expectedState = cloneState();
     expectedState.admin.editUserPassword.pending = true;
     expectedState.admin.editUserPassword.error = null;
     expect(reducer(initialState, expectedSuccessActions[0])).toEqual(expectedState);
 
     // test types.UPDATE_ADMIN_USER_PASSWORD_END
-    expectedState = cloneInitialState();
-    let _initialState = cloneInitialState();
+    expectedState = cloneState();
+    let _initialState = cloneState();
     _initialState.admin.editUserPassword.id = userId;
     _initialState.admin.editUserPassword.password = password;
     _initialState.admin.editUserPassword.confirmPassword = confirmPassword;
@@ -135,7 +135,7 @@ describe('admin/changeUserPassword actions', () => {
     expect(reducer(_initialState, expectedSuccessActions[1])).toEqual(expectedState);
 
     // test async actions
-    let expectedStateBeforeRequest = cloneInitialState();
+    let expectedStateBeforeRequest = cloneState();
     expectedStateBeforeRequest.admin.editUserPassword.id = userId;
     expectedStateBeforeRequest.admin.editUserPassword.password = password;
     expectedStateBeforeRequest.admin.editUserPassword.confirmPassword = confirmPassword;
@@ -177,14 +177,14 @@ describe('admin/changeUserPassword actions', () => {
     ];
 
     // test types.UPDATE_ADMIN_USER_PASSWORD_START
-    let expectedState = cloneInitialState();
+    let expectedState = cloneState();
     expectedState.admin.editUserPassword.pending = true;
     expectedState.admin.editUserPassword.error = null;
     expect(reducer(initialState, expectedErrorActions[0])).toEqual(expectedState);
 
     // test types.UPDATE_ADMIN_USER_PASSWORD_END
-    expectedState = cloneInitialState();
-    let _initialState = cloneInitialState();
+    expectedState = cloneState();
+    let _initialState = cloneState();
     _initialState.admin.editUserPassword.id = userId;
     _initialState.admin.editUserPassword.password = password;
     _initialState.admin.editUserPassword.confirmPassword = confirmPassword;
@@ -196,7 +196,7 @@ describe('admin/changeUserPassword actions', () => {
     expect(reducer(_initialState, expectedErrorActions[1])).toEqual(expectedState);
 
     // test async actions
-    let expectedStateBeforeRequest = cloneInitialState();
+    let expectedStateBeforeRequest = cloneState();
     expectedStateBeforeRequest.admin.editUserPassword.id = userId;
     expectedStateBeforeRequest.admin.editUserPassword.password = password;
     expectedStateBeforeRequest.admin.editUserPassword.confirmPassword = confirmPassword;

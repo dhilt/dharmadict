@@ -3,7 +3,7 @@ const thunk = require('redux-thunk').default;
 const nock = require('nock');
 const expect = require('expect');
 
-const {initialState, cloneInitialState, translators, getNotificationAction} = require('../../_shared.js');
+const {initialState, cloneState, translators, getNotificationAction} = require('../../_shared.js');
 
 const actions = require('../../../../app/actions/admin/changeUser');
 const types = require('../../../../app/actions/_constants');
@@ -46,7 +46,7 @@ describe('admin/changeUser actions', () => {
     ];
 
     // test types.GET_ADMIN_USER_DATA_START
-    let expectedState = cloneInitialState();
+    let expectedState = cloneState();
     Object.assign(expectedState.admin.editUser, {
       sourcePending: true,
       error: null
@@ -54,7 +54,7 @@ describe('admin/changeUser actions', () => {
     expect(reducer(initialState, expectedSuccessActions[0])).toEqual(expectedState);
 
     // test types.GET_ADMIN_USER_DATA_END
-    expectedState = cloneInitialState();
+    expectedState = cloneState();
     Object.assign(expectedState.admin.editUser, {
       error: null,
       id: user.id,
@@ -65,7 +65,7 @@ describe('admin/changeUser actions', () => {
     expect(reducer(initialState, expectedSuccessActions[1])).toEqual(expectedState);
 
     // test async actions
-    let expectedStateBeforeRequest = cloneInitialState();
+    let expectedStateBeforeRequest = cloneState();
     Object.assign(expectedStateBeforeRequest.admin.editUser, {
       id: user.id,
       dataSource: getEditableUserDataObject(expectedSuccessResponse.user)
@@ -82,7 +82,7 @@ describe('admin/changeUser actions', () => {
 
   it('should handle error correctly: function getAdminUserDataAsync', () => {
     const user = translators[0];
-    let expectedStateBeforeRequest = cloneInitialState();
+    let expectedStateBeforeRequest = cloneState();
     Object.assign(expectedStateBeforeRequest.admin.editUser, {
       id: user.id,
       dataSource: getEditableUserDataObject(user),
@@ -108,7 +108,7 @@ describe('admin/changeUser actions', () => {
     ];
 
     // test types.GET_ADMIN_USER_DATA_START
-    let expectedState = cloneInitialState();
+    let expectedState = cloneState();
     Object.assign(expectedState.admin.editUser, {
       sourcePending: true,
       error: null
@@ -116,7 +116,7 @@ describe('admin/changeUser actions', () => {
     expect(reducer(initialState, expectedErrorActions[0])).toEqual(expectedState);
 
     // test types.GET_ADMIN_USER_DATA_END
-    expectedState = cloneInitialState();
+    expectedState = cloneState();
     Object.assign(expectedState.admin.editUser, {
       error: expectedErrorResponse,
       id: user.id,
@@ -139,12 +139,12 @@ describe('admin/changeUser actions', () => {
     const user = translators[0];
     const property = Object.keys(obj)[0];
     const value = obj[property];
-    let _initialState = cloneInitialState();
+    let _initialState = cloneState();
     Object.assign(_initialState.admin.editUser, {
       data: getEditableUserDataObject(user),
       dataSource: getEditableUserDataObject(user)
     });
-    let expectedState = cloneInitialState(_initialState);
+    let expectedState = cloneState(_initialState);
     Object.assign(expectedState.admin.editUser.data, {
       [property]: value
     });
@@ -191,7 +191,7 @@ describe('admin/changeUser actions', () => {
       getNotificationAction('EditUser.success', null)
     ];
 
-    let _initialState = cloneInitialState();
+    let _initialState = cloneState();
     Object.assign(_initialState.admin.editUser, {
       id: user.id,
       dataSource: getEditableUserDataObject(user),
@@ -199,14 +199,14 @@ describe('admin/changeUser actions', () => {
     });
 
     // test types.UPDATE_ADMIN_USER_DATA_START
-    let expectedState = cloneInitialState(_initialState);
+    let expectedState = cloneState(_initialState);
     Object.assign(expectedState.admin.editUser, {
       pending: true
     });
     expect(reducer(_initialState, expectedSuccessActions[0])).toEqual(expectedState);
 
     // test types.UPDATE_ADMIN_USER_DATA_END
-    expectedState = cloneInitialState(_initialState);
+    expectedState = cloneState(_initialState);
     Object.assign(expectedState.admin.editUser, {
       pending: false,
       error: null,
@@ -234,7 +234,7 @@ describe('admin/changeUser actions', () => {
 
   it('should handle error correctly: function updateAdminUserDataAsync', () => {
     const user = translators[0];
-    let _initialState = cloneInitialState();
+    let _initialState = cloneState();
     Object.assign(_initialState.admin.editUser, {
       id: user.id,
       dataSource: getEditableUserDataObject(user),
@@ -258,14 +258,14 @@ describe('admin/changeUser actions', () => {
     ];
 
     // test types.UPDATE_ADMIN_USER_DATA_START
-    let expectedState = cloneInitialState(_initialState);
+    let expectedState = cloneState(_initialState);
     Object.assign(expectedState.admin.editUser, {
       pending: true
     });
     expect(reducer(_initialState, expectedErrorActions[0])).toEqual(expectedState);
 
     // test types.UPDATE_ADMIN_USER_DATA_END
-    expectedState = cloneInitialState(_initialState);
+    expectedState = cloneState(_initialState);
     Object.assign(expectedState.admin.editUser, {
       pending: false,
       error: expectedErrorResponse,
@@ -286,12 +286,12 @@ describe('admin/changeUser actions', () => {
 
   it('should work correctly: function resetAdminUserData', () => {
     const user = translators[0];
-    let _initialState = cloneInitialState();
+    let _initialState = cloneState();
     Object.assign(_initialState.admin.editUser, {
       dataSource: getEditableUserDataObject(user),
       data: getEditableUserDataObject(user)
     });
-    let expectedState = cloneInitialState(_initialState);
+    let expectedState = cloneState(_initialState);
 
     Object.assign(_initialState.admin.editUser.data, {
       name: 'New name!',
