@@ -233,8 +233,7 @@ describe('admin/changeUserPassword actions', () => {
       })
       .reply(200, expectedErrorResponse);
 
-    return store.dispatch(actions.updateAdminUserPasswordAsync()).then(() => {
-      expect(store.getActions()).toEqual(expectedErrorActions);
-    });
+    return store.dispatch(actions.updateAdminUserPasswordAsync())
+      .then(() => expect(store.getActions()).toEqual(expectedErrorActions));
   });
 })

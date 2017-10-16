@@ -56,9 +56,8 @@ describe('common actions', () => {
     nock('http://localhost')
       .get('/api/users/' + userId)
       .reply(200, expectedSuccessResponse);
-    return store.dispatch(actions.getTranslatorInfoAsync(userId)).then(() => {
-      expect(store.getActions()).toEqual(expectedSuccessActions)
-    });
+    return store.dispatch(actions.getTranslatorInfoAsync(userId))
+      .then(() => expect(store.getActions()).toEqual(expectedSuccessActions));
   });
 
   it('should not get translator info async', () => {
@@ -99,8 +98,7 @@ describe('common actions', () => {
     nock('http://localhost')
       .get('/api/users/' + userId)
       .reply(200, expectedErrorResponse);
-    return store.dispatch(actions.getTranslatorInfoAsync(userId)).then(() => {
-      expect(store.getActions()).toEqual(expectedErrorActions)
-    });
+    return store.dispatch(actions.getTranslatorInfoAsync(userId))
+      .then(() => expect(store.getActions()).toEqual(expectedErrorActions));
   });
 })

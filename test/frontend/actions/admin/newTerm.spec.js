@@ -198,8 +198,7 @@ describe('admin/newTerm actions', () => {
       })
       .reply(200, expectedErrorResponse);
 
-    return store.dispatch(actions.saveTermAsync()).then(() => {
-      expect(store.getActions()).toEqual(expectedErrorActions);
-    });
+    return store.dispatch(actions.saveTermAsync())
+      .then(() => expect(store.getActions()).toEqual(expectedErrorActions));
   });
 })

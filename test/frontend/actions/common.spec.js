@@ -60,9 +60,8 @@ describe('common actions', () => {
       .reply((uri, requestBody, cb) => {
         cb(null, [200, expectedSuccessResponse])
       });
-    return store.dispatch(actions.getCommonDataAsync()).then(() => {
-      expect(store.getActions()).toEqual(expectedSuccessActions)
-    });
+    return store.dispatch(actions.getCommonDataAsync())
+      .then(() => expect(store.getActions()).toEqual(expectedSuccessActions));
   });
 
   it('should not get common data async', () => {
