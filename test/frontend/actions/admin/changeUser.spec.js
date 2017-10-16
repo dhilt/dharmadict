@@ -173,6 +173,16 @@ describe('admin/changeUser actions', () => {
     testChangeAdminUserData({description: 'new description of user/translator'})
   );
 
+  const changedStateName = (user, name) => {
+    let _initialState = cloneState();
+    Object.assign(_initialState.admin.editUser, {
+      id: user.id,
+      dataSource: getEditableUserDataObject(user),
+      data: Object.assign(getEditableUserDataObject(user), {name})
+    });
+    return _initialState
+  };
+
   it('should work correctly: function updateAdminUserDataAsync', () => {
     const user = translators[0];
     const expectedSuccessResponse = {
@@ -191,12 +201,7 @@ describe('admin/changeUser actions', () => {
       getNotificationAction('EditUser.success', null)
     ];
 
-    let _initialState = cloneState();
-    Object.assign(_initialState.admin.editUser, {
-      id: user.id,
-      dataSource: getEditableUserDataObject(user),
-      data: getEditableUserDataObject(expectedSuccessResponse.user)
-    });
+    let _initialState = changedStateName(user, expectedSuccessResponse.user.name);
 
     // test types.UPDATE_ADMIN_USER_DATA_START
     let expectedState = cloneState(_initialState);
@@ -234,12 +239,7 @@ describe('admin/changeUser actions', () => {
 
   it('should handle error correctly: function updateAdminUserDataAsync', () => {
     const user = translators[0];
-    let _initialState = cloneState();
-    Object.assign(_initialState.admin.editUser, {
-      id: user.id,
-      dataSource: getEditableUserDataObject(user),
-      data: Object.assign(getEditableUserDataObject(user), {name: 'New name of user/translator'}),
-    });
+    let _initialState = changedStateName(user, 'New name');
     let store = mockStore(_initialState);
 
     const expectedErrorResponse = {
