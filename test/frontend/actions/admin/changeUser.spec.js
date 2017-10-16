@@ -35,6 +35,16 @@ describe('admin/changeUser actions', () => {
     const user = translators[0];
     let changedUser = user;
     changedUser.name = 'Name of user was changed...';
+    const createInitialState = () => {
+      let _initialState = cloneState();
+      Object.assign(_initialState.admin.editUser, {
+        id: user.id,
+        data: getEditableUserDataObject(user),
+        dataSource: getEditableUserDataObject(user)
+      });
+      return _initialState
+    };
+
     const expectedSuccessResponse = {
       success: true,
       user: changedUser
@@ -79,12 +89,7 @@ describe('admin/changeUser actions', () => {
     it('should work, action', () => {
       const expectedActions = expectedSuccessActions();
 
-      let expectedStateBeforeRequest = cloneState();
-      Object.assign(expectedStateBeforeRequest.admin.editUser, {
-        id: user.id,
-        data: getEditableUserDataObject(user),
-        dataSource: getEditableUserDataObject(user)
-      });
+      let expectedStateBeforeRequest = createInitialState();
       let store = mockStore(expectedStateBeforeRequest);
 
       nock('http://localhost')
@@ -139,12 +144,7 @@ describe('admin/changeUser actions', () => {
     });
 
     it('should handle error, action', () => {
-      let expectedStateBeforeRequest = cloneState();
-      Object.assign(expectedStateBeforeRequest.admin.editUser, {
-        id: user.id,
-        data: getEditableUserDataObject(changedUser),
-        dataSource: getEditableUserDataObject(user)
-      });
+      let expectedStateBeforeRequest = createInitialState();
       let store = mockStore(expectedStateBeforeRequest);
 
       nock('http://localhost')
