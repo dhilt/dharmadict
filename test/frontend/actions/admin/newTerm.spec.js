@@ -3,7 +3,7 @@ const thunk = require('redux-thunk').default;
 const nock = require('nock');
 const expect = require('expect');
 
-const {translators} = require('../../_shared.js');
+const {translators, getNotificationAction} = require('../../_shared.js');
 const initialState = require('../../_shared.js').initialState.get();
 const cloneInitialState = require('../../_shared.js').initialState.clone;
 
@@ -98,17 +98,7 @@ describe('admin/newTerm actions', () => {
         error: null,
         termId: expectedSuccessResponse.term.id
       },
-      {
-        type: types.CREATE_NOTIFICATION,
-        idLast: 1,
-        notification: {
-          id: 1,
-          text: 'NewTerm.alert_success',
-          ttl: 3000,
-          type: 'success',
-          values: {termId: expectedSuccessResponse.term.id}
-        },
-      }
+      getNotificationAction('NewTerm.alert_success', null, {termId: expectedSuccessResponse.term.id})
     ];
 
     // test types.ADD_TERM_START
@@ -159,17 +149,7 @@ describe('admin/newTerm actions', () => {
         termId: null,
         error: expectedErrorResponse
       },
-      {
-        idLast: 1,
-        notification: {
-          id: 1,
-          text: expectedErrorResponse.message,
-          ttl: -1,
-          type: 'danger',
-          values: {}
-        },
-        type: types.CREATE_NOTIFICATION
-      }
+      getNotificationAction(null, expectedErrorResponse.message)
     ];
 
     // test types.ADD_TERM_START

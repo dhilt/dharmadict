@@ -3,7 +3,7 @@ const thunk = require('redux-thunk').default;
 const nock = require('nock');
 const expect = require('expect');
 
-const {translators} = require('../../_shared.js');
+const {translators, getNotificationAction} = require('../../_shared.js');
 const initialState = require('../../_shared.js').initialState.get();
 const cloneInitialState = require('../../_shared.js').initialState.clone;
 
@@ -114,17 +114,7 @@ describe('admin/changeUserPassword actions', () => {
         error: null,
         result: true
       },
-      {
-        type: types.CREATE_NOTIFICATION,
-        idLast: 1,
-        notification: {
-          id: 1,
-          text: 'EditUserPassword.new_password_success',
-          ttl: 3000,
-          type: 'success',
-          values: {}
-        }
-      }
+      getNotificationAction('EditUserPassword.new_password_success', null)
     ];
 
     // test types.UPDATE_ADMIN_USER_PASSWORD_START
@@ -185,17 +175,7 @@ describe('admin/changeUserPassword actions', () => {
         error: expectedErrorResponse,
         result: false
       },
-      {
-        type: types.CREATE_NOTIFICATION,
-        idLast: 1,
-        notification: {
-          id: 1,
-          text: 'Can\'t update user data. Database error',
-          ttl: -1,
-          type: 'danger',
-          values: {}
-        }
-      }
+      getNotificationAction(null, expectedErrorResponse)
     ];
 
     // test types.UPDATE_ADMIN_USER_PASSWORD_START

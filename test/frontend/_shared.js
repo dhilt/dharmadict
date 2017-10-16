@@ -4,6 +4,19 @@ global.window.localStorage = {};
 const initialState = require('../../app/reducers/_initial').default;
 const auth = require('../../app/helpers/auth').default;
 const lang = require('../../app/helpers/lang').default;
+const notifier = require('../../app/helpers/notifier').default;
+
+const configureMockStore = require('redux-mock-store').default;
+const thunk = require('redux-thunk').default;
+let middlewares = [thunk];
+let mockStore = configureMockStore(middlewares);
+
+const getNotificationAction = (successMessage, error, values = {}) => {
+  const store = mockStore(initialState);
+  store.dispatch(notifier.onResponse(successMessage, error, values));
+  delete store.getActions()[0].notification.timer;
+  return store.getActions()[0]
+};
 
 const translators = [{
   id: 'ZAG',
@@ -396,6 +409,7 @@ const _initialState = {
 
 module.exports = {
   initialState: _initialState,
+  getNotificationAction,
   translators,
   languages,
   users,

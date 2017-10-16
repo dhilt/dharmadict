@@ -3,7 +3,7 @@ const thunk = require('redux-thunk').default;
 const nock = require('nock');
 const expect = require('expect');
 
-const {translators} = require('../_shared.js');
+const {translators, getNotificationAction} = require('../_shared.js');
 const initialState = require('../_shared.js').initialState.get();
 const cloneInitialState = require('../_shared.js').initialState.clone;
 
@@ -74,17 +74,7 @@ describe('common actions', () => {
         error: expectedErrorResponse,
         result: null
       },
-      {
-        type: types.CREATE_NOTIFICATION,
-        idLast: 1,
-        notification: {
-          id: 1,
-          text: 'TranslatorPage.request_error',
-          ttl: -1,
-          type: 'danger',
-          values: {}
-        }
-      }
+      getNotificationAction(null, 'TranslatorPage.request_error')
     ];
 
     // test reducers
@@ -98,6 +88,7 @@ describe('common actions', () => {
     nock('http://localhost')
       .get('/api/users/' + userId)
       .reply(200, expectedErrorResponse);
+
     return store.dispatch(actions.getTranslatorInfoAsync(userId))
       .then(() => expect(store.getActions()).toEqual(expectedErrorActions));
   });

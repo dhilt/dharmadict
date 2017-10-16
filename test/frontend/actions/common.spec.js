@@ -3,7 +3,7 @@ const thunk = require('redux-thunk').default;
 const nock = require('nock');
 const expect = require('expect');
 
-const {languages, translators} = require('../_shared.js');
+const {languages, translators, getNotificationAction} = require('../_shared.js');
 const initialState = require('../_shared.js').initialState.get();
 const cloneInitialState = require('../_shared.js').initialState.clone;
 
@@ -77,17 +77,7 @@ describe('common actions', () => {
         translators: [],
         languages: []
       },
-      {
-        type: types.CREATE_NOTIFICATION,
-        idLast: 1,
-        notification: {
-          id: 1,
-          text: 'App.get_languages_error',
-          ttl: -1,
-          type: 'danger',
-          values: {}
-        }
-      }
+      getNotificationAction(null, 'App.get_languages_error')
     ];
 
     // test reducers

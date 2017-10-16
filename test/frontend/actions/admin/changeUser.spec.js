@@ -3,7 +3,7 @@ const thunk = require('redux-thunk').default;
 const nock = require('nock');
 const expect = require('expect');
 
-const {translators} = require('../../_shared.js');
+const {translators, getNotificationAction} = require('../../_shared.js');
 const initialState = require('../../_shared.js').initialState.get();
 const cloneInitialState = require('../../_shared.js').initialState.clone;
 
@@ -106,17 +106,7 @@ describe('admin/changeUser actions', () => {
         data: store.getState().admin.editUser.dataSource,
         id: store.getState().admin.editUser.id
       },
-      {
-        type: types.CREATE_NOTIFICATION,
-        idLast: 1,
-        notification: {
-          id: 1,
-          text: expectedErrorResponse.message,
-          ttl: -1,
-          type: 'danger',
-          values: {}
-        }
-      }
+      getNotificationAction(null, expectedErrorResponse)
     ];
 
     // test types.GET_ADMIN_USER_DATA_START
@@ -200,17 +190,7 @@ describe('admin/changeUser actions', () => {
         error: null,
         data: getEditableUserDataObject(expectedSuccessResponse.user)
       },
-      {
-        type: types.CREATE_NOTIFICATION,
-        idLast: 1,
-        notification: {
-          id: 1,
-          text: 'EditUser.success',
-          ttl: 3000,
-          type: 'success',
-          values: {}
-        }
-      }
+      getNotificationAction('EditUser.success', null)
     ];
 
     let _initialState = cloneInitialState();
@@ -276,17 +256,7 @@ describe('admin/changeUser actions', () => {
         error: expectedErrorResponse,
         data: store.getState().admin.editUser.dataSource
       },
-      {
-        type: types.CREATE_NOTIFICATION,
-        idLast: 1,
-        notification: {
-          id: 1,
-          text: expectedErrorResponse.message,
-          ttl: -1,
-          type: 'danger',
-          values: {}
-        }
-      }
+      getNotificationAction(null, expectedErrorResponse)
     ];
 
     // test types.UPDATE_ADMIN_USER_DATA_START
