@@ -4,11 +4,12 @@ const nock = require('nock');
 const expect = require('expect');
 
 const {translators} = require('../../_shared.js');
+const initialState = require('../../_shared.js').initialState.get();
+const cloneInitialState = require('../../_shared.js').initialState.clone;
 
 const actions = require('../../../../app/actions/admin/changeUserPassword');
 const types = require('../../../../app/actions/_constants');
 const reducer = require('../../../../app/reducers').default;
-const initialState = require('../../../../app/reducers/_initial').default;
 
 let middlewares = [thunk];
 let mockStore = configureMockStore(middlewares);
@@ -35,7 +36,7 @@ describe('admin/changeUserPassword actions', () => {
       type: types.SET_ADMIN_USER_ID,
       id: userId
     };
-    let expectedState = JSON.parse(JSON.stringify(initialState));
+    let expectedState = cloneInitialState();
     expectedState.admin.editUserPassword.id = userId;
 
     // test types.SET_ADMIN_USER_ID
@@ -47,7 +48,7 @@ describe('admin/changeUserPassword actions', () => {
   it('should work correctly: function changeAdminUserPassword', () => {
     const password = 'new_password';
     const confirmPassword = 'confirm_password';
-    let _initialState = JSON.parse(JSON.stringify(initialState));
+    let _initialState = cloneInitialState();
     _initialState.admin.editUserPassword.password = password;
     _initialState.admin.editUserPassword.confirmPassword = confirmPassword;
     let store = mockStore(_initialState);
@@ -63,7 +64,7 @@ describe('admin/changeUserPassword actions', () => {
     };
 
     // test types.CHANGE_ADMIN_USER_PASSWORD with property - password
-    let expectedState = JSON.parse(JSON.stringify(_initialState));
+    let expectedState = cloneInitialState(_initialState);
     expectedState.admin.editUserPassword.password = password;
     expect(reducer(initialState, expectedActionWithPassword)).toEqual(expectedState);
 
@@ -86,8 +87,8 @@ describe('admin/changeUserPassword actions', () => {
     };
 
     // test types.CHANGE_ADMIN_USER_PASSWORD
-    let expectedState = JSON.parse(JSON.stringify(initialState));
-    let _initialState = JSON.parse(JSON.stringify(initialState));
+    let expectedState = cloneInitialState();
+    let _initialState = cloneInitialState();
     _initialState.admin.editUserPassword.password = 'password';
     _initialState.admin.editUserPassword.confirmPassword = 'password';
     expect(reducer(_initialState, expectedAction)).toEqual(expectedState);
@@ -127,14 +128,14 @@ describe('admin/changeUserPassword actions', () => {
     ];
 
     // test types.UPDATE_ADMIN_USER_PASSWORD_START
-    let expectedState = JSON.parse(JSON.stringify(initialState));
+    let expectedState = cloneInitialState();
     expectedState.admin.editUserPassword.pending = true;
     expectedState.admin.editUserPassword.error = null;
     expect(reducer(initialState, expectedSuccessActions[0])).toEqual(expectedState);
 
     // test types.UPDATE_ADMIN_USER_PASSWORD_END
-    expectedState = JSON.parse(JSON.stringify(initialState));
-    let _initialState = JSON.parse(JSON.stringify(initialState));
+    expectedState = cloneInitialState();
+    let _initialState = cloneInitialState();
     _initialState.admin.editUserPassword.id = userId;
     _initialState.admin.editUserPassword.password = password;
     _initialState.admin.editUserPassword.confirmPassword = confirmPassword;
@@ -146,7 +147,7 @@ describe('admin/changeUserPassword actions', () => {
     expect(reducer(_initialState, expectedSuccessActions[1])).toEqual(expectedState);
 
     // test async actions
-    let expectedStateBeforeRequest = JSON.parse(JSON.stringify(initialState));
+    let expectedStateBeforeRequest = cloneInitialState();
     expectedStateBeforeRequest.admin.editUserPassword.id = userId;
     expectedStateBeforeRequest.admin.editUserPassword.password = password;
     expectedStateBeforeRequest.admin.editUserPassword.confirmPassword = confirmPassword;
@@ -198,14 +199,14 @@ describe('admin/changeUserPassword actions', () => {
     ];
 
     // test types.UPDATE_ADMIN_USER_PASSWORD_START
-    let expectedState = JSON.parse(JSON.stringify(initialState));
+    let expectedState = cloneInitialState();
     expectedState.admin.editUserPassword.pending = true;
     expectedState.admin.editUserPassword.error = null;
     expect(reducer(initialState, expectedErrorActions[0])).toEqual(expectedState);
 
     // test types.UPDATE_ADMIN_USER_PASSWORD_END
-    expectedState = JSON.parse(JSON.stringify(initialState));
-    let _initialState = JSON.parse(JSON.stringify(initialState));
+    expectedState = cloneInitialState();
+    let _initialState = cloneInitialState();
     _initialState.admin.editUserPassword.id = userId;
     _initialState.admin.editUserPassword.password = password;
     _initialState.admin.editUserPassword.confirmPassword = confirmPassword;
@@ -217,7 +218,7 @@ describe('admin/changeUserPassword actions', () => {
     expect(reducer(_initialState, expectedErrorActions[1])).toEqual(expectedState);
 
     // test async actions
-    let expectedStateBeforeRequest = JSON.parse(JSON.stringify(initialState));
+    let expectedStateBeforeRequest = cloneInitialState();
     expectedStateBeforeRequest.admin.editUserPassword.id = userId;
     expectedStateBeforeRequest.admin.editUserPassword.password = password;
     expectedStateBeforeRequest.admin.editUserPassword.confirmPassword = confirmPassword;

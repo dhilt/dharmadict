@@ -4,11 +4,12 @@ const nock = require('nock');
 const expect = require('expect');
 
 const {languages, translators} = require('../_shared.js');
+const initialState = require('../_shared.js').initialState.get();
+const cloneInitialState = require('../_shared.js').initialState.clone;
 
 const actions = require('../../../app/actions/common');
 const types = require('../../../app/actions/_constants');
 const reducer = require('../../../app/reducers').default;
-const initialState = require('../../../app/reducers/_initial').default;
 const lang = require('../../../app/helpers/lang').default;
 
 let middlewares = [thunk];
@@ -46,7 +47,7 @@ describe('common actions', () => {
     ];
 
     // test reducers
-    let expectedState = JSON.parse(JSON.stringify(initialState));
+    let expectedState = cloneInitialState();
     expectedState.common.languages = expectedSuccessActions[1].languages;
     expectedState.common.translators = expectedSuccessActions[1].translators;
     expect(reducer(initialState, expectedSuccessActions[1])).toEqual(expectedState);
@@ -91,7 +92,7 @@ describe('common actions', () => {
     ];
 
     // test reducers
-    let expectedState = JSON.parse(JSON.stringify(initialState));
+    let expectedState = cloneInitialState();
     expectedState.common.languages = expectedErrorActions[1].languages;
     expectedState.common.translators = expectedErrorActions[1].translators;
     expect(reducer(initialState, expectedErrorActions[1])).toEqual(expectedState);
@@ -115,7 +116,7 @@ describe('common actions', () => {
     }];
 
     // test reducers
-    let expectedState = JSON.parse(JSON.stringify(initialState));
+    let expectedState = cloneInitialState();
     expectedState.common.userLanguage = expectedAction[0].language;
     expect(reducer(initialState, expectedAction)).toEqual(expectedState);
 
@@ -134,7 +135,7 @@ describe('common actions', () => {
     }];
 
     // test reducers
-    let expectedState = JSON.parse(JSON.stringify(initialState));
+    let expectedState = cloneInitialState();
     expectedState.common.userLanguage = expectedAction[0].language;
     expect(reducer(initialState, expectedAction[0])).toEqual(expectedState);
 
@@ -153,7 +154,7 @@ describe('common actions', () => {
     }];
 
     // test reducers
-    let expectedState = JSON.parse(JSON.stringify(initialState));
+    let expectedState = cloneInitialState();
     expectedState.common.userLanguage = expectedAction[0].language;
     expect(reducer(initialState, expectedAction[0])).toEqual(expectedState);
 

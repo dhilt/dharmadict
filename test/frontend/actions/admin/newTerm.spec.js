@@ -4,11 +4,12 @@ const nock = require('nock');
 const expect = require('expect');
 
 const {translators} = require('../../_shared.js');
+const initialState = require('../../_shared.js').initialState.get();
+const cloneInitialState = require('../../_shared.js').initialState.clone;
 
 const actions = require('../../../../app/actions/admin/newTerm');
 const types = require('../../../../app/actions/_constants');
 const reducer = require('../../../../app/reducers').default;
-const initialState = require('../../../../app/reducers/_initial').default;
 const languages = require('../../../../app/helpers/lang').default;
 
 let middlewares = [thunk];
@@ -36,7 +37,7 @@ describe('admin/newTerm actions', () => {
       type: types.CHANGE_NEW_TERM_WYLIE,
       newWylieString
     };
-    let expectedState = JSON.parse(JSON.stringify(initialState));
+    let expectedState = cloneInitialState();
     expectedState.admin.newTerm.wylie = newWylieString;
 
     // test types.CHANGE_NEW_TERM_WYLIE
@@ -46,7 +47,7 @@ describe('admin/newTerm actions', () => {
   });
 
   it('should work correctly: function changeSanskrit', () => {
-    let lastState = JSON.parse(JSON.stringify(initialState));
+    let lastState = cloneInitialState();
     languages.list.forEach(elem => {
       const key = 'sanskrit_' + elem;
       const value = 'new_sanskrit on language ' + elem;
@@ -55,7 +56,7 @@ describe('admin/newTerm actions', () => {
         key,
         value
       };
-      let expectedState = JSON.parse(JSON.stringify(initialState));
+      let expectedState = cloneInitialState();
       expectedState.admin.newTerm.sanskrit[key] = value;
       lastState.admin.newTerm.sanskrit[key] = value;
 
@@ -70,7 +71,7 @@ describe('admin/newTerm actions', () => {
       key: 'sanskrit_' + languages.list[0],
       value: 'new_new_new_term'
     }
-    const lastExpectedState = JSON.parse(JSON.stringify(lastState));
+    const lastExpectedState = cloneInitialState(lastState);
     lastExpectedState.admin.newTerm.sanskrit[lastExpectedAction.key] = lastExpectedAction.value;
     expect(reducer(lastState, lastExpectedAction)).toEqual(lastExpectedState);
     expect(actions.changeSanskrit(lastExpectedAction.key, lastExpectedAction.value)).toEqual(lastExpectedAction);
@@ -111,19 +112,19 @@ describe('admin/newTerm actions', () => {
     ];
 
     // test types.ADD_TERM_START
-    let expectedState = JSON.parse(JSON.stringify(initialState));
+    let expectedState = cloneInitialState();
     expectedState.admin.newTerm.pending = true;
     expectedState.admin.newTerm.error = null;
     expect(reducer(initialState, expectedSuccessActions[0])).toEqual(expectedState);
 
     // test types.ADD_TERM_END
-    expectedState = JSON.parse(JSON.stringify(initialState));
+    expectedState = cloneInitialState();
     expectedState.admin.newTerm.termId = expectedSuccessResponse.term.id;
     expectedState.admin.newTerm.error = null;
     expect(reducer(initialState, expectedSuccessActions[1])).toEqual(expectedState);
 
     // test async actions
-    let _initialState = JSON.parse(JSON.stringify(initialState));
+    let _initialState = cloneInitialState();
     _initialState.admin.newTerm.wylie = wylie;
     languages.list.forEach(elem =>
       _initialState.admin.newTerm.sanskrit['sanskrit_' + elem] = 'Sanskrit on ' + elem
@@ -172,18 +173,18 @@ describe('admin/newTerm actions', () => {
     ];
 
     // test types.ADD_TERM_START
-    let expectedState = JSON.parse(JSON.stringify(initialState));
+    let expectedState = cloneInitialState();
     expectedState.admin.newTerm.pending = true;
     expect(reducer(initialState, expectedErrorActions[0])).toEqual(expectedState);
 
     // test types.ADD_TERM_END
-    expectedState = JSON.parse(JSON.stringify(initialState));
+    expectedState = cloneInitialState();
     expectedState.admin.newTerm.error = expectedErrorActions[1].error;
     expectedState.admin.newTerm.termId = null;
     expect(reducer(initialState, expectedErrorActions[1])).toEqual(expectedState);
 
     // test async actions
-    let _initialState = JSON.parse(JSON.stringify(initialState));
+    let _initialState = cloneInitialState();
     _initialState.admin.newTerm.wylie = wylie;
     languages.list.forEach(elem =>
       _initialState.admin.newTerm.sanskrit['sanskrit_' + elem] = 'Sanskrit on ' + elem

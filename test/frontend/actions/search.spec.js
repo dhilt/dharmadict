@@ -4,11 +4,12 @@ const nock = require('nock');
 const expect = require('expect');
 
 const {terms, translators} = require('../_shared.js');
+const initialState = require('../_shared.js').initialState.get();
+const cloneInitialState = require('../_shared.js').initialState.clone;
 
 const actions = require('../../../app/actions/search');
 const types = require('../../../app/actions/_constants');
 const reducer = require('../../../app/reducers').default;
-const initialState = require('../../../app/reducers/_initial').default;
 const lang = require('../../../app/helpers/lang').default;
 
 let middlewares = [thunk];
@@ -38,7 +39,7 @@ describe('common actions', () => {
     }];
 
     // test reducers
-    let expectedState = JSON.parse(JSON.stringify(initialState));
+    let expectedState = cloneInitialState();
     expectedState.search.searchString = newSearchString;
     expect(reducer(initialState, expectedAction[0])).toEqual(expectedState);
 

@@ -1,4 +1,9 @@
 global.window.localStorage = {};
+// localStorage['dharmadictToken'] = 'token?';
+
+const initialState = require('../../app/reducers/_initial').default;
+const auth = require('../../app/helpers/auth').default;
+const lang = require('../../app/helpers/lang').default;
 
 const translators = [{
   id: 'ZAG',
@@ -384,7 +389,13 @@ const translations = [
 
 ];
 
+const _initialState = {
+  get: () => initialState,
+  clone: (state = initialState) => JSON.parse(JSON.stringify(state))
+};
+
 module.exports = {
+  initialState: _initialState,
   translators,
   languages,
   users,
