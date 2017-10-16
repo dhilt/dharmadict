@@ -3,9 +3,7 @@ const thunk = require('redux-thunk').default;
 const nock = require('nock');
 const expect = require('expect');
 
-const {terms, translators} = require('../_shared.js');
-const initialState = require('../_shared.js').initialState.get();
-const cloneInitialState = require('../_shared.js').initialState.clone;
+const {initialState, cloneInitialState, terms, translators} = require('../_shared.js');
 
 const actions = require('../../../app/actions/search');
 const types = require('../../../app/actions/_constants');
