@@ -29,265 +29,303 @@ describe('admin/changeUser actions', () => {
     expect(reducer()).toEqual(initialState);
   });
 
-  const getAdminUserDataAsyncActions = (user) => ([
-    { type: types.GET_ADMIN_USER_DATA_START },
-    {
-      type: types.GET_ADMIN_USER_DATA_END,
-      error: null,
-      data: getEditableUserDataObject(user),
-      id: user.id
-    }
-  ]);
-
-  it('should work: getAdminUserDataAsync, reducer', () => {
+  describe('function getAdminUserDataAsync', () => {
+    // if function getAdminUserDataAsync was successfull, 'dataSource' should be rewrited by 'data'.
+    // in another case, 'data' should be rewrited by 'dataSource'
     const user = translators[0];
-    const actions = getAdminUserDataAsyncActions(user);
-
-    // test types.GET_ADMIN_USER_DATA_START
-    let expectedState = cloneState();
-    Object.assign(expectedState.admin.editUser, {
-      sourcePending: true,
-      error: null
-    });
-    expect(reducer(initialState, actions[0])).toEqual(expectedState);
-
-    // test types.GET_ADMIN_USER_DATA_END
-    expectedState = cloneState();
-    Object.assign(expectedState.admin.editUser, {
-      error: null,
-      id: user.id,
-      sourcePending: false,
-      data: getEditableUserDataObject(user),
-      dataSource: getEditableUserDataObject(user)
-    });
-    expect(reducer(initialState, actions[1])).toEqual(expectedState);
-  });
-
-  it('should work: getAdminUserDataAsync, action', () => {
-    const user = translators[0];
-    const expectedActions = getAdminUserDataAsyncActions(user);
-    const expectedResponse = {
+    let changedUser = user;
+    changedUser.name = 'Name of user was changed...';
+    const expectedSuccessResponse = {
       success: true,
-      user
+      user: changedUser
+    };
+    const expectedSuccessActions = () => ([
+      { type: types.GET_ADMIN_USER_DATA_START },
+      {
+        type: types.GET_ADMIN_USER_DATA_END,
+        error: null,
+        data: getEditableUserDataObject(changedUser),
+        id: changedUser.id
+      }
+    ]);
+    const createSuccessExpectedState = () => {
+      let expectedState = cloneState();
+      Object.assign(expectedState.admin.editUser, {
+        error: null,
+        id: user.id,
+        sourcePending: false,
+        data: getEditableUserDataObject(changedUser),
+        dataSource: getEditableUserDataObject(changedUser)
+      });
+      return expectedState
     };
 
-    let expectedStateBeforeRequest = cloneState();
-    Object.assign(expectedStateBeforeRequest.admin.editUser, {
-      id: user.id,
-      dataSource: getEditableUserDataObject(user)
+    it('should work, reducer', () => {
+      const actions = expectedSuccessActions();
+
+      // test types.GET_ADMIN_USER_DATA_START
+      let expectedState = cloneState();
+      Object.assign(expectedState.admin.editUser, {
+        sourcePending: true,
+        error: null
+      });
+      expect(reducer(initialState, actions[0])).toEqual(expectedState);
+
+      // test types.GET_ADMIN_USER_DATA_END
+      expectedState = createSuccessExpectedState();
+      expect(reducer(initialState, actions[1])).toEqual(expectedState);
     });
-    let store = mockStore(expectedStateBeforeRequest);
 
-    nock('http://localhost')
-      .get('/api/users/' + user.id)
-      .reply(200, expectedResponse);
+    it('should work, action', () => {
+      const expectedActions = expectedSuccessActions();
 
-    return store.dispatch(actions.getAdminUserDataAsync(user.id))
-      .then(() => expect(store.getActions()).toEqual(expectedActions));
-  });
+      let expectedStateBeforeRequest = cloneState();
+      Object.assign(expectedStateBeforeRequest.admin.editUser, {
+        id: user.id,
+        data: getEditableUserDataObject(user),
+        dataSource: getEditableUserDataObject(user)
+      });
+      let store = mockStore(expectedStateBeforeRequest);
 
-  it('should handle error correctly: function getAdminUserDataAsync', () => {
-    const user = translators[0];
-    let expectedStateBeforeRequest = cloneState();
-    Object.assign(expectedStateBeforeRequest.admin.editUser, {
-      id: user.id,
-      dataSource: getEditableUserDataObject(user),
-      // function should take data about user from own redux-store
-      data: Object.assign(getEditableUserDataObject(user), {description: 'New description'})
+      nock('http://localhost')
+        .get('/api/users/' + user.id)
+        .reply(200, expectedSuccessResponse);
+
+      return store.dispatch(actions.getAdminUserDataAsync(user.id))
+        .then(() => expect(store.getActions()).toEqual(expectedActions));
     });
-    let store = mockStore(expectedStateBeforeRequest);
 
     const expectedErrorResponse = {
       error: true,
       code: 500,
       message: 'Can\'t find user. Database error'
     };
-    const expectedErrorActions = [
+    const expectedErrorActions = () => ([
       { type: types.GET_ADMIN_USER_DATA_START },
       {
         type: types.GET_ADMIN_USER_DATA_END,
         error: expectedErrorResponse,
-        data: store.getState().admin.editUser.dataSource,
-        id: store.getState().admin.editUser.id
+        data: getEditableUserDataObject(user),
+        id: user.id
       },
       getNotificationAction(null, expectedErrorResponse)
-    ];
+    ]);
+    const createErrorExpectedState = () => {
+      let expectedState = cloneState();
+      Object.assign(expectedState.admin.editUser, {
+        error: expectedErrorResponse,
+        id: user.id,
+        sourcePending: false,
+        data: getEditableUserDataObject(user),
+        dataSource: getEditableUserDataObject(user)
+      });
+      return expectedState
+    };
 
-    // test types.GET_ADMIN_USER_DATA_START
-    let expectedState = cloneState();
-    Object.assign(expectedState.admin.editUser, {
-      sourcePending: true,
-      error: null
+    it('should handle error, reducer', () => {
+      const actions = expectedErrorActions();
+
+      // test types.GET_ADMIN_USER_DATA_START
+      let expectedState = cloneState();
+      Object.assign(expectedState.admin.editUser, {
+        sourcePending: true,
+        error: null
+      });
+      expect(reducer(initialState, actions[0])).toEqual(expectedState);
+
+      // test types.GET_ADMIN_USER_DATA_END
+      expectedState = createErrorExpectedState();
+      expect(reducer(initialState, actions[1])).toEqual(expectedState);
     });
-    expect(reducer(initialState, expectedErrorActions[0])).toEqual(expectedState);
 
-    // test types.GET_ADMIN_USER_DATA_END
-    expectedState = cloneState();
-    Object.assign(expectedState.admin.editUser, {
-      error: expectedErrorResponse,
-      id: user.id,
-      sourcePending: false,
-      data: getEditableUserDataObject(user),
-      dataSource: getEditableUserDataObject(user)
+    it('should handle error, action', () => {
+      let expectedStateBeforeRequest = cloneState();
+      Object.assign(expectedStateBeforeRequest.admin.editUser, {
+        id: user.id,
+        data: getEditableUserDataObject(changedUser),
+        dataSource: getEditableUserDataObject(user)
+      });
+      let store = mockStore(expectedStateBeforeRequest);
+
+      nock('http://localhost')
+        .get('/api/users/' + user.id)
+        .reply(200, expectedErrorResponse);
+
+      const expectedActions = expectedErrorActions();
+      return store.dispatch(actions.getAdminUserDataAsync(user.id))
+        .then(() => expect(store.getActions()).toEqual(expectedActions));
     });
-    expect(reducer(expectedStateBeforeRequest, expectedErrorActions[1])).toEqual(expectedState);
-
-    // test async actions
-    nock('http://localhost')
-      .get('/api/users/' + user.id)
-      .reply(200, expectedErrorResponse);
-
-    return store.dispatch(actions.getAdminUserDataAsync(user.id))
-      .then(() => expect(store.getActions()).toEqual(expectedErrorActions));
   });
 
-  const testChangeAdminUserData = (obj) => {
-    const user = translators[0];
-    const property = Object.keys(obj)[0];
-    const value = obj[property];
-    let _initialState = cloneState();
-    Object.assign(_initialState.admin.editUser, {
-      data: getEditableUserDataObject(user),
-      dataSource: getEditableUserDataObject(user)
-    });
-    let expectedState = cloneState(_initialState);
-    Object.assign(expectedState.admin.editUser.data, {
-      [property]: value
-    });
-    let store = mockStore(_initialState);
-    const expectedAction = {
-      type: types.CHANGE_ADMIN_USER_DATA,
-      payload: expectedState.admin.editUser.data
+  describe('function changeAdminUserData', () => {
+
+    const testChangeAdminUserData = (obj) => {
+      const user = translators[0];
+      const property = Object.keys(obj)[0];
+      const value = obj[property];
+      let _initialState = cloneState();
+      Object.assign(_initialState.admin.editUser, {
+        data: getEditableUserDataObject(user),
+        dataSource: getEditableUserDataObject(user)
+      });
+      let expectedState = cloneState(_initialState);
+      Object.assign(expectedState.admin.editUser.data, {
+        [property]: value
+      });
+      let store = mockStore(_initialState);
+      const expectedAction = {
+        type: types.CHANGE_ADMIN_USER_DATA,
+        payload: expectedState.admin.editUser.data
+      };
+      it('should change ${property}, reducer', () =>
+        // test types.CHANGE_ADMIN_USER_DATA
+        expect(reducer(_initialState, expectedAction)).toEqual(expectedState)
+      );
+      it('should change ${property}, action', () => {
+        store.dispatch(actions.changeAdminUserData(obj));
+        expect(store.getActions()[0]).toEqual(expectedAction);
+      });
     };
 
-    // test types.CHANGE_ADMIN_USER_DATA
-    expect(reducer(_initialState, expectedAction)).toEqual(expectedState);
-    // test action
-    store.dispatch(actions.changeAdminUserData(obj));
-    expect(store.getActions()[0]).toEqual(expectedAction);
-  };
+    testChangeAdminUserData({name: 'new name of user/translator'});
+    testChangeAdminUserData({language: 'new language of user/translator'});
+    testChangeAdminUserData({description: 'new description of user/translator'});
+  });
 
-  it('should change name correctly: function changeAdminUserData', () =>
-    testChangeAdminUserData({name: 'new name of user/translator'})
-  );
+  describe('function updateAdminUserDataAsync', () => {
 
-  it('should change language correctly: function changeAdminUserData', () =>
-    testChangeAdminUserData({language: 'new language of user/translator'})
-  );
-
-  it('should change description correctly: function changeAdminUserData', () =>
-    testChangeAdminUserData({description: 'new description of user/translator'})
-  );
-
-  const changedStateName = (user, name) => {
-    let _initialState = cloneState();
-    Object.assign(_initialState.admin.editUser, {
-      id: user.id,
-      dataSource: getEditableUserDataObject(user),
-      data: Object.assign(getEditableUserDataObject(user), {name})
-    });
-    return _initialState
-  };
-
-  it('should work correctly: function updateAdminUserDataAsync', () => {
     const user = translators[0];
+    let changedUser = translators[0];
+    changedUser.name = 'New name of user/translator'
+    const createInitialState = () => {
+      let _initialState = cloneState();
+      Object.assign(_initialState.admin.editUser, {
+        id: user.id,
+        dataSource: getEditableUserDataObject(user),
+        data: getEditableUserDataObject(changedUser)
+      });
+      return _initialState
+    };
+
     const expectedSuccessResponse = {
       success: true,
-      user: {...user,
-        name: 'New name of user/translator'
-      }
+      user: changedUser
     };
-    const expectedSuccessActions = [
+    const expectedSuccessActions = () => ([
       { type: types.UPDATE_ADMIN_USER_DATA_START },
       {
         type: types.UPDATE_ADMIN_USER_DATA_END,
         error: null,
-        data: getEditableUserDataObject(expectedSuccessResponse.user)
+        data: getEditableUserDataObject(changedUser)
       },
       getNotificationAction('EditUser.success', null)
-    ];
+    ]);
+    const createSuccessExpectedState = () => {
+      let expectedState = cloneState();
+      Object.assign(expectedState.admin.editUser, {
+        error: null,
+        id: user.id,
+        pending: false,
+        data: getEditableUserDataObject(changedUser),
+        dataSource: getEditableUserDataObject(changedUser)
+      });
+      return expectedState
+    };
 
-    let _initialState = changedStateName(user, expectedSuccessResponse.user.name);
+    it('should work, reducer', () => {
+      const actions = expectedSuccessActions();
 
-    // test types.UPDATE_ADMIN_USER_DATA_START
-    let expectedState = cloneState(_initialState);
-    Object.assign(expectedState.admin.editUser, {
-      pending: true
+      // test types.UPDATE_ADMIN_USER_DATA_START
+      let _initialState = createInitialState();
+      let expectedState = createSuccessExpectedState();
+      Object.assign(expectedState.admin.editUser, {
+        pending: true,
+        error: null
+      });
+      expect(reducer(_initialState, actions[0])).toEqual(expectedState);
+
+      // test types.UPDATE_ADMIN_USER_DATA_END
+      expectedState = createSuccessExpectedState();
+      expect(reducer(_initialState, actions[1])).toEqual(expectedState);
     });
-    expect(reducer(_initialState, expectedSuccessActions[0])).toEqual(expectedState);
 
-    // test types.UPDATE_ADMIN_USER_DATA_END
-    expectedState = cloneState(_initialState);
-    Object.assign(expectedState.admin.editUser, {
-      pending: false,
-      error: null,
-      dataSource: {...expectedState.admin.editUser.dataSource,
-        name: expectedSuccessResponse.user.name
-      }
+    it('should work, action', () => {
+      const expectedActions = expectedSuccessActions();
+
+      let expectedStateBeforeRequest = createSuccessExpectedState();
+      let store = mockStore(expectedStateBeforeRequest);
+
+      nock('http://localhost')
+        .patch('/api/users/' + user.id, {payload: expectedStateBeforeRequest.admin.editUser.data})
+        .reply(200, expectedSuccessResponse);
+
+      return store.dispatch(actions.updateAdminUserDataAsync()).then(() => {
+        let successNotification = store.getActions().find(elem => elem.type === types.CREATE_NOTIFICATION);
+        delete successNotification.notification.timer;
+        expect(store.getActions()).toEqual(expectedActions);
+      });
     });
-    expect(reducer(_initialState, expectedSuccessActions[1])).toEqual(expectedState);
-
-    // test async actions
-    let store = mockStore(_initialState);
-
-    nock('http://localhost')
-      .patch('/api/users/' + user.id, {
-        payload: store.getState().admin.editUser.data
-      })
-      .reply(200, expectedSuccessResponse);
-
-    return store.dispatch(actions.updateAdminUserDataAsync()).then(() => {
-      let successNotification = store.getActions().find(elem => elem.type === types.CREATE_NOTIFICATION);
-      delete successNotification.notification.timer;
-      expect(store.getActions()).toEqual(expectedSuccessActions);
-    });
-  });
-
-  it('should handle error correctly: function updateAdminUserDataAsync', () => {
-    const user = translators[0];
-    let _initialState = changedStateName(user, 'New name');
-    let store = mockStore(_initialState);
 
     const expectedErrorResponse = {
       error: true,
       code: 500,
       message: 'Can\'t update user data. Database error'
     };
-    const expectedErrorActions = [
+    const expectedErrorActions = () => ([
       { type: types.UPDATE_ADMIN_USER_DATA_START },
       {
         type: types.UPDATE_ADMIN_USER_DATA_END,
         error: expectedErrorResponse,
-        data: store.getState().admin.editUser.dataSource
+        data: getEditableUserDataObject(user)
       },
       getNotificationAction(null, expectedErrorResponse)
-    ];
+    ]);
+    const createErrorExpectedState = () => {
+      let expectedState = cloneState();
+      Object.assign(expectedState.admin.editUser, {
+        error: expectedErrorResponse,
+        id: user.id,
+        pending: false,
+        data: getEditableUserDataObject(changedUser),
+        dataSource: getEditableUserDataObject(user)
+      });
+      return expectedState
+    };
 
-    // test types.UPDATE_ADMIN_USER_DATA_START
-    let expectedState = cloneState(_initialState);
-    Object.assign(expectedState.admin.editUser, {
-      pending: true
+    it('should handle error, reducer', () => {
+      const actions = expectedErrorActions();
+
+      // test types.UPDATE_ADMIN_USER_DATA_START
+      let _initialState = createInitialState();
+      let expectedState = createErrorExpectedState();
+      Object.assign(expectedState.admin.editUser, {
+        pending: true,
+        error: null
+      });
+      expect(reducer(_initialState, actions[0])).toEqual(expectedState);
+
+      // test types.UPDATE_ADMIN_USER_DATA_END
+      expectedState = createErrorExpectedState();
+      expect(reducer(_initialState, actions[1])).toEqual(expectedState);
     });
-    expect(reducer(_initialState, expectedErrorActions[0])).toEqual(expectedState);
 
-    // test types.UPDATE_ADMIN_USER_DATA_END
-    expectedState = cloneState(_initialState);
-    Object.assign(expectedState.admin.editUser, {
-      pending: false,
-      error: expectedErrorResponse,
-      dataSource: store.getState().admin.editUser.dataSource
+    it('should handle error, action', () => {
+      let expectedStateBeforeRequest = cloneState();
+      Object.assign(expectedStateBeforeRequest.admin.editUser, {
+        id: user.id,
+        data: getEditableUserDataObject(changedUser),
+        dataSource: getEditableUserDataObject(user)
+      });
+      let store = mockStore(expectedStateBeforeRequest);
+
+      nock('http://localhost')
+        .patch('/api/users/' + user.id, {payload: expectedStateBeforeRequest.admin.editUser.data})
+        .reply(200, expectedErrorResponse);
+
+      const expectedActions = expectedErrorActions();
+      return store.dispatch(actions.updateAdminUserDataAsync())
+        .then(() => expect(store.getActions()).toEqual(expectedActions));
     });
-    expect(reducer(_initialState, expectedErrorActions[1])).toEqual(expectedState);
-
-    // test async actions
-    nock('http://localhost')
-      .patch('/api/users/' + user.id, {
-        payload: store.getState().admin.editUser.data
-      })
-      .reply(200, expectedErrorResponse);
-
-    return store.dispatch(actions.updateAdminUserDataAsync())
-      .then(() => expect(store.getActions()).toEqual(expectedErrorActions));
   });
 
   it('should work correctly: function resetAdminUserData', () => {
