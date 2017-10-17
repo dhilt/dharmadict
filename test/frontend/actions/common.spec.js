@@ -29,46 +29,53 @@ describe('common actions', () => {
     expect(reducer()).toEqual(initialState);
   });
 
-  it('should get common data async', () => {
+  describe('function getCommonDataAsync', () => {
     const expectedSuccessResponse = {
       success: true,
       translators,
       languages
     };
-    const expectedSuccessActions = [
+    const expectedSuccessActions = () => ([
       { type: types.GET_COMMON_DATA_START },
       {
         type: types.GET_COMMON_DATA_END,
         translators,
         languages
       }
-    ];
+    ]);
 
-    // test reducers
-    let expectedState = cloneState();
-    expectedState.common.languages = expectedSuccessActions[1].languages;
-    expectedState.common.translators = expectedSuccessActions[1].translators;
-    expect(reducer(initialState, expectedSuccessActions[1])).toEqual(expectedState);
+    it('should work, reducer', () => {
+      const actions = expectedSuccessActions();
 
+      // test types.GET_COMMON_DATA_START
+      let expectedState = cloneState();
+      Object.assign(expectedState.common, {translators: null});
+      expect(reducer(initialState, actions[0])).toEqual(expectedState);
 
-    // test async actions
-    let store = mockStore(initialState);
-    nock('http://localhost')
-      .get('/api/common')
-      .reply((uri, requestBody, cb) => {
-        cb(null, [200, expectedSuccessResponse])
-      });
-    return store.dispatch(actions.getCommonDataAsync())
-      .then(() => expect(store.getActions()).toEqual(expectedSuccessActions));
-  });
+      // test types.GET_ADMIN_USER_DATA_END
+      Object.assign(expectedState.common, { languages, translators });
+      expect(reducer(initialState, actions[1])).toEqual(expectedState);
+    });
 
-  it('should not get common data async', () => {
+    it('should work, action', () => {
+      let store = mockStore(initialState);
+
+      nock('http://localhost')
+        .get('/api/common')
+        .reply((uri, requestBody, cb) => {
+          cb(null, [200, expectedSuccessResponse])
+        });
+
+      return store.dispatch(actions.getCommonDataAsync())
+        .then(() => expect(store.getActions()).toEqual(expectedSuccessActions()));
+    });
+
     const expectedErrorResponse = {
       error: true,
       code: 500,
       message: 'Can\'t get common data. Database error'
     };
-    const expectedErrorActions = [
+    const expectedErrorActions = () => ([
       { type: types.GET_COMMON_DATA_START },
       {
         type: types.GET_COMMON_DATA_END,
@@ -76,78 +83,71 @@ describe('common actions', () => {
         languages: []
       },
       getNotificationAction(null, 'App.get_languages_error')
-    ];
+    ]);
 
-    // test reducers
-    let expectedState = cloneState();
-    expectedState.common.languages = expectedErrorActions[1].languages;
-    expectedState.common.translators = expectedErrorActions[1].translators;
-    expect(reducer(initialState, expectedErrorActions[1])).toEqual(expectedState);
+    it('should handle error, reducer', () => {
+      const actions = expectedErrorActions();
 
-    // test async actions
-    let store = mockStore(initialState);
-    nock('http://localhost')
-      .get('/api/common')
-      .reply(304, expectedErrorResponse);
-    return store.dispatch(actions.getCommonDataAsync()).then(() => {
-      expect(store.getActions()).toEqual(expectedErrorActions)
+      // test types.GET_COMMON_DATA_START
+      let expectedState = cloneState();
+      Object.assign(expectedState.common, {translators: null});
+      expect(reducer(initialState, actions[0])).toEqual(expectedState);
+
+      // test types.GET_ADMIN_USER_DATA_END
+      Object.assign(expectedState.common, { languages: [], translators: [] });
+      expect(reducer(initialState, actions[1])).toEqual(expectedState);
+    });
+
+    it('should handle error, action', () => {
+      let store = mockStore(initialState);
+
+      nock('http://localhost')
+        .get('/api/common')
+        .reply(304, expectedErrorResponse);
+
+      return store.dispatch(actions.getCommonDataAsync()).then(() => {
+        expect(store.getActions()).toEqual(expectedErrorActions())
+      });
     });
   });
 
-  it('should change user language on russian', () => {
-    const language = 'ru';
-    expect(lang.get(language)).toEqual(language);
-    const expectedAction = [{
+  describe('function changeUserLanguage', () => {
+    const createExpectedAction = (_lang) => ({
       type: types.SET_LANGUAGE,
-      language: language
-    }];
+      language: _lang
+    });
+    const testChangeUserLanguage = (_lang) => {
+      let language = '';
+      if (lang.list.find(elem => elem === _lang)) {
+        language = _lang
+      } else {
+        language = lang.defaultLang
+      }
 
-    // test reducers
-    let expectedState = cloneState();
-    expectedState.common.userLanguage = expectedAction[0].language;
-    expect(reducer(initialState, expectedAction)).toEqual(expectedState);
+      it('should work, helpers/lang.js', () => {
+        // test helpers/lang.js
+        lang.setUserLanguage(language);
+        expect(lang.get(language)).toEqual(language);
+        expect(lang.getUserLanguage()).toEqual(language);
+      });
 
-    // test actions
-    let store = mockStore(initialState);
-    store.dispatch(actions.changeUserLanguage(language));
-    expect(store.getActions()).toEqual(expectedAction);
-  });
+      const store = mockStore(initialState);
+      let expectedState = cloneState();
+      Object.assign(expectedState.common, {userLanguage: language})
 
-  it('should change user language on english', () => {
-    const language = 'en';
-    expect(lang.get(language)).toEqual(language);
-    const expectedAction = [{
-      type: types.SET_LANGUAGE,
-      language: language
-    }];
+      it('should work, reducer', () =>
+        // test types.SET_LANGUAGE
+        expect(reducer(initialState, createExpectedAction(language))).toEqual(expectedState)
+      );
 
-    // test reducers
-    let expectedState = cloneState();
-    expectedState.common.userLanguage = expectedAction[0].language;
-    expect(reducer(initialState, expectedAction[0])).toEqual(expectedState);
+      it('should work, action', () => {
+        store.dispatch(actions.changeUserLanguage(language));
+        expect(store.getActions()[0]).toEqual(createExpectedAction(language));
+      });
+    };
 
-    // test actions
-    let store = mockStore(initialState);
-    store.dispatch(actions.changeUserLanguage(language));
-    expect(store.getActions()).toEqual(expectedAction);
-  });
-
-  it('should change user language on default', () => {
-    const language = 'abrakadabra_language';
-    expect(lang.get(language)).toEqual(lang.defaultLang);
-    const expectedAction = [{
-      type: types.SET_LANGUAGE,
-      language: lang.get(language)
-    }];
-
-    // test reducers
-    let expectedState = cloneState();
-    expectedState.common.userLanguage = expectedAction[0].language;
-    expect(reducer(initialState, expectedAction[0])).toEqual(expectedState);
-
-    // test actions
-    let store = mockStore(initialState);
-    store.dispatch(actions.changeUserLanguage(language));
-    expect(store.getActions()).toEqual(expectedAction);
+    testChangeUserLanguage('en');
+    testChangeUserLanguage('ru');
+    testChangeUserLanguage('inexistent language');
   });
 })
