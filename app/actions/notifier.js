@@ -3,7 +3,7 @@ import {
   REMOVE_NOTIFICATION
 } from './_constants'
 
-const defaultNotification = {
+export const defaultNotification = {
   type: 'info',
   ttl: 3000
 }
@@ -12,6 +12,7 @@ export function notify(notification) {
   return (dispatch, getState) => {
     const idLast = getState().notifications.idLast + 1
     notification.id = idLast
+    notification.values = notification.values || {}
     if (!notification.hasOwnProperty('type')) {
       notification.type = defaultNotification.type
     }
