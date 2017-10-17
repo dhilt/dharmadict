@@ -29,67 +29,93 @@ describe('admin/newTerm actions', () => {
     expect(reducer()).toEqual(initialState);
   });
 
-  it('should work correctly: function changeWylie', () => {
+  describe('function changeWylie', () => {
     const newWylieString = 'wylie';
     const expectedAction = {
       type: types.CHANGE_NEW_TERM_WYLIE,
       newWylieString
     };
-    let expectedState = cloneState();
-    expectedState.admin.newTerm.wylie = newWylieString;
 
-    // test types.CHANGE_NEW_TERM_WYLIE
-    expect(reducer(initialState, expectedAction)).toEqual(expectedState);
-    // test action
-    expect(actions.changeWylie(newWylieString)).toEqual(expectedAction);
+    it('should work, reducer', () => {
+      // test types.CHANGE_NEW_TERM_WYLIE
+      let expectedState = cloneState();
+      expectedState.admin.newTerm.wylie = newWylieString;
+      expect(reducer(initialState, expectedAction)).toEqual(expectedState);
+    });
+    it('should work, action', () => {
+      expect(actions.changeWylie(newWylieString)).toEqual(expectedAction);
+    });
   });
 
-  it('should work correctly: function changeSanskrit', () => {
+  describe('function changeSanskrit', () => {
+    const createAction = (key, value) => ({
+      type: types.CHANGE_NEW_TERM_SANSKRIT,
+      key,
+      value
+    });
+
     let lastState = cloneState();
+    // test the change of the language separately
     languages.list.forEach(elem => {
       const key = 'sanskrit_' + elem;
       const value = 'new_sanskrit on language ' + elem;
-      const expectedAction = {
-        type: types.CHANGE_NEW_TERM_SANSKRIT,
-        key,
-        value
-      };
+      const expectedAction = createAction(key, value);
       let expectedState = cloneState();
       expectedState.admin.newTerm.sanskrit[key] = value;
       lastState.admin.newTerm.sanskrit[key] = value;
 
-      // test types.CHANGE_NEW_TERM_SANSKRIT
-      expect(reducer(initialState, expectedAction)).toEqual(expectedState);
-      // test action
-      expect(actions.changeSanskrit(key, value)).toEqual(expectedAction);
+      it(`should work with key = ${key}, reducer`, () =>
+        // test types.CHANGE_NEW_TERM_SANSKRIT
+        expect(reducer(initialState, expectedAction)).toEqual(expectedState)
+      );
+      it(`should work with key = ${key}, action`, () =>
+        expect(actions.changeSanskrit(key, value)).toEqual(expectedAction)
+      );
     });
 
-    const lastExpectedAction = {
-      type: types.CHANGE_NEW_TERM_SANSKRIT,
-      key: 'sanskrit_' + languages.list[0],
-      value: 'new_new_new_term'
-    }
+    // test the change of the language separately, with already existing data
     const lastExpectedState = cloneState(lastState);
-    lastExpectedState.admin.newTerm.sanskrit[lastExpectedAction.key] = lastExpectedAction.value;
-    expect(reducer(lastState, lastExpectedAction)).toEqual(lastExpectedState);
-    expect(actions.changeSanskrit(lastExpectedAction.key, lastExpectedAction.value)).toEqual(lastExpectedAction);
+    const key = 'sanskrit_' + languages.list[0];
+    const value = 'new_sanskrit on language ' + languages.list[0];
+    const lastExpectedAction = createAction(key, value);
+    lastExpectedState.admin.newTerm.sanskrit[key] = value;
+    it(`should work with key = ${key}, reducer`, () =>
+      expect(reducer(lastState, lastExpectedAction)).toEqual(lastExpectedState)
+    );
+    it(`should work with key = ${key}, action`, () =>
+      expect(actions.changeSanskrit(key, value)).toEqual(lastExpectedAction)
+    );
   });
 
-  it('should work correctly: function saveTermAsync', () => {
+  describe('function saveTermAsync', () => {
     const wylie = 'New Term';
+    const sanskrit = {};
+    languages.list.forEach(elem => {
+      sanskrit['sanskrit_' + elem] = 'Sanskrit on ' + elem;
+      sanskrit['sanskrit_' + elem + '_lower'] = `Sanskrit on ${elem}`.toLowerCase();
+    });
+    const createInitialState = () => {
+      let _initialState = cloneState();
+      Object.assign(_initialState.admin.newTerm, {
+        termId: null,
+        error: null,
+        pending: false,
+        sanskrit,
+        wylie
+      });
+      return _initialState
+    };
+
     const expectedSuccessResponse = {
       success: true,
       term:	{
         wylie,
+        sanskrit,
         translations: [],
         id: 'New_Term'
       }
     };
-    languages.list.forEach(elem => {
-      expectedSuccessResponse.term['sanskrit_' + elem] = 'Sanskrit on ' + elem;
-      expectedSuccessResponse.term['sanskrit_' + elem + '_lower'] = ('Sanskrit on ' + elem).toLowerCase();
-    });
-    const expectedSuccessActions = [
+    const expectedSuccessActions = () => ([
       { type: types.ADD_TERM_START },
       {
         type: types.ADD_TERM_END,
@@ -97,50 +123,56 @@ describe('admin/newTerm actions', () => {
         termId: expectedSuccessResponse.term.id
       },
       getNotificationAction('NewTerm.alert_success', null, {termId: expectedSuccessResponse.term.id})
-    ];
+    ]);
+    const createSuccessExpectedState = () => {
+      let _initialState = createInitialState();
+      Object.assign(_initialState.admin.newTerm, {
+        termId: expectedSuccessResponse.term.id
+      });
+      return _initialState
+    };
 
-    // test types.ADD_TERM_START
-    let expectedState = cloneState();
-    expectedState.admin.newTerm.pending = true;
-    expectedState.admin.newTerm.error = null;
-    expect(reducer(initialState, expectedSuccessActions[0])).toEqual(expectedState);
+    it('should work, reducer', () => {
+      const actions = expectedSuccessActions();
 
-    // test types.ADD_TERM_END
-    expectedState = cloneState();
-    expectedState.admin.newTerm.termId = expectedSuccessResponse.term.id;
-    expectedState.admin.newTerm.error = null;
-    expect(reducer(initialState, expectedSuccessActions[1])).toEqual(expectedState);
+      // test types.ADD_TERM_START
+      const _initialState = createInitialState();
+      let expectedState = createInitialState();
+      Object.assign(expectedState.admin.newTerm, {pending: true});
+      expect(reducer(_initialState, actions[0])).toEqual(expectedState);
 
-    // test async actions
-    let _initialState = cloneState();
-    _initialState.admin.newTerm.wylie = wylie;
-    languages.list.forEach(elem =>
-      _initialState.admin.newTerm.sanskrit['sanskrit_' + elem] = 'Sanskrit on ' + elem
-    );
-    let store = mockStore(_initialState);
-
-    nock('http://localhost')
-      .post('/api/terms', {
-        term: store.getState().admin.newTerm.wylie,
-        sanskrit: store.getState().admin.newTerm.sanskrit
-      })
-      .reply(200, expectedSuccessResponse);
-
-    return store.dispatch(actions.saveTermAsync()).then(() => {
-      let successNotification = store.getActions().find(elem => elem.type === types.CREATE_NOTIFICATION);
-      delete successNotification.notification.timer;  // remove function-property
-      expect(store.getActions()).toEqual(expectedSuccessActions);
+      // test types.ADD_TERM_END
+      expectedState = createSuccessExpectedState();
+      expect(reducer(_initialState, actions[1])).toEqual(expectedState);
     });
-  });
 
-  it('should handle error correctly: function saveTermAsync', () => {
-    const wylie = 'New Term';
+    it('should work, action', () => {
+      const expectedActions = expectedSuccessActions();
+
+      const expectedState = createSuccessExpectedState();
+      const _initialState = createInitialState();
+      let store = mockStore(_initialState);
+
+      nock('http://localhost')
+        .post('/api/terms', {
+          term: _initialState.admin.newTerm.wylie,
+          sanskrit: _initialState.admin.newTerm.sanskrit
+        })
+        .reply(200, expectedSuccessResponse);
+
+      return store.dispatch(actions.saveTermAsync()).then(() => {
+        let successNotification = store.getActions().find(elem => elem.type === types.CREATE_NOTIFICATION);
+        delete successNotification.notification.timer;  // remove function-property
+        expect(store.getActions()).toEqual(expectedActions);
+      });
+    });
+
     const expectedErrorResponse = {
       error: true,
       code: 500,
       message: 'Can\'t create new term. Unauthorized access. Database error'
     };
-    const expectedErrorActions = [
+    const expectedErrorActions = () => ([
       { type: types.ADD_TERM_START },
       {
         type: types.ADD_TERM_END,
@@ -148,35 +180,47 @@ describe('admin/newTerm actions', () => {
         error: expectedErrorResponse
       },
       getNotificationAction(null, expectedErrorResponse.message)
-    ];
+    ]);
+    const createErrorExpectedState = () => {
+      let _initialState = createInitialState();
+      Object.assign(_initialState.admin.newTerm, {
+        error: expectedErrorResponse,
+        termId: null
+      });
+      return _initialState
+    };
 
-    // test types.ADD_TERM_START
-    let expectedState = cloneState();
-    expectedState.admin.newTerm.pending = true;
-    expect(reducer(initialState, expectedErrorActions[0])).toEqual(expectedState);
+    it('should handle error, reducer', () => {
+      const actions = expectedErrorActions();
 
-    // test types.ADD_TERM_END
-    expectedState = cloneState();
-    expectedState.admin.newTerm.error = expectedErrorActions[1].error;
-    expectedState.admin.newTerm.termId = null;
-    expect(reducer(initialState, expectedErrorActions[1])).toEqual(expectedState);
+      // test types.ADD_TERM_START
+      const _initialState = createInitialState();
+      let expectedState = createInitialState();
+      Object.assign(expectedState.admin.newTerm, {pending: true});
+      expect(reducer(_initialState, actions[0])).toEqual(expectedState);
 
-    // test async actions
-    let _initialState = cloneState();
-    _initialState.admin.newTerm.wylie = wylie;
-    languages.list.forEach(elem =>
-      _initialState.admin.newTerm.sanskrit['sanskrit_' + elem] = 'Sanskrit on ' + elem
-    );
-    let store = mockStore(_initialState);
+      // test types.ADD_TERM_END
+      expectedState = createErrorExpectedState();
+      expect(reducer(_initialState, actions[1])).toEqual(expectedState);
+    });
 
-    nock('http://localhost')
-      .post('/api/terms', {
-        term: store.getState().admin.newTerm.wylie,
-        sanskrit: store.getState().admin.newTerm.sanskrit
-      })
-      .reply(200, expectedErrorResponse);
+    it('should work, action', () => {
+      const expectedActions = expectedErrorActions();
 
-    return store.dispatch(actions.saveTermAsync())
-      .then(() => expect(store.getActions()).toEqual(expectedErrorActions));
+      const expectedState = createErrorExpectedState();
+      const _initialState = createInitialState();
+      let store = mockStore(_initialState);
+
+      nock('http://localhost')
+        .post('/api/terms', {
+          term: _initialState.admin.newTerm.wylie,
+          sanskrit: _initialState.admin.newTerm.sanskrit
+        })
+        .reply(200, expectedErrorResponse);
+
+      return store.dispatch(actions.saveTermAsync()).then(() => {
+        expect(store.getActions()).toEqual(expectedActions);
+      });
+    });
   });
 })
