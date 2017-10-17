@@ -28,72 +28,78 @@ describe('admin/changeUserPassword actions', () => {
     expect(reducer()).toEqual(initialState);
   });
 
-  it('should work correctly: function setUserId', () => {
+  describe('function setUserId', () => {
     const userId = translators[0].id;
     const expectedAction = {
       type: types.SET_ADMIN_USER_ID,
       id: userId
     };
-    let expectedState = cloneState();
-    expectedState.admin.editUserPassword.id = userId;
+    const expectedState = () => {
+      let _expectedState = cloneState();
+      _expectedState.admin.editUserPassword.id = userId;
+      return _expectedState
+    };
 
     // test types.SET_ADMIN_USER_ID
-    expect(reducer(initialState, expectedAction)).toEqual(expectedState);
-    // test action
-    expect(actions.setUserId(userId)).toEqual(expectedAction);
+    it('should work, reducer', () =>
+      expect(reducer(initialState, expectedAction)).toEqual(expectedState())
+    );
+    it('should work, action', () => expect(actions.setUserId(userId)).toEqual(expectedAction));
   });
 
-  it('should work correctly: function changeAdminUserPassword', () => {
-    const password = 'new_password';
-    const confirmPassword = 'confirm_password';
-    let _initialState = cloneState();
-    _initialState.admin.editUserPassword.password = password;
-    _initialState.admin.editUserPassword.confirmPassword = confirmPassword;
-    let store = mockStore(_initialState);
-    const expectedActionWithPassword = {
-      type: types.CHANGE_ADMIN_USER_PASSWORD,
-      password,
-      confirmPassword: store.getState().admin.editUserPassword.confirmPassword
+  describe('function changeAdminUserPassword', () => {
+    const testChangeAdminUserPassword = (obj) => {
+      let _initialState = cloneState();
+      Object.assign(_initialState.admin.editUserPassword, {
+        password: 'new_password',
+        confirmPassword: 'confirm_password'
+      });
+      let store = mockStore(_initialState);
+      const expectedAction = {
+        type: types.CHANGE_ADMIN_USER_PASSWORD,
+        password: _initialState.admin.editUserPassword.password,
+        confirmPassword: _initialState.admin.editUserPassword.confirmPassword
+      };
+      const key = Object.keys(obj)[0];
+      expectedAction[key] = obj[key];
+
+      it(`should change ${key}, reducer`, () => {
+        let expectedState = cloneState(_initialState);
+        expectedState.admin.editUserPassword[key] = obj[key];
+        // test types.CHANGE_ADMIN_USER_PASSWORD
+        expect(reducer(_initialState, expectedAction)).toEqual(expectedState);
+      });
+      it(`should change ${key}, action`, () => {
+        store.dispatch(actions.changeAdminUserPassword(obj));
+        expect(store.getActions()[0]).toEqual(expectedAction);
+      });
     };
-    const expectedActionWithConfirmPassword = {
-      type: types.CHANGE_ADMIN_USER_PASSWORD,
-      password: store.getState().admin.editUserPassword.password,
-      confirmPassword
-    };
 
-    // test types.CHANGE_ADMIN_USER_PASSWORD with property - password
-    let expectedState = cloneState(_initialState);
-    expectedState.admin.editUserPassword.password = password;
-    expect(reducer(initialState, expectedActionWithPassword)).toEqual(expectedState);
-
-    // test types.CHANGE_ADMIN_USER_PASSWORD with property - confirmPassword
-    expectedState.admin.editUserPassword.confirmPassword = confirmPassword;
-    expect(reducer(initialState, expectedActionWithConfirmPassword)).toEqual(expectedState);
-
-    // test actions
-    store.dispatch(actions.changeAdminUserPassword({password: password}));
-    expect(store.getActions()[0]).toEqual(expectedActionWithPassword);
-    store.dispatch(actions.changeAdminUserPassword({confirmPassword: confirmPassword}));
-    expect(store.getActions()[1]).toEqual(expectedActionWithConfirmPassword);
+    testChangeAdminUserPassword({password: 'new_password_had_been_changed!'});
+    testChangeAdminUserPassword({confirmPassword: 'confirmPassword_had_been_changed_too!'});
   });
 
-  it('should work correctly: function resetAdminUserPassword', () => {
+  describe('function resetAdminUserPassword', () => {
     const expectedAction = {
       type: types.CHANGE_ADMIN_USER_PASSWORD,
       password: '',
       confirmPassword: ''
     };
-
-    // test types.CHANGE_ADMIN_USER_PASSWORD
     let _initialState = cloneState();
-    _initialState.admin.editUserPassword.password = 'password';
-    _initialState.admin.editUserPassword.confirmPassword = 'password';
-    expect(reducer(_initialState, expectedAction)).toEqual(initialState);
+    Object.assign(_initialState.admin.editUserPassword, {
+      password: 'password',
+      confirmPassword: 'password'
+    });
 
-    // test action
-    let store = mockStore(_initialState);
-    store.dispatch(actions.resetAdminUserPassword());
-    expect(store.getActions()[0]).toEqual(expectedAction);
+    it('should work, reducer', () =>
+      // test types.CHANGE_ADMIN_USER_PASSWORD
+      expect(reducer(_initialState, expectedAction)).toEqual(initialState)
+    );
+    it('should work, action', () => {
+      let store = mockStore(_initialState);
+      store.dispatch(actions.resetAdminUserPassword());
+      expect(store.getActions()[0]).toEqual(expectedAction);
+    });
   });
 
   const createStateAfterRequestForUpdatePassword = (userId, error) => {
@@ -114,103 +120,131 @@ describe('admin/changeUserPassword actions', () => {
     return _state
   };
 
-  it('should work correctly: function updateAdminUserPasswordAsync', () => {
+  describe('function updateAdminUserPasswordAsync', () => {
     const userId = translators[0].id;
     const password = 'new_password';
-    const confirmPassword = 'new_password';
+    const confirmPassword = 'confirm_new_password';
+    const createInitialState = () => {
+      let _initialState = cloneState();
+      Object.assign(_initialState.admin.editUserPassword, {
+        id: userId,
+        password,
+        confirmPassword
+      })
+      return _initialState
+    };
+
+    const createSuccessExpectedStateAfterRequest = () => {
+      let _initialState = createInitialState();
+      Object.assign(_initialState.admin.editUserPassword, {
+        pending: false,
+        error: null,
+        password: '',
+        confirmPassword: ''
+      });
+      return _initialState
+    };
     const expectedSuccessResponse = {
       success: true,
       user: translators[0]
     };
-    const expectedSuccessActions = [
+    const expectedSuccessActions = () => ([
       { type: types.UPDATE_ADMIN_USER_PASSWORD_START },
       {
         type: types.UPDATE_ADMIN_USER_PASSWORD_END,
-        error: null,
-        result: true
+        error: null
       },
       getNotificationAction('EditUserPassword.new_password_success', null)
-    ];
+    ]);
 
-    // test types.UPDATE_ADMIN_USER_PASSWORD_START
-    let expectedState = cloneState();
-    Object.assign(expectedState.admin.editUserPassword, {
-      pending: true,
-      error: null
+    it('should work, reducer', () => {
+      const actions = expectedSuccessActions();
+      let _initialState = createInitialState();
+      let expectedState = createInitialState();
+
+      // test types.UPDATE_ADMIN_USER_PASSWORD_START
+      expectedState.admin.editUserPassword.pending = true;
+      expect(reducer(_initialState, actions[0])).toEqual(expectedState);
+      // test types.UPDATE_ADMIN_USER_PASSWORD_END
+      expectedState = createSuccessExpectedStateAfterRequest();
+      expect(reducer(_initialState, actions[1])).toEqual(expectedState);
     });
-    expect(reducer(initialState, expectedSuccessActions[0])).toEqual(expectedState);
 
-    // test types.UPDATE_ADMIN_USER_PASSWORD_END
-    let _initialState = createStateBeforeRequestForUpdatePassword(userId, password, confirmPassword);
-    expectedState = createStateAfterRequestForUpdatePassword(userId, null);
-    expect(reducer(_initialState, expectedSuccessActions[1])).toEqual(expectedState);
+    it('should work, action', () => {
+      const expectedActions = expectedSuccessActions();
+      let stateBeforeRequest = createInitialState();
+      let store = mockStore(stateBeforeRequest);
 
-    // test async actions
-    let expectedStateBeforeRequest = createStateBeforeRequestForUpdatePassword(userId, password, confirmPassword);
-    let store = mockStore(expectedStateBeforeRequest);
+      nock('http://localhost')
+        .patch('/api/users/' + userId, {
+          payload: {
+            password: stateBeforeRequest.admin.editUserPassword.password,
+            confirmPassword: stateBeforeRequest.admin.editUserPassword.confirmPassword
+          }
+        })
+        .reply(200, expectedSuccessResponse);
 
-    nock('http://localhost')
-      .patch('/api/users/' + userId, {
-        payload: {
-          password: store.getState().admin.editUserPassword.password,
-          confirmPassword: store.getState().admin.editUserPassword.confirmPassword
-        }
-      })
-      .reply(200, expectedSuccessResponse);
-
-    return store.dispatch(actions.updateAdminUserPasswordAsync()).then(() => {
-      let successNotification = store.getActions().find(elem => elem.type === types.CREATE_NOTIFICATION);
-      delete successNotification.notification.timer;
-      expect(store.getActions()).toEqual(expectedSuccessActions);
+      return store.dispatch(actions.updateAdminUserPasswordAsync()).then(() => {
+        let successNotification = store.getActions().find(elem => elem.type === types.CREATE_NOTIFICATION);
+        delete successNotification.notification.timer;
+        expect(store.getActions()).toEqual(expectedActions);
+      });
     });
-  });
 
-  it('should handle error correctly: function updateAdminUserPasswordAsync', () => {
-    const userId = translators[0].id;
-    const password = 'new_password';
-    const confirmPassword = 'new_password';
     const expectedErrorResponse = {
       error: true,
       code: 500,
       message: 'Can\'t update user data. Database error'
     };
-    const expectedErrorActions = [
+    const expectedErrorActions = () => ([
       { type: types.UPDATE_ADMIN_USER_PASSWORD_START },
       {
         type: types.UPDATE_ADMIN_USER_PASSWORD_END,
-        error: expectedErrorResponse,
-        result: false
+        error: expectedErrorResponse
       },
       getNotificationAction(null, expectedErrorResponse)
-    ];
+    ]);
+    const createErrorExpectedState = () => {
+      let _initialState = createInitialState();
+      Object.assign(_initialState.admin.editUserPassword, {
+        pending: false,
+        error: expectedErrorResponse,
+        password: '',
+        confirmPassword: ''
+      });
+      return _initialState
+    };
 
-    // test types.UPDATE_ADMIN_USER_PASSWORD_START
-    let expectedState = cloneState();
-    Object.assign(expectedState.admin.editUserPassword, {
-      pending: true,
-      error: null
+    it('should handle error, reducer', () => {
+      const actions = expectedErrorActions();
+      let _initialState = createInitialState();
+      let expectedState = createInitialState();
+
+      // test types.UPDATE_ADMIN_USER_PASSWORD_START
+      expectedState.admin.editUserPassword.pending = true;
+      expect(reducer(_initialState, actions[0])).toEqual(expectedState);
+      // test types.UPDATE_ADMIN_USER_PASSWORD_END
+      expectedState = createErrorExpectedState();
+      expect(reducer(_initialState, actions[1])).toEqual(expectedState);
     });
-    expect(reducer(initialState, expectedErrorActions[0])).toEqual(expectedState);
 
-    // test types.UPDATE_ADMIN_USER_PASSWORD_END
-    let _initialState = createStateBeforeRequestForUpdatePassword(userId, password, confirmPassword);
-    expectedState = createStateAfterRequestForUpdatePassword(userId, expectedErrorResponse);
-    expect(reducer(_initialState, expectedErrorActions[1])).toEqual(expectedState);
+    it('should handle error, action', () => {
+      const expectedActions = expectedErrorActions();
+      let stateBeforeRequest = createErrorExpectedState();
+      let store = mockStore(stateBeforeRequest);
 
-    // test async actions
-    let expectedStateBeforeRequest = createStateBeforeRequestForUpdatePassword(userId, password, confirmPassword);
-    let store = mockStore(expectedStateBeforeRequest);
+      nock('http://localhost')
+        .patch('/api/users/' + userId, {
+          payload: {
+            password: stateBeforeRequest.admin.editUserPassword.password,
+            confirmPassword: stateBeforeRequest.admin.editUserPassword.confirmPassword
+          }
+        })
+        .reply(200, expectedErrorResponse);
 
-    nock('http://localhost/')
-      .patch('/api/users/' + userId, {
-        payload: {
-          password: store.getState().admin.editUserPassword.password,
-          confirmPassword: store.getState().admin.editUserPassword.confirmPassword
-        }
-      })
-      .reply(200, expectedErrorResponse);
-
-    return store.dispatch(actions.updateAdminUserPasswordAsync())
-      .then(() => expect(store.getActions()).toEqual(expectedErrorActions));
+      return store.dispatch(actions.updateAdminUserPasswordAsync()).then(() => {
+        expect(store.getActions()).toEqual(expectedActions);
+      });
+    });
   });
 })
