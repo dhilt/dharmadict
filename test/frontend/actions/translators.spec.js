@@ -8,7 +8,6 @@ const {initialState, cloneState, translators, getNotificationAction} = require('
 const actions = require('../../../app/actions/translators');
 const types = require('../../../app/actions/_constants');
 const reducer = require('../../../app/reducers').default;
-const lang = require('../../../app/helpers/lang').default;
 
 let middlewares = [thunk];
 let mockStore = configureMockStore(middlewares);
@@ -16,7 +15,7 @@ let mockStore = configureMockStore(middlewares);
 describe('common actions', () => {
   beforeEach(() => {
     nock.disableNetConnect();
-    nock.enableNetConnect('127.0.0.1');
+    nock.enableNetConnect('localhost');
     console.log = jest.fn();
   });
 
@@ -29,43 +28,62 @@ describe('common actions', () => {
     expect(reducer()).toEqual(initialState);
   });
 
-  it('should get translator info async', () => {
+  describe('function getTranslatorInfoAsync', () => {
     const userId = translators[0].id;
+    const user = translators.find(elem => elem.id === userId);
+
     const expectedSuccessResponse = {
       success: true,
-      user: translators.find(elem => elem.id === userId)
+      user
     };
-    const expectedSuccessActions = [
+    const expectedSuccessActions = () => ([
       { type: types.GET_TRANSLATOR_INFO_START },
       {
         type: types.GET_TRANSLATOR_INFO_END,
         error: null,
-        result: expectedSuccessResponse.user
+        result: user
       }
-    ];
+    ]);
+    const createSuccessExpectedState = () => {
+      let _initialState = cloneState();
+      Object.assign(_initialState.translatorInfo, {
+        data: user,
+        error: null,
+        pending: false
+      });
+      return _initialState
+    };
 
-    // test reducers
-    let expectedState = cloneState();
-    expectedState.translatorInfo.data = expectedSuccessResponse.user;
-    expect(reducer(initialState, expectedSuccessActions[1])).toEqual(expectedState);
+    it('should work, reducer', () => {
+      const actions = expectedSuccessActions();
 
-    // test async actions
-    let store = mockStore(initialState);
-    nock('http://localhost')
-      .get('/api/users/' + userId)
-      .reply(200, expectedSuccessResponse);
-    return store.dispatch(actions.getTranslatorInfoAsync(userId))
-      .then(() => expect(store.getActions()).toEqual(expectedSuccessActions));
-  });
+      // test types.GET_TRANSLATOR_INFO_START
+      let nextState = cloneState();
+      Object.assign(nextState.translatorInfo, {pending: true});
+      expect(reducer(initialState, actions[0])).toEqual(nextState);
 
-  it('should not get translator info async', () => {
-    const userId = translators[0].id;
+      // test types.GET_TRANSLATOR_INFO_END
+      expect(reducer(nextState, actions[1])).toEqual(createSuccessExpectedState());
+    });
+
+    it('should work, action', () => {
+      const expectedActions = expectedSuccessActions();
+      let store = mockStore(initialState);
+
+      nock('http://localhost')
+        .get('/api/users/' + userId)
+        .reply(200, expectedSuccessResponse);
+
+      return store.dispatch(actions.getTranslatorInfoAsync(userId))
+        .then(() => expect(store.getActions()).toEqual(expectedActions));
+    });
+
     const expectedErrorResponse = {
       error: true,
       code: 500,
       message: 'Can\'t find user. Database error'
     };
-    const expectedErrorActions = [
+    const expectedErrorActions = () => ([
       { type: types.GET_TRANSLATOR_INFO_START },
       {
         type: types.GET_TRANSLATOR_INFO_END,
@@ -73,21 +91,39 @@ describe('common actions', () => {
         result: null
       },
       getNotificationAction(null, 'TranslatorPage.request_error')
-    ];
+    ]);
+    const createErrorExpectedState = () => {
+      let _initialState = cloneState();
+      Object.assign(_initialState.translatorInfo, {
+        data: null,
+        error: expectedErrorResponse,
+        pending: false
+      });
+      return _initialState
+    };
 
-    // test reducers
-    let expectedState = cloneState();
-    expectedState.translatorInfo.error = expectedErrorActions[1].error;
-    expectedState.translatorInfo.data = expectedErrorActions[1].result;
-    expect(reducer(initialState, expectedErrorActions[1])).toEqual(expectedState);
+    it('should handle error, reducer', () => {
+      const actions = expectedErrorActions();
 
-    // test async actions
-    let store = mockStore(initialState);
-    nock('http://localhost')
-      .get('/api/users/' + userId)
-      .reply(200, expectedErrorResponse);
+      // test types.GET_TRANSLATOR_INFO_START
+      let nextState = cloneState();
+      Object.assign(nextState.translatorInfo, {pending: true});
+      expect(reducer(initialState, actions[0])).toEqual(nextState);
 
-    return store.dispatch(actions.getTranslatorInfoAsync(userId))
-      .then(() => expect(store.getActions()).toEqual(expectedErrorActions));
+      // test types.GET_TRANSLATOR_INFO_END
+      expect(reducer(nextState, actions[1])).toEqual(createErrorExpectedState());
+    });
+
+    it('should handle error, action', () => {
+      const expectedActions = expectedErrorActions();
+      let store = mockStore(initialState);
+
+      nock('http://localhost')
+        .get('/api/users/' + userId)
+        .reply(200, expectedErrorResponse);
+
+      return store.dispatch(actions.getTranslatorInfoAsync(userId))
+        .then(() => expect(store.getActions()).toEqual(expectedActions));
+    });
   });
 })

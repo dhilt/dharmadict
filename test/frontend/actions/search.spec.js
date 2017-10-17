@@ -8,7 +8,6 @@ const {initialState, cloneState, terms, translators} = require('../_shared.js');
 const actions = require('../../../app/actions/search');
 const types = require('../../../app/actions/_constants');
 const reducer = require('../../../app/reducers').default;
-const lang = require('../../../app/helpers/lang').default;
 
 let middlewares = [thunk];
 let mockStore = configureMockStore(middlewares);
@@ -16,7 +15,7 @@ let mockStore = configureMockStore(middlewares);
 describe('common actions', () => {
   beforeEach(() => {
     nock.disableNetConnect();
-    nock.enableNetConnect('127.0.0.1');
+    nock.enableNetConnect('localhost');
     console.log = jest.fn();
   });
 
