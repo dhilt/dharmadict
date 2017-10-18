@@ -79,6 +79,7 @@ const users = [
 ];
 
 const terms = [{
+  "id": "chos",
   "wylie" : "chos",
   "sanskrit_ru" : "дхамма, дхарма",
   "sanskrit_ru_lower" : "дхамма, дхарма",
@@ -312,6 +313,7 @@ const terms = [{
     }
   ]
 }, {
+  "id": "chos_[kyi]_dbyings",
   "wylie" : "chos [kyi] dbyings",
   "sanskrit_ru" : "дхармадхату",
   "sanskrit_ru_lower" : "дхармадхату",
