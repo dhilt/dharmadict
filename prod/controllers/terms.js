@@ -49,7 +49,7 @@ const findTranslations = (translator, term, translations) => new Promise((resolv
   }
   logger.info('Term\'s translation was successfully found');
   return resolve({
-    termId: term._id,
+    termId: term.id,
     termName: term.wylie,
     translation
   });

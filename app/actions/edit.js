@@ -10,7 +10,7 @@ import {
   TRANSLATION_UPDATE_END
 } from './_constants'
 
-function getTranslationCopy(translation) {
+export function getTranslationCopy(translation) {
   let translationCopy = translation ? JSON.parse(JSON.stringify(translation)) : null
   if (translationCopy) {
     translationCopy.meanings.forEach(m => {
@@ -55,7 +55,7 @@ export function selectTranslation(translatorId, termId) {
       console.log('Let\'s start an async translation request to db! The term is "' + termId + '".')
       return asyncRequest(`terms/translation?translatorId=${translatorId}&termId=${termId}`, 'get', null, (data, error) => {
         let translation = data ? data.result.translation : null
-        dispatchTranslationRequestEnd(dispatch, translatorId, translation, data ? data.termId : '', data ? data.termName : '', error)
+        dispatchTranslationRequestEnd(dispatch, translatorId, translation, data ? data.result.termId : '', data ? data.result.termName : '', error)
       })
     }
   }
