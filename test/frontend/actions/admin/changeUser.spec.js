@@ -17,7 +17,7 @@ describe('admin/changeUser actions', () => {
   beforeEach(() => {
     nock.disableNetConnect();
     nock.enableNetConnect('localhost');
-    //console.log = jest.fn();
+    console.log = jest.fn();
   });
 
   afterEach(() => {
@@ -33,7 +33,7 @@ describe('admin/changeUser actions', () => {
 
     const user = translators[0];
     const userData = getUserData(user);
-    
+
     const responseSuccess = {
       success: true,
       user
@@ -277,7 +277,6 @@ describe('admin/changeUser actions', () => {
         .dispatch(actionCreators.updateAdminUserDataAsync())
         .then(() => expect(store.getActions()).toEqual(actionsFail));
     });
-
   });
 
   describe('function resetAdminUserData', () => {
