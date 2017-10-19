@@ -19,10 +19,12 @@ export function notify(notification) {
     if (!notification.hasOwnProperty('ttl')) {
       notification.ttl = defaultNotification.ttl
     }
-    if(notification.ttl > 0) {
-      notification.timer = setTimeout(() =>
-        dispatch(removeNotify(idLast)), notification.ttl
-      )
+    if(process.env.NODE_ENV !== 'test') {
+      if(notification.ttl > 0) {
+        notification.timer = setTimeout(() =>
+          dispatch(removeNotify(idLast)), notification.ttl
+        )
+      }
     }
     dispatch({
       type: CREATE_NOTIFICATION,
@@ -39,7 +41,7 @@ export function removeNotify(id, force) {
       if(elem.id !== id) {
         return true
       }
-      if(force) {
+      if(force && elem.timer) {
         clearTimeout(elem.timer)
       }
     })

@@ -14,7 +14,6 @@ let mockStore = configureMockStore(middlewares);
 const getNotificationAction = (successMessage, error, values = {}) => {
   const store = mockStore(initialState);
   store.dispatch(notifier.onResponse(successMessage, error, values));
-  delete store.getActions()[0].notification.timer;
   return store.getActions()[0]
 };
 
