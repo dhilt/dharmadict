@@ -137,9 +137,9 @@ export function resetTranslation() {
 
 export function saveTranslationAsync(shouldClose) {
   return (dispatch, getState) => {
-    let editSate = getState().edit
-    let termId = editSate.termId
-    let translation = getTranslationCopy(editSate.change)
+    let editState = getState().edit
+    let termId = editState.termId
+    let translation = getTranslationCopy(editState.change)
     translation.meanings.forEach(m => m.versions = m.versions.filter(v => v))
     translation.meanings = translation.meanings.filter(m => m.versions.length)
     dispatch({

@@ -17,7 +17,7 @@ describe('edit actions', () => {
   beforeEach(() => {
     nock.disableNetConnect();
     nock.enableNetConnect('localhost');
-    // console.log = jest.fn();
+    console.log = jest.fn();
   });
 
   afterEach(() => {
@@ -279,6 +279,279 @@ describe('edit actions', () => {
       // return store
       //   .dispatch(actionsCreators.saveTranslationAsync(false))
       //   .then(() => expect(store.getActions()).toEqual(actionsFail));
+    });
+  });
+
+  describe('function resetTranslation', () => {
+
+    const source = terms[0].translations[4];
+
+    const actions = [
+      {
+        type: types.CHANGE_TRANSLATION_LOCAL,
+        change: getTranslationCopy(source)
+      }
+    ];
+    const states = [
+      { ...initialState,
+        edit: { ...initialState.edit,
+          change: getTranslationCopy(source),
+          source
+        }
+      }
+    ];
+
+    it('should work, reducer', () => {
+      let _initialState = cloneState();
+      Object.assign(_initialState.edit, {
+        change: terms[1].translations[1],
+        source
+      });
+      expect(reducer(_initialState, actions[0])).toEqual(states[0]);
+    });
+
+    it('should work, action', () => {
+      let _initialState = cloneState();
+      Object.assign(_initialState.edit, {
+        change: terms[1].translations[1],
+        source
+      });
+      const store = mockStore(_initialState);
+
+      store.dispatch(actionsCreators.resetTranslation());
+      expect(store.getActions()).toEqual(actions);
+    });
+  });
+
+  describe('function addNewMeaning', () => {
+
+    const term = terms[0].translations[4];
+    let translation = JSON.parse(JSON.stringify(term));
+    translation.meanings.push({
+      comment: null,
+      versions: [""]
+    });
+
+    const actions = [
+      {
+        type: types.CHANGE_TRANSLATION_LOCAL,
+        change: translation
+      }
+    ];
+    const states = [
+      { ...initialState,
+        edit: { ...initialState.edit,
+          source: term,
+          change: translation
+        }
+      }
+    ];
+
+    it('should work, reducer', () => {
+      let _initialState = cloneState();
+      Object.assign(_initialState.edit, {
+        change: translation,
+        source: term
+      });
+      expect(reducer(_initialState, actions[0])).toEqual(states[0]);
+    });
+
+    it('should work, action', () => {
+      let _initialState = cloneState();
+      Object.assign(_initialState.edit, {
+        change: translation,
+        source: term
+      });
+      const store = mockStore(_initialState);
+
+      store.dispatch(actionsCreators.addNewMeaning());
+      expect(store.getActions()).toEqual(actions);
+    });
+  });
+
+  describe('function onMeaningRemoved', () => {
+
+    const term = terms[0].translations[4];
+    const index = 1;
+    let translation = JSON.parse(JSON.stringify(term));
+    translation.meanings.splice(index, 1);
+
+    const actions = [
+      {
+        type: types.CHANGE_TRANSLATION_LOCAL,
+        change: translation
+      }
+    ];
+    const states = [
+      { ...initialState,
+        edit: { ...initialState.edit,
+          source: term,
+          change: translation
+        }
+      }
+    ];
+
+    it('should work, reducer', () => {
+      let _initialState = cloneState();
+      Object.assign(_initialState.edit, {
+        change: translation,
+        source: term
+      });
+      expect(reducer(_initialState, actions[0])).toEqual(states[0]);
+    });
+
+    it('should work, action', () => {
+      let _initialState = cloneState();
+      Object.assign(_initialState.edit, {
+        change: translation,
+        source: term
+      });
+      const store = mockStore(_initialState);
+
+      store.dispatch(actionsCreators.onMeaningRemoved(index));
+      expect(store.getActions()).toEqual(actions);
+    });
+  });
+
+  describe('function onCommentChanged', () => {
+
+    const term = terms[0].translations[4];
+    const meaningIndex = 1;
+    const value = 'new comment';
+    let translation = JSON.parse(JSON.stringify(term));
+    let meaning = translation.meanings[meaningIndex];
+    meaning.comment = value;
+
+    const actions = [
+      {
+        type: types.CHANGE_TRANSLATION_LOCAL,
+        change: translation
+      }
+    ];
+    const states = [
+      { ...initialState,
+        edit: { ...initialState.edit,
+          source: term,
+          change: translation
+        }
+      }
+    ];
+
+    it('should work, reducer', () => {
+      let _initialState = cloneState();
+      Object.assign(_initialState.edit, {
+        change: translation,
+        source: term
+      });
+      expect(reducer(_initialState, actions[0])).toEqual(states[0]);
+    });
+
+    it('should work, action', () => {
+      let _initialState = cloneState();
+      Object.assign(_initialState.edit, {
+        change: translation,
+        source: term
+      });
+      const store = mockStore(_initialState);
+
+      store.dispatch(actionsCreators.onCommentChanged(meaningIndex, value));
+      expect(store.getActions()).toEqual(actions);
+    });
+  });
+
+  describe('function onVersionRemoved', () => {
+
+    const term = terms[0].translations[4];
+    const meaningIndex = 1;
+    const versionIndex = 1;
+    let translation = JSON.parse(JSON.stringify(term));
+    let meaning = translation.meanings[meaningIndex];
+    meaning.versions.splice(versionIndex, 1);
+
+    const actions = [
+      {
+        type: types.CHANGE_TRANSLATION_LOCAL,
+        change: translation
+      }
+    ];
+    const states = [
+      { ...initialState,
+        edit: { ...initialState.edit,
+          source: term,
+          change: translation
+        }
+      }
+    ];
+
+    it('should work, reducer', () => {
+      let _initialState = cloneState();
+      Object.assign(_initialState.edit, {
+        change: translation,
+        source: term
+      });
+      expect(reducer(_initialState, actions[0])).toEqual(states[0]);
+    });
+
+    it('should work, action', () => {
+      let _initialState = cloneState();
+      Object.assign(_initialState.edit, {
+        change: translation,
+        source: term
+      });
+      const store = mockStore(_initialState);
+
+      store.dispatch(actionsCreators.onVersionRemoved(meaningIndex, versionIndex));
+      expect(store.getActions()).toEqual(actions);
+    });
+  });
+
+  describe('function onVersionChanged', () => {
+
+    const term = terms[0].translations[4];
+    const meaningIndex = 1;
+    const versionIndex = 1;
+    const value = 'new version of translation';
+    let translation = JSON.parse(JSON.stringify(term));
+    let meaning = translation.meanings[meaningIndex];
+    meaning.versions[versionIndex] = value;
+    if (versionIndex === meaning.versions.length - 1) {
+      meaning.versions.push('')
+    };
+
+    const actions = [
+      {
+        type: types.CHANGE_TRANSLATION_LOCAL,
+        change: translation
+      }
+    ];
+    const states = [
+      { ...initialState,
+        edit: { ...initialState.edit,
+          source: term,
+          change: translation
+        }
+      }
+    ];
+
+    it('should work, reducer', () => {
+      let _initialState = cloneState();
+      Object.assign(_initialState.edit, {
+        change: translation,
+        source: term
+      });
+      expect(reducer(_initialState, actions[0])).toEqual(states[0]);
+    });
+
+    it('should work, action', () => {
+      let _initialState = cloneState();
+      Object.assign(_initialState.edit, {
+        change: translation,
+        source: term
+      });
+      const store = mockStore(_initialState);
+
+      store.dispatch(actionsCreators.onVersionChanged(meaningIndex, versionIndex, value));
+      expect(store.getActions()).toEqual(actions);
     });
   });
 })
