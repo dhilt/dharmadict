@@ -12,7 +12,7 @@ const reducer = require('../../../app/reducers').default;
 let middlewares = [thunk];
 let mockStore = configureMockStore(middlewares);
 
-describe('common actions', () => {
+describe('search actions', () => {
   beforeEach(() => {
     nock.disableNetConnect();
     nock.enableNetConnect('localhost');

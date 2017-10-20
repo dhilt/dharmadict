@@ -12,7 +12,7 @@ const reducer = require('../../../app/reducers').default;
 let middlewares = [thunk];
 let mockStore = configureMockStore(middlewares);
 
-describe('common actions', () => {
+describe('notifier actions', () => {
   beforeEach(() => {
     console.log = jest.fn();
   });

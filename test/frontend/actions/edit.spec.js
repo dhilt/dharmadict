@@ -13,7 +13,7 @@ const reducer = require('../../../app/reducers').default;
 let middlewares = [thunk];
 let mockStore = configureMockStore(middlewares);
 
-describe('common actions', () => {
+describe('edit actions', () => {
   beforeEach(() => {
     nock.disableNetConnect();
     nock.enableNetConnect('localhost');
@@ -139,6 +139,146 @@ describe('common actions', () => {
       return store
         .dispatch(actionsCreators.selectTranslation(translatorId, termId))
         .then(() => expect(store.getActions()).toEqual(actionsFail));
+    });
+  });
+
+  describe('function saveTranslationAsync', () => {
+
+    const term = terms[0];
+    const termId = term.id;
+    const termName = term.wylie;
+    const translatorId = translators[0].id;
+    const sourceTranslations = getTranslationCopy(term.translations.find(elem => elem.translatorId === translatorId));
+    let newTranslations = getTranslationCopy(sourceTranslations);
+    newTranslations.meanings.push({
+      "versions" : [ "New description of term" ],
+      "comment" : ""
+    });
+    let newTerm = JSON.parse(JSON.stringify(terms[0]));
+    newTerm.translations = newTerm.translations.map(elem =>
+      elem.translatorId === translatorId ? newTranslations : elem
+    );
+
+    const responseSuccess = {
+      success: true,
+      term: newTranslations
+    };
+    const actions = [
+      { type: types.TRANSLATION_UPDATE_START },
+      {
+        type: types.TRANSLATION_UPDATE_END,
+        error: null,
+        searchResult: terms,
+        term: newTerm
+      }
+    ];
+    const states = [
+      { ...initialState,
+        edit: { ...initialState.edit,
+          update: {
+            pending: true
+          }
+        }
+      },
+      { ...initialState,
+        search: { ...initialState.search,
+          result: terms
+        },
+        selected: { ...initialState.selected,
+          term: newTerm
+        },
+        edit: { ...initialState.edit,
+          update: {
+            pending: false,
+            error: null
+          }
+        }
+      }
+    ];
+
+    const responseFail = {
+      error: true,
+      code: 500,
+      message: 'Can\'t find translations. Database error'
+    };
+    const actionsFail = [
+      actions[0],
+      {
+        type: actions[1].type,
+        error: responseFail,
+        searchResult: null,
+        term: null
+      },
+      getNotificationAction(null, responseFail)
+    ];
+    const statesFail = [
+      states[0],
+      { ...initialState,
+        search: { ...initialState.search,
+          result: null
+        },
+        selected: { ...initialState.selected,
+          term: null
+        },
+        edit: { ...initialState.edit,
+          update: {
+            pending: false,
+            error: responseFail
+          }
+        }
+      }
+    ];
+
+    it('should work, reducer', () => {
+      expect(reducer(initialState, actions[0])).toEqual(states[0]);
+      expect(reducer(initialState, actions[1])).toEqual(states[1]);
+    });
+
+    it('should work, action', () => {
+      let _initialState = cloneState();
+      Object.assign(_initialState, states[1]);
+      Object.assign(_initialState.edit, {
+        termId,
+        change: newTranslations
+      });
+      const store = mockStore(_initialState);
+
+      nock('http://localhost')
+        .patch('/api/terms', {
+          termId: termId,
+          translation: newTranslations
+        })
+        .reply(200, responseSuccess);
+
+      // return store
+      //   .dispatch(actionsCreators.saveTranslationAsync(false))
+      //   .then(() => expect(store.getActions()).toEqual(actions));
+    });
+
+    it('should handle error, reducer', () => {
+      expect(reducer(initialState, actionsFail[0])).toEqual(statesFail[0]);
+      expect(reducer(initialState, actionsFail[1])).toEqual(statesFail[1]);
+    });
+
+    it('should handle error, action', () => {
+      let _initialState = cloneState();
+      Object.assign(_initialState, states[1]);
+      Object.assign(_initialState.edit, {
+        termId,
+        change: newTranslations
+      });
+      const store = mockStore(_initialState);
+
+      nock('http://localhost')
+        .patch('/api/terms', {
+          termId: store.getState().edit.termId,
+          translation: store.getState().edit.change
+        })
+        .reply(200, responseFail);
+
+      // return store
+      //   .dispatch(actionsCreators.saveTranslationAsync(false))
+      //   .then(() => expect(store.getActions()).toEqual(actionsFail));
     });
   });
 })
