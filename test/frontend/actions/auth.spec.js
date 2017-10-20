@@ -359,16 +359,14 @@ describe('edit actions', () => {
     );
   });
 
-  describe('function changeLoginString', () => {
-
-    const login = 'user login';
+  const testChangeUserInput = (key, value, typeAction, action) => {
     const expectedAction = {
-      type: types.CHANGE_LOGIN_STRING,
-      login
+      type: typeAction,
+      [key]: value
     };
     const expectedState = { ...initialState,
       auth: { ...initialState.auth,
-        login
+        [key]: value
       }
     };
 
@@ -377,30 +375,18 @@ describe('edit actions', () => {
     );
 
     it('should work, action', () =>
-      expect(actionsCreators.changeLoginString(login)).toEqual(expectedAction)
+      expect(action).toEqual(expectedAction)
     );
+  };
+
+  describe('function changeLoginString', () => {
+    const login = 'user login';
+    testChangeUserInput('login', login, types.CHANGE_LOGIN_STRING, actionsCreators.changeLoginString(login));
   });
 
   describe('function changePasswordString', () => {
-
     const password = 'user password';
-    const expectedAction = {
-      type: types.CHANGE_PASSWORD_STRING,
-      password
-    };
-    const expectedState = { ...initialState,
-      auth: { ...initialState.auth,
-        password
-      }
-    };
-
-    it('should work, reducer', () =>
-      expect(reducer(initialState, expectedAction)).toEqual(expectedState)
-    );
-
-    it('should work, action', () =>
-      expect(actionsCreators.changePasswordString(password)).toEqual(expectedAction)
-    );
+    testChangeUserInput('password', password, types.CHANGE_PASSWORD_STRING, actionsCreators.changePasswordString(password));
   });
 
   describe('function doLogout', () => {
