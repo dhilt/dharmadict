@@ -19,7 +19,7 @@ describe('edit actions', () => {
   beforeEach(() => {
     nock.disableNetConnect();
     nock.enableNetConnect('localhost');
-    // console.log = jest.fn();
+    console.log = jest.fn();
   });
 
   afterEach(() => {
@@ -35,12 +35,13 @@ describe('edit actions', () => {
   describe('function getUserInfoAsync', () => {
 
     const user = translators[1];
+    const mockPromise = () => new Promise((resolve, reject) => {});
 
     const responseSuccess = user;
     const actions = [
       {
         type: types.USERINFO_REQUEST_START,
-        promise: Promise  // ???
+        promise: mockPromise()
       },
       {
         type: types.USERINFO_REQUEST_END,
@@ -55,7 +56,7 @@ describe('edit actions', () => {
           userInfo: { ...initialState.auth.userInfo,
             requested: true,
             pending: true,
-            promise: Promise,  // ???
+            promise: mockPromise(),
             error: null
           }
         }
@@ -115,11 +116,7 @@ describe('edit actions', () => {
 
       return store
         .dispatch(actionsCreators.getUserInfoAsync())
-        .then(() => {
-          // expect(store.getActions()[0]).toEqual(actions[0]);  // problem with promise
-          expect(store.getActions()[1]).toEqual(actions[1]);
-          // expect(store.getActions()).toEqual(actions)  // should work
-        });
+        .then(() => expect(store.getActions()).toEqual(actions));
     });
 
     it('should handle error, reducer', () => {
@@ -137,12 +134,7 @@ describe('edit actions', () => {
 
       return store
         .dispatch(actionsCreators.getUserInfoAsync())
-        .then(() => {
-          // expect(store.getActions()[0]).toEqual(actionsFail[0]);  // problem with promise
-          expect(store.getActions()[1]).toEqual(actionsFail[1]);
-          expect(store.getActions()[2]).toEqual(actionsFail[2]);
-          // expect(store.getActions()).toEqual(actionsFail)  // should work
-        });
+        .then(() => expect(store.getActions()).toEqual(actionsFail));
     });
   });
 
@@ -151,6 +143,7 @@ describe('edit actions', () => {
     const user = translators[1];
     const login = 'user login';
     const password = 'user password';
+    const mockPromise = () => new Promise((resolve, reject) => {});
 
     const responseSuccess = {
       success: true,
@@ -161,7 +154,7 @@ describe('edit actions', () => {
       { type: types.LOGIN_REQUEST_START },
       {
         type: types.USERINFO_REQUEST_START,
-        promise: Promise  // ???
+        promise: mockPromise()
       },
       { type: types.CLOSE_LOGIN_MODAL },
       {
@@ -190,7 +183,7 @@ describe('edit actions', () => {
           userInfo: { ...initialState.auth.userInfo,
             requested: true,
             pending: true,
-            promise: Promise,  // ???
+            promise: mockPromise(),
             error: null
           }
         }
@@ -289,14 +282,7 @@ describe('edit actions', () => {
 
       return store
         .dispatch(actionsCreators.doLoginAsync())
-        .then(() => {
-          expect(store.getActions()[0]).toEqual(actions[0]);
-          // expect(store.getActions()[1]).toEqual(actions[1]);  // // problem with promise
-          expect(store.getActions()[2]).toEqual(actions[2]);
-          expect(store.getActions()[3]).toEqual(actions[3]);
-          expect(store.getActions()[4]).toEqual(actions[4]);
-          // expect(store.getActions()).toEqual(actions)  // should work
-        });
+        .then(() => expect(store.getActions()).toEqual(actions));
     });
 
     it('should handle error, reducer', () => {
@@ -323,15 +309,7 @@ describe('edit actions', () => {
 
       return store
         .dispatch(actionsCreators.doLoginAsync())
-        .then(() => {
-          expect(store.getActions()[0]).toEqual(actionsFail[0]);
-          // expect(store.getActions()[1]).toEqual(actionsFail[1]);  // problem with promise
-          expect(store.getActions()[2]).toEqual(actionsFail[2]);
-          expect(store.getActions()[3]).toEqual(actionsFail[3]);
-          expect(store.getActions()[4]).toEqual(actionsFail[4]);
-          expect(store.getActions()[5]).toEqual(actionsFail[5]);
-          // expect(store.getActions()).toEqual(actionsFail)  // should work
-        });
+        .then(() => expect(store.getActions()).toEqual(actionsFail));
     });
   });
 
