@@ -91,7 +91,7 @@ describe('search actions', () => {
       {
         type: actions[1].type,
         error: responseFail,
-        data: null
+        result: null
       },
       getNotificationAction(null, 'SearchInput.request_error')
     ];
@@ -102,7 +102,7 @@ describe('search actions', () => {
           searchString,
           pending: false,
           started: true,
-          result: undefined,
+          result: null,
           error: responseFail
         }
       }
@@ -124,9 +124,9 @@ describe('search actions', () => {
         .get(`/api/terms?pattern=${searchString}`)
         .reply(200, responseSuccess);
 
-      // return store
-      //   .dispatch(actionsCreators.doSearchRequestAsync())
-      //   .then(() => expect(store.getActions()).toEqual(actions));
+      return store
+        .dispatch(actionsCreators.doSearchRequestAsync())
+        .then(() => expect(store.getActions()).toEqual(actions));
     });
 
     it('should handle error, reducer', () => {
@@ -142,12 +142,12 @@ describe('search actions', () => {
       const store = mockStore(_initialState);
 
       nock('http://localhost')
-        .get('/api/terms?pattern=${searchString}')
+        .get(`/api/terms?pattern=${searchString}`)
         .reply(200, responseFail);
 
-      // return store
-      //   .dispatch(actionsCreators.doSearchRequestAsync())
-      //   .then(() => expect(store.getActions()).toEqual(actionsFail));
+      return store
+        .dispatch(actionsCreators.doSearchRequestAsync())
+        .then(() => expect(store.getActions()).toEqual(actionsFail));
     });
   });
 
@@ -221,7 +221,7 @@ describe('search actions', () => {
       {
         type: actions[2].type,
         error: responseFail,
-        data: null
+        result: null
       },
       getNotificationAction(null, 'SearchInput.request_error')
     ];
@@ -232,7 +232,7 @@ describe('search actions', () => {
         search: { ...initialState.search,
           pending: false,
           started: true,
-          result: undefined,
+          result: null,
           error: responseFail
         }
       }
@@ -272,13 +272,12 @@ describe('search actions', () => {
       const store = mockStore(_initialState);
 
       nock('http://localhost')
-        .get('/api/terms?pattern=${term}')
+        .get(`/api/terms?pattern=${term}`)
         .reply(200, responseFail);
 
-      // return store
-      //   .dispatch(actionsCreators.selectTermAsync(termId))
-      //   .then(() => expect(store.getActions()).toEqual(actionsFail));
-      // should work
+      return store
+        .dispatch(actionsCreators.selectTermAsync(termId))
+        .then(() => expect(store.getActions()).toEqual(actionsFail));
     });
   });
 

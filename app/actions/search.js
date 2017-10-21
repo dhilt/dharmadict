@@ -36,9 +36,8 @@ function searchRequestAsync(dispatch, getState, cb) {
 }
 
 export function doSearchRequestAsync(cb) {
-  return (dispatch, getState) => {
+  return (dispatch, getState) =>
     searchRequestAsync(dispatch, getState, () => null)
-  }
 }
 
 export function selectTermAsync(termId) {
