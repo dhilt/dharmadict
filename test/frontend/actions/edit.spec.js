@@ -148,20 +148,24 @@ describe('edit actions', () => {
     const termId = term.id;
     const termName = term.wylie;
     const translatorId = translators[0].id;
-    const sourceTranslations = getTranslationCopy(term.translations.find(elem => elem.translatorId === translatorId));
-    let newTranslations = getTranslationCopy(sourceTranslations);
+    let newTranslations = JSON.parse(JSON.stringify(term.translations.find(elem => elem.translatorId === translatorId)));
+    newTranslations.meanings.forEach(m => delete m.versions_lower);
     newTranslations.meanings.push({
       "versions" : [ "New description of term" ],
       "comment" : ""
     });
-    let newTerm = JSON.parse(JSON.stringify(terms[0]));
+    let newTerm = JSON.parse(JSON.stringify(term));
     newTerm.translations = newTerm.translations.map(elem =>
       elem.translatorId === translatorId ? newTranslations : elem
     );
 
     const responseSuccess = {
       success: true,
-      term: newTranslations
+      term: {
+        termId,
+        termName,
+        translation: newTranslations
+      }
     };
     const actions = [
       { type: types.TRANSLATION_UPDATE_START },
@@ -250,9 +254,9 @@ describe('edit actions', () => {
         })
         .reply(200, responseSuccess);
 
-      // return store
-      //   .dispatch(actionsCreators.saveTranslationAsync(false))
-      //   .then(() => expect(store.getActions()).toEqual(actions));
+      return store
+        .dispatch(actionsCreators.saveTranslationAsync(false))
+        .then(() => expect(store.getActions()).toEqual(actions));
     });
 
     it('should handle error, reducer', () => {
@@ -276,9 +280,9 @@ describe('edit actions', () => {
         })
         .reply(200, responseFail);
 
-      // return store
-      //   .dispatch(actionsCreators.saveTranslationAsync(false))
-      //   .then(() => expect(store.getActions()).toEqual(actionsFail));
+      return store
+        .dispatch(actionsCreators.saveTranslationAsync(false))
+        .then(() => expect(store.getActions()).toEqual(actionsFail));
     });
   });
 
