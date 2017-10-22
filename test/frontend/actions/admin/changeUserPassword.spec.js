@@ -61,7 +61,7 @@ describe('admin/changeUserPassword actions', () => {
 
       let _initialState = cloneState();
       Object.assign(_initialState.admin.editUserPassword, { password, confirmPassword });
-      let store = mockStore(_initialState);
+      const store = mockStore(_initialState);
 
       const expectedAction = {
         type: types.CHANGE_ADMIN_USER_PASSWORD,
@@ -104,7 +104,7 @@ describe('admin/changeUserPassword actions', () => {
     );
 
     it('should work, action', () => {
-      let store = mockStore(_initialState);
+      const store = mockStore(_initialState);
       store.dispatch(actionsCreators.resetAdminUserPassword());
       expect(store.getActions()[0]).toEqual(expectedAction);
     });

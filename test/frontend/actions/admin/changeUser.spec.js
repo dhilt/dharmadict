@@ -156,7 +156,7 @@ describe('admin/changeUser actions', () => {
       );
 
       it(`should change ${key}, action`, () => {
-        let store = mockStore(stateStart);
+        const store = mockStore(stateStart);
         store.dispatch(actionCreators.changeAdminUserData({[key]: value}));
         expect(store.getActions()).toEqual([action]);
       });

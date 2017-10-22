@@ -91,7 +91,7 @@ describe('translators actions', () => {
     });
 
     it('should work, action', () => {
-      let store = mockStore(initialState);
+      const store = mockStore(initialState);
 
       nock('http://localhost')
         .get('/api/users/' + userId)
@@ -108,7 +108,7 @@ describe('translators actions', () => {
     });
 
     it('should handle error, action', () => {
-      let store = mockStore(initialState);
+      const store = mockStore(initialState);
 
       nock('http://localhost')
         .get('/api/users/' + userId)

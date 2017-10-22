@@ -42,7 +42,7 @@ describe('search actions', () => {
     });
 
     it('should work, action', () => {
-      let store = mockStore(initialState);
+      const store = mockStore(initialState);
       store.dispatch(actionsCreators.changeSearchString(newSearchString));
       expect(store.getActions()[0]).toEqual(expectedAction);
     });
