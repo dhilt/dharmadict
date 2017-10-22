@@ -108,17 +108,20 @@ describe('search actions', () => {
       }
     ];
 
+    const createInitialState = () => {
+      let _initialState = cloneState(states[0]);
+      Object.assign(_initialState.search, { pending: false });
+      return _initialState
+    };
+
     it('should work, reducer', () => {
-      let _initialState = cloneState();
-      Object.assign(_initialState.search, { searchString });
+      let _initialState = createInitialState();
       expect(reducer(_initialState, actions[0])).toEqual(states[0]);
       expect(reducer(_initialState, actions[1])).toEqual(states[1]);
     });
 
     it('should work, action', () => {
-      let _initialState = cloneState();
-      Object.assign(_initialState.search, { searchString });
-      const store = mockStore(_initialState);
+      const store = mockStore(createInitialState());
 
       nock('http://localhost')
         .get(`/api/terms?pattern=${searchString}`)
@@ -130,16 +133,13 @@ describe('search actions', () => {
     });
 
     it('should handle error, reducer', () => {
-      let _initialState = cloneState();
-      Object.assign(_initialState.search, { searchString });
+      let _initialState = createInitialState();
       expect(reducer(_initialState, actionsFail[0])).toEqual(statesFail[0]);
       expect(reducer(_initialState, actionsFail[1])).toEqual(statesFail[1]);
     });
 
     it('should handle error, action', () => {
-      let _initialState = cloneState();
-      Object.assign(_initialState.search, { searchString });
-      const store = mockStore(_initialState);
+      const store = mockStore(createInitialState());
 
       nock('http://localhost')
         .get(`/api/terms?pattern=${searchString}`)
@@ -185,11 +185,13 @@ describe('search actions', () => {
       },
       { ...initialState,
         search: { ...initialState.search,
+          searchString: term,
           pending: true
         }
       },
       { ...initialState,
         search: { ...initialState.search,
+          searchString: term,
           pending: false,
           result: terms,
           started: true,
@@ -201,6 +203,7 @@ describe('search actions', () => {
       },
       { ...initialState,
         search: { ...initialState.search,
+          searchString: term,
           pending: false,
           error: null
         },
@@ -230,6 +233,7 @@ describe('search actions', () => {
       states[1],
       { ...initialState,
         search: { ...initialState.search,
+          searchString: term,
           pending: false,
           started: true,
           result: null,
@@ -238,14 +242,19 @@ describe('search actions', () => {
       }
     ];
 
-    it('should work, reducer', () =>
-      actions.forEach((action, i) => expect(reducer(initialState, action)).toEqual(states[i]))
-    );
+    const createInitialState = () => {
+      let _initialState = cloneState(states[0]);
+      Object.assign(_initialState.search, { pending: false });
+      return _initialState
+    };
+
+    it('should work, reducer', () => {
+      const _initialState = createInitialState();
+      actions.forEach((action, i) => expect(reducer(_initialState, action)).toEqual(states[i]));
+    });
 
     it('should work, action', () => {
-      let _initialState = cloneState();
-      Object.assign(_initialState.search, { searchString: term });
-      const store = mockStore(_initialState);
+      const store = mockStore(createInitialState());
 
       nock('http://localhost')
         .get(`/api/terms?pattern=${term}`)
@@ -261,15 +270,14 @@ describe('search actions', () => {
     });
 
     it('should handle error, reducer', () => {
-      expect(reducer(initialState, actionsFail[0])).toEqual(statesFail[0]);
-      expect(reducer(initialState, actionsFail[1])).toEqual(statesFail[1]);
-      expect(reducer(initialState, actionsFail[2])).toEqual(statesFail[2]);
+      const _initialState = createInitialState();
+      expect(reducer(_initialState, actionsFail[0])).toEqual(statesFail[0]);
+      expect(reducer(_initialState, actionsFail[1])).toEqual(statesFail[1]);
+      expect(reducer(_initialState, actionsFail[2])).toEqual(statesFail[2]);
     });
 
     it('should handle error, action', () => {
-      let _initialState = cloneState();
-      Object.assign(_initialState.search, { searchString: term });
-      const store = mockStore(_initialState);
+      const store = mockStore(createInitialState());
 
       nock('http://localhost')
         .get(`/api/terms?pattern=${term}`)
@@ -284,28 +292,24 @@ describe('search actions', () => {
   describe('function selectTerm', () => {
 
     const term = terms[0].wylie;
-    const actions = [
-      {
-        type: types.SELECT_TERM,
+    const expectedAction = {
+      type: types.SELECT_TERM,
+      term
+    };
+    const expectedState = { ...initialState,
+      selected: { ...initialState.selected,
         term
       }
-    ];
-    const states = [
-      { ...initialState,
-        selected: { ...initialState.selected,
-          term
-        }
-      }
-    ];
+    };
 
     it('should work, reducer', () => {
-      expect(reducer(initialState, actions[0])).toEqual(states[0]);
+      expect(reducer(initialState, expectedAction)).toEqual(expectedState);
     });
 
     it('should work, action', () => {
       const store = mockStore(initialState);
       store.dispatch(actionsCreators.selectTerm(term, true));
-      expect(store.getActions()).toEqual(actions);
+      expect(store.getActions()[0]).toEqual(expectedAction);
     });
   });
 
@@ -318,22 +322,18 @@ describe('search actions', () => {
     let meaning = newTerm.translations[translationIndex].meanings[meaningIndex];
     meaning.openComment = !meaning.openComment;
 
-    const actions = [
-      {
-        type: types.TOGGLE_COMMENT,
+    const expectedAction = {
+      type: types.TOGGLE_COMMENT,
+      term: newTerm
+    };
+    const expectedState = { ...initialState,
+      selected: { ...initialState.selected,
         term: newTerm
       }
-    ];
-    const states = [
-      { ...initialState,
-        selected: { ...initialState.selected,
-          term: newTerm
-        }
-      }
-    ];
+    };
 
     it('should work, reducer', () =>
-      expect(reducer(initialState, actions[0])).toEqual(states[0])
+      expect(reducer(initialState, expectedAction)).toEqual(expectedState)
     );
 
     it('should work, action', () => {
@@ -342,7 +342,7 @@ describe('search actions', () => {
       const store = mockStore(_initialState);
 
       store.dispatch(actionsCreators.toggleComment(translationIndex, meaningIndex));
-      expect(store.getActions()[0]).toEqual(actions[0]);
+      expect(store.getActions()[0]).toEqual(expectedAction);
     });
   });
 })
