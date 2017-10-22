@@ -4,7 +4,7 @@ const expect = require('expect');
 
 const {initialState, cloneState, getNotificationAction} = require('../_shared.js');
 
-const actions = require('../../../app/actions/notifier');
+const actionsCreators = require('../../../app/actions/notifier');
 const {defaultNotification} = require('../../../app/actions/notifier');
 const types = require('../../../app/actions/_constants');
 const reducer = require('../../../app/reducers').default;
@@ -44,13 +44,12 @@ describe('notifier actions', () => {
       });
 
       it('should work, reducer', () =>
-        // test types.CREATE_NOTIFICATION
         expect(reducer(initialState, expectedAction(notification))).toEqual(expectedState)
       );
 
       it('should work, action', () => {
         const store = mockStore(initialState);
-        store.dispatch(actions.notify(notification));
+        store.dispatch(actionsCreators.notify(notification));
         delete store.getActions()[0].notification.timer;
         expect(store.getActions()[0]).toEqual(expectedAction(notification));
       });
@@ -93,13 +92,12 @@ describe('notifier actions', () => {
       })
 
       it('should work, reducer', () =>
-        // test types.REMOVE_NOTIFICATION
         expect(reducer(_initialState, expectedAction(expectedState.notifications.list))).toEqual(expectedState)
       );
 
       it('should work, action', () => {
         const store = mockStore(_initialState);
-        store.dispatch(actions.removeNotify(id));
+        store.dispatch(actionsCreators.removeNotify(id));
         expect(store.getActions()[0]).toEqual(expectedAction(expectedState.notifications.list));
       });
     };

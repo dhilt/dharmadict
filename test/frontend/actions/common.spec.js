@@ -5,7 +5,7 @@ const expect = require('expect');
 
 const {initialState, cloneState, languages, translators, getNotificationAction} = require('../_shared.js');
 
-const actions = require('../../../app/actions/common');
+const actionsCreators = require('../../../app/actions/common');
 const types = require('../../../app/actions/_constants');
 const reducer = require('../../../app/reducers').default;
 const lang = require('../../../app/helpers/lang').default;
@@ -30,31 +30,65 @@ describe('common actions', () => {
   });
 
   describe('function getCommonDataAsync', () => {
-    const expectedSuccessResponse = {
+
+    const responseSuccess = {
       success: true,
       translators,
       languages
     };
-    const expectedSuccessActions = () => ([
+    const actions = [
       { type: types.GET_COMMON_DATA_START },
       {
         type: types.GET_COMMON_DATA_END,
         translators,
         languages
       }
-    ]);
+    ];
+    const states = [
+      { ...initialState,
+        common: { ...initialState.common,
+          translators: null
+        }
+      },
+      { ...initialState,
+        common: { ...initialState.common,
+          translators,
+          languages
+        }
+      }
+    ];
+
+    const responseFail = {
+      error: true,
+      code: 500,
+      message: 'Can\'t get common data. Database error'
+    };
+    const actionsFail = [
+      actions[0],
+      {
+        type: types.GET_COMMON_DATA_END,
+        translators: [],
+        languages: []
+      },
+      getNotificationAction(null, 'App.get_languages_error')
+    ];
+    const statesFail = [
+      { ...initialState,
+        common: { ...initialState.common,
+          translators: null
+        }
+      },
+      { ...initialState,
+        common: { ...initialState.common,
+          translators: [],
+          languages: []
+        }
+      }
+    ];
 
     it('should work, reducer', () => {
-      const actions = expectedSuccessActions();
-
-      // test types.GET_COMMON_DATA_START
-      let expectedState = cloneState();
-      Object.assign(expectedState.common, {translators: null});
-      expect(reducer(initialState, actions[0])).toEqual(expectedState);
-
-      // test types.GET_ADMIN_USER_DATA_END
-      Object.assign(expectedState.common, { languages, translators });
-      expect(reducer(initialState, actions[1])).toEqual(expectedState);
+      expect(reducer(initialState, actions[0])).toEqual(states[0]);
+      expect(reducer(initialState, actions[1])).toEqual(states[1]);
     });
 
     it('should work, action', () => {
@@ -63,39 +97,17 @@ describe('common actions', () => {
       nock('http://localhost')
         .get('/api/common')
         .reply((uri, requestBody, cb) => {
-          cb(null, [200, expectedSuccessResponse])
+          cb(null, [200, responseSuccess])
         });
 
-      return store.dispatch(actions.getCommonDataAsync())
-        .then(() => expect(store.getActions()).toEqual(expectedSuccessActions()));
+      return store
+        .dispatch(actionsCreators.getCommonDataAsync())
+        .then(() => expect(store.getActions()).toEqual(actions));
     });
 
-    const expectedErrorResponse = {
-      error: true,
-      code: 500,
-      message: 'Can\'t get common data. Database error'
-    };
-    const expectedErrorActions = () => ([
-      { type: types.GET_COMMON_DATA_START },
-      {
-        type: types.GET_COMMON_DATA_END,
-        translators: [],
-        languages: []
-      },
-      getNotificationAction(null, 'App.get_languages_error')
-    ]);
-
     it('should handle error, reducer', () => {
-      const actions = expectedErrorActions();
-
-      // test types.GET_COMMON_DATA_START
-      let expectedState = cloneState();
-      Object.assign(expectedState.common, {translators: null});
-      expect(reducer(initialState, actions[0])).toEqual(expectedState);
-
-      // test types.GET_ADMIN_USER_DATA_END
-      Object.assign(expectedState.common, { languages: [], translators: [] });
-      expect(reducer(initialState, actions[1])).toEqual(expectedState);
+      expect(reducer(initialState, actionsFail[0])).toEqual(statesFail[0]);
+      expect(reducer(initialState, actionsFail[1])).toEqual(statesFail[1]);
     });
 
     it('should handle error, action', () => {
@@ -103,12 +115,12 @@ describe('common actions', () => {
 
       nock('http://localhost')
         .get('/api/common')
-        .reply(304, expectedErrorResponse);
+        .reply(304, responseFail);
 
-      return store.dispatch(actions.getCommonDataAsync()).then(() => {
-        expect(store.getActions()).toEqual(expectedErrorActions())
+      return store
+        .dispatch(actionsCreators.getCommonDataAsync())
+        .then(() => expect(store.getActions()).toEqual(actionsFail))
       });
-    });
   });
 
   describe('function changeUserLanguage', () => {
@@ -136,12 +148,11 @@ describe('common actions', () => {
       Object.assign(expectedState.common, {userLanguage: language})
 
       it('should work, reducer', () =>
-        // test types.SET_LANGUAGE
         expect(reducer(initialState, createExpectedAction(language))).toEqual(expectedState)
       );
 
       it('should work, action', () => {
-        store.dispatch(actions.changeUserLanguage(language));
+        store.dispatch(actionsCreators.changeUserLanguage(language));
         expect(store.getActions()[0]).toEqual(createExpectedAction(language));
       });
     };
