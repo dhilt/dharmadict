@@ -6,6 +6,17 @@ const auth = require('../../app/helpers/auth').default;
 const lang = require('../../app/helpers/lang').default;
 const notifier = require('../../app/helpers/notifier').default;
 
+const React = require('react');
+const {Component} = require('react');
+const {IntlProvider, addLocaleData} = require('react-intl');
+const {shallow, mount, render, configure} = require('enzyme');
+const Adapter = require('enzyme-adapter-react-15');
+configure({ adapter: new Adapter() });
+
+const _defaultLang = require('react-intl/locale-data/' + lang.defaultLang);
+addLocaleData([..._defaultLang]);
+const i18n = require('../../app/helpers/i18n').default;
+
 const configureMockStore = require('redux-mock-store').default;
 const thunk = require('redux-thunk').default;
 let middlewares = [thunk];
@@ -15,6 +26,15 @@ const getNotificationAction = (successMessage, error, values = {}) => {
   const store = mockStore(initialState);
   store.dispatch(notifier.onResponse(successMessage, error, values));
   return store.getActions()[0]
+};
+
+const setupComponent = (NewComponent, props = {}) => {
+  const wrapper = mount(
+    <IntlProvider locale={lang.defaultLang} messages={i18n.data[lang.defaultLang]}>
+      <NewComponent {...props} />
+    </IntlProvider>
+  );
+  return { props, wrapper }
 };
 
 const translators = [{
@@ -406,8 +426,10 @@ const translations = [
 const cloneState = (state = initialState) => JSON.parse(JSON.stringify(state));
 
 module.exports = {
+  defaultLang: lang.defaultLang,
   initialState,
   cloneState,
+  setupComponent,
   getNotificationAction,
   translators,
   languages,
