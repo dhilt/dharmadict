@@ -8,6 +8,7 @@ const notifier = require('../../app/helpers/notifier').default;
 
 const React = require('react');
 const {Component} = require('react');
+const {Provider} = require('react-redux');
 const {IntlProvider, addLocaleData} = require('react-intl');
 const {shallow, mount, render, configure} = require('enzyme');
 const Adapter = require('enzyme-adapter-react-15');
@@ -28,11 +29,13 @@ const getNotificationAction = (successMessage, error, values = {}) => {
   return store.getActions()[0]
 };
 
-const setupComponent = (NewComponent, props = {}) => {
+const setupComponent = (NewComponent, state = initialState, props = {}) => {
   const wrapper = mount(
-    <IntlProvider locale={lang.defaultLang} messages={i18n.data[lang.defaultLang]}>
-      <NewComponent {...props} />
-    </IntlProvider>
+    <Provider store={mockStore(state)}>
+      <IntlProvider locale={lang.defaultLang} messages={i18n.data[lang.defaultLang]}>
+        <NewComponent {...props} />
+      </IntlProvider>
+    </Provider>
   );
   return { props, wrapper }
 };
