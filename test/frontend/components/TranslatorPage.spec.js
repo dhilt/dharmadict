@@ -9,6 +9,9 @@ const {setupComponent, defaultLang, initialState, translators, languages} = requ
 const i18n = require('../../../app/i18n/' + defaultLang);
 
 describe('Testing TranslatorPage Component.', () => {
+
+  const errorMessage = 'Can\'t get translator data. Database error';
+
   it('should show component with received translator data', () => {
     const translator = translators[0];
     const _initialState = { ...initialState,
@@ -48,6 +51,13 @@ describe('Testing TranslatorPage Component.', () => {
     expect(wrapper.find('h3').text()).equal(translator.name);
     expect(wrapper.find('h4').text()).equal(expectedLangDescription);
     expect(wrapper.find('pre').text()).equal(translator.description);
+
+    // it's hidden admin panel - should not be shown
+    expect(wrapper.find('a').length).equal(0);
+    // it's loading message - should not be shown
+    expect(wrapper.find('h3').text()).to.not.equal(i18n['TranslatorPage.loading_text']);
+    // it's error message - should not be shown
+    expect(wrapper.find('h3').text()).to.not.equal(errorMessage);
   });
 
   it('should show component with waiting for data', () => {
@@ -78,11 +88,17 @@ describe('Testing TranslatorPage Component.', () => {
 
     expect(wrapper.find('div')).to.exist;
     expect(wrapper.find('h3').text()).equal(i18n['TranslatorPage.loading_text']);
+
+    // it's hidden admin panel - should not be shown
+    expect(wrapper.find('a').length).equal(0);
+    // it's error message - should not be shown
+    expect(wrapper.find('h3').text()).to.not.equal(errorMessage);
+    // it's translator data - should not be shown
+    expect(wrapper.find('pre').length).equal(0);
   });
 
   it('should show component with error', () => {
     const translator = translators[0];
-    const errorMessage = 'Can\'t get translator data. Database error';
     const _initialState = { ...initialState,
       route: { ...initialState.route,
         location: { ...initialState.route.location,
@@ -113,6 +129,13 @@ describe('Testing TranslatorPage Component.', () => {
 
     expect(wrapper.find('div')).to.exist;
     expect(wrapper.find('h3').text()).equal(errorMessage);
+
+    // it's hidden admin panel - should not be shown
+    expect(wrapper.find('a').length).equal(0);
+    // it's loading message - should not be shown
+    expect(wrapper.find('h3').text()).to.not.equal(i18n['TranslatorPage.loading_text']);
+    // it's translator data - should not be shown
+    expect(wrapper.find('pre').length).equal(0);
   });
 
   it('should show component with admin capabilities', () => {
@@ -164,5 +187,10 @@ describe('Testing TranslatorPage Component.', () => {
     expect(wrapper.find('a').text()).equal(i18n['TranslatorPage.button_edit']);
     expect(wrapper.find('a').hasClass('btn')).equal(true);
     expect(wrapper.find('a').hasClass('btn-default')).equal(true);
+
+    // it's error message - should not be shown
+    expect(wrapper.find('h3').text()).to.not.equal(errorMessage);
+    // it's loading message - should not be shown
+    expect(wrapper.find('h3').text()).to.not.equal(i18n['TranslatorPage.loading_text']);
   });
 });
