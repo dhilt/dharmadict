@@ -9,7 +9,7 @@ const i18n = require('../../../app/i18n/' + defaultLang);
 
 describe('Testing NotFound Component.', () => {
   it('should show component', () => {
-    const {wrapper} = setupComponent(NotFound);
+    const wrapper = setupComponent(NotFound);
 
     expect(wrapper.find('article')).to.exist;
     expect(wrapper.find('h1').text()).equal(i18n['NotFound.main_text']);

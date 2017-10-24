@@ -42,7 +42,7 @@ describe('Testing TranslatorPage Component.', () => {
         id: translator.id
       }
     };
-    const {wrapper} = setupComponent(TranslatorPage, _initialState, props);
+    const wrapper = setupComponent(TranslatorPage, _initialState, props);
     let expectedLangDescription = i18n['TranslatorPage.translations_language'];
     expectedLangDescription = expectedLangDescription.replace(/{translatorLanguage}/g, '');
     expectedLangDescription += languages.find(e => e.id === defaultLang)['name_' + defaultLang];
@@ -84,7 +84,7 @@ describe('Testing TranslatorPage Component.', () => {
         id: translator.id
       }
     };
-    const {wrapper} = setupComponent(TranslatorPage, _initialState, props);
+    const wrapper = setupComponent(TranslatorPage, _initialState, props);
 
     expect(wrapper.find('div')).to.exist;
     expect(wrapper.find('h3').text()).equal(i18n['TranslatorPage.loading_text']);
@@ -125,7 +125,7 @@ describe('Testing TranslatorPage Component.', () => {
         id: translator.id
       }
     };
-    const {wrapper} = setupComponent(TranslatorPage, _initialState, props);
+    const wrapper = setupComponent(TranslatorPage, _initialState, props);
 
     expect(wrapper.find('div')).to.exist;
     expect(wrapper.find('h3').text()).equal(errorMessage);
@@ -175,7 +175,7 @@ describe('Testing TranslatorPage Component.', () => {
         id: translator.id
       }
     };
-    const {wrapper} = setupComponent(TranslatorPage, _initialState, props);
+    const wrapper = setupComponent(TranslatorPage, _initialState, props);
     let expectedLangDescription = i18n['TranslatorPage.translations_language'];
     expectedLangDescription = expectedLangDescription.replace(/{translatorLanguage}/g, '');
     expectedLangDescription += languages.find(e => e.id === defaultLang)['name_' + defaultLang];

@@ -9,7 +9,7 @@ const {setupComponent} = require('../_shared.js');
 describe('Testing App Component.', () => {
 
   it('should show component', () => {
-    const {wrapper} = setupComponent(App);
+    const wrapper = setupComponent(App);
 
     expect(wrapper.find('div.wrapper')).to.exist;
     expect(wrapper.find('div.container')).to.exist;

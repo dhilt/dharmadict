@@ -37,7 +37,7 @@ const setupComponent = (NewComponent, state = initialState, props = {}) => {
       </IntlProvider>
     </Provider>
   );
-  return { props, wrapper }
+  return wrapper
 };
 
 const translators = [{
