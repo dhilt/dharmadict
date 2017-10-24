@@ -14,8 +14,8 @@ const {shallow, mount, render, configure} = require('enzyme');
 const Adapter = require('enzyme-adapter-react-15');
 configure({ adapter: new Adapter() });
 
-const _defaultLang = require('react-intl/locale-data/' + lang.defaultLang);
-addLocaleData([..._defaultLang]);
+const i18nLang = require('react-intl/locale-data/' + lang.defaultLang);
+addLocaleData([...i18nLang]);
 const i18n = require('../../app/helpers/i18n').default;
 
 const configureMockStore = require('redux-mock-store').default;
@@ -95,10 +95,6 @@ const languages = [{
   name_ru: 'английский',
   name_en: 'english'
 }];
-
-const users = [
-
-];
 
 const terms = [{
   "id": "chos",
@@ -422,10 +418,6 @@ const terms = [{
   ]
 }];
 
-const translations = [
-
-];
-
 const cloneState = (state = initialState) => JSON.parse(JSON.stringify(state));
 
 module.exports = {
@@ -436,7 +428,5 @@ module.exports = {
   getNotificationAction,
   translators,
   languages,
-  users,
-  terms,
-  translations
+  terms
 }
