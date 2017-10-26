@@ -48,16 +48,16 @@ describe('Testing TranslatorPage Component.', () => {
     expectedLangDescription += languages.find(e => e.id === defaultLang)['name_' + defaultLang];
 
     expect(wrapper.find('div')).to.exist;
-    expect(wrapper.find('h3').text()).equal(translator.name);
-    expect(wrapper.find('h4').text()).equal(expectedLangDescription);
-    expect(wrapper.find('pre').text()).equal(translator.description);
+    expect(wrapper.find('[data-test-id="name"]').text()).equal(translator.name);
+    expect(wrapper.find('[data-test-id="language"]').text()).equal(expectedLangDescription);
+    expect(wrapper.find('[data-test-id="description"]').text()).equal(translator.description);
 
     // it's hidden admin panel - should not be shown
-    expect(wrapper.find('a').length).equal(0);
+    expect(wrapper.find('[data-test-id="changeUser"]').length).equal(0);
     // it's loading message - should not be shown
-    expect(wrapper.find('h3').text()).to.not.equal(i18n['TranslatorPage.loading_text']);
+    expect(wrapper.find('[data-test-id="pending"]').length).equal(0);
     // it's error message - should not be shown
-    expect(wrapper.find('h3').text()).to.not.equal(errorMessage);
+    expect(wrapper.find('[data-test-id="error"]').length).equal(0);
   });
 
   it('should show component with waiting for data', () => {
@@ -87,14 +87,14 @@ describe('Testing TranslatorPage Component.', () => {
     const wrapper = setupComponent(TranslatorPage, _initialState, props);
 
     expect(wrapper.find('div')).to.exist;
-    expect(wrapper.find('h3').text()).equal(i18n['TranslatorPage.loading_text']);
+    expect(wrapper.find('[data-test-id="pending"]').text()).equal(i18n['TranslatorPage.loading_text']);
 
     // it's hidden admin panel - should not be shown
-    expect(wrapper.find('a').length).equal(0);
+    expect(wrapper.find('[data-test-id="changeUser"]').length).equal(0);
     // it's error message - should not be shown
-    expect(wrapper.find('h3').text()).to.not.equal(errorMessage);
+    expect(wrapper.find('[data-test-id="error"]').length).equal(0);
     // it's translator data - should not be shown
-    expect(wrapper.find('pre').length).equal(0);
+    expect(wrapper.find('[data-test-id="description"]').length).equal(0);
   });
 
   it('should show component with error', () => {
@@ -131,11 +131,11 @@ describe('Testing TranslatorPage Component.', () => {
     expect(wrapper.find('h3').text()).equal(errorMessage);
 
     // it's hidden admin panel - should not be shown
-    expect(wrapper.find('a').length).equal(0);
+    expect(wrapper.find('[data-test-id="changeUser"]').length).equal(0);
     // it's loading message - should not be shown
-    expect(wrapper.find('h3').text()).to.not.equal(i18n['TranslatorPage.loading_text']);
+    expect(wrapper.find('[data-test-id="pending"]').length).equal(0);
     // it's translator data - should not be shown
-    expect(wrapper.find('pre').length).equal(0);
+    expect(wrapper.find('[data-test-id="description"]').length).equal(0);
   });
 
   it('should show component with admin capabilities', () => {
@@ -181,16 +181,16 @@ describe('Testing TranslatorPage Component.', () => {
     expectedLangDescription += languages.find(e => e.id === defaultLang)['name_' + defaultLang];
 
     expect(wrapper.find('div')).to.exist;
-    expect(wrapper.find('h3').text()).equal(translator.name);
-    expect(wrapper.find('h4').text()).equal(expectedLangDescription);
-    expect(wrapper.find('pre').text()).equal(translator.description);
-    expect(wrapper.find('a').text()).equal(i18n['TranslatorPage.button_edit']);
-    expect(wrapper.find('a').hasClass('btn')).equal(true);
-    expect(wrapper.find('a').hasClass('btn-default')).equal(true);
+    expect(wrapper.find('[data-test-id="name"]').text()).equal(translator.name);
+    expect(wrapper.find('[data-test-id="language"]').text()).equal(expectedLangDescription);
+    expect(wrapper.find('[data-test-id="description"]').text()).equal(translator.description);
+    expect(wrapper.find('a[data-test-id="changeUser"]').text()).equal(i18n['TranslatorPage.button_edit']);
+    expect(wrapper.find('a[data-test-id="changeUser"]').hasClass('btn')).equal(true);
+    expect(wrapper.find('a[data-test-id="changeUser"]').hasClass('btn-default')).equal(true);
 
     // it's error message - should not be shown
-    expect(wrapper.find('h3').text()).to.not.equal(errorMessage);
+    expect(wrapper.find('[data-test-id="error"]').length).equal(0);
     // it's loading message - should not be shown
-    expect(wrapper.find('h3').text()).to.not.equal(i18n['TranslatorPage.loading_text']);
+    expect(wrapper.find('[data-test-id="loading"]').length).equal(0);
   });
 });

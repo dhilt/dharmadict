@@ -24,15 +24,15 @@ class TranslatorPage extends Component {
     const translatorLang = languages && languages.find(elem => elem.id === translator.language)
     return (
       <div>
-        <h3>{translator.name}</h3>
-        <h4><FormattedMessage
+        <h3 data-test-id="name">{translator.name}</h3>
+        <h4 data-test-id="language"><FormattedMessage
           id="TranslatorPage.translations_language"
           values={{translatorLanguage: translatorLang ? translatorLang['name_' + lang.get(userLanguage)] : ''}}
         /></h4>
-        <pre>{translator.description}</pre>
+        <pre data-test-id="description">{translator.description}</pre>
         {
           userData && userData.role === 'admin' &&
-          <Link className="btn btn-default" to={`/translator/${translatorId}/edit`}>
+          <Link data-test-id="changeUser" className="btn btn-default" to={`/translator/${translatorId}/edit`}>
             <FormattedMessage id="TranslatorPage.button_edit" />
           </Link>
         }
@@ -43,10 +43,10 @@ class TranslatorPage extends Component {
   render () {
     const {translatorInfo} = this.props
     let content = translatorInfo.pending ? (
-      <h3><FormattedMessage id="TranslatorPage.loading_text" /></h3>
+      <h3 data-test-id="pending"><FormattedMessage id="TranslatorPage.loading_text" /></h3>
     ) : (
       translatorInfo.error ? (
-        <h3>{translatorInfo.error.message}</h3>
+        <h3 data-test-id="error">{translatorInfo.error.message}</h3>
       ) :
         this.getTranslatorContent(translatorInfo.data)
     )
