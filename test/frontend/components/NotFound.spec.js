@@ -12,8 +12,8 @@ describe('Testing NotFound Component.', () => {
     const wrapper = setupComponent(NotFound);
 
     expect(wrapper.find('article')).to.exist;
-    expect(wrapper.find('h1').text()).equal(i18n['NotFound.main_text']);
-    expect(wrapper.find('a').text()).equal(i18n['NotFound.go_home']);
-    expect(wrapper.find('a').hasClass('btn')).equal(true);
+    expect(wrapper.find('h1[test-id="NotFound.headind"]').text()).equal(i18n['NotFound.main_text']);
+    expect(wrapper.find('a[test-id="NotFound.back_link"]').text()).equal(i18n['NotFound.go_home']);
+    expect(wrapper.find('a[test-id="NotFound.back_link"]').hasClass('btn')).equal(true);
   });
 });

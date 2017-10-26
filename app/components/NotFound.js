@@ -6,8 +6,8 @@ class NotFound extends Component {
   render () {
     return (
       <article>
-        <h1><FormattedMessage id="NotFound.main_text" /></h1>
-        <Link to='/' className='btn'><FormattedMessage id="NotFound.go_home" /></Link>
+        <h1 test-id="NotFound.headind"><FormattedMessage id="NotFound.main_text" /></h1>
+        <Link test-id="NotFound.back_link" to='/' className='btn'><FormattedMessage id="NotFound.go_home" /></Link>
       </article>
     )
   }

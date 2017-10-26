@@ -83,7 +83,22 @@ function makeWebpackConfig (options) {
           test: /\.(ttf|ico)$/,
           loader: 'file?name=[name].[ext]'
         }
-      ]
+      ] /*,
+      rules: [
+        {
+          // test: /\.js$/,
+          exclude: path.join(__dirname, '../', '/node_modules/'),
+          use: {
+            loader: 'babel-loader',
+            options: {
+              // presets: ['env'],
+              plugins: ['babel-plugin-react-remove-properties', {
+                'properties': ['test-id']
+              }]
+            }
+          }
+        }
+      ] */
     },
     plugins: plugins,
     postcss: function () {
