@@ -9,7 +9,7 @@ class SearchResults extends Component {
   render () {
     let search = this.props.data
     return (
-    <div className="row search-results-row"> {
+    <div data-test-id="SearchResults" className="row search-results-row"> {
         search.started && search.result && !search.pending ? (
       <div>
         <div className="col-md-3">

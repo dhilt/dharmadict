@@ -9,21 +9,21 @@ import logoPath from '../styles/images/manjushri_175x226.jpg'
 class Home extends Component {
   render () {
     return (
-      <div className="row">
-        <div className="col-md-2">
-          <img src={logoPath} className="logo" />
+      <div data-test-id="main-div" className="row">
+        <div data-test-id="div-logo" className="col-md-2">
+          <img data-test-id="img-logo" src={logoPath} className="logo" />
         </div>
-        <div className="col-md-10">
-          <div className="row header-row">
-            <div className="col-md-12">
-              <h1>
-                <em><FormattedMessage id="Home.search_title_em" /></em>
-                <FormattedMessage id="Home.search_title_h1" />
+        <div data-test-id="title-md-10" className="col-md-10">
+          <div data-test-id="header-row" className="row header-row">
+            <div data-test-id="title-md-12" className="col-md-12">
+              <h1 data-test-id="full-title">
+                <em data-test-id="em-title"><FormattedMessage id="Home.search_title_em" /></em>
+                <span data-test-id="span-title"><FormattedMessage id="Home.search_title_h1" /></span>
               </h1>
             </div>
           </div>
-          <div className="row search-row">
-            <div className="col-md-12">
+          <div data-test-id="search-row" className="row search-row">
+            <div data-test-id="search-md-12" className="col-md-12">
               <SearchInput />
               <SearchResults />
             </div>

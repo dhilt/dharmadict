@@ -16,7 +16,7 @@ class SearchInput extends Component {
   render () {
     let search = this.props.data
     return (
-      <div className='row'>
+      <div data-test-id="SearchInput" className='row'>
         <form>
           <div className='form-group'>
             <div className='col-md-6'>
