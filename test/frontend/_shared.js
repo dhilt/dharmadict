@@ -30,9 +30,10 @@ const getNotificationAction = (successMessage, error, values = {}) => {
 };
 
 const setupComponent = (NewComponent, state = initialState, props = {}) => {
+  const _lang = state.common.userLanguage || lang.defaultLang;
   const wrapper = mount(
     <Provider store={mockStore(state)}>
-      <IntlProvider locale={lang.defaultLang} messages={i18n.data[lang.defaultLang]}>
+      <IntlProvider locale={_lang} messages={i18n.data[_lang]}>
         <NewComponent {...props} />
       </IntlProvider>
     </Provider>

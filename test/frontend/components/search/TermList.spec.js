@@ -2,9 +2,7 @@ global.window.localStorage = {};
 const {expect} = require('chai');
 
 const TermList = require('../../../../app/components/search/TermList').default;
-const {setupComponent, defaultLang, initialState, terms} = require('../../_shared.js');
-
-const i18n = require('../../../../app/i18n/' + defaultLang);
+const {setupComponent, initialState, terms} = require('../../_shared.js');
 
 describe('Testing TermList Component.', () => {
 
