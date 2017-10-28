@@ -12,7 +12,7 @@ class TermList extends Component {
 
   render() {
     return (
-      <div> {
+      <div data-test-id="TermList"> {
         this.props.termList.map((item, i) =>
           <div
             className={'list-group-item' + (this.props.isTermSelected(item) ? ' selected' : '') }

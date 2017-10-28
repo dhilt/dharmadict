@@ -22,6 +22,8 @@
   "SearchInput.button_find": "Find",
   "SearchInput.request_error": "The request failed",
 
+  "SearchResults.Not_found": "Nothing found",
+
   "Term.add_translation": "Add translation...",
   "Term.sanskrit_term": "Sanskrit: {sanskrit_en}",
 

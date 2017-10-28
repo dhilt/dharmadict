@@ -19,7 +19,7 @@ class Term extends Component {
     let translators = this.props.translators
     let term = this.props.data.term
     return (
-      <div className="term">
+      <div data-test-id="Term" className="term">
         <div className="term-header">
           <div className="wylie">{term.wylie}</div>
           {

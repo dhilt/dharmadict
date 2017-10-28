@@ -22,6 +22,8 @@
   "SearchInput.button_find": "Найти",
   "SearchInput.request_error": "Ошибка запроса",
 
+  "SearchResults.Not_found": "Ничего не найдено",
+
   "Term.add_translation": "Добавить перевод...",
   "Term.sanskrit_term": "Санскрит: {sanskrit_ru}",
 
