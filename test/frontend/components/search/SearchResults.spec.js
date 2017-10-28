@@ -91,4 +91,7 @@ describe('Testing SearchResults Component.', () => {
   it('should show component with error request', () =>
     checkShowSearchResults(null, null, false, responseFail)
   );
+  it('should show component with error request and starting new request', () =>
+    checkShowSearchResults(null, null, true, responseFail)
+  );
 });
