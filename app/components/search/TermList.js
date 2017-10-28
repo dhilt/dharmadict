@@ -14,7 +14,7 @@ class TermList extends Component {
     return (
       <div data-test-id="TermList"> {
         this.props.termList.map((item, i) =>
-          <div
+          <div data-test-id={item.wylie}
             className={'list-group-item' + (this.props.isTermSelected(item) ? ' selected' : '') }
             key={i} onClick={()=>this._selectTerm(item)}>
             {item.wylie}
