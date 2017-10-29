@@ -41,6 +41,20 @@ const setupComponent = (NewComponent, state = initialState, props = {}) => {
   return wrapper
 };
 
+const languages = [{
+  id: 'ru',
+  name: 'русский',
+  name_ru: 'русский',
+  name_en: 'russian',
+}, {
+  id: 'en',
+  name: 'english',
+  name_ru: 'английский',
+  name_en: 'english'
+}];
+
+const roles = ['user', 'translator', 'admin'];
+
 const translators = [{
   id: 'ZAG',
   name: 'Б.И. Загуменнов',
@@ -85,17 +99,19 @@ const translators = [{
   language: 'en'
 }];
 
-const languages = [{
-  id: 'ru',
-  name: 'русский',
-  name_ru: 'русский',
-  name_en: 'russian',
-}, {
-  id: 'en',
-  name: 'english',
-  name_ru: 'английский',
-  name_en: 'english'
-}];
+let users = [];
+
+languages.forEach(lang => {
+  roles.forEach(role => {
+    users.push({
+      id: 'ID',
+      name: `${lang} ${role}`,
+      role: role,
+      description: '',
+      language: lang.id
+    });
+  });
+});
 
 const terms = [{
   "id": "chos",
@@ -428,6 +444,8 @@ module.exports = {
   setupComponent,
   getNotificationAction,
   translators,
+  users,
+  roles,
   languages,
   terms
 }

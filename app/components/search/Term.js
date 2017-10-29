@@ -57,21 +57,25 @@ class Term extends Component {
                   ) : ( null )
                 }
               </div>
-              <ol className={"meanings" + (translation.meanings.length === 1 ? " single-item" : "")}>
+              <ol data-test-id="list-meanings"
+                className={"meanings" + (translation.meanings.length === 1 ? " single-item" : "")}>
               {
                 translation.meanings.map((meaning, meaningIndex) =>
-                <li key={meaningIndex} className="meaning">
+                <li data-test-id="meaning" key={meaningIndex} className="meaning">
                   {
                     meaning.versions.map((version, versionIndex) =>
-                      <span key={versionIndex}>
+                      <span data-test-id="version" key={versionIndex}>
                         {version + (versionIndex < meaning.versions.length - 1 ? '; ' : '')}
                       </span>
                     )
                   }
                   {
                     meaning.comment ?
-                    (<a className="commentLink" onClick={()=>this._toggleComment(translationIndex, meaningIndex)}>&gt;&gt;&gt;</a>) :
-                    ( null )
+                    (<a data-test-id="commentLink"
+                      className="commentLink"
+                      onClick={()=>this._toggleComment(translationIndex, meaningIndex)}
+                     >&gt;&gt;&gt;</a>
+                    ) : ( null )
                   }
                   {
                     meaning.openComment ?
@@ -88,8 +92,8 @@ class Term extends Component {
         </ul>
         {
           this.canAdd(term) ? (
-            <div className="add-translation">
-              <Link to={{
+            <div data-test-id="add-translation" className="add-translation">
+              <Link data-test-id="link-add-translation" to={{
                 pathname: '/edit',
                 query: { termId: term.id, translatorId: this.userInfo.id }
               }}>
