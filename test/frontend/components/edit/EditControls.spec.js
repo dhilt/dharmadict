@@ -20,7 +20,7 @@ describe('Testing EditControls Component.', () => {
     const wrapper = setupComponent(EditControls, _initialState);
     const i18n = require('../../../../app/i18n/' + lang);
 
-    checkWrap(wrapper.find('[data-test-id="form"]'), {
+    checkWrap(wrapper.find('[data-test-id="EditControls"]'), {
       className: 'form-group form-inline'
     });
 
@@ -42,6 +42,8 @@ describe('Testing EditControls Component.', () => {
       text: i18n['EditControls.button_reset'],
       className: 'cancel-link'
     });
+
+    wrapper.unmount();
   };
 
   languages.forEach(lang => {

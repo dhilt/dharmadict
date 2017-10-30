@@ -14,7 +14,7 @@ class EditControls extends Component {
 
   render () {
     return (
-      <div data-test-id="form" className="form-group form-inline">
+      <div data-test-id="EditControls" className="form-group form-inline">
         <Button data-test-id="button-save-and-close"
           bsStyle='primary'
           type="button"

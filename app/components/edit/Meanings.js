@@ -18,44 +18,44 @@ class Meanings extends Component {
 
   render () {
     return (
-      <div>
-        <h2>{this.props.data.termName}</h2>
-        <ul className="meaningList">
+      <div data-test-id="main-div-Meanings">
+        <h2 data-test-id="termName">{this.props.data.termName}</h2>
+        <ul data-test-id="meaningList" className="meaningList">
         {
           this.props.data.change.meanings.map((meaning, meaningIndex) =>
-          <li key={meaningIndex}>
-            <div className="meaning">
-              <div className="title">
+          <li data-test-id="li-meaning" key={meaningIndex}>
+            <div data-test-id="meaning" className="meaning">
+              <div data-test-id="meaning-title" className="title">
                 <FormattedMessage id="Meanings.number_of_meaning" values={{indexOfMeaning: meaningIndex +1}} />
               </div>
-              <ul className="versionList">
+              <ul data-test-id="versionList" className="versionList">
               {
                 meaning.versions.map((version, versionIndex) =>
-                  <li key={versionIndex} className="form-group form-inline">
-                    <input className="form-control" name="search" type="text"
+                  <li data-test-id="li-version" key={versionIndex} className="form-group form-inline">
+                    <input data-test-id="input-version" className="form-control" name="search" type="text"
                       value={version}
                       onChange={(event) => this._onVersionChanged(event, meaningIndex, versionIndex)}/>
-                      <button className="btn btn-link btn-sm remove-btn" type="button"
+                    <button data-test-id="button-version" className="btn btn-link btn-sm remove-btn" type="button"
                         disabled={versionIndex === meaning.versions.length - 1 ? "disabled" : ""}
                         onClick={() => this._onVersionRemoved(meaningIndex, versionIndex)}>X
-                      </button>
+                    </button>
                   </li>
                 )
               }
               </ul>
             </div>
-            <div className="comment">
-              <span className="title">
+            <div data-test-id="comment" className="comment">
+              <span data-test-id="comment-title" className="title">
                 <FormattedMessage id="Meanings.comment_for_meaning" values={{indexOfMeaning: meaningIndex + 1}} />
               </span>
-              <div className="form-group form-inline">
-                <textarea className="form-control" name="comment"
+              <div data-test-id="comment-group" className="form-group form-inline">
+                <textarea data-test-id="comment-textarea" className="form-control" name="comment"
                   value={meaning.comment || ''}
                   onChange={(event) => this._onCommentChanged(event, meaningIndex)}/>
               </div>
             </div>
-            <div className="remove">
-              <a className="remove-link"
+            <div data-test-id="remove" className="remove">
+              <a data-test-id="remove-link" className="remove-link"
                 onClick={(event) => this._onMeaningRemoved(event, meaningIndex)}>
                 <FormattedMessage id="Meanings.button_delete_meaning" values={{indexOfMeaning: meaningIndex + 1}} />
               </a>
@@ -63,15 +63,15 @@ class Meanings extends Component {
           </li>
           )
         }
-          <li>
+          <li data-test-id="li-no-meanings">
             {
               !this.props.data.change.meanings.length ? (
-                <div className="no-meanings">
+                <div data-test-id="div-no-meanings" className="no-meanings">
                   <FormattedMessage id="Meanings.have_no_one_meaning" />
                 </div>
               ) : ( null )
             }
-            <a className="add-new-meaning" onClick={this._addNewMeaning}>
+            <a data-test-id="add-new-meaning" className="add-new-meaning" onClick={this._addNewMeaning}>
               <FormattedMessage id="Meanings.add_new_meaning" />
             </a>
           </li>

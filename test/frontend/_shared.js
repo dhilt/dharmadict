@@ -460,6 +460,12 @@ const checkWrap = (wrap, params) => {
   if (params.type) {
     expect(wrap.props().type).equal(params.type)
   }
+  if (params.name) {
+    expect(wrap.props().name).equal(params.name)
+  }
+  if (params.value) {
+    expect(wrap.props().value).equal(params.value)
+  }
   return
 };
 
