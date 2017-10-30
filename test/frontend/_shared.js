@@ -466,6 +466,9 @@ const checkWrap = (wrap, params) => {
   if (params.value) {
     expect(wrap.props().value).equal(params.value)
   }
+  if (params.checked) {
+    expect(wrap.props().checked).equal(params.checked)
+  }
   return
 };
 
