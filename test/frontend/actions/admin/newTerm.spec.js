@@ -3,7 +3,7 @@ const thunk = require('redux-thunk').default;
 const nock = require('nock');
 const expect = require('expect');
 
-const {initialState, cloneState, translators, getNotificationAction, appPath} = require('../../_shared.js');
+const {initialState, translators, getNotificationAction, appPath} = require('../../_shared.js');
 
 const actionsCreators = require(appPath + 'actions/admin/newTerm');
 const types = require(appPath + 'actions/_constants');
