@@ -476,6 +476,7 @@ const checkWrap = (wrap, params) => {
 };
 
 module.exports = {
+  appPath: '../../../../app/',
   defaultLang: lang.defaultLang,
   initialState,
   cloneState,

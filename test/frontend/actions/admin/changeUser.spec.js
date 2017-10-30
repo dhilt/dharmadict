@@ -3,15 +3,15 @@ const thunk = require('redux-thunk').default;
 const nock = require('nock');
 const expect = require('expect');
 
-const {initialState, cloneState, translators, getNotificationAction} = require('../../_shared.js');
+const {initialState, translators, getNotificationAction, appPath} = require('../../_shared.js');
 
-const actionCreators = require('../../../../app/actions/admin/changeUser');
-const types = require('../../../../app/actions/_constants');
-const reducer = require('../../../../app/reducers').default;
-const getUserData = require('../../../../app/actions/admin/changeUser').getEditableUserDataObject;
+const actionCreators = require(appPath + 'actions/admin/changeUser');
+const types = require(appPath + 'actions/_constants');
+const reducer = require(appPath + 'reducers').default;
+const getUserData = require(appPath + 'actions/admin/changeUser').getEditableUserDataObject;
 
-let middlewares = [thunk];
-let mockStore = configureMockStore(middlewares);
+const middlewares = [thunk];
+const mockStore = configureMockStore(middlewares);
 
 describe('admin/changeUser actions', () => {
   beforeEach(() => {
@@ -25,9 +25,9 @@ describe('admin/changeUser actions', () => {
     nock.enableNetConnect();
   });
 
-  it('should return the initial state', () => {
-    expect(reducer()).toEqual(initialState);
-  });
+  it('should return the initial state', () =>
+    expect(reducer()).toEqual(initialState)
+  );
 
   describe('function getAdminUserDataAsync', () => {
 

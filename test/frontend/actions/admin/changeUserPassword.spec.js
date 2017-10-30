@@ -3,14 +3,14 @@ const thunk = require('redux-thunk').default;
 const nock = require('nock');
 const expect = require('expect');
 
-const {translators, initialState, cloneState, getNotificationAction} = require('../../_shared.js');
+const {translators, initialState, getNotificationAction, appPath} = require('../../_shared.js');
 
-const actionsCreators = require('../../../../app/actions/admin/changeUserPassword');
-const types = require('../../../../app/actions/_constants');
-const reducer = require('../../../../app/reducers').default;
+const actionsCreators = require(appPath + 'actions/admin/changeUserPassword');
+const types = require(appPath + 'actions/_constants');
+const reducer = require(appPath + 'reducers').default;
 
-let middlewares = [thunk];
-let mockStore = configureMockStore(middlewares);
+const middlewares = [thunk];
+const mockStore = configureMockStore(middlewares);
 
 describe('admin/changeUserPassword actions', () => {
   beforeEach(() => {
@@ -97,25 +97,37 @@ describe('admin/changeUserPassword actions', () => {
 
   describe('function resetAdminUserPassword', () => {
 
-    const expectedAction = {
-      type: types.CHANGE_ADMIN_USER_PASSWORD,
-      password: '',
-      confirmPassword: ''
+    const input = { password: '', confirmPassword: '' };
+    const startState = {...initialState,
+      admin: {...initialState.admin,
+        editUserPassword: {...initialState.admin.editUserPassword,
+          id: translators[0].id,
+          password: 'pass',
+          confirmPassword: 'conf'
+        }
+      }
     };
-    let _initialState = cloneState();
-    Object.assign(_initialState.admin.editUserPassword, {
-      password: 'password',
-      confirmPassword: 'password'
-    });
+    const action = {
+      type: types.CHANGE_ADMIN_USER_PASSWORD,
+      ...input
+    };
+    const state = { ...startState,
+      admin: { ...startState.admin,
+        editUserPassword: { ...startState.admin.editUserPassword,
+          ...input
+        }
+      }
+    };
 
     it('should work, reducer', () =>
-      expect(reducer(_initialState, expectedAction)).toEqual(initialState)
+      expect(reducer(startState, action)).toEqual(state)
     );
 
     it('should work, action', () => {
-      const store = mockStore(_initialState);
+      const store = mockStore(startState);
       store.dispatch(actionsCreators.resetAdminUserPassword());
-      expect(store.getActions()[0]).toEqual(expectedAction);
+      expect(store.getActions().length).toEqual(1);
+      expect(store.getActions()[0]).toEqual(action);
     });
   });
 
@@ -124,6 +136,16 @@ describe('admin/changeUserPassword actions', () => {
     const userId = translators[0].id;
     const password = 'new_password';
     const confirmPassword = 'confirm_new_password';
+
+    const startState = {...initialState,
+      admin: {...initialState.admin,
+        editUserPassword: {...initialState.admin.editUserPassword,
+          id: userId,
+          password,
+          confirmPassword
+        }
+      }
+    };
 
     const responseSuccess = {
       success: true,
@@ -138,21 +160,18 @@ describe('admin/changeUserPassword actions', () => {
       getNotificationAction('EditUserPassword.new_password_success', null)
     ];
     const states = [
-      { ...initialState,
-        admin: { ...initialState.admin,
-          editUserPassword: { ...initialState.admin.editUserPassword,
-            pending: true,
-            id: userId,
-            password,
-            confirmPassword
+      { ...startState,
+        admin: { ...startState.admin,
+          editUserPassword: { ...startState.admin.editUserPassword,
+            pending: true
           }
         }
       },
-      { ...initialState,
-        admin: { ...initialState.admin,
-          editUserPassword: { ...initialState.admin.editUserPassword,
-            id: userId,
-            error: null
+      { ...startState,
+        admin: { ...startState.admin,
+          editUserPassword: { ...startState.admin.editUserPassword,
+            password: '',
+            confirmPassword: ''
           }
         }
       }
@@ -173,30 +192,24 @@ describe('admin/changeUserPassword actions', () => {
     ];
     const statesFail = [
       states[0],
-      { ...initialState,
-        admin: { ...initialState.admin,
-          editUserPassword: { ...initialState.admin.editUserPassword,
-            id: userId,
-            error: responseFail
+      { ...startState,
+        admin: { ...startState.admin,
+          editUserPassword: { ...startState.admin.editUserPassword,
+            error: responseFail,
+            password: '',
+            confirmPassword: ''
           }
         }
       }
     ];
 
-    const cloneStateBeforeRequest = () => {
-      let _initialState = cloneState(states[0]);
-      Object.assign(_initialState.admin.editUserPassword, { pending: false });
-      return _initialState
-    };
-
     it('should work, reducer', () => {
-      const _initialState = cloneStateBeforeRequest();
-      expect(reducer(_initialState, actions[0])).toEqual(states[0]);
-      expect(reducer(_initialState, actions[1])).toEqual(states[1]);
+      expect(reducer(startState, actions[0])).toEqual(states[0]);
+      expect(reducer(startState, actions[1])).toEqual(states[1]);
     });
 
     it('should work, action', () => {
-      const store = mockStore(cloneStateBeforeRequest());
+      const store = mockStore(startState);
 
       nock('http://localhost')
         .patch('/api/users/' + userId, {
@@ -207,19 +220,18 @@ describe('admin/changeUserPassword actions', () => {
         })
         .reply(200, responseSuccess);
 
-      return store
+      store
         .dispatch(actionsCreators.updateAdminUserPasswordAsync())
         .then(() => expect(store.getActions()).toEqual(actions));
     });
 
     it('should handle error, reducer', () => {
-      const _initialState = cloneStateBeforeRequest();
-      expect(reducer(_initialState, actionsFail[0])).toEqual(statesFail[0]);
-      expect(reducer(_initialState, actionsFail[1])).toEqual(statesFail[1]);
+      expect(reducer(startState, actionsFail[0])).toEqual(statesFail[0]);
+      expect(reducer(startState, actionsFail[1])).toEqual(statesFail[1]);
     });
 
     it('should handle error, action', () => {
-      const store = mockStore(cloneStateBeforeRequest());
+      const store = mockStore(startState);
 
       nock('http://localhost')
         .patch('/api/users/' + userId, {
@@ -230,7 +242,7 @@ describe('admin/changeUserPassword actions', () => {
         })
         .reply(200, responseFail);
 
-      return store
+      store
         .dispatch(actionsCreators.updateAdminUserPasswordAsync())
         .then(() => expect(store.getActions()).toEqual(actionsFail));
     });

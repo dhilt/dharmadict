@@ -8,7 +8,7 @@
     "dev-server": "node webpack/server.js",
     "prod-server": "node prod/server.js",
     "test": "mocha -R spec --bail",
-    "test-frontend": "cross-env NODE_ENV=test jest --runInBand --watch",
+    "test-frontend": "cross-env NODE_ENV=test jest --runInBand --watchAll",
     "db-reset": "node prod/db/reset.js"
   },
   "repository": {
@@ -93,6 +93,7 @@
   },
   "jest": {
     "bail": true,
+    "testMatch": [ "**/test/frontend/**/*.spec.js"],
     "moduleNameMapper": {
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/test/frontend/assetsTransformer.js",
       "\\.(css|less)$": "<rootDir>/test/frontend/assetsTransformer.js"
