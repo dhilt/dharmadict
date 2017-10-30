@@ -31,11 +31,11 @@ describe('admin/changeUserPassword actions', () => {
   describe('function setUserId', () => {
 
     const userId = translators[0].id;
-    const expectedAction = {
+    const action = {
       type: types.SET_ADMIN_USER_ID,
       id: userId
     };
-    const expectedState = { ...initialState,
+    const state = { ...initialState,
       admin: { ...initialState.admin,
         editUserPassword: { ...initialState.admin.editUserPassword,
           id: userId
@@ -44,46 +44,55 @@ describe('admin/changeUserPassword actions', () => {
     };
 
     it('should work, reducer', () =>
-      expect(reducer(initialState, expectedAction)).toEqual(expectedState)
+      expect(reducer(initialState, action)).toEqual(state)
     );
 
     it('should work, action', () =>
-      expect(actionsCreators.setUserId(userId)).toEqual(expectedAction)
+      expect(actionsCreators.setUserId(userId)).toEqual(action)
     );
   });
 
   describe('function changeAdminUserPassword', () => {
 
-    const testChangeAdminUserPassword = (key, value) => {
+    const {password, confirmPassword} = initialState.admin.editUserPassword;
+    const startState = {...initialState,
+      admin: {...initialState.admin,
+        editUserPassword: {...initialState.admin.editUserPassword,
+          id: translators[0].id
+        }
+      }
+    };
 
-      const password = 'new_password';
-      const confirmPassword = 'confirm_new_password';
+    const testChangeAdminUserPassword = (input) => {
 
-      let _initialState = cloneState();
-      Object.assign(_initialState.admin.editUserPassword, { password, confirmPassword });
-      const store = mockStore(_initialState);
-
-      const expectedAction = {
+      const action = {
         type: types.CHANGE_ADMIN_USER_PASSWORD,
         password,
-        confirmPassword
+        confirmPassword,
+        ...input
       };
-      expectedAction[key] = value;
+      const state = { ...startState,
+        admin: { ...startState.admin,
+          editUserPassword: { ...startState.admin.editUserPassword,
+            ...input
+          }
+        }
+      };
+      const store = mockStore(startState);
 
-      it(`should change ${key}, reducer`, () => {
-        let expectedState = cloneState(_initialState);
-        expectedState.admin.editUserPassword[key] = value;
-        expect(reducer(_initialState, expectedAction)).toEqual(expectedState);
+      it(`should change ${input}, reducer`, () => {
+        expect(reducer(startState, action)).toEqual(state);
       });
 
-      it(`should change ${key}, action`, () => {
-        store.dispatch(actionsCreators.changeAdminUserPassword({[key]: value}));
-        expect(store.getActions()[0]).toEqual(expectedAction);
+      it(`should change ${input}, action`, () => {
+        store.dispatch(actionsCreators.changeAdminUserPassword(input));
+        expect(store.getActions().length).toEqual(1);
+        expect(store.getActions()[0]).toEqual(action);
       });
     };
 
-    testChangeAdminUserPassword('password', 'new_password_had_been_changed!');
-    testChangeAdminUserPassword('confirmPassword', 'confirmPassword_had_been_changed_too!');
+    testChangeAdminUserPassword({'password': 'new password value'});
+    testChangeAdminUserPassword({'confirmPassword': 'new confirmPassword value'});
   });
 
   describe('function resetAdminUserPassword', () => {
