@@ -10,6 +10,7 @@ const React = require('react');
 const {Component} = require('react');
 const {Provider} = require('react-redux');
 const {IntlProvider, addLocaleData} = require('react-intl');
+const {expect} = require('chai');
 const {shallow, mount, render, configure} = require('enzyme');
 const Adapter = require('enzyme-adapter-react-15');
 configure({ adapter: new Adapter() });
@@ -437,11 +438,37 @@ const terms = [{
 
 const cloneState = (state = initialState) => JSON.parse(JSON.stringify(state));
 
+const checkWrap = (wrap, params) => {
+  if (!params) {
+    expect(wrap.length).equal(1)
+    return
+  }
+  if (params.className) {
+    expect(wrap.hasClass(params.className)).equal(true)
+  }
+  if (params.length || params.length === 0) {
+    expect(wrap.length).equal(params.length)
+  } else {
+    expect(wrap.length).equal(1)
+  }
+  if (params.text) {
+    expect(wrap.text()).equal(params.text)
+  }
+  if (params.disabled) {
+    expect(wrap.props().disabled).equal(params.disabled)
+  }
+  if (params.type) {
+    expect(wrap.props().type).equal(params.type)
+  }
+  return
+};
+
 module.exports = {
   defaultLang: lang.defaultLang,
   initialState,
   cloneState,
   setupComponent,
+  checkWrap,
   getNotificationAction,
   translators,
   users,

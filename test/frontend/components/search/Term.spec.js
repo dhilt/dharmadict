@@ -4,6 +4,7 @@ const {expect} = require('chai');
 const Term = require('../../../../app/components/search/Term').default;
 const {
   setupComponent,
+  checkWrap,
   initialState,
   terms,
   translators,
@@ -12,25 +13,6 @@ const {
 } = require('../../_shared.js');
 
 describe('Testing Term Component.', () => {
-
-  const checkWrap = (wrap, params) => {
-    if (!params) {
-      expect(wrap.length).equal(1)
-      return
-    }
-    if (params.className) {
-      expect(wrap.hasClass(params.className)).equal(true)
-    }
-    if (params.length || params.length === 0) {
-      expect(wrap.length).equal(params.length)
-    } else {
-      expect(wrap.length).equal(1)
-    }
-    if (params.text) {
-      expect(wrap.text()).equal(params.text)
-    }
-    return
-  };
 
   const checkShowTerm = (selectedTerm, user, lang) => {
     const _initialState = { ...initialState,
