@@ -3,15 +3,15 @@ const thunk = require('redux-thunk').default;
 const nock = require('nock');
 const expect = require('expect');
 
-const {initialState, cloneState, translators, getNotificationAction} = require('../../_shared.js');
+const {initialState, cloneState, translators, getNotificationAction, appPath} = require('../../_shared.js');
 
-const actionsCreators = require('../../../../app/actions/admin/newTerm');
-const types = require('../../../../app/actions/_constants');
-const reducer = require('../../../../app/reducers').default;
-const languages = require('../../../../app/helpers/lang').default;
+const actionsCreators = require(appPath + 'actions/admin/newTerm');
+const types = require(appPath + 'actions/_constants');
+const reducer = require(appPath + 'reducers').default;
+const languages = require(appPath + 'helpers/lang').default;
 
-let middlewares = [thunk];
-let mockStore = configureMockStore(middlewares);
+const middlewares = [thunk];
+const mockStore = configureMockStore(middlewares);
 
 describe('admin/newTerm actions', () => {
   beforeEach(() => {
@@ -31,77 +31,88 @@ describe('admin/newTerm actions', () => {
 
   describe('function changeWylie', () => {
 
-    const newWylieString = 'wylie';
-    const expectedAction = {
+    const input = 'mewWylie';
+    const action = {
       type: types.CHANGE_NEW_TERM_WYLIE,
-      newWylieString
+      newWylieString: input
     };
-    const expectedState = cloneState();
-    Object.assign(expectedState.admin.newTerm, { wylie: newWylieString });
+    const state = { ...initialState,
+      admin: { ...initialState.admin,
+        newTerm: { ...initialState.admin.newTerm,
+          wylie: input
+        }
+      }
+    };
 
     it('should work, reducer', () =>
-      expect(reducer(initialState, expectedAction)).toEqual(expectedState)
+      expect(reducer(initialState, action)).toEqual(state)
     );
 
     it('should work, action', () =>
-      expect(actionsCreators.changeWylie(newWylieString)).toEqual(expectedAction)
+      expect(actionsCreators.changeWylie(input)).toEqual(action)
     );
   });
 
   describe('function changeSanskrit', () => {
 
+    const startState = {...initialState,
+      admin: {...initialState.admin,
+        newTerm: {...initialState.admin.newTerm,
+          ...languages.list.reduce((obj, lang) =>
+            Object.assign(obj, { [`sanskrit_${lang}`]: `sanskrit for ${lang}` })
+          , {})
+        }
+      }
+    };
     const createAction = (key, value) => ({
       type: types.CHANGE_NEW_TERM_SANSKRIT,
       key,
       value
     });
-    let _initialState = { ...initialState,
-      admin: { ...initialState.admin,
-        newTerm: { ...initialState.admin.newTerm,
-          sanksrit: {}
-        }
-      }
-    };
-    languages.list.forEach(elem =>
-      Object.assign(_initialState.admin.newTerm, { [`sanskrit_${elem}`]: `new sanskrit on ${elem}` })
-    );
 
     languages.list.forEach(elem => {
       const key = 'sanskrit_' + elem;
-      const value = 'absolutely new_sanskrit on language ' + elem;
-      const expectedAction = createAction(key, value);
-      let expectedState = cloneState(_initialState);
-      Object.assign(expectedState.admin.newTerm.sanskrit, { [key]: value });
+      const value = 'new sanskrit for ' + elem;
+      const action = createAction(key, value);
+      const state = { ...startState };
+      Object.assign(state.admin.newTerm.sanskrit, { [key]: value });
 
       it(`should work with key = ${key}, reducer`, () =>
-        expect(reducer(_initialState, expectedAction)).toEqual(expectedState)
+        expect(reducer(startState, action)).toEqual(state)
       );
 
       it(`should work with key = ${key}, action`, () =>
-        expect(actionsCreators.changeSanskrit(key, value)).toEqual(expectedAction)
+        expect(actionsCreators.changeSanskrit(key, value)).toEqual(action)
       );
     });
   });
 
   describe('function saveTermAsync', () => {
 
-    const wylie = 'New Term';
-    const idWylie = 'New_Term';
-    let initialSanskrit = {};
-    let expectedSanskrit = {};
-    languages.list.forEach(elem => {
-      initialSanskrit['sanskrit_' + elem] = 'Sanskrit on ' + elem;
-      expectedSanskrit['sanskrit_' + elem] = 'Sanskrit on ' + elem;
-      expectedSanskrit['sanskrit_' + elem + '_lower'] = `Sanskrit on ${elem}`.toLowerCase();
-    });
+    const wylie = 'New Term Wylie';
+    const termId = 'New_Term_Id';
+    const startState = { ...initialState,
+      admin: { ...initialState.admin,
+        newTerm: { ...initialState.admin.newTerm,
+          wylie,
+          sanskrit: languages.list.reduce((obj, lang) =>
+            Object.assign(obj, { [`sanskrit_${lang}`]: `Sanskrit for ${lang}` })
+          , {})
+        }
+      }
+    };
 
     const responseSuccess = {
       success: true,
       term:	{
         wylie,
-        sanskrit: expectedSanskrit,
+        sanskrit: languages.list.reduce((obj, lang) =>
+          Object.assign(obj, {
+            [`sanskrit_${lang}`]: startState.admin.newTerm.sanskrit[`sanskrit_${lang}`],
+            [`sanskrit_${lang}_lower`]: startState.admin.newTerm.sanskrit[`sanskrit_${lang}`].toLowerCase()
+          }), {}),
         translations: [],
-        id: idWylie
+        id: termId
       }
     };
     const actions = [
@@ -109,27 +120,22 @@ describe('admin/newTerm actions', () => {
       {
         type: types.ADD_TERM_END,
         error: null,
-        termId: responseSuccess.term.id
+        termId
       },
-      getNotificationAction('NewTerm.alert_success', null, {termId: responseSuccess.term.id})
+      getNotificationAction('NewTerm.alert_success', null, { termId })
     ];
     const states = [
-      { ...initialState,
-        admin: { ...initialState.admin,
-          newTerm: { ...initialState.admin.newTerm,
-            wylie,
-            sanskrit: initialSanskrit,
+      { ...startState,
+        admin: { ...startState.admin,
+          newTerm: { ...startState.admin.newTerm,
             pending: true
           }
         }
       },
-      { ...initialState,
-        admin: { ...initialState.admin,
-          newTerm: { ...initialState.admin.newTerm,
-            wylie,
-            sanskrit: initialSanskrit,
-            pending: false,
-            termId: idWylie
+      { ...startState,
+        admin: { ...startState.admin,
+          newTerm: { ...startState.admin.newTerm,
+            termId
           }
         }
       }
@@ -151,33 +157,22 @@ describe('admin/newTerm actions', () => {
     ];
     const statesFail = [
       states[0],
-      { ...initialState,
-        admin: { ...initialState.admin,
-          newTerm: { ...initialState.admin.newTerm,
-            wylie,
-            sanskrit: initialSanskrit,
-            pending: false,
-            termId: null,
+      { ...startState,
+        admin: { ...startState.admin,
+          newTerm: { ...startState.admin.newTerm,
             error: responseFail
           }
         }
       }
     ];
 
-    const createInitialState = () => {
-      let _initialState = cloneState(states[0]);
-      Object.assign(_initialState.admin.newTerm, { pending: false });
-      return _initialState
-    }
-
     it('should work, reducer', () => {
-      const _initialState = createInitialState();
-      expect(reducer(_initialState, actions[0])).toEqual(states[0]);
-      expect(reducer(_initialState, actions[1])).toEqual(states[1]);
+      expect(reducer(startState, actions[0])).toEqual(states[0]);
+      expect(reducer(startState, actions[1])).toEqual(states[1]);
     });
 
     it('should work, action', () => {
-      const store = mockStore(createInitialState());
+      const store = mockStore(startState);
 
       nock('http://localhost')
         .post('/api/terms', {
@@ -186,19 +181,18 @@ describe('admin/newTerm actions', () => {
         })
         .reply(200, responseSuccess);
 
-      return store
+      store
         .dispatch(actionsCreators.saveTermAsync())
         .then(() => expect(store.getActions()).toEqual(actions));
     });
 
     it('should handle error, reducer', () => {
-      const _initialState = createInitialState();
-      expect(reducer(_initialState, actionsFail[0])).toEqual(statesFail[0]);
-      expect(reducer(_initialState, actionsFail[1])).toEqual(statesFail[1]);
+      expect(reducer(startState, actionsFail[0])).toEqual(statesFail[0]);
+      expect(reducer(startState, actionsFail[1])).toEqual(statesFail[1]);
     });
 
     it('should work, action', () => {
-      const store = mockStore(createInitialState());
+      const store = mockStore(startState);
 
       nock('http://localhost')
         .post('/api/terms', {
@@ -207,7 +201,7 @@ describe('admin/newTerm actions', () => {
         })
         .reply(200, responseFail);
 
-      return store
+      store
         .dispatch(actionsCreators.saveTermAsync())
         .then(() => expect(store.getActions()).toEqual(actionsFail));
     });
