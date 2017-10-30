@@ -2,7 +2,7 @@ global.window.localStorage = {};
 const {expect} = require('chai');
 
 const NewTerm = require('../../../../app/components/admin/NewTerm').default;
-const {setupComponent, checkWrap, initialState, languages, users} = require('../../_shared.js');
+const {setupComponent, checkWrap, initialState, languages} = require('../../_shared.js');
 
 describe('Testing NewTerm Component.', () => {
 

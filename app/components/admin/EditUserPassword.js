@@ -52,47 +52,49 @@ class EditUserPassword extends Component {
 
   render () {
     const {id} = this.props.params
-    const {result, error, password, confirmPassword} = this.props.stateData
+    const {password, confirmPassword} = this.props.stateData
     return (
-      <div>
-        <form className="col-md-6">
-          <h3><FormattedMessage id="EditUserPassword.title" values={{id}} /></h3>
-          <div className="form-group">
-            <label>
+      <div data-test-id="EditUserPassword">
+        <form data-test-id="main-form" className="col-md-6">
+          <h3 data-test-id="title"><FormattedMessage id="EditUserPassword.title" values={{id}} /></h3>
+          <div data-test-id="group-new-pass" className="form-group">
+            <label data-test-id="label-new-pass">
               <FormattedMessage id="EditUserPassword.new_password" />
-              <span className="hint">
+              <span data-test-id="hint-new-pass" className="hint">
                 <FormattedMessage id="EditUserPassword.new_password_hint" />
               </span>
             </label>
-            <input
+            <input data-test-id="input-new-pass"
               type="password"
               value={password}
               className="form-control"
               onChange={this.changeUserPassword}
             />
           </div>
-          <div className="form-group">
-            <label><FormattedMessage id="EditUserPassword.new_password_confirm" /></label>
-            <input
+          <div data-test-id="group-confirm-pass" className="form-group">
+            <label data-test-id="label-confirm-pass">
+              <FormattedMessage id="EditUserPassword.new_password_confirm" />
+            </label>
+            <input data-test-id="input-confirm-pass"
               type="password"
               value={confirmPassword}
               className="form-control"
               onChange={this.changeUserConfirmPassword}
             />
           </div>
-          <div className="form-group">
-            <button
+          <div data-test-id="group-button" className="form-group">
+            <button data-test-id="btn-save"
               className="btn btn-primary"
               onClick={this.sendNewUserData}
               disabled={this.disabled()}
               ><FormattedMessage id="EditUser.button_save" />
             </button>
-            <button
+            <button data-test-id="btn-reset"
               className="btn btn-default"
               onClick={this.resetChanges}
             ><FormattedMessage id="EditUser.button_reset_changes" />
             </button>
-            <Link to={`/translator/${id}/edit`}>
+            <Link data-test-id="btn-cancel" to={`/translator/${id}/edit`}>
               <FormattedMessage id="EditUser.button_cancel" />
             </Link>
           </div>
