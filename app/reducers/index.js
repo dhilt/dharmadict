@@ -38,7 +38,10 @@ import {
   SET_ADMIN_USER_ID,
   UPDATE_ADMIN_USER_PASSWORD_START,
   UPDATE_ADMIN_USER_PASSWORD_END,
-  CHANGE_ADMIN_USER_PASSWORD
+  CHANGE_ADMIN_USER_PASSWORD,
+  UPDATE_TRANSLATOR_PASSWORD_START,
+  UPDATE_TRANSLATOR_PASSWORD_END,
+  CHANGE_TRANSLATOR_PASSWORD
 } from '../actions/_constants'
 
 import initialState from './_initial'
@@ -369,6 +372,32 @@ function reducer(state = initialState, action = {}) {
         admin: {...state.admin,
           editUserPassword: {...state.admin.editUserPassword,
             password: action.password,
+            confirmPassword: action.confirmPassword
+          }
+        }
+      }
+    case UPDATE_TRANSLATOR_PASSWORD_START:
+      return {...state,
+        translator: {...state.translator,
+          editPassword: {...state.translator.editPassword,
+            pending: true
+          }
+        }
+      }
+    case UPDATE_TRANSLATOR_PASSWORD_END:
+      return {...state,
+        translator: {...initialState.translator,
+          editPassword: {...initialState.translator.editPassword,
+            error: action.error
+          }
+        }
+      }
+    case CHANGE_TRANSLATOR_PASSWORD:
+      return {...state,
+        translator: {...state.translator,
+          editPassword: {...state.translator.editPassword,
+            currentPassword: action.currentPassword,
+            newPassword: action.newPassword,
             confirmPassword: action.confirmPassword
           }
         }

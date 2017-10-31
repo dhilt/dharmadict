@@ -12,6 +12,8 @@ import NewTerm from './components/admin/NewTerm'
 import EditUser from './components/admin/EditUser'
 import EditUserPassword from './components/admin/EditUserPassword'
 
+import EditPasswordByTranslator from './components/translator/EditPasswordByTranslator'
+
 function unauthorizedAccess (replace) {
   replace('/not_authorized')
   browserHistory.replace('/not_authorized')
@@ -22,7 +24,7 @@ function unpermittedAccess (replace) {
   browserHistory.replace('/not_permitted')
 }
 
-function checkAuth (nextState, replace, callback, store, role) {
+function checkAuth (nextState, replace, callback, store, role, userId) {
   let auth = store.getState().auth
   if(auth.loggedIn && (!role || (auth.userInfo.data && auth.userInfo.data.role === role))) {
     callback()
@@ -36,6 +38,9 @@ function checkAuth (nextState, replace, callback, store, role) {
         unauthorizedAccess(replace)
       }
       if (role && (!userInfo || userInfo.role !== role)) {
+        unpermittedAccess(replace)
+      }
+      if (userId && userId !== userInfo.id) {
         unpermittedAccess(replace)
       }
       callback()
@@ -70,6 +75,12 @@ const getRoutes = (store) => ({
       exactly: true,
       component: EditUserPassword,
       onEnter: (...args) => checkAuth(...args, store, 'admin')
+    },
+    {
+      path: '/translator/:id/password',
+      exactly: true,
+      component: EditPasswordByTranslator,
+      onEnter: (...args) => checkAuth(...args, store, 'translator', args[0].params.id)
     },
     { path: '/not_authorized', exactly: true, component: NotFound },
     { path: '/not_permitted', exactly: true, component: NotFound },

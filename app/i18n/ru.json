@@ -10,6 +10,7 @@
   "TranslatorPage.button_edit": "Редактировать",
   "TranslatorPage.loading_text": "Идет загрузка...",
   "TranslatorPage.request_error": "Ошибка запроса",
+  "TranslatorPage.button_edit_password": "Сменить пароль",
 
   "NotFound.main_text": "Страница не найдена",
   "NotFound.go_home": "На главную страницу",
@@ -70,5 +71,15 @@
   "EditUserPassword.new_password": "Новый пароль",
   "EditUserPassword.new_password_hint": "(не менее 6 символов)",
   "EditUserPassword.new_password_confirm": "Подтверждение пароля",
-  "EditUserPassword.new_password_success": "Пароль был успешно изменен"
+  "EditUserPassword.new_password_success": "Пароль был успешно изменен",
+
+  "EditPasswordByTranslator.title": "Смена пароля. Переводчик: {id}",
+  "EditPasswordByTranslator.current_password": "Текущий пароль",
+  "EditPasswordByTranslator.new_password": "Новый пароль",
+  "EditPasswordByTranslator.new_password_hint": "(не менее 6 символов)",
+  "EditPasswordByTranslator.new_password_confirm": "Подтверждение пароля",
+  "EditPasswordByTranslator.button_save": "Сохранить",
+  "EditPasswordByTranslator.button_reset_changes": "Сбросить",
+  "EditPasswordByTranslator.button_cancel": "Отмена",
+  "EditPasswordByTranslator.new_password_success": "Пароль был успешно изменен"
 }

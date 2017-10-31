@@ -10,6 +10,7 @@
   "TranslatorPage.button_edit": "Edit",
   "TranslatorPage.loading_text": "Loading...",
   "TranslatorPage.request_error": "The request failed",
+  "TranslatorPage.button_edit_password": "Edit password",
 
   "NotFound.main_text": "Page not found",
   "NotFound.go_home": "Go home page",
@@ -70,5 +71,15 @@
   "EditUserPassword.new_password": "New password",
   "EditUserPassword.new_password_hint": "(at least 6 symbols)",
   "EditUserPassword.new_password_confirm": "Confirm password",
-  "EditUserPassword.new_password_success": "Password was successfully changed"
+  "EditUserPassword.new_password_success": "Password was successfully changed",
+
+  "EditPasswordByTranslator.title": "Change password. Translator: {id}",
+  "EditPasswordByTranslator.current_password": "Current password",
+  "EditPasswordByTranslator.new_password": "New password",
+  "EditPasswordByTranslator.new_password_hint": "(at least 6 symbols)",
+  "EditPasswordByTranslator.new_password_confirm": "Confirm password",
+  "EditPasswordByTranslator.button_save": "Save",
+  "EditPasswordByTranslator.button_reset_changes": "Reset",
+  "EditPasswordByTranslator.button_cancel": "Cancel",
+  "EditPasswordByTranslator.new_password_success": "Password was successfully changed"
 }

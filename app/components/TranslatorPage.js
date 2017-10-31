@@ -36,6 +36,12 @@ class TranslatorPage extends Component {
             <FormattedMessage id="TranslatorPage.button_edit" />
           </Link>
         }
+        {
+          userData && userData.role === 'translator' && userData.id === translatorId &&
+          <Link data-test-id="changeTranslatorPassword" className="btn btn-default" to={`/translator/${translatorId}/password`}>
+            <FormattedMessage id="TranslatorPage.button_edit_password" />
+          </Link>
+        }
       </div>
     )
   }

@@ -64,6 +64,15 @@ let initialState = {
       description: ''
     }
   },
+  translator: {
+    editPassword: {
+      currentPassword: '',
+      newPassword: '',
+      confirmPassword: '',
+      pending: false,
+      error: null
+    }
+  },
   admin: {
     newTerm: {
       wylie: '',

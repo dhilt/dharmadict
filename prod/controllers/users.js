@@ -23,10 +23,17 @@ const getUserInfo = (user, isPublic = true) => {
 
 const isAdmin = (user) => {
   if (user.role !== 'admin') {
-    return Promise.reject(new ApiError('Admin only', 302));
+    return Promise.reject(new ApiError('Admin only', 302))
   }
-  return Promise.resolve(user);
+  return Promise.resolve(user)
 };
+
+const isSameUser = (reqId, user) => {
+  if (reqId !== user.id) {
+    return Promise.reject(new ApiError('Unpermitted success'));
+  }
+  return Promise.resolve(user)
+}
 
 const canLogin = (login, password) => new Promise(resolve => {
   logger.info(`Check if user ${login} can login`);
@@ -211,6 +218,33 @@ const update = (userId, payload) => validator.update(userId, payload)
   )
   .then(findById);
 
+const updatePasswordByTranslator = (user, payload) => validator.updatePassword(payload)
+  .then(() => findById(user.id))
+  .then(user => {
+    if (!passwordHash.verify(payload.currentPassword, user.hash)) {
+      throw new ApiError('The password does not match the current one')
+    } else {
+      user.hash = passwordHash.generate(payload.newPassword)
+    }
+    return user
+  })
+  .then(body =>
+    elasticClient.index({
+      index: config.db.index,
+      type: 'users',
+      id: user.id,
+      body,
+      refresh: true
+    }).then(() => {
+      logger.info('User data was successfully updated');
+      return user.id
+    }, error => {
+      logger.error(error.message);
+      throw new ApiError('DB error')
+    })
+  )
+  .then(findById);
+
 const removeById = userId => new Promise(resolve => {
   if (!userId || typeof userId !== 'string') {
     throw new ApiError('Invalid id')
@@ -235,11 +269,13 @@ const removeById = userId => new Promise(resolve => {
 module.exports = {
   getUserInfo,
   isAdmin,
+  isSameUser,
   canLogin,
   findById,
   findByLogin,
   findAll,
   create,
   update,
+  updatePasswordByTranslator,
   removeById
 };
