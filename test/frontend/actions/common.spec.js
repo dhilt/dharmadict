@@ -70,7 +70,7 @@ describe('common actions', () => {
         translators: [],
         languages: []
       },
-      getNotificationAction(null, 'App.get_languages_error')
+      getNotificationAction(null, 'App.get_common_error')
     ];
     const statesFail = [
       { ...initialState,

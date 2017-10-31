@@ -2,7 +2,7 @@
   "Common.unknown_error": "Unknown error",
   "Common.error_message": "{error}",
 
-  "App.get_languages_error": "Error getting languages",
+  "App.get_common_error": "Error getting data",
 
   "Home.search_title_em": "Buddhist terminology",
   "Home.search_title_h1": " in english translations",

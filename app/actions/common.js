@@ -20,7 +20,7 @@ export function getCommonDataAsync() {
         translators: error ? [] : data.translators,
         languages: error ? [] : data.languages
       })
-      error && dispatch(notifier.onErrorResponse('App.get_languages_error'))
+      error && dispatch(notifier.onErrorResponse('App.get_common_error'))
     })
   }
 }

@@ -2,7 +2,7 @@
   "Common.unknown_error": "Неизвестная ошибка",
   "Common.error_message": "{error}",
 
-  "App.get_languages_error": "Ошибка получения языков",
+  "App.get_common_error": "Ошибка получения данных",
 
   "Home.search_title_em": "Буддийская терминология",
   "Home.search_title_h1": " в русских переводах",
