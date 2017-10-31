@@ -386,7 +386,7 @@ function reducer(state = initialState, action = {}) {
       }
     case UPDATE_TRANSLATOR_PASSWORD_END:
       return {...state,
-        translator: {...initialState.translator,
+        translator: {...state.translator,
           editPassword: {...initialState.translator.editPassword,
             error: action.error
           }
