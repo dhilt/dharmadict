@@ -1,5 +1,6 @@
 {
   "Common.unknown_error": "Unknown error",
+  "Common.error_message": "{error}",
 
   "App.get_languages_error": "Error getting languages",
 
