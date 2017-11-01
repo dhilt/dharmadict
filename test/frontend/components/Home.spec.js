@@ -1,57 +1,69 @@
 global.window.localStorage = {};
-const {expect} = require('chai');
 
 const Home = require('../../../app/components/Home').default;
-const {setupComponent, defaultLang} = require('../_shared.js');
-
-const i18n = require('../../../app/i18n/' + defaultLang);
+const {setupComponent, checkWrap, initialState, languages} = require('../_shared.js');
 
 describe('Testing Home Component.', () => {
-  it('should show component', () => {
-    const wrapper = setupComponent(Home);
 
-    expect(wrapper.find('[data-test-id="Home"]').length).equal(1);
-    expect(wrapper.find('[data-test-id="Home"]').hasClass('row')).equal(true);
+  languages.forEach(lang => {
+    it(`should show component on ${lang.id} language`, () => {
+      const _initialState = { ...initialState,
+        common: { ...initialState.common,
+          userLanguage: lang.id
+        }
+      };
+      const wrapper = setupComponent(Home, _initialState);
+      const i18n = require('../../../app/i18n/' + lang.id);
 
-    expect(wrapper.find('[data-test-id="div-logo"]').length).equal(1);
-    expect(wrapper.find('[data-test-id="div-logo"]').hasClass('col-md-2')).equal(true);
+      checkWrap(wrapper.find('[data-test-id="Home"]'), {
+        className: 'row'
+      });
 
-    expect(wrapper.find('[data-test-id="img-logo"]').length).equal(1);
-    expect(wrapper.find('[data-test-id="img-logo"]').hasClass('logo')).equal(true);
+      checkWrap(wrapper.find('[data-test-id="div-logo"]'), {
+        className: 'col-md-2'
+      });
 
-    expect(wrapper.find('[data-test-id="title-md-10"]').length).equal(1);
-    expect(wrapper.find('[data-test-id="title-md-10"]').hasClass('col-md-10')).equal(true);
+      checkWrap(wrapper.find('[data-test-id="img-logo"]'), {
+        className: 'logo'
+      });
 
-    expect(wrapper.find('[data-test-id="header-row"]').length).equal(1);
-    expect(wrapper.find('[data-test-id="header-row"]').hasClass('row')).equal(true);
-    expect(wrapper.find('[data-test-id="header-row"]').hasClass('header-row')).equal(true);
+      checkWrap(wrapper.find('[data-test-id="title-md-10"]'), {
+        className: 'col-md-10'
+      });
 
-    expect(wrapper.find('[data-test-id="title-md-12"]').length).equal(1);
-    expect(wrapper.find('[data-test-id="title-md-12"]').hasClass('col-md-12')).equal(true);
+      checkWrap(wrapper.find('[data-test-id="header-row"]'), {
+        className: 'row header-row'
+      });
 
-    const fullTitle = i18n['Home.search_title_em'] + i18n['Home.search_title_h1'];
-    expect(wrapper.find('[data-test-id="full-title"]').length).equal(1);
-    expect(wrapper.find('[data-test-id="full-title"]').text()).equal(fullTitle);
+      checkWrap(wrapper.find('[data-test-id="title-md-12"]'), {
+        className: 'col-md-12'
+      });
 
-    const emTitle = i18n['Home.search_title_em'];
-    expect(wrapper.find('[data-test-id="em-title"]').length).equal(1);
-    expect(wrapper.find('[data-test-id="em-title"]').text()).equal(emTitle);
+      checkWrap(wrapper.find('[data-test-id="full-title"]'), {
+        text: i18n['Home.search_title_em'] + i18n['Home.search_title_h1']
+      });
 
-    const spanTitle = i18n['Home.search_title_h1'];
-    expect(wrapper.find('[data-test-id="span-title"]').length).equal(1);
-    expect(wrapper.find('[data-test-id="span-title"]').text()).equal(spanTitle);
+      checkWrap(wrapper.find('[data-test-id="em-title"]'), {
+        text: i18n['Home.search_title_em']
+      });
 
-    expect(wrapper.find('[data-test-id="search-row"]').length).equal(1);
-    expect(wrapper.find('[data-test-id="search-row"]').hasClass('row')).equal(true);
-    expect(wrapper.find('[data-test-id="search-row"]').hasClass('search-row')).equal(true);
+      checkWrap(wrapper.find('[data-test-id="span-title"]'), {
+        text: i18n['Home.search_title_h1']
+      });
 
-    expect(wrapper.find('[data-test-id="search-md-12"]').length).equal(1);
-    expect(wrapper.find('[data-test-id="search-md-12"]').hasClass('col-md-12')).equal(true);
+      checkWrap(wrapper.find('[data-test-id="search-row"]'), {
+        className: 'row search-row'
+      });
 
-    expect(wrapper.find('[data-test-id="SearchInput"]').length).equal(1);
-    // further tests in "test/frontend/components/search/SearchInput"
+      checkWrap(wrapper.find('[data-test-id="search-md-12"]'), {
+        className: 'col-md-12'
+      });
 
-    expect(wrapper.find('[data-test-id="SearchResults"]').length).equal(1);
-    // further tests in "test/frontend/components/search/SearchResults"
+      checkWrap(wrapper.find('[data-test-id="SearchInput"]'));
+      // further tests in "test/frontend/components/search/SearchInput"
+
+      checkWrap(wrapper.find('[data-test-id="SearchResults"]'));
+      // further tests in "test/frontend/components/search/SearchResults"
+    });
   });
 });
