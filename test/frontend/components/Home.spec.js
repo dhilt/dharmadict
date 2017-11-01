@@ -64,6 +64,8 @@ describe('Testing Home Component.', () => {
 
       checkWrap(wrapper.find('[data-test-id="SearchResults"]'));
       // further tests in "test/frontend/components/search/SearchResults"
+
+      wrapper.unmount();
     });
   });
 });
