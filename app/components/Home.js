@@ -9,7 +9,7 @@ import logoPath from '../styles/images/manjushri_175x226.jpg'
 class Home extends Component {
   render () {
     return (
-      <div data-test-id="main-div" className="row">
+      <div data-test-id="Home" className="row">
         <div data-test-id="div-logo" className="col-md-2">
           <img data-test-id="img-logo" src={logoPath} className="logo" />
         </div>

@@ -73,6 +73,8 @@ describe('Testing SearchResults Component.', () => {
           // further tests in "test/frontend/components/search/Term"
         }
       }
+
+      wrapper.unmount();
     });
   };
 

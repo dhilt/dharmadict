@@ -28,6 +28,8 @@ describe('Testing TermList Component.', () => {
         text: elem.wylie
       })
     );
+
+    wrapper.unmount();
   };
 
   const result = terms;

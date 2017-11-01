@@ -7,10 +7,10 @@ import Notifier from './common/Notifier'
 class App extends Component {
   render () {
     return (
-      <div className='wrapper'>
+      <div data-test-id="App" className='wrapper'>
         <Notifier />
         <Header />
-        <div className='container'>
+        <div data-test-id="App.container" className='container'>
           {this.props.children}
         </div>
       </div>

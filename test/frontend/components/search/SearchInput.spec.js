@@ -59,6 +59,8 @@ describe('Testing SearchInput Component.', () => {
         text: i18n['SearchInput.button_find'],
         className: pending ? 'invisible' : ''
       });
+
+      wrapper.unmount();
     });
   };
 

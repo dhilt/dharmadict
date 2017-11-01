@@ -10,8 +10,8 @@ describe('Testing Home Component.', () => {
   it('should show component', () => {
     const wrapper = setupComponent(Home);
 
-    expect(wrapper.find('[data-test-id="main-div"]').length).equal(1);
-    expect(wrapper.find('[data-test-id="main-div"]').hasClass('row')).equal(true);
+    expect(wrapper.find('[data-test-id="Home"]').length).equal(1);
+    expect(wrapper.find('[data-test-id="Home"]').hasClass('row')).equal(true);
 
     expect(wrapper.find('[data-test-id="div-logo"]').length).equal(1);
     expect(wrapper.find('[data-test-id="div-logo"]').hasClass('col-md-2')).equal(true);
