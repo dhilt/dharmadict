@@ -53,7 +53,7 @@ const Login = props => {
             </button>
             <button className="btn btn-default"
               onClick={closeModal}>
-              <FormattedMessage id="Login.button_cancel" />
+              <FormattedMessage id="Common.cancel" />
             </button>
           </form>
         </div>

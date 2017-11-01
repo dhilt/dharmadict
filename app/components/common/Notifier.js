@@ -20,7 +20,7 @@ class Notifier extends Component {
   render () {
     const {notifications} = this.props
     return (
-      <div className="alert-column">
+      <div data-test-id="Notifier" className="alert-column">
         {
           notifications.length !== 0 && notifications.map((elem, index) =>
             <Alert

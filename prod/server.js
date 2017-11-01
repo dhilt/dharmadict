@@ -84,6 +84,14 @@ app.patch('/api/users/:id', (req, res) =>
     .catch(error => sendApiError(res, 'Can\'t update user data.', error))
 );
 
+app.patch('/api/translators/:id', (req, res) =>
+  doAuthorize(req)
+    .then(user => usersController.isSameUser(req.params.id, user))
+    .then(user => usersController.updatePasswordByTranslator(user, req.body.payload))
+    .then(result => res.json({success: true, user: usersController.getUserInfo(result)}))
+    .catch(error => sendApiError(res, 'Can\'t update password.', error))
+);
+
 app.get('/api/terms', (req, res) =>
   termsController.searchByPattern(req.query.pattern)
     .then(result => res.json(result))

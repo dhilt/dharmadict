@@ -1,7 +1,11 @@
 {
   "Common.unknown_error": "Unknown error",
+  "Common.error_message": "{error}",
+  "Common.save": "Save",
+  "Common.reset": "Reset",
+  "Common.cancel": "Cancel",
 
-  "App.get_languages_error": "Error getting languages",
+  "App.get_common_error": "Error getting data",
 
   "Home.search_title_em": "Buddhist terminology",
   "Home.search_title_h1": " in english translations",
@@ -10,6 +14,7 @@
   "TranslatorPage.button_edit": "Edit",
   "TranslatorPage.loading_text": "Loading...",
   "TranslatorPage.request_error": "The request failed",
+  "TranslatorPage.button_edit_password": "Edit password",
 
   "NotFound.main_text": "Page not found",
   "NotFound.go_home": "Go home page",
@@ -21,6 +26,8 @@
 
   "SearchInput.button_find": "Find",
   "SearchInput.request_error": "The request failed",
+
+  "SearchResults.Not_found": "Nothing found",
 
   "Term.add_translation": "Add translation...",
   "Term.sanskrit_term": "Sanskrit: {sanskrit_en}",
@@ -46,21 +53,15 @@
   "Login.header_button_log_in": "Login",
   "Login.please_log_in": "Please, Log In",
   "Login.button_log_in": "Log in!",
-  "Login.button_cancel": "Cancel",
   "Login.authorization_error": "Authorization failed",
 
   "NewTerm.title_new_term": "New term",
-  "NewTerm.button_save_term": "Save",
-  "NewTerm.button_cancel": "Cancel",
   "NewTerm.alert_success": "Term was created with id: {termId}",
 
   "EditUser.title_edit_user": "Editing a user {id}",
   "EditUser.name_of_translator": "Name of the translator",
   "EditUser.language_of_translations": "Language of translations",
   "EditUser.description_of_translator": "Description of the translator",
-  "EditUser.button_save": "Save",
-  "EditUser.button_reset_changes": "Reset",
-  "EditUser.button_cancel": "Cancel",
   "EditUser.link_reset_password": "Change password",
   "EditUser.success": "User information was successfully changed",
 
@@ -68,5 +69,12 @@
   "EditUserPassword.new_password": "New password",
   "EditUserPassword.new_password_hint": "(at least 6 symbols)",
   "EditUserPassword.new_password_confirm": "Confirm password",
-  "EditUserPassword.new_password_success": "Password was successfully changed"
+  "EditUserPassword.new_password_success": "Password was successfully changed",
+
+  "EditPasswordByTranslator.title": "Change password. Translator: {id}",
+  "EditPasswordByTranslator.current_password": "Current password",
+  "EditPasswordByTranslator.new_password": "New password",
+  "EditPasswordByTranslator.new_password_hint": "(at least 6 symbols)",
+  "EditPasswordByTranslator.new_password_confirm": "Confirm password",
+  "EditPasswordByTranslator.new_password_success": "Password was successfully changed"
 }

@@ -5,10 +5,10 @@ const chaiHttp = require('chai-http');
 
 process.env.NODE_ENV = 'test';
 
-const server = require('../prod/server.js');
-const usersController = require('../prod/controllers/users.js');
-const termsController = require('../prod/controllers/terms.js');
-const languages = require('../prod/helper').languages;
+const server = require('../../prod/server.js');
+const usersController = require('../../prod/controllers/users.js');
+const termsController = require('../../prod/controllers/terms.js');
+const languages = require('../../prod/helper').languages;
 
 chai.use(chaiHttp);
 const request = chai.request(server);

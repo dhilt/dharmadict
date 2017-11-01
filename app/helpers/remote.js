@@ -1,6 +1,9 @@
 import fetch from 'isomorphic-fetch'
 import auth from './auth'
 
+const testing = process.env.NODE_ENV === 'test'
+const apiUrl = testing ? 'http://localhost/api/' : 'api/'
+
 let getConfig = (payload, typeQuery) => {
   let config = {
     headers: {}
@@ -18,7 +21,7 @@ let getConfig = (payload, typeQuery) => {
 }
 
 let asyncRequest = (path, typeQuery, payload, cb) =>
-  fetch('api/' + path, getConfig(payload, typeQuery))
+  fetch(apiUrl + path, getConfig(payload, typeQuery))
   .then(response => {
     if (!response.ok) {
       throw ({

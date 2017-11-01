@@ -1,13 +1,5 @@
-let localStorage
 const langNameLS = 'userLanguage'
-
-// If we're testing, use a local storage polyfill
-if (global.process && process.env.NODE_ENV === 'test') {
-  localStorage = require('localStorage')
-} else {
-  // If not, use the browser one
-  localStorage = global.window.localStorage
-}
+const localStorage = global.window.localStorage
 
 const lang = {
   list: ['en', 'ru'],

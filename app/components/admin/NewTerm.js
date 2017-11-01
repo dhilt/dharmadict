@@ -18,11 +18,12 @@ class NewTerm extends Component {
     const {pending, wylie, termId, sanskrit} = this.props.data
     const {languages} = this.props
     return (
-      <div>
-        <h3><FormattedMessage id="NewTerm.title_new_term" /></h3>
-        <form className="col-md-6">
-          <div className="form-group">
-            <input className="form-control"
+      <div data-test-id="NewTerm">
+        <h3 data-test-id="title"><FormattedMessage id="NewTerm.title_new_term" /></h3>
+        <form data-test-id="main-form" className="col-md-6">
+          <div data-test-id="form-wylie" className="form-group">
+            <input data-test-id="input-wylie"
+              className="form-control"
               name="wylie"
               type="text"
               placeholder="wylie"
@@ -31,8 +32,8 @@ class NewTerm extends Component {
           </div>
           {
             languages && languages.map(langItem =>
-              <div className="form-group" key={langItem.id}>
-                <input
+              <div data-test-id="form-sanskrit" className="form-group" key={langItem.id}>
+                <input data-test-id="input-sanskrit"
                   className="form-control"
                   name={langItem.id}
                   type="text"
@@ -42,15 +43,15 @@ class NewTerm extends Component {
               </div>
             )
           }
-          <div className="form-group">
-            <Button
+          <div data-test-id="button-group" className="form-group">
+            <Button data-test-id="button-save"
               bsStyle='primary'
               type="button"
               className={pending ? 'loader' : ''}
               disabled={this.disabled()}
               onClick={(event) => this._onTermSave(event)}
-            ><FormattedMessage id="NewTerm.button_save_term" /></Button>
-            <Link to={`/`}><FormattedMessage id="NewTerm.button_cancel" /></Link>
+            ><FormattedMessage id="Common.save" /></Button>
+            <Link data-test-id="button-cancel" to={`/`}><FormattedMessage id="Common.cancel" /></Link>
           </div>
         </form>
       </div>

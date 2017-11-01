@@ -31,29 +31,29 @@ class Edit extends Component {
     let editState = this.props.editState
     let allOk = editState.started && !this.blockMessage && !editState.pending && !editState.error
     return (
-      <div>
-        <a className="back-link" onClick={() => this._goBack()}>
+      <div data-test-id="Edit">
+        <a data-test-id="back-link" className="back-link" onClick={() => this._goBack()}>
           <FormattedMessage id="Edit.go_back" />
         </a>
         {
           this.blockMessage ? (
-            <div>
+            <div data-test-id="blockMessage">
               {this.blockMessage}
             </div>
           ) : ( null )
         }
         {
           editState.pending ? (
-            <div>
+            <div data-test-id="pending">
               <FormattedMessage id="Edit.query_is_performed" />
             </div>
           ) : ( null )
         }
         {
           editState.error ? (
-            <div>
+            <div data-test-id="request_error">
               <FormattedMessage id="Edit.request_error" />
-              <div className="error">{editState.error.message}</div>
+              <div data-test-id="errorMsg" className="error">{editState.error.message}</div>
             </div>
           ) : ( null )
         }

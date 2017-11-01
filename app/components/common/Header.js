@@ -54,7 +54,7 @@ class Header extends Component {
     )
 
     return (
-      <div className='nav'>
+      <div data-test-id="Header" className='nav'>
         <div className='nav__wrapper'>
           <Link to={'/about'}><FormattedMessage id="Header.about_project" /></Link>
           {navButtons}

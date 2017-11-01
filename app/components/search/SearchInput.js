@@ -16,25 +16,27 @@ class SearchInput extends Component {
   render () {
     let search = this.props.data
     return (
-      <div className='row'>
-        <form>
-          <div className='form-group'>
-            <div className='col-md-6'>
+      <div data-test-id="SearchInput" className='row'>
+        <form data-test-id="main-form">
+          <div data-test-id="form-group1" className='form-group'>
+            <div data-test-id="form-group1.col-md-6" className='col-md-6'>
               <input className='form-control col-md-7'
+                data-test-id="form-group1.input"
                 name='search' type='search'
                 value={search.searchString}
                 onChange={this._onSearchStringChange}/>
             </div>
           </div>
-          <div className='col-md-2'>
-            <div className='form-group'>
+          <div data-test-id="div.col-md-2" className='col-md-2'>
+            <div data-test-id="form-group2" className='form-group'>
               <Button
+                data-test-id="searchButton"
                 bsStyle='default'
                 type='submit'
                 className={search.pending ? 'loader' : ''}
                 disabled={!search.searchString || search.pending}
                 onClick={this._onSubmit}>
-                <span className={search.pending ? 'invisible' : ''}>
+                <span data-test-id="button-pending" className={search.pending ? 'invisible' : ''}>
                   <FormattedMessage id="SearchInput.button_find" />
                 </span>
               </Button>

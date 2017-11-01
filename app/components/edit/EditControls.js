@@ -14,8 +14,8 @@ class EditControls extends Component {
 
   render () {
     return (
-      <div className="form-group form-inline">
-        <Button
+      <div data-test-id="EditControls" className="form-group form-inline">
+        <Button data-test-id="button-save-and-close"
           bsStyle='primary'
           type="button"
           className={this.props.data.pending ? 'loader' : ''}
@@ -23,7 +23,7 @@ class EditControls extends Component {
           onClick={(event) => this._onSave(event, true)}>
           <FormattedMessage id="EditControls.button_save_and_close" />
         </Button>
-        <Button
+        <Button data-test-id="button-save"
           bsStyle='primary'
           type="button"
           className={this.props.data.pending ? 'loader' : ''}
@@ -31,7 +31,7 @@ class EditControls extends Component {
           onClick={this._onSave}>
           <FormattedMessage id="EditControls.button_save" />
         </Button>
-        <a
+        <a data-test-id="cancel-link"
           className="cancel-link"
           onClick={this._onCancel}>
           <FormattedMessage id="EditControls.button_reset" />

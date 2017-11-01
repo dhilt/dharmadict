@@ -49,24 +49,24 @@ class EditUser extends Component {
     const {sourcePending, pending} = this.props.editUser
     const {name, language, description} = this.props.editUser.data
     return !sourcePending ? (
-      <div>
-        <form className="col-md-6">
-          <h3><FormattedMessage id="EditUser.title_edit_user" values={{id}} /></h3>
-          <div className="form-group">
-            <label><FormattedMessage id="EditUser.name_of_translator" /></label>
-            <input
+      <div data-test-id="EditUser">
+        <form data-test-id="main-form" className="col-md-6">
+          <h3 data-test-id="heading"><FormattedMessage id="EditUser.title_edit_user" values={{id}} /></h3>
+          <div data-test-id="form-name" className="form-group">
+            <label data-test-id="label-name"><FormattedMessage id="EditUser.name_of_translator" /></label>
+            <input data-test-id="input-name"
               type="text"
               value={name}
               className="form-control"
               onChange={this.changeUserName}
             />
           </div>
-          <div className="form-group">
-            <label><FormattedMessage id="EditUser.language_of_translations" /></label>
-            {languages && languages.map(langItem =>
-              <div className="radio" key={langItem.id}>
-                <label>
-                  <input
+          <div data-test-id="form-lang" className="form-group">
+            <label data-test-id="label-lang"><FormattedMessage id="EditUser.language_of_translations" /></label>
+            {languages && languages.map((langItem, langIndex) =>
+              <div data-test-id="radio-lang" className="radio" key={langIndex}>
+                <label data-test-id="radio-label-lang">
+                  <input data-test-id="input-lang"
                     type="radio"
                     name="lang_radio"
                     onChange={() => this.changeUserLanguage(langItem.id)}
@@ -76,33 +76,33 @@ class EditUser extends Component {
               </div>
             )}
           </div>
-          <div className="form-group">
-            <label><FormattedMessage id="EditUser.description_of_translator" /></label>
-            <textarea
+          <div data-test-id="form-desc" className="form-group">
+            <label data-test-id="label-desc"><FormattedMessage id="EditUser.description_of_translator" /></label>
+            <textarea data-test-id="textarea-desc"
               type="text"
               value={description}
               className="form-control"
               onChange={this.changeUserDescription}
             />
           </div>
-          <div className="form-group">
-            <button
+          <div data-test-id="button-group" className="form-group">
+            <button data-test-id="button-save"
               className="btn btn-primary"
               onClick={this.sendNewUserData}
               disabled={pending}
-              ><FormattedMessage id="EditUser.button_save" />
+              ><FormattedMessage id="Common.save" />
             </button>
-            <button
+            <button data-test-id="button-reset"
               className="btn btn-default"
               onClick={this.resetChanges}
-            ><FormattedMessage id="EditUser.button_reset_changes" />
+            ><FormattedMessage id="Common.reset" />
             </button>
-            <Link to={`/translator/${id}`}>
-              <FormattedMessage id="EditUser.button_cancel" />
+            <Link data-test-id="button-cancel" to={`/translator/${id}`}>
+              <FormattedMessage id="Common.cancel" />
             </Link>
           </div>
-          <div className="form-group">
-            <Link to={`/translator/${id}/edit/password`}>
+          <div data-test-id="password-group" className="form-group">
+            <Link data-test-id="link-password" to={`/translator/${id}/edit/password`}>
               <FormattedMessage id="EditUser.link_reset_password" />
             </Link>
           </div>

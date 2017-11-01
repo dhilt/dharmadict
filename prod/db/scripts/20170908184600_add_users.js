@@ -1,4 +1,3 @@
-const passwordHash = require('password-hash');
 const config = require('../config.js');
 
 const users = [{
@@ -96,6 +95,16 @@ const users = [{
     login: 'rag',
     name: 'В.К. Рагимов',
     hash: 'sha1$a81da821$1$713b00c1960eaa33e1a8b4aabe5155f64755cab6',
+    language: 'ru',
+    description: ''
+  }
+}, {
+  id: 'JRK',
+  body: {
+    role: 'translator',
+    login: 'jrk',
+    name: 'Ю. Жиронкина',
+    hash: 'sha1$c419206b$1$d0016a4ad283df8eebce4f12b8f57eb27ec300df',
     language: 'ru',
     description: ''
   }

@@ -1,7 +1,11 @@
 {
   "Common.unknown_error": "Неизвестная ошибка",
+  "Common.error_message": "{error}",
+  "Common.save": "Сохранить",
+  "Common.reset": "Сбросить",
+  "Common.cancel": "Отмена",
 
-  "App.get_languages_error": "Ошибка получения языков",
+  "App.get_common_error": "Ошибка получения данных",
 
   "Home.search_title_em": "Буддийская терминология",
   "Home.search_title_h1": " в русских переводах",
@@ -10,6 +14,7 @@
   "TranslatorPage.button_edit": "Редактировать",
   "TranslatorPage.loading_text": "Идет загрузка...",
   "TranslatorPage.request_error": "Ошибка запроса",
+  "TranslatorPage.button_edit_password": "Сменить пароль",
 
   "NotFound.main_text": "Страница не найдена",
   "NotFound.go_home": "На главную страницу",
@@ -21,6 +26,8 @@
 
   "SearchInput.button_find": "Найти",
   "SearchInput.request_error": "Ошибка запроса",
+
+  "SearchResults.Not_found": "Ничего не найдено",
 
   "Term.add_translation": "Добавить перевод...",
   "Term.sanskrit_term": "Санскрит: {sanskrit_ru}",
@@ -46,21 +53,15 @@
   "Login.header_button_log_in": "Войти",
   "Login.please_log_in": "Пожалуйста, войдите",
   "Login.button_log_in": "Войти",
-  "Login.button_cancel": "Отмена",
   "Login.authorization_error": "Ошибка авторизации",
 
   "NewTerm.title_new_term": "Новый термин",
-  "NewTerm.button_save_term": "Сохранить",
-  "NewTerm.button_cancel": "Отмена",
   "NewTerm.alert_success": "Термин был создан с id: {termId}",
 
   "EditUser.title_edit_user": "Редактирование пользователя {id}",
   "EditUser.name_of_translator": "Имя переводчика",
   "EditUser.language_of_translations": "Язык переводов",
   "EditUser.description_of_translator": "Описание переводчика",
-  "EditUser.button_save": "Сохранить",
-  "EditUser.button_reset_changes": "Сбросить",
-  "EditUser.button_cancel": "Отмена",
   "EditUser.link_reset_password": "Изменить пароль",
   "EditUser.success": "Информация о пользователе была успешно изменена",
 
@@ -68,5 +69,12 @@
   "EditUserPassword.new_password": "Новый пароль",
   "EditUserPassword.new_password_hint": "(не менее 6 символов)",
   "EditUserPassword.new_password_confirm": "Подтверждение пароля",
-  "EditUserPassword.new_password_success": "Пароль был успешно изменен"
+  "EditUserPassword.new_password_success": "Пароль был успешно изменен",
+
+  "EditPasswordByTranslator.title": "Смена пароля. Переводчик: {id}",
+  "EditPasswordByTranslator.current_password": "Текущий пароль",
+  "EditPasswordByTranslator.new_password": "Новый пароль",
+  "EditPasswordByTranslator.new_password_hint": "(не менее 6 символов)",
+  "EditPasswordByTranslator.new_password_confirm": "Подтверждение пароля",
+  "EditPasswordByTranslator.new_password_success": "Пароль был успешно изменен"
 }

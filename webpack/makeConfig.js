@@ -69,7 +69,12 @@ function makeWebpackConfig (options) {
         {
           test: /\.js$/, // Transform all .js files required somewhere within an entry point...
           loader: 'babel', // ...with the specified loaders...
-          exclude: path.join(__dirname, '../', '/node_modules/') // ...except for the node_modules folder.
+          exclude: path.join(__dirname, '../', '/node_modules/'), // ...except for the node_modules folder.
+          query: {
+            plugins: options.prod ? [
+              ["react-remove-properties", {"properties": ["data-test-id"]}]
+            ] : []
+          }
         }, {
           test: /\.json$/,
           loader: 'json-loader'

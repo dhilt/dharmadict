@@ -3,7 +3,7 @@ const testAdmin = require('./_shared.js').testAdmin;
 const testTranslator = require('./_shared.js').testTranslator;
 const testTranslator2 = require('./_shared.js').testTranslator2;
 
-const usersController = require('../prod/controllers/users.js');
+const usersController = require('../../prod/controllers/users.js');
 
 describe('Delete user ctrl method', () => {
 

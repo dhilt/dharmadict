@@ -12,6 +12,8 @@ import NewTerm from './components/admin/NewTerm'
 import EditUser from './components/admin/EditUser'
 import EditUserPassword from './components/admin/EditUserPassword'
 
+import EditPasswordByTranslator from './components/translator/EditPasswordByTranslator'
+
 function unauthorizedAccess (replace) {
   replace('/not_authorized')
   browserHistory.replace('/not_authorized')
@@ -22,21 +24,22 @@ function unpermittedAccess (replace) {
   browserHistory.replace('/not_permitted')
 }
 
-function checkAuth (nextState, replace, callback, store, role) {
+function hasAccess(auth, role, userId) {
+  return auth.loggedIn
+    && (!role || (auth.userInfo.data && auth.userInfo.data.role === role))
+    && (!userId || (userId === auth.userInfo.data.id))
+}
+
+function checkAccess (nextState, replace, callback, store, role, userId) {
   let auth = store.getState().auth
-  if(auth.loggedIn && (!role || (auth.userInfo.data && auth.userInfo.data.role === role))) {
+  if(hasAccess(auth, role, userId)) {
     callback()
     return
   }
   if(auth.userInfo.promise) {
     auth.userInfo.promise.then(() => {
-      auth = store.getState().auth
-      const userInfo = auth.userInfo.data
-      if (!auth.loggedIn) {
+      if(!hasAccess(store.getState().auth, role, userId)) {
         unauthorizedAccess(replace)
-      }
-      if (role && (!userInfo || userInfo.role !== role)) {
-        unpermittedAccess(replace)
       }
       callback()
     })
@@ -56,20 +59,26 @@ const getRoutes = (store) => ({
       path: '/newTerm',
       exactly: true,
       component: NewTerm,
-      onEnter: (...args) => checkAuth(...args, store, 'admin')
+      onEnter: (...args) => checkAccess(...args, store, 'admin')
     },
     { path: '/translator/:id', exactly: true, component: TranslatorPage },
     {
       path: '/translator/:id/edit',
       exactly: true,
       component: EditUser,
-      onEnter: (...args) => checkAuth(...args, store, 'admin')
+      onEnter: (...args) => checkAccess(...args, store, 'admin')
     },
     {
       path: '/translator/:id/edit/password',
       exactly: true,
       component: EditUserPassword,
-      onEnter: (...args) => checkAuth(...args, store, 'admin')
+      onEnter: (...args) => checkAccess(...args, store, 'admin')
+    },
+    {
+      path: '/translator/:id/password',
+      exactly: true,
+      component: EditPasswordByTranslator,
+      onEnter: (...args) => checkAccess(...args, store, 'translator', args[0].params.id)
     },
     { path: '/not_authorized', exactly: true, component: NotFound },
     { path: '/not_permitted', exactly: true, component: NotFound },

@@ -75,7 +75,39 @@ const update = (userId, payload) => new Promise(resolve => {
   resolve(userId, payload)
 });
 
+const updatePassword = (payload) => new Promise(resolve => {
+  if (!payload || typeof payload !== 'object') {
+    throw new ApiError('Invalid payload')
+  }
+  if(!payload.hasOwnProperty('currentPassword')) {
+    throw new ApiError('No current password')
+  }
+  if (!payload.hasOwnProperty('newPassword')) {
+    throw new ApiError('No new password')
+  }
+  if(!payload.hasOwnProperty('confirmPassword')) {
+    throw new ApiError('No password confirmation')
+  }
+  if (typeof payload.currentPassword !== 'string') {
+    throw new ApiError('Invalid current password')
+  }
+  if (typeof payload.newPassword !== 'string') {
+    throw new ApiError('Invalid new password')
+  }
+  if (typeof payload.confirmPassword !== 'string') {
+    throw new ApiError('Invalid password confirmation')
+  }
+  if (payload.newPassword.length < 6) {
+    throw new ApiError('Password is too short')
+  }
+  if (payload.newPassword !== payload.confirmPassword) {
+    throw new ApiError('Password is not confirmed')
+  }
+  resolve(payload)
+});
+
 module.exports = {
   create,
-  update
+  update,
+  updatePassword
 };

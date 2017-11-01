@@ -19,12 +19,12 @@ class Term extends Component {
     let translators = this.props.translators
     let term = this.props.data.term
     return (
-      <div className="term">
-        <div className="term-header">
-          <div className="wylie">{term.wylie}</div>
+      <div data-test-id="Term" className="term">
+        <div data-test-id="term-header" className="term-header">
+          <div data-test-id="wylie-header" className="wylie">{term.wylie}</div>
           {
             term.sanskrit_ru ? (
-              <div className="sanskrit">
+              <div data-test-id="sanskrit" className="sanskrit">
                 <FormattedMessage
                   id="Term.sanskrit_term"
                   values={{sanskrit_ru: term.sanskrit_ru, sanskrit_en: term.sanskrit_en}}
@@ -33,61 +33,67 @@ class Term extends Component {
             ) : ( null )
           }
         </div>
-        <ul className="translation-list">
+        <ul data-test-id="translation-list" className="translation-list">
         {
           term.translations.map((translation, translationIndex) =>
-          <li key={translationIndex} className="translation">
-            <div className="wrap-translator-ref">
-              <Link to={`translator/${translation.translatorId}`} className="translator=ref">
-                {translators &&
-                  translators.find(elem => elem.id === translation.translatorId).name
+            <li data-test-id="translation" key={translationIndex} className="translation">
+              <div data-test-id="wrap-translator-ref" className="wrap-translator-ref">
+                <Link data-test-id="link-translator"
+                  to={`translator/${translation.translatorId}`}
+                  className="translator=ref"
+                >{translators &&
+                    translators.find(elem => elem.id === translation.translatorId).name
+                  }
+                </Link>
+                {
+                  this.canEdit(translation.translatorId) ?
+                  (
+                    <Link data-test-id="link-to-edit" to={{
+                      pathname: '/edit',
+                      query: { termId: term.id, translatorId: translation.translatorId }
+                    }}>
+                        <img data-test-id="edit-icon" src={editIcon} className="edit-icon" />
+                    </Link>
+                  ) : ( null )
                 }
-              </Link>
+              </div>
+              <ol data-test-id="list-meanings"
+                className={"meanings" + (translation.meanings.length === 1 ? " single-item" : "")}>
               {
-                this.canEdit(translation.translatorId) ?
-                (
-                  <Link to={{
-                    pathname: '/edit',
-                    query: { termId: term.id, translatorId: translation.translatorId }
-                  }}>
-                      <img src={editIcon} className="edit-icon" />
-                  </Link>
-                ) : ( null )
+                translation.meanings.map((meaning, meaningIndex) =>
+                <li data-test-id="meaning" key={meaningIndex} className="meaning">
+                  {
+                    meaning.versions.map((version, versionIndex) =>
+                      <span data-test-id="version" key={versionIndex}>
+                        {version + (versionIndex < meaning.versions.length - 1 ? '; ' : '')}
+                      </span>
+                    )
+                  }
+                  {
+                    meaning.comment ?
+                    (<a data-test-id="commentLink"
+                      className="commentLink"
+                      onClick={()=>this._toggleComment(translationIndex, meaningIndex)}
+                     >&gt;&gt;&gt;</a>
+                    ) : ( null )
+                  }
+                  {
+                    meaning.openComment ?
+                    (<span className="translation-comment"> {meaning.comment} </span>) :
+                    ( null )
+                  }
+                </li>
+                )
               }
-            </div>
-            <ol className={"meanings" + (translation.meanings.length === 1 ? " single-item" : "")}>
-            {
-              translation.meanings.map((meaning, meaningIndex) =>
-              <li key={meaningIndex} className="meaning">
-                {
-                  meaning.versions.map((version, versionIndex) =>
-                    <span key={versionIndex}>
-                      {version + (versionIndex < meaning.versions.length - 1 ? '; ' : '')}
-                    </span>
-                  )
-                }
-                {
-                  meaning.comment ?
-                  (<a className="commentLink" onClick={()=>this._toggleComment(translationIndex, meaningIndex)}>&gt;&gt;&gt;</a>) :
-                  ( null )
-                }
-                {
-                  meaning.openComment ?
-                  (<span className="translation-comment"> {meaning.comment} </span>) :
-                  ( null )
-                }
-              </li>
-              )
-            }
-            </ol>
-          </li>
+              </ol>
+            </li>
           )
         }
         </ul>
         {
           this.canAdd(term) ? (
-            <div className="add-translation">
-              <Link to={{
+            <div data-test-id="add-translation" className="add-translation">
+              <Link data-test-id="link-add-translation" to={{
                 pathname: '/edit',
                 query: { termId: term.id, translatorId: this.userInfo.id }
               }}>
