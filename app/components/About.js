@@ -4,7 +4,7 @@ import {Link} from 'react-router'
 class About extends Component {
   render () {
     return (
-      <article>
+      <article data-test-id="About">
 <h3>Цели проекта</h3>
 <p>
 Сегодня в России имеет хождение большое количество буддийских текстов, и публикуются новые и новые книги,
