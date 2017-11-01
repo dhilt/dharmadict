@@ -1,142 +1,129 @@
 global.window.localStorage = {};
-const {expect} = require('chai');
-const Edit = require('../../../app/components/Edit').default;
-const {setupComponent, translators, terms, initialState, defaultLang} = require('../_shared.js');
 
-const i18n = require('../../../app/i18n/' + defaultLang);
+const Edit = require('../../../app/components/Edit').default;
+const {
+  setupComponent,
+  checkWrap,
+  initialState,
+  translators,
+  terms,
+  languages
+} = require('../_shared.js');
 
 describe('Testing Edit Component.', () => {
 
   beforeEach(() => console.log = jest.fn());
 
-  const errorRequest = {
+  const responseFail = {
     message: 'Some error. Database error'
   };
 
-  it('should show component with data', () => {
-    const translator = translators[0];
-    const term = terms[0];
-    const translations = term.translations.find(elem => elem.translatorId === translator.id);
-    const _initialState = { ...initialState,
-      edit: { ...initialState.edit,
-        started: true,
-        termId: term.id,
-        termName: term.wylie,
-        source: translations,
-        change: translations
+  const checkShowEdit = (translatorId, term, started, pending, error) => {
+    languages.forEach(lang => {
+      const _initialState = { ...initialState,
+        common: { ...initialState.common,
+          userLanguage: lang.id
+        },
+        edit: { ...initialState.edit,
+          started,
+          pending,
+          error,
+          termId: term ? term.id : null,
+          translatorId,
+          source: term ? term.translations[0] : null,
+          change: term ? term.translations[0] : null
+        }
       }
-    }
-    const query = {
-      translatorId: translator.id,
-      termId: term.id
-    };
-    const props = {
-      location: {
-        pathname: '/edit',
+      const query = {
+        translatorId,
+        termId: term ? term.id : null
+      };
+      const _props = {
+        location: {
+          pathname: '/edit',
+          query
+        },
         query
-      },
-      query
-    };
-    const wrapper = setupComponent(Edit, _initialState, props);
+      };
+      const wrapper = setupComponent(Edit, _initialState, _props);
+      const i18n = require('../../../app/i18n/' + lang.id);
 
-    expect(wrapper.find('a.back-link')).to.exist;
-    expect(wrapper.find('a.back-link').text()).equal(i18n['Edit.go_back']);
-    expect(wrapper.find('ul.meaningList').length).equal(1);  // further test in 'Meanings.spec.js'
+      checkWrap(wrapper.find('[data-test-id="Edit"]'));
 
-    // request error - should not be shown
-    expect(wrapper.find('div.error').length).equal(0);
-    // route params error and terms loading - should not be shown
-    expect(wrapper.find('div > div').length).to.not.equal(1);
-  });
+      checkWrap(wrapper.find('[data-test-id="back-link"]'), {
+        text: i18n['Edit.go_back'],
+        className: 'back-link'
+      });
 
-  it('should show component with error: missing parameter (translatorId or termId)', () => {
-    const translator = translators[0];
-    const query = {
-      translatorId: translator.id
-    };
-    const props = {
-      location: {
-        pathname: '/edit',
-        query
-      },
-      query
-    };
-    const wrapper = setupComponent(Edit, initialState, props);
-
-    expect(wrapper.find('a.back-link')).to.exist;
-    expect(wrapper.find('a.back-link').text()).equal(i18n['Edit.go_back']);
-    expect(wrapper.find('div > div').text()).equal(i18n['Edit.should_select_term']);
-
-    // term translations - should not be shown
-    expect(wrapper.find('ul.meaningList').length).equal(0);
-    // request error - should not be shown
-    expect(wrapper.find('div.error').length).equal(0);
-    // terms loading - should not be shown
-    expect(wrapper.find('div > div').text()).to.not.equal('Edit.query_is_performed');
-  });
-
-  it('should show component with data loading', () => {
-    const translator = translators[0];
-    const term = terms[0];
-    const _initialState = { ...initialState,
-      edit: { ...initialState.edit,
-        pending: true
+      if (!translatorId || (!term || !term.id)) {
+        checkWrap(wrapper.find('[data-test-id="blockMessage"]'), {
+          text: i18n['Edit.should_select_term']
+        })
+      } else {
+        checkWrap(wrapper.find('[data-test-id="blockMessage"]'), {
+          length: 0
+        })
       }
-    }
-    const query = {
-      translatorId: translator.id,
-      termId: term.id
-    };
-    const props = {
-      location: {
-        pathname: '/edit',
-        query
-      },
-      query
-    };
-    const wrapper = setupComponent(Edit, _initialState, props);
 
-    expect(wrapper.find('a.back-link')).to.exist;
-    expect(wrapper.find('a.back-link').text()).equal(i18n['Edit.go_back']);
-    expect(wrapper.find('div > div').text()).equal(i18n['Edit.query_is_performed']);
-
-    // term translations - should not be shown
-    expect(wrapper.find('ul.meaningList').length).equal(0);
-    // request error - should not be shown
-    expect(wrapper.find('div.error').length).equal(0);
-    // route params error - should not be shown
-    expect(wrapper.find('div > div').text()).to.not.equal(i18n['Edit.should_select_term']);
-  });
-
-  it('should show component with error', () => {
-    const translator = translators[0];
-    const term = terms[0];
-    const _initialState = { ...initialState,
-      edit: { ...initialState.edit,
-        error: errorRequest
+      if (pending) {
+        checkWrap(wrapper.find('[data-test-id="pending"]'), {
+          text: i18n['Edit.query_is_performed']
+        })
+      } else {
+        checkWrap(wrapper.find('[data-test-id="pending"]'), {
+          length: 0
+        })
       }
-    }
-    const query = {
-      translatorId: translator.id,
-      termId: term.id
-    };
-    const props = {
-      location: {
-        pathname: '/edit',
-        query
-      },
-      query
-    };
-    const wrapper = setupComponent(Edit, _initialState, props);
 
-    expect(wrapper.find('a.back-link')).to.exist;
-    expect(wrapper.find('a.back-link').text()).equal(i18n['Edit.go_back']);
-    expect(wrapper.find('div > div').find('span').text()).equal(i18n['Edit.request_error']);
-    expect(wrapper.find('div > div > div').text()).equal(errorRequest.message);
+      if (error) {
+        checkWrap(wrapper.find('[data-test-id="request_error"]'), {
+          text: i18n['Edit.request_error'] + responseFail.message
+        });
+        checkWrap(wrapper.find('[data-test-id="errorMsg"]'), {
+          text: responseFail.message,
+          className: 'error'
+        });
+      } else {
+        checkWrap(wrapper.find('[data-test-id="request_error"]'), {
+          length: 0
+        })
+      }
 
-    // term translations - should not be shown
-    expect(wrapper.find('ul.meaningList').length).equal(0);
-    // route params error and terms loading - should not be shown
-    expect(wrapper.find('div > div').length).to.not.equal(1);
-  });
+      if (started && translatorId && term && term.id && !pending && !error) {
+        checkWrap(wrapper.find('[data-test-id="Meanings"]'))
+        // further tests in "test/frontend/components/edit/Meanings"
+      }
+
+      wrapper.unmount();
+    });
+  };
+
+  const defaultTerm = terms[0];
+  const defaultTranslator = translators[0];
+
+  it('should show component sending request',
+    () => checkShowEdit(defaultTranslator.id, defaultTerm, true, true, null)
+  );
+
+  it('should show component showing the error',
+    () => checkShowEdit(defaultTranslator.id, defaultTerm, true, false, responseFail)
+  );
+
+  it('should show component showing block message (no termId)',
+    () => checkShowEdit(null, defaultTerm, true, false, null)
+  );
+
+  it('should show component showing block message (no translatorId)',
+    () => checkShowEdit(defaultTranslator.id, null, true, false, null)
+  );
+
+  it('should show component with no data and no request',
+    () => checkShowEdit(defaultTranslator.id, defaultTerm, false, false, null)
+  );
+
+  translators.forEach(translator =>
+    it('should show component with data',
+      () => checkShowEdit(translator.id, defaultTerm, true, false, null)
+    )
+  );
 });

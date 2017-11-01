@@ -19,7 +19,7 @@ describe('Testing Meanings Component.', () => {
     const wrapper = setupComponent(Meanings, _initialState);
     const i18n = require('../../../../app/i18n/' + lang);
 
-    checkWrap(wrapper.find('[data-test-id="main-div-Meanings"]'));
+    checkWrap(wrapper.find('[data-test-id="Meanings"]'));
 
     checkWrap(wrapper.find('[data-test-id="termName"]'), {
       text: termName

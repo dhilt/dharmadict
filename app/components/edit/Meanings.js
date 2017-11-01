@@ -18,7 +18,7 @@ class Meanings extends Component {
 
   render () {
     return (
-      <div data-test-id="main-div-Meanings">
+      <div data-test-id="Meanings">
         <h2 data-test-id="termName">{this.props.data.termName}</h2>
         <ul data-test-id="meaningList" className="meaningList">
         {
