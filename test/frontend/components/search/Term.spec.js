@@ -105,7 +105,9 @@ describe('Testing Term Component.', () => {
 
       let meaningsLength = 0;
       selectedTerm.translations.forEach(e => meaningsLength += e.meanings.length);
-      expect(wrapper.find('[data-test-id="meaning"]').length).equal(meaningsLength);
+      checkWrap(wrapper.find('[data-test-id="meaning"]'), {
+        length: meaningsLength
+      });
 
       translation.meanings.forEach((meaning, meaningIndex) => {
 
@@ -121,7 +123,9 @@ describe('Testing Term Component.', () => {
             versionLength += e.versions.length
           )
         );
-        expect(wrapper.find('[data-test-id="version"]').length).equal(versionLength);
+        checkWrap(wrapper.find('[data-test-id="version"]'), {
+          length: versionLength
+        });
 
         let amountComments = 0;
         meaning.versions.forEach(e => e.comment ? amountComments++ : null);
