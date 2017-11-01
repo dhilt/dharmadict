@@ -1,5 +1,3 @@
-const React = require('react');
-const {Component} = require('react');
 const {expect} = require('chai');
 
 const NotFound = require('../../../app/components/NotFound').default;

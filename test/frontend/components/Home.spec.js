@@ -1,6 +1,4 @@
 global.window.localStorage = {};
-const React = require('react');
-const {Component} = require('react');
 const {expect} = require('chai');
 
 const Home = require('../../../app/components/Home').default;

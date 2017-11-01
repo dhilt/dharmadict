@@ -1,6 +1,4 @@
 global.window.localStorage = {};
-const React = require('react');
-const {Component} = require('react');
 const {expect} = require('chai');
 
 const TranslatorPage = require('../../../app/components/TranslatorPage').default;

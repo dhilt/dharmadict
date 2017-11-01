@@ -2,7 +2,7 @@ global.window.localStorage = {};
 const {expect} = require('chai');
 
 const TermList = require('../../../../app/components/search/TermList').default;
-const {setupComponent, initialState, terms} = require('../../_shared.js');
+const {setupComponent, checkWrap, initialState, terms} = require('../../_shared.js');
 
 describe('Testing TermList Component.', () => {
 
@@ -20,17 +20,14 @@ describe('Testing TermList Component.', () => {
     };
     const wrapper = setupComponent(TermList, _initialState);
 
-    expect(wrapper.find('[data-test-id="TermList"]').length).equal(1);
+    checkWrap(wrapper.find('[data-test-id="TermList"]'));
 
-    terms.forEach(elem => {
-      const _term = wrapper.find(`[data-test-id="${elem.wylie}"]`);
-      expect(_term.text()).equal(elem.wylie);
-      if (selectedTerm && elem === selectedTerm) {
-        expect(_term.props().className).equal('list-group-item selected');
-      } else {
-        expect(_term.props().className).equal('list-group-item');
-      }
-    })
+    terms.forEach(elem =>
+      checkWrap(wrapper.find(`[data-test-id="${elem.wylie}"]`), {
+        className: selectedTerm && elem === selectedTerm ? 'list-group-item selected' : 'list-group-item',
+        text: elem.wylie
+      })
+    );
   };
 
   const result = terms;
