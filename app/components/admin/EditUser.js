@@ -90,15 +90,15 @@ class EditUser extends Component {
               className="btn btn-primary"
               onClick={this.sendNewUserData}
               disabled={pending}
-              ><FormattedMessage id="EditUser.button_save" />
+              ><FormattedMessage id="Common.save" />
             </button>
             <button data-test-id="button-reset"
               className="btn btn-default"
               onClick={this.resetChanges}
-            ><FormattedMessage id="EditUser.button_reset_changes" />
+            ><FormattedMessage id="Common.reset" />
             </button>
             <Link data-test-id="button-cancel" to={`/translator/${id}`}>
-              <FormattedMessage id="EditUser.button_cancel" />
+              <FormattedMessage id="Common.cancel" />
             </Link>
           </div>
           <div data-test-id="password-group" className="form-group">

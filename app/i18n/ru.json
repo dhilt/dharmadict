@@ -1,6 +1,9 @@
 {
   "Common.unknown_error": "Неизвестная ошибка",
   "Common.error_message": "{error}",
+  "Common.save": "Сохранить",
+  "Common.reset": "Сбросить",
+  "Common.cancel": "Отмена",
 
   "App.get_common_error": "Ошибка получения данных",
 
@@ -50,21 +53,15 @@
   "Login.header_button_log_in": "Войти",
   "Login.please_log_in": "Пожалуйста, войдите",
   "Login.button_log_in": "Войти",
-  "Login.button_cancel": "Отмена",
   "Login.authorization_error": "Ошибка авторизации",
 
   "NewTerm.title_new_term": "Новый термин",
-  "NewTerm.button_save_term": "Сохранить",
-  "NewTerm.button_cancel": "Отмена",
   "NewTerm.alert_success": "Термин был создан с id: {termId}",
 
   "EditUser.title_edit_user": "Редактирование пользователя {id}",
   "EditUser.name_of_translator": "Имя переводчика",
   "EditUser.language_of_translations": "Язык переводов",
   "EditUser.description_of_translator": "Описание переводчика",
-  "EditUser.button_save": "Сохранить",
-  "EditUser.button_reset_changes": "Сбросить",
-  "EditUser.button_cancel": "Отмена",
   "EditUser.link_reset_password": "Изменить пароль",
   "EditUser.success": "Информация о пользователе была успешно изменена",
 
@@ -79,8 +76,5 @@
   "EditPasswordByTranslator.new_password": "Новый пароль",
   "EditPasswordByTranslator.new_password_hint": "(не менее 6 символов)",
   "EditPasswordByTranslator.new_password_confirm": "Подтверждение пароля",
-  "EditPasswordByTranslator.button_save": "Сохранить",
-  "EditPasswordByTranslator.button_reset_changes": "Сбросить",
-  "EditPasswordByTranslator.button_cancel": "Отмена",
   "EditPasswordByTranslator.new_password_success": "Пароль был успешно изменен"
 }

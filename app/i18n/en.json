@@ -1,6 +1,9 @@
 {
   "Common.unknown_error": "Unknown error",
   "Common.error_message": "{error}",
+  "Common.save": "Save",
+  "Common.reset": "Reset",
+  "Common.cancel": "Cancel",
 
   "App.get_common_error": "Error getting data",
 
@@ -50,21 +53,15 @@
   "Login.header_button_log_in": "Login",
   "Login.please_log_in": "Please, Log In",
   "Login.button_log_in": "Log in!",
-  "Login.button_cancel": "Cancel",
   "Login.authorization_error": "Authorization failed",
 
   "NewTerm.title_new_term": "New term",
-  "NewTerm.button_save_term": "Save",
-  "NewTerm.button_cancel": "Cancel",
   "NewTerm.alert_success": "Term was created with id: {termId}",
 
   "EditUser.title_edit_user": "Editing a user {id}",
   "EditUser.name_of_translator": "Name of the translator",
   "EditUser.language_of_translations": "Language of translations",
   "EditUser.description_of_translator": "Description of the translator",
-  "EditUser.button_save": "Save",
-  "EditUser.button_reset_changes": "Reset",
-  "EditUser.button_cancel": "Cancel",
   "EditUser.link_reset_password": "Change password",
   "EditUser.success": "User information was successfully changed",
 
@@ -79,8 +76,5 @@
   "EditPasswordByTranslator.new_password": "New password",
   "EditPasswordByTranslator.new_password_hint": "(at least 6 symbols)",
   "EditPasswordByTranslator.new_password_confirm": "Confirm password",
-  "EditPasswordByTranslator.button_save": "Save",
-  "EditPasswordByTranslator.button_reset_changes": "Reset",
-  "EditPasswordByTranslator.button_cancel": "Cancel",
   "EditPasswordByTranslator.new_password_success": "Password was successfully changed"
 }

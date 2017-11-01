@@ -50,8 +50,8 @@ class NewTerm extends Component {
               className={pending ? 'loader' : ''}
               disabled={this.disabled()}
               onClick={(event) => this._onTermSave(event)}
-            ><FormattedMessage id="NewTerm.button_save_term" /></Button>
-            <Link data-test-id="button-cancel" to={`/`}><FormattedMessage id="NewTerm.button_cancel" /></Link>
+            ><FormattedMessage id="Common.save" /></Button>
+            <Link data-test-id="button-cancel" to={`/`}><FormattedMessage id="Common.cancel" /></Link>
           </div>
         </form>
       </div>

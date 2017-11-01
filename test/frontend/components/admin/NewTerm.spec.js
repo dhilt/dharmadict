@@ -67,13 +67,13 @@ describe('Testing NewTerm Component.', () => {
       disabled: !term.wylie || pending
         || (Object.keys(term.sanskrit).reduce(
           (result, key) => result + !!term.sanskrit[key], 0) !== languages.length),
-      text: i18n['NewTerm.button_save_term'],
+      text: i18n['Common.save'],
       className: pending ? 'loader' : '',
       type: 'button'
     });
 
     checkWrap(wrapper.find('a[data-test-id="button-cancel"]'), {
-      text: i18n['NewTerm.button_cancel']
+      text: i18n['Common.cancel']
     });
 
     wrapper.unmount();

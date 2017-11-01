@@ -103,15 +103,15 @@ class EditPasswordByTranslator extends Component {
               className="btn btn-primary"
               onClick={this.sendNewPassword}
               disabled={this.disabled()}
-              ><FormattedMessage id="EditPasswordByTranslator.button_save" />
+              ><FormattedMessage id="Common.save" />
             </button>
             <button data-test-id="btn-reset"
               className="btn btn-default"
               onClick={this.resetChanges}
-            ><FormattedMessage id="EditPasswordByTranslator.button_reset_changes" />
+            ><FormattedMessage id="Common.reset" />
             </button>
             <Link data-test-id="btn-cancel" to={`/translator/${id}`}>
-              <FormattedMessage id="EditPasswordByTranslator.button_cancel" />
+              <FormattedMessage id="Common.cancel" />
             </Link>
           </div>
         </form>

@@ -75,17 +75,17 @@ describe('Testing EditUserPassword Component.', () => {
       checkWrap(wrapper.find('[data-test-id="btn-save"]'), {
         disabled: pending || !password || !confirmPassword
           || password !== confirmPassword || password.length < 6,
-        text: i18n['EditUser.button_save'],
+        text: i18n['Common.save'],
         className: 'btn btn-primary'
       });
 
       checkWrap(wrapper.find('[data-test-id="btn-reset"]'), {
-        text: i18n['EditUser.button_reset_changes'],
+        text: i18n['Common.reset'],
         className: 'btn btn-default'
       });
 
       checkWrap(wrapper.find('a[data-test-id="btn-cancel"]'), {
-        text: i18n['EditUser.button_cancel']
+        text: i18n['Common.cancel']
       });
 
       wrapper.unmount();
