@@ -1,14 +1,13 @@
 global.window.localStorage = {};
-const React = require('react');
-const {Component} = require('react');
 const {expect} = require('chai');
-
 const Edit = require('../../../app/components/Edit').default;
 const {setupComponent, translators, terms, initialState, defaultLang} = require('../_shared.js');
 
 const i18n = require('../../../app/i18n/' + defaultLang);
 
 describe('Testing Edit Component.', () => {
+
+  beforeEach(() => console.log = jest.fn());
 
   const errorRequest = {
     message: 'Some error. Database error'
