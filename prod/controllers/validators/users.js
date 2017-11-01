@@ -101,7 +101,7 @@ const updatePassword = (payload) => new Promise(resolve => {
     throw new ApiError('Password is too short')
   }
   if (payload.newPassword !== payload.confirmPassword) {
-    throw new ApiError('Password not confirmed')
+    throw new ApiError('Password is not confirmed')
   }
   resolve(payload)
 });
