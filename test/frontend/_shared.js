@@ -114,6 +114,8 @@ languages.forEach(lang => {
   });
 });
 
+const userMutableProperties = ['name', 'description', 'language'];
+
 const terms = [{
   "id": "chos",
   "wylie" : "chos",
@@ -485,6 +487,7 @@ module.exports = {
   getNotificationAction,
   translators,
   users,
+  userMutableProperties,
   roles,
   languages,
   terms

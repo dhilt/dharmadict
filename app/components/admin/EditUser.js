@@ -63,8 +63,8 @@ class EditUser extends Component {
           </div>
           <div data-test-id="form-lang" className="form-group">
             <label data-test-id="label-lang"><FormattedMessage id="EditUser.language_of_translations" /></label>
-            {languages && languages.map(langItem =>
-              <div data-test-id="radio-lang" className="radio" key={langItem.id}>
+            {languages && languages.map((langItem, langIndex) =>
+              <div data-test-id="radio-lang" className="radio" key={langIndex}>
                 <label data-test-id="radio-label-lang">
                   <input data-test-id="input-lang"
                     type="radio"
