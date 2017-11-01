@@ -1,59 +1,68 @@
 global.window.localStorage = {};
-const React = require('react');
-const {Component} = require('react');
 const {expect} = require('chai');
 
 const SearchInput = require('../../../../app/components/search/SearchInput').default;
-const {setupComponent, defaultLang, initialState} = require('../../_shared.js');
-
-const i18n = require('../../../../app/i18n/' + defaultLang);
+const {setupComponent, checkWrap, initialState, languages} = require('../../_shared.js');
 
 describe('Testing SearchInput Component.', () => {
 
-  const checkShowSearchInput = (searchString, pending) => {
+  const checkShowSearchInput = (searchString, pending, lang) => {
     const _initialState = { ...initialState,
+      common: { ...initialState.common,
+        userLanguage: lang
+      },
       search: { ...initialState.search,
         searchString,
         pending
       }
     };
     const wrapper = setupComponent(SearchInput, _initialState);
+    const i18n = require('../../../../app/i18n/' + lang);
 
-    expect(wrapper.find('[data-test-id="SearchInput"]').length).equal(1);
-    expect(wrapper.find('[data-test-id="SearchInput"]').hasClass('row')).equal(true);
+    checkWrap(wrapper.find('[data-test-id="SearchInput"]'), {
+      className: 'row'
+    });
 
-    expect(wrapper.find('[data-test-id="main-form"]').length).equal(1);
+    checkWrap(wrapper.find('[data-test-id="main-form"]'));
 
-    expect(wrapper.find('[data-test-id="form-group1"]').length).equal(1);
-    expect(wrapper.find('[data-test-id="form-group1"]').hasClass('form-group')).equal(true);
+    checkWrap(wrapper.find('[data-test-id="form-group1"]'), {
+      className: 'form-group'
+    });
 
-    expect(wrapper.find('[data-test-id="form-group1.col-md-6"]').length).equal(1);
-    expect(wrapper.find('[data-test-id="form-group1.col-md-6"]').hasClass('col-md-6')).equal(true);
+    checkWrap(wrapper.find('[data-test-id="form-group1.col-md-6"]'), {
+      className: 'col-md-6'
+    });
 
-    expect(wrapper.find('[data-test-id="form-group1.input"]').length).equal(1);
-    expect(wrapper.find('[data-test-id="form-group1.input"]').hasClass('form-control')).equal(true);
-    expect(wrapper.find('[data-test-id="form-group1.input"]').hasClass('col-md-7')).equal(true);
-    expect(wrapper.find('[data-test-id="form-group1.input"]').props().name).equal('search');
-    expect(wrapper.find('[data-test-id="form-group1.input"]').props().type).equal('search');
-    expect(wrapper.find('[data-test-id="form-group1.input"]').props().value).equal(searchString);
+    checkWrap(wrapper.find('[data-test-id="form-group1.input"]'), {
+      className: 'form-control col-md-7',
+      name: 'search',
+      type: 'search',
+      value: searchString
+    });
 
-    expect(wrapper.find('[data-test-id="div.col-md-2"]').length).equal(1);
-    expect(wrapper.find('[data-test-id="div.col-md-2"]').hasClass('col-md-2')).equal(true);
+    checkWrap(wrapper.find('[data-test-id="div.col-md-2"]'), {
+      className: 'col-md-2'
+    });
 
-    expect(wrapper.find('[data-test-id="form-group2"]').length).equal(1);
-    expect(wrapper.find('[data-test-id="form-group2"]').hasClass('form-group')).equal(true);
+    checkWrap(wrapper.find('[data-test-id="form-group2"]'), {
+      className: 'form-group'
+    });
 
-    expect(wrapper.find('button[data-test-id="searchButton"]').length).equal(1);
-    expect(wrapper.find('button[data-test-id="searchButton"]').props().disabled).equal(!searchString || pending);
-    expect(wrapper.find('button[data-test-id="searchButton"]').hasClass('loader')).not.to.equal(!pending);
-    expect(wrapper.find('button[data-test-id="searchButton"]').props().type).equal('submit');
+    checkWrap(wrapper.find('button[data-test-id="searchButton"]'), {
+      disabled: !searchString || pending,
+      className: pending ? 'loader' : '',
+      type: 'submit'
+    });
 
-    expect(wrapper.find('[data-test-id="button-pending"]').length).equal(1);
-    expect(wrapper.find('[data-test-id="button-pending"]').hasClass('invisible')).not.to.equal(!pending);
-    expect(wrapper.find('[data-test-id="button-pending"]').text()).equal(i18n['SearchInput.button_find']);
+    checkWrap(wrapper.find('[data-test-id="button-pending"]'), {
+      text: i18n['SearchInput.button_find'],
+      className: pending ? 'invisible' : ''
+    });
   };
 
-  it('should show component with initial empty data', () => checkShowSearchInput('', false));
-  it('should show component with term searching', () => checkShowSearchInput('term', true));
-  it('should show component ready for term searching', () => checkShowSearchInput('term', false));
+  languages.forEach(lang => {
+    it('should show component with initial empty data', () => checkShowSearchInput('', false, lang.id));
+    it('should show component with term searching', () => checkShowSearchInput('term', true, lang.id));
+    it('should show component ready for term searching', () => checkShowSearchInput('term', false, lang.id));
+  });
 });
