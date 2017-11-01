@@ -56,6 +56,13 @@ const languages = [{
 
 const roles = ['user', 'translator', 'admin'];
 
+const admin = {
+  id: 'ADMIN',
+  name: 'Admin',
+  role: 'admin',
+  language: languages[0].id
+};
+
 const translators = [{
   id: 'ZAG',
   name: 'Б.И. Загуменнов',
@@ -485,6 +492,7 @@ module.exports = {
   setupComponent,
   checkWrap,
   getNotificationAction,
+  admin,
   translators,
   users,
   userMutableProperties,

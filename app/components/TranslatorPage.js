@@ -23,7 +23,7 @@ class TranslatorPage extends Component {
     const {languages, userLanguage} = this.props.common
     const translatorLang = languages && languages.find(elem => elem.id === translator.language)
     return (
-      <div>
+      <div data-test-id="translatorContent">
         <h3 data-test-id="name">{translator.name}</h3>
         <h4 data-test-id="language"><FormattedMessage
           id="TranslatorPage.translations_language"
@@ -57,7 +57,7 @@ class TranslatorPage extends Component {
         this.getTranslatorContent(translatorInfo.data)
     )
     return (
-      <div>{content}</div>
+      <div data-test-id="TranslatorPage">{content}</div>
     )
   }
 }
