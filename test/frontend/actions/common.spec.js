@@ -3,12 +3,12 @@ const thunk = require('redux-thunk').default;
 const nock = require('nock');
 const expect = require('expect');
 
-const {initialState, cloneState, languages, translators, getNotificationAction} = require('../_shared.js');
+const {initialState, cloneState, languages, translators, getNotificationAction, appPath} = require('../_shared.js');
 
-const actionsCreators = require('../../../app/actions/common');
-const types = require('../../../app/actions/_constants');
-const reducer = require('../../../app/reducers').default;
-const lang = require('../../../app/helpers/lang').default;
+const actionsCreators = require(appPath + 'actions/common');
+const types = require(appPath + 'actions/_constants');
+const reducer = require(appPath + 'reducers').default;
+const lang = require(appPath + 'helpers/lang').default;
 
 let middlewares = [thunk];
 let mockStore = configureMockStore(middlewares);

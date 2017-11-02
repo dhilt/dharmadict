@@ -1,14 +1,16 @@
 global.window.localStorage = {};
 
-const Edit = require('../../../app/components/Edit').default;
 const {
   setupComponent,
   checkWrap,
   initialState,
   translators,
   terms,
-  languages
+  languages,
+  appPath
 } = require('../_shared.js');
+
+const Edit = require(appPath + 'components/Edit').default;
 
 describe('Testing Edit Component.', () => {
 
@@ -46,7 +48,7 @@ describe('Testing Edit Component.', () => {
         query
       };
       const wrapper = setupComponent(Edit, _initialState, _props);
-      const i18n = require('../../../app/i18n/' + lang.id);
+      const i18n = require(appPath + 'i18n/' + lang.id);
 
       checkWrap(wrapper.find('[data-test-id="Edit"]'));
 

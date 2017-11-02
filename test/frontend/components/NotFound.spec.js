@@ -1,5 +1,6 @@
-const NotFound = require('../../../app/components/NotFound').default;
-const {setupComponent, checkWrap, initialState, languages} = require('../_shared.js');
+const {setupComponent, checkWrap, initialState, languages, appPath} = require('../_shared.js');
+
+const NotFound = require(appPath + 'components/NotFound').default;
 
 describe('Testing NotFound Component.', () => {
 
@@ -11,7 +12,7 @@ describe('Testing NotFound Component.', () => {
         }
       };
       const wrapper = setupComponent(NotFound, _initialState);
-      const i18n = require('../../../app/i18n/' + lang.id);
+      const i18n = require(appPath + 'i18n/' + lang.id);
 
       checkWrap(wrapper.find('[data-test-id="NotFound"]'));
 

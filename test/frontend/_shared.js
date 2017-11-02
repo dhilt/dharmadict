@@ -21,7 +21,8 @@ const {
 } = require('./__test-methods/mountTestedComponent');
 
 module.exports = {
-  appPath: '../../../../app/',
+  appPath: '../../../app/',
+  _appPath: '../../../../app/',
   defaultLang: lang.defaultLang,
   initialState,
   cloneState,

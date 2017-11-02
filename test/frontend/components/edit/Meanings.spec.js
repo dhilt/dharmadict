@@ -1,7 +1,8 @@
 global.window.localStorage = {};
 
-const Meanings = require('../../../../app/components/edit/Meanings').default;
-const {setupComponent, checkWrap, initialState, languages, terms} = require('../../_shared.js');
+const {setupComponent, checkWrap, initialState, languages, terms, _appPath} = require('../../_shared.js');
+
+const Meanings = require(_appPath + 'components/edit/Meanings').default;
 
 describe('Testing Meanings Component.', () => {
 
@@ -16,7 +17,7 @@ describe('Testing Meanings Component.', () => {
       }
     };
     const wrapper = setupComponent(Meanings, _initialState);
-    const i18n = require('../../../../app/i18n/' + lang);
+    const i18n = require(_appPath + 'i18n/' + lang);
 
     checkWrap(wrapper.find('[data-test-id="Meanings"]'));
 

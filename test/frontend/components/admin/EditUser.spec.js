@@ -1,15 +1,17 @@
 global.window.localStorage = {};
 
-const EditUser = require('../../../../app/components/admin/EditUser').default;
-const {getEditableUserDataObject} = require('../../../../app/actions/admin/changeUser');
 const {
   setupComponent,
   checkWrap,
   initialState,
   languages,
   translators,
-  userMutableProperties
+  userMutableProperties,
+  _appPath
 } = require('../../_shared.js');
+
+const EditUser = require(_appPath + 'components/admin/EditUser').default;
+const {getEditableUserDataObject} = require(_appPath + 'actions/admin/changeUser');
 
 describe('Testing EditUser Component.', () => {
 
@@ -40,7 +42,7 @@ describe('Testing EditUser Component.', () => {
         }
       };
       const wrapper = setupComponent(EditUser, _initialState, _props);
-      const i18n = require('../../../../app/i18n/' + lang.id);
+      const i18n = require(_appPath + 'i18n/' + lang.id);
 
       if (sourcePending) {
         checkWrap(wrapper.find('[data-test-id="EditUser"]'), {

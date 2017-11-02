@@ -1,6 +1,5 @@
 global.window.localStorage = {};
 
-const TranslatorPage = require('../../../app/components/TranslatorPage').default;
 const {
   setupComponent,
   checkWrap,
@@ -8,8 +7,11 @@ const {
   admin,
   users,
   translators,
-  languages
+  languages,
+  appPath
 } = require('../_shared.js');
+
+const TranslatorPage = require(appPath + 'components/TranslatorPage').default;
 
 describe('Testing TranslatorPage Component.', () => {
 
@@ -53,7 +55,7 @@ describe('Testing TranslatorPage Component.', () => {
       }
     };
     const wrapper = setupComponent(TranslatorPage, _initialState, _props);
-    const i18n = require('../../../app/i18n/' + userLooking.language);
+    const i18n = require(appPath + 'i18n/' + userLooking.language);
 
     checkWrap(wrapper.find('[data-test-id="TranslatorPage"]'));
 

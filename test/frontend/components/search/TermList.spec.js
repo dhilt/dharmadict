@@ -1,7 +1,8 @@
 global.window.localStorage = {};
 
-const TermList = require('../../../../app/components/search/TermList').default;
-const {setupComponent, checkWrap, initialState, terms} = require('../../_shared.js');
+const {setupComponent, checkWrap, initialState, terms, _appPath} = require('../../_shared.js');
+
+const TermList = require(_appPath + 'components/search/TermList').default;
 
 describe('Testing TermList Component.', () => {
 

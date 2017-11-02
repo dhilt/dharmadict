@@ -1,7 +1,8 @@
 global.window.localStorage = {};
 
-const EditUserPassword = require('../../../../app/components/admin/EditUserPassword').default;
-const {setupComponent, checkWrap, initialState, languages} = require('../../_shared.js');
+const {setupComponent, checkWrap, initialState, languages, _appPath} = require('../../_shared.js');
+
+const EditUserPassword = require(_appPath + 'components/admin/EditUserPassword').default;
 
 describe('Testing EditUserPassword Component.', () => {
 
@@ -22,7 +23,7 @@ describe('Testing EditUserPassword Component.', () => {
       const id = 'NEW_USER_ID';
       const _props = { params: { id } };
       const wrapper = setupComponent(EditUserPassword, _initialState, _props);
-      const i18n = require('../../../../app/i18n/' + lang.id);
+      const i18n = require(_appPath + 'i18n/' + lang.id);
 
       checkWrap(wrapper.find('[data-test-id="EditUserPassword"]'));
 

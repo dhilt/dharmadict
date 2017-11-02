@@ -3,12 +3,12 @@ const thunk = require('redux-thunk').default;
 const nock = require('nock');
 const expect = require('expect');
 
-const {initialState, cloneState, translators, getNotificationAction} = require('../_shared.js');
+const {initialState, cloneState, translators, getNotificationAction, appPath} = require('../_shared.js');
 
-const actionsCreators = require('../../../app/actions/auth');
-const auth = require('../../../app/helpers/auth').default;
-const types = require('../../../app/actions/_constants');
-const reducer = require('../../../app/reducers').default;
+const actionsCreators = require(appPath + 'actions/auth');
+const auth = require(appPath + 'helpers/auth').default;
+const types = require(appPath + 'actions/_constants');
+const reducer = require(appPath + 'reducers').default;
 
 const SUPER_TOKEN = 'SUPER_TOKEN';
 

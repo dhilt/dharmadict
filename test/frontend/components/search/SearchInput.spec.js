@@ -1,7 +1,8 @@
 global.window.localStorage = {};
 
-const SearchInput = require('../../../../app/components/search/SearchInput').default;
-const {setupComponent, checkWrap, initialState, languages} = require('../../_shared.js');
+const {setupComponent, checkWrap, initialState, languages, _appPath} = require('../../_shared.js');
+
+const SearchInput = require(_appPath + 'components/search/SearchInput').default;
 
 describe('Testing SearchInput Component.', () => {
 
@@ -17,7 +18,7 @@ describe('Testing SearchInput Component.', () => {
         }
       };
       const wrapper = setupComponent(SearchInput, _initialState);
-      const i18n = require('../../../../app/i18n/' + lang.id);
+      const i18n = require(_appPath + 'i18n/' + lang.id);
 
       checkWrap(wrapper.find('[data-test-id="SearchInput"]'), {
         className: 'row'

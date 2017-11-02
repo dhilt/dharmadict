@@ -1,6 +1,5 @@
 global.window.localStorage = {};
 
-const Term = require('../../../../app/components/search/Term').default;
 const {
   setupComponent,
   checkWrap,
@@ -8,8 +7,11 @@ const {
   terms,
   translators,
   users,
-  languages
+  languages,
+  _appPath
 } = require('../../_shared.js');
+
+const Term = require(_appPath + 'components/search/Term').default;
 
 describe('Testing Term Component.', () => {
 
@@ -32,7 +34,7 @@ describe('Testing Term Component.', () => {
       }
     };
     const wrapper = setupComponent(Term, _initialState);
-    const i18n = require('../../../../app/i18n/' + lang);
+    const i18n = require(_appPath + 'i18n/' + lang);
 
     checkWrap(wrapper.find('[data-test-id="Term"]'), {
       className: 'term'

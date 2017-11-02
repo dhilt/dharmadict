@@ -1,7 +1,8 @@
 global.window.localStorage = {};
 
-const EditControls = require('../../../../app/components/edit/EditControls').default;
-const {setupComponent, checkWrap, initialState, languages} = require('../../_shared.js');
+const {setupComponent, checkWrap, initialState, languages, _appPath} = require('../../_shared.js');
+
+const EditControls = require(_appPath + 'components/edit/EditControls').default;
 
 describe('Testing EditControls Component.', () => {
 
@@ -17,7 +18,7 @@ describe('Testing EditControls Component.', () => {
       }
     };
     const wrapper = setupComponent(EditControls, _initialState);
-    const i18n = require('../../../../app/i18n/' + lang);
+    const i18n = require(_appPath + 'i18n/' + lang);
 
     checkWrap(wrapper.find('[data-test-id="EditControls"]'), {
       className: 'form-group form-inline'

@@ -1,7 +1,8 @@
 global.window.localStorage = {};
 
-const NewTerm = require('../../../../app/components/admin/NewTerm').default;
-const {setupComponent, checkWrap, initialState, languages} = require('../../_shared.js');
+const {setupComponent, checkWrap, initialState, languages, _appPath} = require('../../_shared.js');
+
+const NewTerm = require(_appPath + 'components/admin/NewTerm').default;
 
 describe('Testing NewTerm Component.', () => {
 
@@ -20,7 +21,7 @@ describe('Testing NewTerm Component.', () => {
       }
     };
     const wrapper = setupComponent(NewTerm, _initialState);
-    const i18n = require('../../../../app/i18n/' + lang);
+    const i18n = require(_appPath + 'i18n/' + lang);
 
     checkWrap(wrapper.find('[data-test-id="NewTerm"]'));
 

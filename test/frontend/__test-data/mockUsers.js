@@ -5,8 +5,8 @@ const roles = ['user', 'translator', 'admin'];
 const userMutableProperties = ['name', 'description', 'language'];
 
 const admin = {
-  id: 'ADMIN',
-  name: 'Admin',
+  id: 'ADMIN_ID',
+  name: 'Admin name',
   role: 'admin',
   language: languages[0].id
 };
@@ -61,7 +61,7 @@ languages.forEach(lang => {
   roles.forEach(role => {
     users.push({
       id: 'ID',
-      name: `${lang} ${role}`,
+      name: `${lang.id}-${role}`,
       role: role,
       description: '',
       language: lang.id

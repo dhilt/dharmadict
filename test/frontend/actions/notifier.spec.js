@@ -2,12 +2,12 @@ const configureMockStore = require('redux-mock-store').default;
 const thunk = require('redux-thunk').default;
 const expect = require('expect');
 
-const {initialState, cloneState, getNotificationAction} = require('../_shared.js');
+const {initialState, cloneState, getNotificationAction, appPath} = require('../_shared.js');
 
-const actionsCreators = require('../../../app/actions/notifier');
-const {defaultNotification} = require('../../../app/actions/notifier');
-const types = require('../../../app/actions/_constants');
-const reducer = require('../../../app/reducers').default;
+const actionsCreators = require(appPath + 'actions/notifier');
+const {defaultNotification} = require(appPath + 'actions/notifier');
+const types = require(appPath + 'actions/_constants');
+const reducer = require(appPath + 'reducers').default;
 
 let middlewares = [thunk];
 let mockStore = configureMockStore(middlewares);

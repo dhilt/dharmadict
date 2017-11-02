@@ -1,7 +1,8 @@
 global.window.localStorage = {};
 
-const App = require('../../../app/components/App').default;
-const {setupComponent, checkWrap} = require('../_shared.js');
+const {setupComponent, checkWrap, appPath} = require('../_shared.js');
+
+const App = require(appPath + 'components/App').default;
 
 describe('Testing App Component.', () => {
 

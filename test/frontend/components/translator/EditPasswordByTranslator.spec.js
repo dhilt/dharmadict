@@ -1,13 +1,15 @@
 global.window.localStorage = {};
 
-const EditPasswordByTranslator = require('../../../../app/components/translator/EditPasswordByTranslator').default;
 const {
   setupComponent,
   checkWrap,
   initialState,
   translators,
-  languages
+  languages,
+  _appPath
 } = require('../../_shared.js');
+
+const EditPasswordByTranslator = require(_appPath + 'components/translator/EditPasswordByTranslator').default;
 
 describe('Testing EditPasswordByTranslator Component.', () => {
 
@@ -36,7 +38,7 @@ describe('Testing EditPasswordByTranslator Component.', () => {
         }
       };
       const wrapper = setupComponent(EditPasswordByTranslator, _initialState, _props);
-      const i18n = require('../../../../app/i18n/' + lang.id);
+      const i18n = require(_appPath + 'i18n/' + lang.id);
       const {currentPassword, newPassword, confirmPassword} = payload;
 
       checkWrap(wrapper.find('[data-test-id="EditPasswordByTranslator"]'));

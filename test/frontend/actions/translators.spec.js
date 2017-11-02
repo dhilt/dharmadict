@@ -3,11 +3,11 @@ const thunk = require('redux-thunk').default;
 const nock = require('nock');
 const expect = require('expect');
 
-const {initialState, translators, getNotificationAction} = require('../_shared.js');
+const {initialState, translators, getNotificationAction, appPath} = require('../_shared.js');
 
-const actionsCreators = require('../../../app/actions/translators');
-const types = require('../../../app/actions/_constants');
-const reducer = require('../../../app/reducers').default;
+const actionsCreators = require(appPath + 'actions/translators');
+const types = require(appPath + 'actions/_constants');
+const reducer = require(appPath + 'reducers').default;
 
 let middlewares = [thunk];
 let mockStore = configureMockStore(middlewares);

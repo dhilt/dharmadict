@@ -1,5 +1,6 @@
-const About = require('../../../app/components/About').default;
-const {setupComponent, checkWrap} = require('../_shared.js');
+const {setupComponent, checkWrap, appPath} = require('../_shared.js');
+
+const About = require(appPath + 'components/About').default;
 
 describe('Testing About Component.', () => {
   beforeEach(() => console.error = jest.fn());
