@@ -3,8 +3,8 @@ import PropTypes from 'prop-types'
 
 function ErrorMessage (props) {
   return (
-    <div className='form__error-wrapper js-form__err-animation'>
-      <p className='form__error'>
+    <div data-test-id="ErrorMessage" className='form__error-wrapper js-form__err-animation'>
+      <p data-test-id="ErrorMessage.text" className='form__error'>
         {props.error}
       </p>
     </div>
