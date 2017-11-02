@@ -1,5 +1,4 @@
 global.window.localStorage = {};
-const {expect} = require('chai');
 
 const SearchInput = require('../../../../app/components/search/SearchInput').default;
 const {setupComponent, checkWrap, initialState, languages} = require('../../_shared.js');

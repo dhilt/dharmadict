@@ -1,5 +1,4 @@
 global.window.localStorage = {};
-const {expect} = require('chai');
 
 const Term = require('../../../../app/components/search/Term').default;
 const {

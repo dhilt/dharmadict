@@ -1,5 +1,4 @@
 global.window.localStorage = {};
-const {expect} = require('chai');
 
 const EditUserPassword = require('../../../../app/components/admin/EditUserPassword').default;
 const {setupComponent, checkWrap, initialState, languages} = require('../../_shared.js');

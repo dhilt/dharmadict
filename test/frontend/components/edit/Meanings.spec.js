@@ -1,5 +1,4 @@
 global.window.localStorage = {};
-const {expect} = require('chai');
 
 const Meanings = require('../../../../app/components/edit/Meanings').default;
 const {setupComponent, checkWrap, initialState, languages, terms} = require('../../_shared.js');

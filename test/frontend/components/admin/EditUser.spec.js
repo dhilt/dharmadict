@@ -1,5 +1,4 @@
 global.window.localStorage = {};
-const {expect} = require('chai');
 
 const EditUser = require('../../../../app/components/admin/EditUser').default;
 const {getEditableUserDataObject} = require('../../../../app/actions/admin/changeUser');

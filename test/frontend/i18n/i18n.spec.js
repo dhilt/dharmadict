@@ -1,9 +1,9 @@
 const expect = require('expect');
 
-const lang = require('../../app/helpers/lang').default;
+const lang = require('../../../app/helpers/lang').default;
 
 const i18nFiles = {};
-lang.list.forEach(elem => i18nFiles[elem] = require('../../app/i18n/' + elem));
+lang.list.forEach(elem => i18nFiles[elem] = require('../../../app/i18n/' + elem));
 
 describe('test i18n translations', () => {
 

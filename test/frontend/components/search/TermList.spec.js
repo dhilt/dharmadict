@@ -1,5 +1,4 @@
 global.window.localStorage = {};
-const {expect} = require('chai');
 
 const TermList = require('../../../../app/components/search/TermList').default;
 const {setupComponent, checkWrap, initialState, terms} = require('../../_shared.js');
