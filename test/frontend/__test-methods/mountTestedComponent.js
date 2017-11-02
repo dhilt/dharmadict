@@ -65,6 +65,12 @@ const checkWrap = (wrap, params) => {
   if (params.placeholder) {
     expect(wrap.props().placeholder).equal(params.placeholder)
   }
+  if (params.contentLabel) {
+    expect(wrap.props().contentLabel).equal(params.contentLabel)
+  }
+  if (params.isOpen) {
+    expect(wrap.props().isOpen).equal(params.isOpen)
+  }
   return
 };
 

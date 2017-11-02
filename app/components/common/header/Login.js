@@ -16,18 +16,22 @@ const customStyles = {
 const Login = props => {
 
   return (
-    <span>
-      <a href="/login" onClick={openModal}><FormattedMessage id="Login.header_button_log_in" /></a>
-      <Modal
+    <span data-test-id="Login">
+      <a data-test-id="Login.header_button_log_in" href="/login" onClick={openModal}>
+        <FormattedMessage id="Login.header_button_log_in" />
+      </a>
+      <Modal data-test-id="Login.modal"
         contentLabel="Log In Dialog"
         isOpen={props.data.modalIsOpen}
         onRequestClose={closeModal}
         style={customStyles}>
-        <h1><FormattedMessage id="Login.please_log_in"/></h1>
-        <div className="login-modal-content">
-          <form>
-            <div className="form-group">
-              <input
+        <h1 data-test-id="Login.title_log_in">
+          <FormattedMessage id="Login.please_log_in"/>
+        </h1>
+        <div data-test-id="Login.modal-content" className="login-modal-content">
+          <form data-test-id="Login.form">
+            <div data-test-id="Login.form-login" className="form-group">
+              <input data-test-id="Login.input-login"
                 type="text"
                 name="login"
                 placeholder="login"
@@ -35,8 +39,8 @@ const Login = props => {
                 value={props.data.login}
                 onChange={onLoginChange} />
             </div>
-            <div className="form-group">
-              <input
+            <div data-test-id="Login.form-password" className="form-group">
+              <input data-test-id="Login.input-password"
                 type="password"
                 name="password"
                 placeholder="password"
@@ -44,16 +48,18 @@ const Login = props => {
                 value={props.data.password}
                 onChange={onPasswordChange} />
             </div>
-            <button className={"btn btn-primary" + (props.data.pending ? " loader" : "")}
+            <button data-test-id="Login.button_do_login"
+              className={"btn btn-primary" + (props.data.pending ? " loader" : "")}
               onClick={doLogin} type="submit"
               disabled={!props.data.login || !props.data.password || props.data.pending}>
-              <span className={props.data.pending ? "invisible" : ""}>
-                <FormattedMessage id="Login.button_log_in" />
+              <span data-test-id="Login.button_do_login_text"
+                className={props.data.pending ? "invisible" : ""}
+              ><FormattedMessage id="Login.button_log_in" />
               </span>
             </button>
-            <button className="btn btn-default"
-              onClick={closeModal}>
-              <FormattedMessage id="Common.cancel" />
+            <button data-test-id="Login.button_cancel" className="btn btn-default"
+              onClick={closeModal}
+            ><FormattedMessage id="Common.cancel" />
             </button>
           </form>
         </div>
