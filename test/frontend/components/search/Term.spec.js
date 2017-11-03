@@ -33,7 +33,7 @@ describe('Testing Term Component.', () => {
         }
       }
     };
-    const wrapper = setupComponent(Term, _initialState);
+    const {wrapper} = setupComponent(Term, _initialState);
     const i18n = require(_appPath + 'i18n/' + lang);
 
     checkWrap(wrapper.find('[data-test-id="Term"]'), {

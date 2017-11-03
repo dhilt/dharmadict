@@ -37,7 +37,7 @@ describe('Testing EditPasswordByTranslator Component.', () => {
           id: translator ? translator.id : null
         }
       };
-      const wrapper = setupComponent(EditPasswordByTranslator, _initialState, _props);
+      const {wrapper} = setupComponent(EditPasswordByTranslator, _initialState, _props);
       const i18n = require(_appPath + 'i18n/' + lang.id);
       const {currentPassword, newPassword, confirmPassword} = payload;
 

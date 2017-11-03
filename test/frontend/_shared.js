@@ -17,7 +17,8 @@ const {cloneState} = require('./__test-methods/cloneInitialState');
 const {getNotificationAction} = require('./__test-methods/getNotificationAction');
 const {
   setupComponent,
-  checkWrap
+  checkWrap,
+  checkWrapActions
 } = require('./__test-methods/mountTestedComponent');
 
 module.exports = {
@@ -28,6 +29,7 @@ module.exports = {
   cloneState,
   setupComponent,
   checkWrap,
+  checkWrapActions,
   getNotificationAction,
   admin,
   translators,

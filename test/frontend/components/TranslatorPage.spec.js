@@ -54,7 +54,7 @@ describe('Testing TranslatorPage Component.', () => {
         id: translatorId
       }
     };
-    const wrapper = setupComponent(TranslatorPage, _initialState, _props);
+    const {wrapper} = setupComponent(TranslatorPage, _initialState, _props);
     const i18n = require(appPath + 'i18n/' + userLooking.language);
 
     checkWrap(wrapper.find('[data-test-id="TranslatorPage"]'));

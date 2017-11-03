@@ -26,7 +26,7 @@ describe('Testing Logout, presentational Component.', () => {
         }
       }
     };
-    const wrapper = setupComponent(Header, _initialState);
+    const {wrapper} = setupComponent(Header, _initialState);
     const i18n = require('../' + _appPath + 'i18n/' + userLooking.language);
 
     checkWrap(wrapper.find('[data-test-id="Logout"]'));

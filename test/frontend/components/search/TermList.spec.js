@@ -18,7 +18,7 @@ describe('Testing TermList Component.', () => {
         term: selectedTerm
       }
     };
-    const wrapper = setupComponent(TermList, _initialState);
+    const {wrapper} = setupComponent(TermList, _initialState);
 
     checkWrap(wrapper.find('[data-test-id="TermList"]'));
 

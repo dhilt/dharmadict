@@ -13,7 +13,7 @@ describe('Testing Home Component.', () => {
           userLanguage: lang.id
         }
       };
-      const wrapper = setupComponent(Home, _initialState);
+      const {wrapper} = setupComponent(Home, _initialState);
       const i18n = require(appPath + 'i18n/' + lang.id);
 
       checkWrap(wrapper.find('[data-test-id="Home"]'), {

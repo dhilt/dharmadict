@@ -18,7 +18,7 @@ describe('Testing Languages Component.', () => {
         userLanguage: lang.id,
         languages
       };
-      const wrapper = setupComponent(Languages, initialState, _props);
+      const {wrapper} = setupComponent(Languages, initialState, _props);
       const i18n = require('../' + _appPath + 'i18n/' + lang.id);
 
       checkWrap(wrapper.find('[data-test-id="Languages"]'), {

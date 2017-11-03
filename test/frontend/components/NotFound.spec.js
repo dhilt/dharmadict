@@ -11,7 +11,7 @@ describe('Testing NotFound Component.', () => {
           userLanguage: lang.id
         }
       };
-      const wrapper = setupComponent(NotFound, _initialState);
+      const {wrapper} = setupComponent(NotFound, _initialState);
       const i18n = require(appPath + 'i18n/' + lang.id);
 
       checkWrap(wrapper.find('[data-test-id="NotFound"]'));

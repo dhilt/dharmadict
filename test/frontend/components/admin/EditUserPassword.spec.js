@@ -22,7 +22,7 @@ describe('Testing EditUserPassword Component.', () => {
       };
       const id = 'NEW_USER_ID';
       const _props = { params: { id } };
-      const wrapper = setupComponent(EditUserPassword, _initialState, _props);
+      const {wrapper} = setupComponent(EditUserPassword, _initialState, _props);
       const i18n = require(_appPath + 'i18n/' + lang.id);
 
       checkWrap(wrapper.find('[data-test-id="EditUserPassword"]'));

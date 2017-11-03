@@ -17,7 +17,7 @@ describe('Testing EditControls Component.', () => {
         }
       }
     };
-    const wrapper = setupComponent(EditControls, _initialState);
+    const {wrapper} = setupComponent(EditControls, _initialState);
     const i18n = require(_appPath + 'i18n/' + lang);
 
     checkWrap(wrapper.find('[data-test-id="EditControls"]'), {

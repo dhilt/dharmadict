@@ -5,7 +5,7 @@ describe('Testing LoadingButton Component.', () => {
 
   it('should show the component', () => {
     const _props = {className: 'some className'};
-    const wrapper = setupComponent(LoadingButton, initialState, _props);
+    const {wrapper} = setupComponent(LoadingButton, initialState, _props);
 
     checkWrap(wrapper.find('[data-test-id="LoadingButton"]'), {
       className: _props.className + ' btn btn--loading',

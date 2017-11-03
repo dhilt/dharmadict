@@ -17,7 +17,7 @@ describe('Testing SearchInput Component.', () => {
           pending
         }
       };
-      const wrapper = setupComponent(SearchInput, _initialState);
+      const {wrapper} = setupComponent(SearchInput, _initialState);
       const i18n = require(_appPath + 'i18n/' + lang.id);
 
       checkWrap(wrapper.find('[data-test-id="SearchInput"]'), {

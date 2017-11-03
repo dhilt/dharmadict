@@ -10,7 +10,7 @@ describe('Testing LoadingIndicator Component.', () => {
           userLanguage: lang.id
         }
       };
-      const wrapper = setupComponent(LoadingIndicator, _initialState);
+      const {wrapper} = setupComponent(LoadingIndicator, _initialState);
       const i18n = require(_appPath + 'i18n/' + lang.id);
 
       checkWrap(wrapper.find('[data-test-id="LoadingIndicator"]'), {

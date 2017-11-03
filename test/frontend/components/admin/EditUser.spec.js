@@ -3,6 +3,7 @@ global.window.localStorage = {};
 const {
   setupComponent,
   checkWrap,
+  checkWrapActions,
   initialState,
   languages,
   translators,
@@ -41,7 +42,7 @@ describe('Testing EditUser Component.', () => {
           id: sourceTranslator.id
         }
       };
-      const wrapper = setupComponent(EditUser, _initialState, _props);
+      const {wrapper} = setupComponent(EditUser, _initialState, _props);
       const i18n = require(_appPath + 'i18n/' + lang.id);
 
       if (sourcePending) {
@@ -168,5 +169,53 @@ describe('Testing EditUser Component.', () => {
       _translator[property] = 'New description of translator property'
       checkShowEditUser(false, false, null, translator, _translator);
     });
+  });
+
+  it('should correctly handle actions on component', () => {
+    const defaultUser = translators[0];
+    const _initialState = { ...initialState,
+      common: { ...initialState.common,
+        userLanguage: defaultUser.language,
+        languages
+      },
+      admin: { ...initialState.admin,
+        editUser: { ...initialState.admin.editUser,
+          id: defaultUser.id,
+          dataSource: getEditableUserDataObject(defaultUser),
+          data: getEditableUserDataObject(defaultUser)
+        }
+      }
+    };
+    const _props = {
+      params: {
+        id: defaultUser.id
+      },
+      routeParams: {
+        id: defaultUser.id
+      },
+      dispatch: jest.fn()
+    };
+    const {wrapper, store} = setupComponent(EditUser, _initialState, _props);
+    const i18n = require(_appPath + 'i18n/' + defaultUser.language);
+
+    let actionsCount = 1;  // component starts with the request
+    checkWrapActions(store, actionsCount);
+
+    wrapper.find('[data-test-id="input-name"]').props().onChange({target: {value: 'name'}});
+    checkWrapActions(store, ++actionsCount);
+
+    languages.forEach((lang, index) => {
+      wrapper.find('[data-test-id="input-lang"]').at(index).props().onChange({target: {value: lang.id}});
+      checkWrapActions(store, ++actionsCount);
+    });
+
+    wrapper.find('[data-test-id="textarea-desc"]').props().onChange({target: {value: 'desc'}});
+    checkWrapActions(store, ++actionsCount);
+
+    wrapper.find('[data-test-id="button-save"]').props().onClick({preventDefault: () => {}});
+    checkWrapActions(store, ++actionsCount);
+
+    wrapper.find('[data-test-id="button-reset"]').props().onClick({preventDefault: () => {}});
+    checkWrapActions(store, ++actionsCount);
   });
 });

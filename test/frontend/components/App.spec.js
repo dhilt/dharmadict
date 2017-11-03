@@ -7,7 +7,7 @@ const App = require(appPath + 'components/App').default;
 describe('Testing App Component.', () => {
 
   it('should show component', () => {
-    const wrapper = setupComponent(App);
+    const {wrapper} = setupComponent(App);
 
     checkWrap(wrapper.find('[data-test-id="App"]'), {
       className: 'wrapper'

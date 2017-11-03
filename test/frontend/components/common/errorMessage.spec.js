@@ -5,7 +5,7 @@ describe('Testing ErrorMessage Component.', () => {
 
   it('should show the component', () => {
     const _props = {error: 'some error'};
-    const wrapper = setupComponent(ErrorMessage, initialState, _props);
+    const {wrapper} = setupComponent(ErrorMessage, initialState, _props);
 
     checkWrap(wrapper.find('[data-test-id="ErrorMessage"]'), {
       className: 'form__error-wrapper js-form__err-animation'

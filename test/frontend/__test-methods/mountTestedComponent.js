@@ -21,14 +21,16 @@ const setupComponent = (NewComponent, state = initialState, props = {}) => {
   const i18nLang = require('react-intl/locale-data/' + _lang);
   addLocaleData([...i18nLang]);
 
+  const store = mockStore(state);
+
   const wrapper = mount(
-    <Provider store={mockStore(state)}>
+    <Provider store={store}>
       <IntlProvider locale={_lang} messages={i18n.data[_lang]}>
         <NewComponent {...props} />
       </IntlProvider>
     </Provider>
   );
-  return wrapper
+  return {wrapper, store, props}
 };
 
 const checkWrap = (wrap, params) => {
@@ -74,7 +76,13 @@ const checkWrap = (wrap, params) => {
   return
 };
 
+const checkWrapActions = (store, amount) => {
+  expect(store.getActions().length).equal(amount);
+  return
+};
+
 module.exports = {
   setupComponent,
-  checkWrap
+  checkWrap,
+  checkWrapActions
 };

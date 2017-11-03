@@ -42,7 +42,7 @@ describe('Testing Notifier Component.', () => {
         },
         notifications
       };
-      const wrapper = setupComponent(Notifier, _initialState);
+      const {wrapper} = setupComponent(Notifier, _initialState);
 
       checkWrap(wrapper.find('[data-test-id="Notifier"]'), {
         className: 'alert-column'
@@ -61,7 +61,7 @@ describe('Testing Notifier Component.', () => {
 
   it('should show the component without notifications', () => {
 
-    const wrapper = setupComponent(Notifier);
+    const {wrapper} = setupComponent(Notifier);
 
     checkWrap(wrapper.find('[data-test-id="Notifier"]'), {
       className: 'alert-column'

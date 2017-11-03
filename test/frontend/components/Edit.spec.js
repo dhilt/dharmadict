@@ -47,7 +47,7 @@ describe('Testing Edit Component.', () => {
         },
         query
       };
-      const wrapper = setupComponent(Edit, _initialState, _props);
+      const {wrapper} = setupComponent(Edit, _initialState, _props);
       const i18n = require(appPath + 'i18n/' + lang.id);
 
       checkWrap(wrapper.find('[data-test-id="Edit"]'));
