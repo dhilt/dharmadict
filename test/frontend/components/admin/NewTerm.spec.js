@@ -14,7 +14,7 @@ const NewTerm = require(_appPath + 'components/admin/NewTerm').default;
 
 describe('Testing NewTerm Component.', () => {
 
-  // beforeEach(() => console.log = jest.fn());
+  beforeEach(() => console.log = jest.fn());
 
   const checkShowNewTerm = (term, lang, pending) => {
     const _initialState = { ...initialState,
@@ -144,7 +144,7 @@ describe('Testing NewTerm Component.', () => {
     const _props = {
       dispatch: jest.fn()
     };
-    const {wrapper, store, props} = setupComponent(NewTerm, _initialState, _props);
+    const {wrapper, store} = setupComponent(NewTerm, _initialState, _props);
     const i18n = require(_appPath + 'i18n/' + defaultLang);
 
     let actionsCount = 0;
