@@ -155,7 +155,6 @@ describe('Testing Meanings Component.', () => {
       }
     };
     const {wrapper, store} = setupComponent(Meanings, _initialState);
-    const i18n = require(_appPath + 'i18n/' + defaultLang);
 
     let actionsCount = 0;
     checkWrapActions(store, actionsCount);
@@ -189,8 +188,6 @@ describe('Testing Meanings Component.', () => {
       dispatch: jest.fn()
     };
     const {wrapper, store} = setupComponent(Meanings, _initialState, _props);
-    const i18n = require(_appPath + 'i18n/' + defaultLang);
-
     let actionsCount = 0;
     checkWrapActions(store, actionsCount);
 

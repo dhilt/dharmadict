@@ -145,7 +145,6 @@ describe('Testing NewTerm Component.', () => {
       dispatch: jest.fn()
     };
     const {wrapper, store} = setupComponent(NewTerm, _initialState, _props);
-    const i18n = require(_appPath + 'i18n/' + defaultLang);
 
     let actionsCount = 0;
     checkWrapActions(store, actionsCount);

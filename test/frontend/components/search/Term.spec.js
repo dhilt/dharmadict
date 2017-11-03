@@ -3,10 +3,14 @@ global.window.localStorage = {};
 const {
   setupComponent,
   checkWrap,
+  checkWrapActions,
   initialState,
+  defaultLang,
   terms,
   translators,
   users,
+  admin,
+  roles,
   languages,
   _appPath
 } = require('../../_shared.js');
@@ -186,5 +190,38 @@ describe('Testing Term Component.', () => {
         () => checkShowTerm(term, translator, translator.language)
       )
     );
+  });
+
+  it('should correctly handle actions on component', () => {
+    const selectedTerm = terms[0];
+    const _initialState = { ...initialState,
+      selected: { ...initialState.selected,
+        term: selectedTerm
+      },
+      common: { ...initialState.common,
+        userLanguage: defaultLang,
+        translators
+      },
+      auth: { ...initialState.auth,
+        userInfo: { ...initialState.auth.userInfo,
+          data: { ...initialState.auth.userInfo.data,
+            role: 'user',
+            id: 'id'
+          }
+        }
+      }
+    };
+    const _props = {
+      dispatch: jest.fn()
+    };
+    const {wrapper, store} = setupComponent(Term, _initialState, _props);
+    let actionsCount = 0;
+    checkWrapActions(store, actionsCount);
+
+    const _wrap = wrapper.find('a[data-test-id="commentLink"]');
+    for (let i = 0; i < _wrap.length; i++) {
+      _wrap.at(i).props().onClick();
+      checkWrapActions(store, ++actionsCount);
+    }
   });
 });

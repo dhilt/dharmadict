@@ -146,7 +146,6 @@ describe('Testing EditUserPassword Component.', () => {
       dispatch: jest.fn()
     };
     const {wrapper, store} = setupComponent(EditUserPassword, _initialState, _props);
-    const i18n = require(_appPath + 'i18n/' + defaultLang);
 
     let actionsCount = 1;  // component starts with the request
     checkWrapActions(store, actionsCount);

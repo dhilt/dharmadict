@@ -67,7 +67,7 @@ describe('Testing EditControls Component.', () => {
     );
   });
 
-  it('should correctly handle actions on component with existing translations', () => {
+  it('should correctly handle actions on component', () => {
     const _initialState = { ...initialState,
       common: { ...initialState.common,
         userLanguage: defaultLang
@@ -81,7 +81,6 @@ describe('Testing EditControls Component.', () => {
       dispatch: jest.fn()
     };
     const {wrapper, store} = setupComponent(EditControls, _initialState, _props);
-    const i18n = require(_appPath + 'i18n/' + defaultLang);
 
     let actionsCount = 0;
     checkWrapActions(store, actionsCount);

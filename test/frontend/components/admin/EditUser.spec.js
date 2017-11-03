@@ -196,7 +196,6 @@ describe('Testing EditUser Component.', () => {
       dispatch: jest.fn()
     };
     const {wrapper, store} = setupComponent(EditUser, _initialState, _props);
-    const i18n = require(_appPath + 'i18n/' + defaultUser.language);
 
     let actionsCount = 1;  // component starts with the request
     checkWrapActions(store, actionsCount);
