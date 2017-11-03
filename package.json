@@ -8,7 +8,7 @@
     "dev-server": "node webpack/server.js",
     "prod-server": "node prod/server.js",
     "test": "mocha --opts test/backend/mocha.opts -R spec --bail",
-    "test-frontend": "cross-env NODE_ENV=test jest --runInBand --watchAll --config ./test/frontend/jest.config.json",
+    "test-frontend": "cross-env NODE_ENV=test jest --watch --config ./test/frontend/jest.config.json",
     "db-reset": "node prod/db/reset.js"
   },
   "repository": {

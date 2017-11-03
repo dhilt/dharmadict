@@ -3,6 +3,7 @@ global.window.localStorage = {};
 const {
   setupComponent,
   checkWrap,
+  checkWrapActions,
   initialState,
   languages,
   users,
@@ -42,4 +43,31 @@ describe('Testing Logout, presentational Component.', () => {
       () => checkShowLogout(user)
     )
   );
+
+  it('should correctly handle actions on component', () => {
+    const defaultUser = users[0];
+    const _initialState = { ...initialState,
+      common: { ...initialState.common,
+        userLanguage: defaultUser.language,
+        languages
+      },
+      auth: { ...initialState.auth,
+        loggedIn: true,
+        userInfo: { ...initialState.auth.userInfo,
+          data: defaultUser
+        }
+      }
+    };
+    const _props = {
+      dispatch: jest.fn()
+    };
+    const {wrapper, store} = setupComponent(Header, _initialState, _props);
+
+    let actionsCount = 0;
+    checkWrapActions(store, actionsCount);
+
+    // SecurityError ???
+    // wrapper.find('a[data-test-id="Logout.button_logout"]').props().onClick({preventDefault: () => {}});
+    // checkWrapActions(store, ++actionsCount);
+  });
 });
