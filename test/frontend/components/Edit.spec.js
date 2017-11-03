@@ -3,6 +3,7 @@ global.window.localStorage = {};
 const {
   setupComponent,
   checkWrap,
+  checkWrapActions,
   initialState,
   translators,
   terms,
@@ -128,4 +129,47 @@ describe('Testing Edit Component.', () => {
       () => checkShowEdit(translator.id, defaultTerm, true, false, null)
     )
   );
+
+  it('should correctly handle actions on component (with valid props.query)', () => {
+    const query = {
+      translatorId: 'TRANSLATOR_ID',
+      termId: 'TERM_ID'
+    };
+    const _props = {
+      location: {
+        pathname: '/edit',
+        query
+      },
+      query,
+      dispatch: jest.fn()
+    };
+    const {wrapper, store} = setupComponent(Edit, initialState, _props);
+
+    let actionsCount = 1;  // component starts with the request
+    checkWrapActions(store, actionsCount);
+
+    // wrapper.find('[data-test-id="back-link"]').props().onClick();  // SecurityError ???
+    // checkWrapActions(store, ++actionsCount);
+  });
+
+  it('should correctly handle actions on component (with invalid props.query)', () => {
+    const query = {
+      translatorId: 'TRANSLATOR_ID'
+    };
+    const _props = {
+      location: {
+        pathname: '/edit',
+        query
+      },
+      query,
+      dispatch: jest.fn()
+    };
+    const {wrapper, store} = setupComponent(Edit, initialState, _props);
+
+    let actionsCount = 0;  // component doesn't send request, because query invalid
+    checkWrapActions(store, actionsCount);
+
+    // wrapper.find('[data-test-id="back-link"]').props().onClick();  // SecurityError ???
+    // checkWrapActions(store, ++actionsCount);
+  });
 });

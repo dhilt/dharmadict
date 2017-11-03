@@ -3,6 +3,7 @@ global.window.localStorage = {};
 const {
   setupComponent,
   checkWrap,
+  checkWrapActions,
   initialState,
   admin,
   users,
@@ -146,5 +147,16 @@ describe('Testing TranslatorPage Component.', () => {
         () => checkShowTranslatorPage(translator.id, translator, null, false, user)
       )
     );
+  });
+
+  it('should correctly handle actions on component', () => {
+    const _props = {
+      params: { id: 'ID' },
+      dispatch: jest.fn()
+    };
+    const {wrapper, store} = setupComponent(TranslatorPage, initialState, _props);
+
+    let actionsCount = 1;  // component starts with the request
+    checkWrapActions(store, actionsCount);
   });
 });
