@@ -3,7 +3,9 @@ global.window.localStorage = {};
 const {
   setupComponent,
   checkWrap,
+  checkWrapActions,
   initialState,
+  defaultLang,
   translators,
   languages,
   _appPath
@@ -165,8 +167,44 @@ describe('Testing EditPasswordByTranslator Component.', () => {
     () => checkShowEditPasswordByTranslator(defaultTranslator, payload, null, true)
   );
 
-  // it('should show component with error',
-  //   // should find error in Notifier Component
-  //   () => checkShowEditPasswordByTranslator(defaultTranslator, null, 'error', false)
-  // );
+  it('should correctly handle actions on component', () => {
+    const _initialState = { ...initialState,
+      common: { ...initialState.common,
+        userLanguage: defaultLang
+      },
+      translator: { ...initialState.translator,
+        editPassword: { ...initialState.translator.editPassword,
+          currentPassword: '',
+          newPassword: '',
+          confirmPassword: ''
+        }
+      }
+    };
+    const mockId = 'ID';
+    const _props = {
+      params: { id: mockId },
+      routeParams: { id: mockId },
+      dispatch: jest.fn()
+    };
+    const {wrapper, store} = setupComponent(EditPasswordByTranslator, _initialState, _props);
+    const i18n = require(_appPath + 'i18n/' + defaultLang);
+
+    let actionsCount = 0;
+    checkWrapActions(store, actionsCount);
+
+    wrapper.find('[data-test-id="input-current-pass"]').props().onChange({target: {value: 'pass'}});
+    checkWrapActions(store, ++actionsCount);
+
+    wrapper.find('[data-test-id="input-new-pass"]').props().onChange({target: {value: 'new_pass'}});
+    checkWrapActions(store, ++actionsCount);
+
+    wrapper.find('[data-test-id="input-confirm-pass"]').props().onChange({target: {value: 'new_pass'}});
+    checkWrapActions(store, ++actionsCount);
+
+    wrapper.find('button[data-test-id="btn-save"]').props().onClick({preventDefault: () => {}});
+    checkWrapActions(store, ++actionsCount);
+
+    wrapper.find('button[data-test-id="btn-reset"]').props().onClick({preventDefault: () => {}});
+    checkWrapActions(store, ++actionsCount);
+  });
 });
