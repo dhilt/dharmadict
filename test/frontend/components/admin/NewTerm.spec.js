@@ -1,10 +1,20 @@
 global.window.localStorage = {};
 
-const {setupComponent, checkWrap, initialState, languages, _appPath} = require('../../_shared.js');
+const {
+  setupComponent,
+  checkWrap,
+  checkWrapActions,
+  defaultLang,
+  initialState,
+  languages,
+  _appPath
+} = require('../../_shared.js');
 
 const NewTerm = require(_appPath + 'components/admin/NewTerm').default;
 
 describe('Testing NewTerm Component.', () => {
+
+  // beforeEach(() => console.log = jest.fn());
 
   const checkShowNewTerm = (term, lang, pending) => {
     const _initialState = { ...initialState,
@@ -116,5 +126,39 @@ describe('Testing NewTerm Component.', () => {
     it(`should show the component blocking button for sending`,
       () => checkShowNewTerm(termWithNoFullSanskrit, lang.id, false)
     );
+  });
+
+  it('should correctly handle actions on component', () => {
+    const _initialState = { ...initialState,
+      common: { ...initialState.common,
+        userLanguage: defaultLang,
+        languages
+      },
+      admin: { ...initialState.admin,
+        newTerm: { ...initialState.admin.newTerm,
+          wylie: 'wylie',
+          sanskrit: {}
+        }
+      }
+    };
+    const _props = {
+      dispatch: jest.fn()
+    };
+    const {wrapper, store, props} = setupComponent(NewTerm, _initialState, _props);
+    const i18n = require(_appPath + 'i18n/' + defaultLang);
+
+    let actionsCount = 0;
+    checkWrapActions(store, actionsCount);
+
+    wrapper.find('[data-test-id="input-wylie"]').props().onChange({target: {value: 'wylie'}});
+    checkWrapActions(store, ++actionsCount);
+
+    languages.forEach((lang, index) => {
+      wrapper.find('[data-test-id="input-sanskrit"]').at(index).props().onChange({target: {value: `sanskrit_${lang.id}`}});
+      checkWrapActions(store, ++actionsCount);
+    });
+
+    wrapper.find('button[data-test-id="button-save"]').props().onClick({preventDefault: () => {}});
+    checkWrapActions(store, ++actionsCount);
   });
 });

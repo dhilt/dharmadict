@@ -1,6 +1,14 @@
 global.window.localStorage = {};
 
-const {setupComponent, checkWrap, initialState, languages, _appPath} = require('../../_shared.js');
+const {
+  setupComponent,
+  checkWrap,
+  checkWrapActions,
+  initialState,
+  languages,
+  defaultLang,
+  _appPath
+} = require('../../_shared.js');
 
 const EditUserPassword = require(_appPath + 'components/admin/EditUserPassword').default;
 
@@ -119,4 +127,40 @@ describe('Testing EditUserPassword Component.', () => {
   it('should show component with disabled button (pending)',
     () => checkShowEditUserPassword('password', 'password', true)
   );
+
+  it('should correctly handle actions on component', () => {
+    const _initialState = { ...initialState,
+      common: { ...initialState.common,
+        userLanguage: defaultLang
+      },
+      admin: { ...initialState.admin,
+        editUserPassword: { ...initialState.admin.editUserPassword,
+          confirmPassword: '',
+          password: ''
+        }
+      }
+    };
+    const id = 'NEW_USER_ID';
+    const _props = {
+      params: { id },
+      dispatch: jest.fn()
+    };
+    const {wrapper, store} = setupComponent(EditUserPassword, _initialState, _props);
+    const i18n = require(_appPath + 'i18n/' + defaultLang);
+
+    let actionsCount = 1;  // component starts with the request
+    checkWrapActions(store, actionsCount);
+
+    wrapper.find('[data-test-id="input-new-pass"]').props().onChange({target: {value: 'pass'}});
+    checkWrapActions(store, ++actionsCount);
+
+    wrapper.find('[data-test-id="input-confirm-pass"]').props().onChange({target: {value: 'pass'}});
+    checkWrapActions(store, ++actionsCount);
+
+    wrapper.find('[data-test-id="btn-save"]').props().onClick({preventDefault: () => {}});
+    checkWrapActions(store, ++actionsCount);
+
+    wrapper.find('[data-test-id="btn-reset"]').props().onClick({preventDefault: () => {}});
+    checkWrapActions(store, ++actionsCount);
+  });
 });
