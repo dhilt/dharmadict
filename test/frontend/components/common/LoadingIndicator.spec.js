@@ -21,42 +21,12 @@ describe('Testing LoadingIndicator Component.', () => {
         className: 'sk-fading-circle'
       });
 
-      checkWrap(wrapper.find('[data-test-id="LoadingIndicator.circle-1"]'), {
-        className: 'sk-circle1 sk-circle'
-      });
-      checkWrap(wrapper.find('[data-test-id="LoadingIndicator.circle-2"]'), {
-        className: 'sk-circle2 sk-circle'
-      });
-      checkWrap(wrapper.find('[data-test-id="LoadingIndicator.circle-3"]'), {
-        className: 'sk-circle3 sk-circle'
-      });
-      checkWrap(wrapper.find('[data-test-id="LoadingIndicator.circle-4"]'), {
-        className: 'sk-circle4 sk-circle'
-      });
-      checkWrap(wrapper.find('[data-test-id="LoadingIndicator.circle-5"]'), {
-        className: 'sk-circle5 sk-circle'
-      });
-      checkWrap(wrapper.find('[data-test-id="LoadingIndicator.circle-6"]'), {
-        className: 'sk-circle6 sk-circle'
-      });
-      checkWrap(wrapper.find('[data-test-id="LoadingIndicator.circle-7"]'), {
-        className: 'sk-circle7 sk-circle'
-      });
-      checkWrap(wrapper.find('[data-test-id="LoadingIndicator.circle-8"]'), {
-        className: 'sk-circle8 sk-circle'
-      });
-      checkWrap(wrapper.find('[data-test-id="LoadingIndicator.circle-9"]'), {
-        className: 'sk-circle9 sk-circle'
-      });
-      checkWrap(wrapper.find('[data-test-id="LoadingIndicator.circle-10"]'), {
-        className: 'sk-circle10 sk-circle'
-      });
-      checkWrap(wrapper.find('[data-test-id="LoadingIndicator.circle-11"]'), {
-        className: 'sk-circle11 sk-circle'
-      });
-      checkWrap(wrapper.find('[data-test-id="LoadingIndicator.circle-12"]'), {
-        className: 'sk-circle12 sk-circle'
-      });
+      const countOfCircles = 12;
+      for (let i = 1; i <= countOfCircles; i++) {
+        checkWrap(wrapper.find(`[data-test-id="LoadingIndicator.circle-${i}"]`), {
+          className: `sk-circle${i} sk-circle`
+        });
+      }
 
       wrapper.unmount();
     });
