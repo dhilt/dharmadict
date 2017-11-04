@@ -5,154 +5,32 @@ const path = require('path');
 const config = require('./config.js');
 const logger = require('./log/logger');
 
-const ApiError = require('./helper').ApiError;
-const sendApiError = require('./helper').sendApiError;
-const languages = require('./helper').languages;
-const authController = require('./controllers/auth');
-const termsController = require('./controllers/terms');
-const usersController = require('./controllers/users');
+const apiCommon = require('./api/apiCommon').apiCommon;
+const apiTest = require('./api/apiCommon').apiTest;
+const apiLogin = require('./api/apiLogin');
+
+const apiTranslation = require('./api/apiTranslation');
+const apiUsers = require('./api/apiUsers');
+const apiTerms = require('./api/apiTerms');
 
 const app = express();
 app.use(bodyParser.json());
 
-const doAuthorize = (req) => {
-  const token = authController.extractToken(req.headers.authorization);
-  if (!token) {
-    return Promise.reject(new ApiError('Authorization needed', 302));
-  }
-  return authController.parseToken(token)
-    .then(login => usersController.findByLogin(login))
-    .catch(error => {
-      throw new ApiError(`Unauthorized access. ${error.text}`, error.code)
-    })
-};
+app.get('/api/common', apiCommon);
+app.post('/api/login', apiLogin);
+app.get('/api/test', apiTest);
 
-app.get('/api/test', (req, res) => {
-  const param = req.query.param;
-  res.send({success: true, param});
-});
+app.patch('/api/translators/:id', apiUsers.editPassword);
+app.get('/api/userInfo', apiUsers.userInfo);
+app.get('/api/users/:id', apiUsers.getById);
+app.patch('/api/users/:id', apiUsers.edit);
+app.post('/api/users', apiUsers.create);
 
-app.get('/api/userInfo', (req, res) =>
-  doAuthorize(req)
-    .then(user => {
-      logger.info('Authenticated as ' + user.login);
-      res.send(usersController.getUserInfo(user));
-    })
-    .catch(error => sendApiError(res, 'Can\'t get user info.', error))
-);
-
-app.post('/api/login', (req, res) => {
-  const {login, password} = req.body;
-  usersController.canLogin(login, password)
-    .then(user => {
-      const _user = usersController.getUserInfo(user, false);
-      const token = authController.generateToken(_user);
-      res.send({user: _user, token})
-    })
-    .catch(error => sendApiError(res, 'Can\'t login.', error))
-});
-
-app.get('/api/common', (req, res) =>
-  usersController.findAll('translator')
-    .then(translators => res.send({
-      success: true,
-      translators,
-      languages: languages.data
-    }))
-    .catch(error => sendApiError(res, 'Can\'t get common data.', error))
-);
-
-app.get('/api/users/:id', (req, res) =>
-  usersController.findById(req.params.id)
-    .then(user => res.json({success: true, user: usersController.getUserInfo(user)}))
-    .catch(error => sendApiError(res, 'Can\'t find user.', error))
-);
-
-app.post('/api/users', (req, res) =>
-  doAuthorize(req)
-    .then(user => usersController.isAdmin(user))
-    .then(user => usersController.create(req.body.user))
-    .then(result => res.json({success: true, user: result}))
-    .catch(error => sendApiError(res, 'Can\'t create new user.', error))
-);
-
-app.patch('/api/users/:id', (req, res) =>
-  doAuthorize(req)
-    .then(user => usersController.isAdmin(user))
-    .then(user => usersController.update(req.params.id, req.body.payload))
-    .then(result => res.json({success: true, user: usersController.getUserInfo(result)}))
-    .catch(error => sendApiError(res, 'Can\'t update user data.', error))
-);
-
-app.patch('/api/translators/:id', (req, res) =>
-  doAuthorize(req)
-    .then(user => usersController.isSameUser(req.params.id, user))
-    .then(user => usersController.updatePasswordByTranslator(user, req.body.payload))
-    .then(result => res.json({success: true, user: usersController.getUserInfo(result)}))
-    .catch(error => sendApiError(res, 'Can\'t update password.', error))
-);
-
-app.get('/api/terms', (req, res) =>
-  termsController.searchByPattern(req.query.pattern)
-    .then(result => res.json(result))
-    .catch(error => sendApiError(res, 'Search error.', error))
-);
-
-app.get('/api/terms/translation', (req, res) => {
-  const {termId, translatorId} = req.query;
-  if (!termId || !translatorId) {
-    return sendApiError(res, 'Incorrect /api/term request params', null);
-  }
-  logger.info('Requesting a translation by term id "' + termId + '" and translatorId "' + translatorId + '"');
-  let user, term, translations;
-  doAuthorize(req)
-    .then(result => {
-      user = result;
-      return termsController.findById(termId);
-    })
-    .then(_term => {
-      term = _term;
-      if (!(translations = term ? term.translations : null)) {
-        throw 'Can not find a translation by termId'
-      }
-      return usersController.findById(translatorId)
-    })
-    .then(translator => {
-      if (user.id !== translator.id && user.role !== 'admin') {
-        throw 'Unpermitted access'
-      }
-      return termsController.findTranslations(translator, term, translations)
-    })
-    .then(result => res.json({result}))
-    .catch(error => {
-      console.log(error);
-      sendApiError(res, `Can't get a translation.`, error)
-    })
-});
-
-app.patch('/api/terms', (req, res) => {
-  const {termId, translation} = req.body;
-  doAuthorize(req)
-    .then(user => termsController.update(user, termId, translation))
-    .then(term => res.json({success: true, term}))
-    .catch(error => sendApiError(res, 'Can\'t update term.', error))
-});
-
-app.post('/api/terms', (req, res) =>
-  doAuthorize(req)
-    .then(user => usersController.isAdmin(user))
-    .then(() => termsController.create(req.body.term, req.body.sanskrit))
-    .then(term => res.json({success: true, term}))
-    .catch(error => sendApiError(res, 'Can\'t create new term.', error))
-);
-
-app.delete('/api/terms/:id', (req, res) =>
-  doAuthorize(req)
-    .then(user => usersController.isAdmin(user))
-    .then(() => termsController.removeById(req.params.id))
-    .then(() => res.json({success: true}))
-    .catch(error => sendApiError(res, 'Can\'t delete term.', error))
-);
+app.get('/api/terms/translation', apiTranslation.get);
+app.delete('/api/terms/:id', apiTerms.remove);
+app.post('/api/terms', apiTerms.create);
+app.patch('/api/terms', apiTerms.edit);
+app.get('/api/terms', apiTerms.search);
 
 // serve static
 app.use(express.static(path.join(__dirname, '/client')));
