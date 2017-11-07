@@ -100,7 +100,7 @@ describe('Testing TranslatorPage Component.', () => {
     }
 
     if (userLooking.role === 'admin') {
-      checkWrap(wrapper.find('a[data-test-id="changeUser"]'), {
+      checkWrap(wrapper.find('[data-test-id="changeUser"]').first(), {
         text: i18n['TranslatorPage.button_edit'],
         className: 'btn btn-default'
       })
@@ -109,7 +109,7 @@ describe('Testing TranslatorPage Component.', () => {
     }
 
     if (userLooking.role === 'translator' && userLooking.id === translatorInfo.id) {
-      checkWrap(wrapper.find('a[data-test-id="changeTranslatorPassword"]'), {
+      checkWrap(wrapper.find('[data-test-id="changeTranslatorPassword"]').first(), {
         text: i18n['TranslatorPage.button_edit_password'],
         className: 'btn btn-default'
       })

@@ -20,7 +20,7 @@ describe('Testing NotFound Component.', () => {
         text: i18n['NotFound.main_text']
       });
 
-      checkWrap(wrapper.find('a[data-test-id="back_link"]'), {
+      checkWrap(wrapper.find('[data-test-id="back_link"]').first(), {
         text: i18n['NotFound.go_home'],
         className: 'btn'
       });

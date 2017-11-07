@@ -117,7 +117,7 @@ describe('Testing EditPasswordByTranslator Component.', () => {
         className: 'btn btn-default'
       });
 
-      checkWrap(wrapper.find('a[data-test-id="btn-cancel"]'), {
+      checkWrap(wrapper.find('[data-test-id="btn-cancel"]').first(), {
         text: i18n['Common.cancel']
       });
 
@@ -201,10 +201,10 @@ describe('Testing EditPasswordByTranslator Component.', () => {
     wrapper.find('[data-test-id="input-confirm-pass"]').props().onChange({target: {value: 'new_pass'}});
     checkWrapActions(store, ++actionsCount);
 
-    wrapper.find('button[data-test-id="btn-save"]').props().onClick({preventDefault: () => {}});
+    wrapper.find('[data-test-id="btn-save"]').first().props().onClick({preventDefault: () => {}});
     checkWrapActions(store, ++actionsCount);
 
-    wrapper.find('button[data-test-id="btn-reset"]').props().onClick({preventDefault: () => {}});
+    wrapper.find('[data-test-id="btn-reset"]').first().props().onClick({preventDefault: () => {}});
     checkWrapActions(store, ++actionsCount);
   });
 });

@@ -38,7 +38,7 @@ describe('Testing Header Component.', () => {
       className: 'nav__wrapper'
     });
 
-    checkWrap(wrapper.find('a[data-test-id="Header.about_project"]'), {
+    checkWrap(wrapper.find('[data-test-id="Header.about_project"]').first(), {
       text: i18n['Header.about_project']
     });
 
@@ -50,18 +50,18 @@ describe('Testing Header Component.', () => {
 
       checkWrap(wrapper.find('[data-test-id="Header.navButtons-loggedIn"]'));
 
-      checkWrap(wrapper.find('a[data-test-id="Header.link_to_user"]'), {
+      checkWrap(wrapper.find('[data-test-id="Header.link_to_user"]').first(), {
         text: userLooking.name
       });
 
       checkWrap(wrapper.find('[data-test-id="Header.Logout"]'));
 
       if (userLooking.role === 'admin') {
-        checkWrap(wrapper.find('a[data-test-id="Header.link_create_term"]'), {
+        checkWrap(wrapper.find('[data-test-id="Header.link_create_term"]').first(), {
           text: i18n['Header.create_new_term']
         })
       } else {
-        checkWrap(wrapper.find('a[data-test-id="Header.link_create_term"]'), {
+        checkWrap(wrapper.find('[data-test-id="Header.link_create_term"]'), {
           length: 0
         })
       }
@@ -69,7 +69,7 @@ describe('Testing Header Component.', () => {
       checkWrap(wrapper.find('[data-test-id="Header.navButtons-loggedIn"]'), { length: 0 });
       checkWrap(wrapper.find('[data-test-id="Header.link_to_user"]'), { length: 0 });
       checkWrap(wrapper.find('[data-test-id="Header.Logout"]'), { length: 0 });
-      checkWrap(wrapper.find('a[data-test-id="Header.link_create_term"]'), { length: 0 });
+      checkWrap(wrapper.find('[data-test-id="Header.link_create_term"]'), { length: 0 });
     }
 
     if (!userLooking) {

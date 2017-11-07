@@ -34,21 +34,21 @@ describe('Testing EditControls Component.', () => {
       className: 'form-group form-inline'
     });
 
-    checkWrap(wrapper.find('button[data-test-id="button-save-and-close"]'), {
+    checkWrap(wrapper.find('[data-test-id="button-save-and-close"]').first(), {
       text: i18n['EditControls.button_save_and_close'],
       className: pending ? 'loader' : '',
       disabled: pending,
       type: 'button'
     });
 
-    checkWrap(wrapper.find('button[data-test-id="button-save"]'), {
+    checkWrap(wrapper.find('[data-test-id="button-save"]').first(), {
       text: i18n['EditControls.button_save'],
       className: pending ? 'loader' : '',
       disabled: pending,
       type: 'button'
     });
 
-    checkWrap(wrapper.find('a[data-test-id="cancel-link"]'), {
+    checkWrap(wrapper.find('[data-test-id="cancel-link"]').first(), {
       text: i18n['EditControls.button_reset'],
       className: 'cancel-link'
     });
@@ -85,10 +85,10 @@ describe('Testing EditControls Component.', () => {
     let actionsCount = 0;
     checkWrapActions(store, actionsCount);
 
-    wrapper.find('button[data-test-id="button-save-and-close"]').props().onClick({});
+    wrapper.find('[data-test-id="button-save-and-close"]').first().props().onClick({});
     checkWrapActions(store, ++actionsCount);
 
-    wrapper.find('button[data-test-id="button-save"]').props().onClick({});
+    wrapper.find('[data-test-id="button-save"]').first().props().onClick({});
     checkWrapActions(store, ++actionsCount);
 
     wrapper.find('[data-test-id="cancel-link"]').props().onClick({preventDefault: () => {}});
