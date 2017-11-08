@@ -55,8 +55,7 @@ describe('Testing Term Component.', () => {
 
     checkWrap(wrapper.find('[data-test-id="sanskrit"]'), {
       className: 'sanskrit',
-      text: i18n['Term.sanskrit_term'].replace(`{sanskrit_${lang}}`, '')
-            + selectedTerm[`sanskrit_${lang}`]
+      text: i18n['Term.sanskrit_term'].replace(`{sanskrit_${lang}}`, selectedTerm[`sanskrit_${lang}`])
     });
 
     checkWrap(wrapper.find('[data-test-id="translation-list"]'), {

@@ -10,7 +10,7 @@ const {
   _appPath
 } = require('../../../_shared.js');
 
-const Header = require('../' + _appPath + 'components/common/Header').default;
+const Logout = require('../' + _appPath + 'components/common/header/Logout').default;
 
 describe('Testing Logout, presentational Component.', () => {
 
@@ -27,7 +27,7 @@ describe('Testing Logout, presentational Component.', () => {
         }
       }
     };
-    const {wrapper} = setupComponent(Header, _initialState);
+    const {wrapper} = setupComponent(Logout, _initialState);
     const i18n = require('../' + _appPath + 'i18n/' + userLooking.language);
 
     checkWrap(wrapper.find('[data-test-id="Logout"]'));
@@ -59,15 +59,10 @@ describe('Testing Logout, presentational Component.', () => {
       }
     };
     const _props = {
-      dispatch: jest.fn()
+      doLogout: () => null
     };
-    const {wrapper, store} = setupComponent(Header, _initialState, _props);
+    const {wrapper} = setupComponent(Logout, _initialState, _props);
 
-    let actionsCount = 0;
-    checkWrapActions(store, actionsCount);
-
-    // SecurityError ???
-    // wrapper.find('a[data-test-id="Logout.button_logout"]').props().onClick({preventDefault: () => {}});
-    // checkWrapActions(store, ++actionsCount);
+    wrapper.find('[data-test-id="Logout.button_logout"]').first().props().onClick({preventDefault: () => {}});
   });
 });
