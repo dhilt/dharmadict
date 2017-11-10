@@ -1,4 +1,4 @@
-const doAuthorize = require('./apiCommon').doAuthorize;
+const doAuthorize = require('./doAuthorize');
 const sendApiError = require('../helper').sendApiError;
 const logger = require('../log/logger');
 
