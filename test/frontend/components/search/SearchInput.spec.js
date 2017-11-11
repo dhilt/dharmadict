@@ -59,7 +59,7 @@ describe('Testing SearchInput Component.', () => {
         className: 'form-group'
       });
 
-      checkWrap(wrapper.find('button[data-test-id="searchButton"]'), {
+      checkWrap(wrapper.find('[data-test-id="searchButton"]').first(), {
         disabled: !searchString || pending,
         className: pending ? 'loader' : '',
         type: 'submit'
@@ -101,7 +101,7 @@ describe('Testing SearchInput Component.', () => {
     wrapper.find('[data-test-id="form-group1.input"]').props().onChange({target: {value: 'term'}});
     checkWrapActions(store, ++actionsCount);
 
-    wrapper.find('button[data-test-id="searchButton"]').props().onClick({preventDefault: () => {}});
+    wrapper.find('[data-test-id="searchButton"]').first().props().onClick({preventDefault: () => {}});
     checkWrapActions(store, ++actionsCount);
   });
 });

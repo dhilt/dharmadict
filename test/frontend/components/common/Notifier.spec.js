@@ -49,7 +49,7 @@ describe('Testing Notifier Component.', () => {
       });
 
       for (let i = 0; i < countOfMessages; i++) {
-        checkWrap(wrapper.find('div[data-test-id="Notifier.notification"]').at(i));
+        checkWrap(wrapper.find('[data-test-id="Notifier.notification"]').at(i));
         checkWrap(wrapper.find('[data-test-id="Notifier.message"]').at(i), {
           text: i18n[i]
         });

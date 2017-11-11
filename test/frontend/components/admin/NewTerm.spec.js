@@ -73,7 +73,7 @@ describe('Testing NewTerm Component.', () => {
       className: 'form-group'
     });
 
-    checkWrap(wrapper.find('button[data-test-id="button-save"]'), {
+    checkWrap(wrapper.find('[data-test-id="button-save"]').first(), {
       disabled: !term.wylie || pending
         || (Object.keys(term.sanskrit).reduce(
           (result, key) => result + !!term.sanskrit[key], 0) !== languages.length),
@@ -82,7 +82,7 @@ describe('Testing NewTerm Component.', () => {
       type: 'button'
     });
 
-    checkWrap(wrapper.find('a[data-test-id="button-cancel"]'), {
+    checkWrap(wrapper.find('[data-test-id="button-cancel"]').first(), {
       text: i18n['Common.cancel']
     });
 
@@ -157,7 +157,7 @@ describe('Testing NewTerm Component.', () => {
       checkWrapActions(store, ++actionsCount);
     });
 
-    wrapper.find('button[data-test-id="button-save"]').props().onClick({preventDefault: () => {}});
+    wrapper.find('[data-test-id="button-save"]').first().props().onClick({preventDefault: () => {}});
     checkWrapActions(store, ++actionsCount);
   });
 });

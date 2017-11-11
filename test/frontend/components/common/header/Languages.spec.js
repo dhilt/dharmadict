@@ -25,7 +25,7 @@ describe('Testing Languages Component.', () => {
         className: 'languages-bar-header'
       });
 
-      checkWrap(wrapper.find('button[data-test-id="Languages.Dropdown"]'));
+      checkWrap(wrapper.find('[data-test-id="Languages.Dropdown"]').first());
 
       checkWrap(wrapper.find('[data-test-id="Languages.title"]'));
 

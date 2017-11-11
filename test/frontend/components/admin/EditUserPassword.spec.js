@@ -92,7 +92,7 @@ describe('Testing EditUserPassword Component.', () => {
         className: 'btn btn-default'
       });
 
-      checkWrap(wrapper.find('a[data-test-id="btn-cancel"]'), {
+      checkWrap(wrapper.find('[data-test-id="btn-cancel"]').first(), {
         text: i18n['Common.cancel']
       });
 

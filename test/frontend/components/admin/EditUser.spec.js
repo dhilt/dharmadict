@@ -91,11 +91,12 @@ describe('Testing EditUser Component.', () => {
           className: 'radio'
         });
 
-        checkWrap(wrapper.find('[data-test-id="radio-label-lang"]').at(languageIndex));
+        checkWrap(wrapper.find('[data-test-id="radio-label-lang"]').at(languageIndex), {
+          text: language['name_' + lang.id]
+        });
 
         checkWrap(wrapper.find('[data-test-id="input-lang"]').at(languageIndex), {
           checked: language.id === editedTranslator.language,
-          // text: language['name_' + lang.id],  // should work
           name: 'lang_radio',
           type: 'radio'
         });
@@ -130,7 +131,7 @@ describe('Testing EditUser Component.', () => {
         className: 'btn btn-default'
       });
 
-      checkWrap(wrapper.find('a[data-test-id="button-cancel"]'), {
+      checkWrap(wrapper.find('[data-test-id="button-cancel"]').first(), {
         text: i18n['Common.cancel']
       });
 
@@ -138,7 +139,7 @@ describe('Testing EditUser Component.', () => {
         className: 'form-group'
       });
 
-      checkWrap(wrapper.find('a[data-test-id="link-password"]'), {
+      checkWrap(wrapper.find('[data-test-id="link-password"]').first(), {
         text: i18n['EditUser.link_reset_password']
       });
 
