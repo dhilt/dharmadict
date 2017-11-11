@@ -1,7 +1,8 @@
 global.window.localStorage = {};
 
-const Home = require('../../../app/components/Home').default;
-const {setupComponent, checkWrap, initialState, languages} = require('../_shared.js');
+const {setupComponent, checkWrap, initialState, languages, appPath} = require('../_shared.js');
+
+const Home = require(appPath + 'components/Home').default;
 
 describe('Testing Home Component.', () => {
 
@@ -12,8 +13,8 @@ describe('Testing Home Component.', () => {
           userLanguage: lang.id
         }
       };
-      const wrapper = setupComponent(Home, _initialState);
-      const i18n = require('../../../app/i18n/' + lang.id);
+      const {wrapper} = setupComponent(Home, _initialState);
+      const i18n = require(appPath + 'i18n/' + lang.id);
 
       checkWrap(wrapper.find('[data-test-id="Home"]'), {
         className: 'row'

@@ -1,15 +1,18 @@
 global.window.localStorage = {};
 
-const TranslatorPage = require('../../../app/components/TranslatorPage').default;
 const {
   setupComponent,
   checkWrap,
+  checkWrapActions,
   initialState,
   admin,
   users,
   translators,
-  languages
+  languages,
+  appPath
 } = require('../_shared.js');
+
+const TranslatorPage = require(appPath + 'components/TranslatorPage').default;
 
 describe('Testing TranslatorPage Component.', () => {
 
@@ -52,8 +55,8 @@ describe('Testing TranslatorPage Component.', () => {
         id: translatorId
       }
     };
-    const wrapper = setupComponent(TranslatorPage, _initialState, _props);
-    const i18n = require('../../../app/i18n/' + userLooking.language);
+    const {wrapper} = setupComponent(TranslatorPage, _initialState, _props);
+    const i18n = require(appPath + 'i18n/' + userLooking.language);
 
     checkWrap(wrapper.find('[data-test-id="TranslatorPage"]'));
 
@@ -97,7 +100,7 @@ describe('Testing TranslatorPage Component.', () => {
     }
 
     if (userLooking.role === 'admin') {
-      checkWrap(wrapper.find('a[data-test-id="changeUser"]'), {
+      checkWrap(wrapper.find('[data-test-id="changeUser"]').first(), {
         text: i18n['TranslatorPage.button_edit'],
         className: 'btn btn-default'
       })
@@ -106,7 +109,7 @@ describe('Testing TranslatorPage Component.', () => {
     }
 
     if (userLooking.role === 'translator' && userLooking.id === translatorInfo.id) {
-      checkWrap(wrapper.find('a[data-test-id="changeTranslatorPassword"]'), {
+      checkWrap(wrapper.find('[data-test-id="changeTranslatorPassword"]').first(), {
         text: i18n['TranslatorPage.button_edit_password'],
         className: 'btn btn-default'
       })
@@ -144,5 +147,16 @@ describe('Testing TranslatorPage Component.', () => {
         () => checkShowTranslatorPage(translator.id, translator, null, false, user)
       )
     );
+  });
+
+  it('should correctly handle actions on component', () => {
+    const _props = {
+      params: { id: 'ID' },
+      dispatch: jest.fn()
+    };
+    const {wrapper, store} = setupComponent(TranslatorPage, initialState, _props);
+
+    let actionsCount = 1;  // component starts with the request
+    checkWrapActions(store, actionsCount);
   });
 });

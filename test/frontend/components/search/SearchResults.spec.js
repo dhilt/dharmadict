@@ -1,8 +1,8 @@
 global.window.localStorage = {};
-const {expect} = require('chai');
 
-const SearchResults = require('../../../../app/components/search/SearchResults').default;
-const {setupComponent, checkWrap, languages, initialState, terms} = require('../../_shared.js');
+const {setupComponent, checkWrap, languages, initialState, terms, _appPath} = require('../../_shared.js');
+
+const SearchResults = require(_appPath + 'components/search/SearchResults').default;
 
 describe('Testing SearchResults Component.', () => {
 
@@ -26,8 +26,8 @@ describe('Testing SearchResults Component.', () => {
           term: selectedTerm
         }
       };
-      const wrapper = setupComponent(SearchResults, _initialState);
-      const i18n = require('../../../../app/i18n/' + lang.id);
+      const {wrapper} = setupComponent(SearchResults, _initialState);
+      const i18n = require(_appPath + 'i18n/' + lang.id);
 
       checkWrap(wrapper.find('[data-test-id="SearchResults"]'), {
         className: 'row search-results-row'

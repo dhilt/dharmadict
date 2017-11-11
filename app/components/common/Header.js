@@ -31,17 +31,24 @@ class Header extends Component {
     const userInfo = !this.props.data.userInfo.pending ? this.props.data.userInfo.data : {}
 
     const navButtons = this.props.data.loggedIn ? (
-      <div>
-        <Link to={`/translator/${userInfo.id}`}>{userInfo.name}</Link>
-        <Logout doLogout={this.doLogout} />
-        {userInfo.role === 'admin' ? <Link to={`/newTerm`}><FormattedMessage id="Header.create_new_term" /></Link> : null}
+      <div data-test-id="Header.navButtons-loggedIn">
+        <Link
+          data-test-id="Header.link_to_user"
+          to={`/translator/${userInfo.id}`}>{userInfo.name}
+        </Link>
+        <Logout data-test-id="Header.Logout" doLogout={this.doLogout} />
+        {userInfo.role === 'admin' ?
+          <Link data-test-id="Header.link_create_term" to={`/newTerm`}>
+            <FormattedMessage id="Header.create_new_term" />
+          </Link> : null
+        }
       </div>
     ) : (
-      <div>
+      <div data-test-id="Header.navButtons-notLoggedIn">
         {this.props.data.userInfo.pending ?
-          <LoadingButton className='btn--nav' />
+          <LoadingButton data-test-id="Header.LoadingButton" className='btn--nav' />
           :
-          <Login
+          <Login data-test-id="Header.Login"
             data={this.props.data}
             openModal={this.openModal}
             closeModal={this.closeModal}
@@ -55,11 +62,17 @@ class Header extends Component {
 
     return (
       <div data-test-id="Header" className='nav'>
-        <div className='nav__wrapper'>
-          <Link to={'/about'}><FormattedMessage id="Header.about_project" /></Link>
+        <div data-test-id="Header.nav" className='nav__wrapper'>
+          <Link data-test-id="Header.about_project" to={'/about'}>
+            <FormattedMessage id="Header.about_project" />
+          </Link>
           {navButtons}
         </div>
-        <Languages languages={languages} current={userLanguage} doChangeLang={this.doChangeLang} />
+        <Languages
+          languages={languages}
+          current={userLanguage}
+          doChangeLang={this.doChangeLang}
+        />
       </div>
     )
   }

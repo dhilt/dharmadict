@@ -1,14 +1,17 @@
 global.window.localStorage = {};
 
-const Edit = require('../../../app/components/Edit').default;
 const {
   setupComponent,
   checkWrap,
+  checkWrapActions,
   initialState,
   translators,
   terms,
-  languages
+  languages,
+  appPath
 } = require('../_shared.js');
+
+const Edit = require(appPath + 'components/Edit').default;
 
 describe('Testing Edit Component.', () => {
 
@@ -45,8 +48,8 @@ describe('Testing Edit Component.', () => {
         },
         query
       };
-      const wrapper = setupComponent(Edit, _initialState, _props);
-      const i18n = require('../../../app/i18n/' + lang.id);
+      const {wrapper} = setupComponent(Edit, _initialState, _props);
+      const i18n = require(appPath + 'i18n/' + lang.id);
 
       checkWrap(wrapper.find('[data-test-id="Edit"]'));
 
@@ -126,4 +129,47 @@ describe('Testing Edit Component.', () => {
       () => checkShowEdit(translator.id, defaultTerm, true, false, null)
     )
   );
+
+  it('should correctly handle actions on component (with valid props.query)', () => {
+    const query = {
+      translatorId: 'TRANSLATOR_ID',
+      termId: 'TERM_ID'
+    };
+    const _props = {
+      location: {
+        pathname: '/edit',
+        query
+      },
+      query,
+      dispatch: jest.fn()
+    };
+    const {wrapper, store} = setupComponent(Edit, initialState, _props);
+
+    let actionsCount = 1;  // component starts with the request
+    checkWrapActions(store, actionsCount);
+
+    // wrapper.find('[data-test-id="back-link"]').props().onClick();  // SecurityError ???
+    // checkWrapActions(store, ++actionsCount);
+  });
+
+  it('should correctly handle actions on component (with invalid props.query)', () => {
+    const query = {
+      translatorId: 'TRANSLATOR_ID'
+    };
+    const _props = {
+      location: {
+        pathname: '/edit',
+        query
+      },
+      query,
+      dispatch: jest.fn()
+    };
+    const {wrapper, store} = setupComponent(Edit, initialState, _props);
+
+    let actionsCount = 0;  // component doesn't send request, because query invalid
+    checkWrapActions(store, actionsCount);
+
+    // wrapper.find('[data-test-id="back-link"]').props().onClick();  // SecurityError ???
+    // checkWrapActions(store, ++actionsCount);
+  });
 });

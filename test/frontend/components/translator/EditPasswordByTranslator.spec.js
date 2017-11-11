@@ -1,13 +1,17 @@
 global.window.localStorage = {};
 
-const EditPasswordByTranslator = require('../../../../app/components/translator/EditPasswordByTranslator').default;
 const {
   setupComponent,
   checkWrap,
+  checkWrapActions,
   initialState,
+  defaultLang,
   translators,
-  languages
+  languages,
+  _appPath
 } = require('../../_shared.js');
+
+const EditPasswordByTranslator = require(_appPath + 'components/translator/EditPasswordByTranslator').default;
 
 describe('Testing EditPasswordByTranslator Component.', () => {
 
@@ -35,8 +39,8 @@ describe('Testing EditPasswordByTranslator Component.', () => {
           id: translator ? translator.id : null
         }
       };
-      const wrapper = setupComponent(EditPasswordByTranslator, _initialState, _props);
-      const i18n = require('../../../../app/i18n/' + lang.id);
+      const {wrapper} = setupComponent(EditPasswordByTranslator, _initialState, _props);
+      const i18n = require(_appPath + 'i18n/' + lang.id);
       const {currentPassword, newPassword, confirmPassword} = payload;
 
       checkWrap(wrapper.find('[data-test-id="EditPasswordByTranslator"]'));
@@ -113,7 +117,7 @@ describe('Testing EditPasswordByTranslator Component.', () => {
         className: 'btn btn-default'
       });
 
-      checkWrap(wrapper.find('a[data-test-id="btn-cancel"]'), {
+      checkWrap(wrapper.find('[data-test-id="btn-cancel"]').first(), {
         text: i18n['Common.cancel']
       });
 
@@ -163,8 +167,44 @@ describe('Testing EditPasswordByTranslator Component.', () => {
     () => checkShowEditPasswordByTranslator(defaultTranslator, payload, null, true)
   );
 
-  // it('should show component with error',
-  //   // should find error in Notifier Component
-  //   () => checkShowEditPasswordByTranslator(defaultTranslator, null, 'error', false)
-  // );
+  it('should correctly handle actions on component', () => {
+    const _initialState = { ...initialState,
+      common: { ...initialState.common,
+        userLanguage: defaultLang
+      },
+      translator: { ...initialState.translator,
+        editPassword: { ...initialState.translator.editPassword,
+          currentPassword: '',
+          newPassword: '',
+          confirmPassword: ''
+        }
+      }
+    };
+    const mockId = 'ID';
+    const _props = {
+      params: { id: mockId },
+      routeParams: { id: mockId },
+      dispatch: jest.fn()
+    };
+    const {wrapper, store} = setupComponent(EditPasswordByTranslator, _initialState, _props);
+    const i18n = require(_appPath + 'i18n/' + defaultLang);
+
+    let actionsCount = 0;
+    checkWrapActions(store, actionsCount);
+
+    wrapper.find('[data-test-id="input-current-pass"]').props().onChange({target: {value: 'pass'}});
+    checkWrapActions(store, ++actionsCount);
+
+    wrapper.find('[data-test-id="input-new-pass"]').props().onChange({target: {value: 'new_pass'}});
+    checkWrapActions(store, ++actionsCount);
+
+    wrapper.find('[data-test-id="input-confirm-pass"]').props().onChange({target: {value: 'new_pass'}});
+    checkWrapActions(store, ++actionsCount);
+
+    wrapper.find('[data-test-id="btn-save"]').first().props().onClick({preventDefault: () => {}});
+    checkWrapActions(store, ++actionsCount);
+
+    wrapper.find('[data-test-id="btn-reset"]').first().props().onClick({preventDefault: () => {}});
+    checkWrapActions(store, ++actionsCount);
+  });
 });

@@ -23,11 +23,13 @@ class Notifier extends Component {
       <div data-test-id="Notifier" className="alert-column">
         {
           notifications.length !== 0 && notifications.map((elem, index) =>
-            <Alert
+            <Alert data-test-id="Notifier.notification"
               key={index}
               bsStyle={elem.type}
               onDismiss={() => this.closeAlert(elem.id)}
-            ><FormattedMessage id={elem.text} values={elem.values} />
+            ><span data-test-id="Notifier.message">
+                <FormattedMessage id={elem.text} values={elem.values} />
+              </span>
             </Alert>
           )
         }

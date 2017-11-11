@@ -1,16 +1,18 @@
 global.window.localStorage = {};
-const {expect} = require('chai');
 
-const EditUser = require('../../../../app/components/admin/EditUser').default;
-const {getEditableUserDataObject} = require('../../../../app/actions/admin/changeUser');
 const {
   setupComponent,
   checkWrap,
+  checkWrapActions,
   initialState,
   languages,
   translators,
-  userMutableProperties
+  userMutableProperties,
+  _appPath
 } = require('../../_shared.js');
+
+const EditUser = require(_appPath + 'components/admin/EditUser').default;
+const {getEditableUserDataObject} = require(_appPath + 'actions/admin/changeUser');
 
 describe('Testing EditUser Component.', () => {
 
@@ -40,8 +42,8 @@ describe('Testing EditUser Component.', () => {
           id: sourceTranslator.id
         }
       };
-      const wrapper = setupComponent(EditUser, _initialState, _props);
-      const i18n = require('../../../../app/i18n/' + lang.id);
+      const {wrapper} = setupComponent(EditUser, _initialState, _props);
+      const i18n = require(_appPath + 'i18n/' + lang.id);
 
       if (sourcePending) {
         checkWrap(wrapper.find('[data-test-id="EditUser"]'), {
@@ -89,11 +91,12 @@ describe('Testing EditUser Component.', () => {
           className: 'radio'
         });
 
-        checkWrap(wrapper.find('[data-test-id="radio-label-lang"]').at(languageIndex));
+        checkWrap(wrapper.find('[data-test-id="radio-label-lang"]').at(languageIndex), {
+          text: language['name_' + lang.id]
+        });
 
         checkWrap(wrapper.find('[data-test-id="input-lang"]').at(languageIndex), {
           checked: language.id === editedTranslator.language,
-          // text: language['name_' + lang.id],  // should work
           name: 'lang_radio',
           type: 'radio'
         });
@@ -128,7 +131,7 @@ describe('Testing EditUser Component.', () => {
         className: 'btn btn-default'
       });
 
-      checkWrap(wrapper.find('a[data-test-id="button-cancel"]'), {
+      checkWrap(wrapper.find('[data-test-id="button-cancel"]').first(), {
         text: i18n['Common.cancel']
       });
 
@@ -136,7 +139,7 @@ describe('Testing EditUser Component.', () => {
         className: 'form-group'
       });
 
-      checkWrap(wrapper.find('a[data-test-id="link-password"]'), {
+      checkWrap(wrapper.find('[data-test-id="link-password"]').first(), {
         text: i18n['EditUser.link_reset_password']
       });
 
@@ -167,5 +170,52 @@ describe('Testing EditUser Component.', () => {
       _translator[property] = 'New description of translator property'
       checkShowEditUser(false, false, null, translator, _translator);
     });
+  });
+
+  it('should correctly handle actions on component', () => {
+    const defaultUser = translators[0];
+    const _initialState = { ...initialState,
+      common: { ...initialState.common,
+        userLanguage: defaultUser.language,
+        languages
+      },
+      admin: { ...initialState.admin,
+        editUser: { ...initialState.admin.editUser,
+          id: defaultUser.id,
+          dataSource: getEditableUserDataObject(defaultUser),
+          data: getEditableUserDataObject(defaultUser)
+        }
+      }
+    };
+    const _props = {
+      params: {
+        id: defaultUser.id
+      },
+      routeParams: {
+        id: defaultUser.id
+      },
+      dispatch: jest.fn()
+    };
+    const {wrapper, store} = setupComponent(EditUser, _initialState, _props);
+
+    let actionsCount = 1;  // component starts with the request
+    checkWrapActions(store, actionsCount);
+
+    wrapper.find('[data-test-id="input-name"]').props().onChange({target: {value: 'name'}});
+    checkWrapActions(store, ++actionsCount);
+
+    languages.forEach((lang, index) => {
+      wrapper.find('[data-test-id="input-lang"]').at(index).props().onChange({target: {value: lang.id}});
+      checkWrapActions(store, ++actionsCount);
+    });
+
+    wrapper.find('[data-test-id="textarea-desc"]').props().onChange({target: {value: 'desc'}});
+    checkWrapActions(store, ++actionsCount);
+
+    wrapper.find('[data-test-id="button-save"]').props().onClick({preventDefault: () => {}});
+    checkWrapActions(store, ++actionsCount);
+
+    wrapper.find('[data-test-id="button-reset"]').props().onClick({preventDefault: () => {}});
+    checkWrapActions(store, ++actionsCount);
   });
 });

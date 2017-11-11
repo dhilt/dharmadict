@@ -1,16 +1,21 @@
 global.window.localStorage = {};
-const {expect} = require('chai');
 
-const Term = require('../../../../app/components/search/Term').default;
 const {
   setupComponent,
   checkWrap,
+  checkWrapActions,
   initialState,
+  defaultLang,
   terms,
   translators,
   users,
-  languages
+  admin,
+  roles,
+  languages,
+  _appPath
 } = require('../../_shared.js');
+
+const Term = require(_appPath + 'components/search/Term').default;
 
 describe('Testing Term Component.', () => {
 
@@ -32,8 +37,8 @@ describe('Testing Term Component.', () => {
         }
       }
     };
-    const wrapper = setupComponent(Term, _initialState);
-    const i18n = require('../../../../app/i18n/' + lang);
+    const {wrapper} = setupComponent(Term, _initialState);
+    const i18n = require(_appPath + 'i18n/' + lang);
 
     checkWrap(wrapper.find('[data-test-id="Term"]'), {
       className: 'term'
@@ -50,8 +55,7 @@ describe('Testing Term Component.', () => {
 
     checkWrap(wrapper.find('[data-test-id="sanskrit"]'), {
       className: 'sanskrit',
-      text: i18n['Term.sanskrit_term'].replace(`{sanskrit_${lang}}`, '')
-            + selectedTerm[`sanskrit_${lang}`]
+      text: i18n['Term.sanskrit_term'].replace(`{sanskrit_${lang}}`, selectedTerm[`sanskrit_${lang}`])
     });
 
     checkWrap(wrapper.find('[data-test-id="translation-list"]'), {
@@ -74,9 +78,8 @@ describe('Testing Term Component.', () => {
       });
 
       checkWrap(wrapper.find('a[data-test-id="link-translator"]').at(translationIndex), {
-        className: 'translator=ref',
-        // reference ?
-        text: translators.find(e => e.id === translation.translatorId).name
+        text: translators.find(e => e.id === translation.translatorId).name,
+        className: 'translator=ref'
       });
 
       if (user.role === 'admin') {
@@ -87,7 +90,7 @@ describe('Testing Term Component.', () => {
           length: selectedTerm.translations.length
         });
       } else if (translation.translatorId === user.id) {
-        checkWrap(wrapper.find('a[data-test-id="link-to-edit"]'));
+        checkWrap(wrapper.find('[data-test-id="link-to-edit"]').first());
         checkWrap(wrapper.find('[data-test-id="edit-icon"].edit-icon'));
       } else if (!selectedTerm.translations.find(t => t.translatorId === user.id)) {
         checkWrap(wrapper.find('[data-test-id="link-to-edit"]'), {
@@ -159,8 +162,8 @@ describe('Testing Term Component.', () => {
     if (!selectedTerm.translations.find(t => t.translatorId === user.id)
       && user.role === 'translator') {
       checkWrap(wrapper.find('[data-test-id="add-translation"].add-translation'));
-      checkWrap(wrapper.find('a[data-test-id="link-add-translation"]'));
-      checkWrap(wrapper.find('a[data-test-id="link-add-translation"]'), {
+      checkWrap(wrapper.find('[data-test-id="link-add-translation"]').first());
+      checkWrap(wrapper.find('[data-test-id="link-add-translation"]').first(), {
         text: i18n['Term.add-translation']
       });
     } else {
@@ -185,5 +188,38 @@ describe('Testing Term Component.', () => {
         () => checkShowTerm(term, translator, translator.language)
       )
     );
+  });
+
+  it('should correctly handle actions on component', () => {
+    const selectedTerm = terms[0];
+    const _initialState = { ...initialState,
+      selected: { ...initialState.selected,
+        term: selectedTerm
+      },
+      common: { ...initialState.common,
+        userLanguage: defaultLang,
+        translators
+      },
+      auth: { ...initialState.auth,
+        userInfo: { ...initialState.auth.userInfo,
+          data: { ...initialState.auth.userInfo.data,
+            role: 'user',
+            id: 'id'
+          }
+        }
+      }
+    };
+    const _props = {
+      dispatch: jest.fn()
+    };
+    const {wrapper, store} = setupComponent(Term, _initialState, _props);
+    let actionsCount = 0;
+    checkWrapActions(store, actionsCount);
+
+    const _wrap = wrapper.find('[data-test-id="commentLink"]');
+    for (let i = 0; i < _wrap.length; i++) {
+      _wrap.at(i).props().onClick();
+      checkWrapActions(store, ++actionsCount);
+    }
   });
 });

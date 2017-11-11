@@ -1,8 +1,8 @@
 global.window.localStorage = {};
-const {expect} = require('chai');
 
-const TermList = require('../../../../app/components/search/TermList').default;
-const {setupComponent, checkWrap, initialState, terms} = require('../../_shared.js');
+const {setupComponent, checkWrap, checkWrapActions, initialState, terms, _appPath} = require('../../_shared.js');
+
+const TermList = require(_appPath + 'components/search/TermList').default;
 
 describe('Testing TermList Component.', () => {
 
@@ -18,7 +18,7 @@ describe('Testing TermList Component.', () => {
         term: selectedTerm
       }
     };
-    const wrapper = setupComponent(TermList, _initialState);
+    const {wrapper} = setupComponent(TermList, _initialState);
 
     checkWrap(wrapper.find('[data-test-id="TermList"]'));
 
@@ -42,4 +42,35 @@ describe('Testing TermList Component.', () => {
   it('should show component with terms, with selected term', () =>
     checkShowTermList(terms, selectedTerm)
   );
+
+  // it('should correctly handle actions on component', () => {
+  //   const selectedTerm = terms[0];
+  //   const _initialState = { ...initialState,
+  //     search: { ...initialState.search,
+  //       started: true,
+  //       result: terms,
+  //       error: false,
+  //       pending: false
+  //     },
+  //     selected: { ...initialState.selected,
+  //       term: selectedTerm
+  //     }
+  //   };
+  //   const _props = {
+  //     dispatch: jest.fn()
+  //   };
+  //   const {wrapper, store} = setupComponent(TermList, _initialState, _props);
+  //
+  //   let actionsCount = 0;
+  //   checkWrapActions(store, actionsCount);
+  //
+  //   terms.forEach(term => {
+  //     wrapper.find(`[data-test-id="${term.wylie}"]`).props().onClick(term);  // SecurityError ???
+  //     if (term.wylie === selectedTerm.wylie) {
+  //       checkWrapActions(store, actionsCount);
+  //     } else {
+  //       checkWrapActions(store, ++actionsCount);
+  //     }
+  //   });
+  // });
 });

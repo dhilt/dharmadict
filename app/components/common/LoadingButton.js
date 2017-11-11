@@ -4,8 +4,11 @@ import LoadingIndicator from './LoadingIndicator'
 
 function LoadingButton (props) {
   return (
-    <a href='#' className={props.className + ' btn btn--loading'} disabled='true'>
-      <LoadingIndicator />
+    <a data-test-id="LoadingButton"
+      href='#'
+      className={props.className + ' btn btn--loading'}
+      disabled='true'
+      ><LoadingIndicator data-test-id="LoadingButton.LoadingIndicator" />
     </a>
   )
 }

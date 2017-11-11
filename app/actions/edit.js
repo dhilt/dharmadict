@@ -165,7 +165,7 @@ export function saveTranslationAsync(shouldClose) {
         }
       })
       error && dispatch(notifier.onErrorResponse(error))
-      if(shouldClose) {
+      if(shouldClose && process.env.NODE_ENV !== 'test') {
         dispatch(goBack(true))
       }
     })

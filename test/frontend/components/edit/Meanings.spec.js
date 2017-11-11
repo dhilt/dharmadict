@@ -1,8 +1,17 @@
 global.window.localStorage = {};
-const {expect} = require('chai');
 
-const Meanings = require('../../../../app/components/edit/Meanings').default;
-const {setupComponent, checkWrap, initialState, languages, terms} = require('../../_shared.js');
+const {
+  setupComponent,
+  checkWrap,
+  checkWrapActions,
+  initialState,
+  defaultLang,
+  languages,
+  terms,
+  _appPath
+} = require('../../_shared.js');
+
+const Meanings = require(_appPath + 'components/edit/Meanings').default;
 
 describe('Testing Meanings Component.', () => {
 
@@ -16,8 +25,8 @@ describe('Testing Meanings Component.', () => {
         change: translation
       }
     };
-    const wrapper = setupComponent(Meanings, _initialState);
-    const i18n = require('../../../../app/i18n/' + lang);
+    const {wrapper} = setupComponent(Meanings, _initialState);
+    const i18n = require(_appPath + 'i18n/' + lang);
 
     checkWrap(wrapper.find('[data-test-id="Meanings"]'));
 
@@ -132,5 +141,57 @@ describe('Testing Meanings Component.', () => {
         )
       )
     )
-  )
+  );
+
+  it('should correctly handle actions on component with existing translations', () => {
+    const translation = terms[0].translations[0];
+    const _initialState = { ...initialState,
+      common: { ...initialState.common,
+        userLanguage: defaultLang
+      },
+      edit: { ...initialState.edit,
+        termName: 'termName',
+        change: translation
+      }
+    };
+    const {wrapper, store} = setupComponent(Meanings, _initialState);
+
+    let actionsCount = 0;
+    checkWrapActions(store, actionsCount);
+
+    translation.meanings.forEach((meaning, index) => {
+      wrapper.find('[data-test-id="input-version"]').at(index).props().onChange({target: {value: 'meaning'}});
+      checkWrapActions(store, ++actionsCount);
+
+      wrapper.find('[data-test-id="button-version"]').at(index).props().onClick({preventDefault: () => {}});
+      checkWrapActions(store, ++actionsCount);
+
+      wrapper.find('[data-test-id="comment-textarea"]').at(index).props().onChange({target: {value: 'comment'}});
+      checkWrapActions(store, ++actionsCount);
+
+      wrapper.find('[data-test-id="remove-link"]').at(index).props().onClick({preventDefault: () => {}});
+      checkWrapActions(store, ++actionsCount);
+    });
+  });
+
+  it('should correctly handle actions on component with no translations', () => {
+    const _initialState = { ...initialState,
+      common: { ...initialState.common,
+        userLanguage: defaultLang
+      },
+      edit: { ...initialState.edit,
+        termName: 'termName',
+        change: { meanings: [] }
+      }
+    };
+    const _props = {
+      dispatch: jest.fn()
+    };
+    const {wrapper, store} = setupComponent(Meanings, _initialState, _props);
+    let actionsCount = 0;
+    checkWrapActions(store, actionsCount);
+
+    wrapper.find('[data-test-id="add-new-meaning"]').props().onClick({preventDefault: () => {}});
+    checkWrapActions(store, ++actionsCount);
+  });
 });

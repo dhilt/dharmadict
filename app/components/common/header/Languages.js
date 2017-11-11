@@ -20,16 +20,16 @@ class Languages extends Component {
     }
 
     const showLangId = (langId) => (
-      <span className={lang.get(langId) === current ? 'selected': ''}>
+      <span data-test-id="Languages.showLangId" className={lang.get(langId) === current ? 'selected': ''}>
         {lang.get(langId)}
       </span>
     )
 
     const title = (
-      <span>
+      <span data-test-id="Languages.title">
       {
         languages.map((item, index) =>
-          <span key={item.id}>
+          <span data-test-id="Languages.langItem" key={item.id}>
             {showLangId(item.id)}{index < languages.length - 1 ? '/': ''}
           </span>
         )
@@ -38,11 +38,11 @@ class Languages extends Component {
     )
 
     return (
-      <div className="languages-bar-header">
-        <DropdownButton title={title} pullRight id={`languagesDropdown`}>
+      <div data-test-id="Languages" className="languages-bar-header">
+        <DropdownButton data-test-id="Languages.Dropdown" title={title} pullRight id={`languagesDropdown`}>
         {
           languages.map(item =>
-            <MenuItem key={item.id} onSelect={() => doChangeLang(item.id)}>
+            <MenuItem data-test-id="Languages.MenuItem" key={item.id} onSelect={() => doChangeLang(item.id)}>
               {showLangId(item.id)} - {item.name}
             </MenuItem>
           )

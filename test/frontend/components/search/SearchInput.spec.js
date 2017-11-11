@@ -1,10 +1,20 @@
 global.window.localStorage = {};
-const {expect} = require('chai');
 
-const SearchInput = require('../../../../app/components/search/SearchInput').default;
-const {setupComponent, checkWrap, initialState, languages} = require('../../_shared.js');
+const {
+  setupComponent,
+  checkWrap,
+  checkWrapActions,
+  initialState,
+  defaultLang,
+  languages,
+  _appPath
+} = require('../../_shared.js');
+
+const SearchInput = require(_appPath + 'components/search/SearchInput').default;
 
 describe('Testing SearchInput Component.', () => {
+
+  beforeEach(() => console.log = jest.fn());
 
   const checkShowSearchInput = (searchString, pending) => {
     languages.forEach(lang => {
@@ -17,8 +27,8 @@ describe('Testing SearchInput Component.', () => {
           pending
         }
       };
-      const wrapper = setupComponent(SearchInput, _initialState);
-      const i18n = require('../../../../app/i18n/' + lang.id);
+      const {wrapper} = setupComponent(SearchInput, _initialState);
+      const i18n = require(_appPath + 'i18n/' + lang.id);
 
       checkWrap(wrapper.find('[data-test-id="SearchInput"]'), {
         className: 'row'
@@ -49,7 +59,7 @@ describe('Testing SearchInput Component.', () => {
         className: 'form-group'
       });
 
-      checkWrap(wrapper.find('button[data-test-id="searchButton"]'), {
+      checkWrap(wrapper.find('[data-test-id="searchButton"]').first(), {
         disabled: !searchString || pending,
         className: pending ? 'loader' : '',
         type: 'submit'
@@ -73,4 +83,25 @@ describe('Testing SearchInput Component.', () => {
   it('should show component ready for term searching',
     () => checkShowSearchInput('term', false)
   );
+
+  it('should correctly handle actions on component', () => {
+    const _initialState = { ...initialState,
+      common: { ...initialState.common,
+        userLanguage: defaultLang
+      }
+    };
+    const _props = {
+      dispatch: jest.fn()
+    };
+    const {wrapper, store} = setupComponent(SearchInput, _initialState, _props);
+
+    let actionsCount = 0;
+    checkWrapActions(store, actionsCount);
+
+    wrapper.find('[data-test-id="form-group1.input"]').props().onChange({target: {value: 'term'}});
+    checkWrapActions(store, ++actionsCount);
+
+    wrapper.find('[data-test-id="searchButton"]').first().props().onClick({preventDefault: () => {}});
+    checkWrapActions(store, ++actionsCount);
+  });
 });
