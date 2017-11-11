@@ -21,8 +21,7 @@ describe('Testing NotFound Component.', () => {
       });
 
       checkWrap(wrapper.find('[data-test-id="back_link"]').first(), {
-        text: i18n['NotFound.go_home'],
-        className: 'btn'
+        text: i18n['NotFound.go_home']
       });
 
       wrapper.unmount();

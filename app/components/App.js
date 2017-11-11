@@ -10,7 +10,7 @@ class App extends Component {
       <div data-test-id="App" className='wrapper'>
         <Notifier />
         <Header />
-        <div data-test-id="App.container" className='container'>
+        <div className='container'>
           {this.props.children}
         </div>
       </div>
