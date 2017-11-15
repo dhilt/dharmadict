@@ -47,14 +47,14 @@ class About extends Component {
 следующими переводчиками:
 
 <ul>
-  <li><Link to='/translator/DON'>А.М. Донца</Link> (по изданию "Введение в Мадхьямику" Чандракирти)</li>
-  <li><Link to='/translator/ZAG'>Б.И. Загуменного</Link> (по глоссарию с сайта переводчика)</li>
-  <li><Link to='/translator/MK'>М.Н. Кожевниковой</Link> (по глоссарию предоставленному переводчиком в электронном виде)</li>
-  <li><Link to='/translator/AKT'>А. Кугявичуса и А.А.Терентьева</Link> (по предоставленной переводчиками, электронной версии индексов к "Большому руководству к этапам Пути Пробуждения" Чже Цонкапы)</li>
+  <li><Link to='/translator/DON'>А.М. Донец</Link> (по изданию "Введение в Мадхьямику" Чандракирти)</li>
+  <li><Link to='/translator/ZAG'>Б.И. Загуменнов</Link> (по глоссарию с сайта переводчика)</li>
+  <li><Link to='/translator/MK'>М.Н. Кожевникова</Link> (по глоссарию предоставленному переводчиком в электронном виде)</li>
+  <li><Link to='/translator/AKT'>А. Кугявичус и А.А. Терентьев</Link> (по предоставленной переводчиками, электронной версии индексов к "Большому руководству к этапам Пути Пробуждения" Чже Цонкапы)</li>
   <li><Link to='/translator/HOP'>J. Hopkins</Link></li>
   <li><Link to='/translator/BRZ'>A. Berzin</Link></li>
   <li><Link to='/translator/MM'>М. Малыгина</Link></li>
-  <li><Link to='/translator/RAG'>В. К. Рагимова</Link></li>
+  <li><Link to='/translator/RAG'>В.К. Рагимов</Link></li>
   <li><Link to='/translator/JRK'>Ю. Жиронкина</Link></li>
 </ul>
 
