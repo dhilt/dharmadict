@@ -1,5 +1,3 @@
-global.window.localStorage = {};
-
 const {setupComponent, checkWrap, checkWrapActions, initialState, terms, _appPath} = require('../../_shared.js');
 
 const TermList = require(_appPath + 'components/search/TermList').default;

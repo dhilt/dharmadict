@@ -1,5 +1,3 @@
-global.window.localStorage = {};
-
 const {setupComponent, checkWrap, initialState, languages, appPath} = require('../_shared.js');
 
 const Home = require(appPath + 'components/Home').default;

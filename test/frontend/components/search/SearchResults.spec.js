@@ -1,5 +1,3 @@
-global.window.localStorage = {};
-
 const {setupComponent, checkWrap, languages, initialState, terms, _appPath} = require('../../_shared.js');
 
 const SearchResults = require(_appPath + 'components/search/SearchResults').default;

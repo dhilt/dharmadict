@@ -1,5 +1,3 @@
-global.window.localStorage = {};
-
 const {
   setupComponent,
   checkWrap,

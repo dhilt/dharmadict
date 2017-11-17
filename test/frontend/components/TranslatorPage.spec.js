@@ -1,5 +1,3 @@
-global.window.localStorage = {};
-
 const {
   setupComponent,
   checkWrap,
@@ -59,6 +57,13 @@ describe('Testing TranslatorPage Component.', () => {
     const i18n = require(appPath + 'i18n/' + userLooking.language);
 
     checkWrap(wrapper.find('[data-test-id="TranslatorPage"]'));
+
+    // /* If this works, we will be able to make one pass for all users and translators */
+    // wrapper.setProps({translatorInfo: {pending: true}}, () => {
+    //   checkWrap(wrapper.find('[data-test-id="pending"]'));
+    //   checkWrap(wrapper.find('[data-test-id="error"]'), { length: 0 });
+    //   checkWrap(wrapper.find('[data-test-id="translatorContent"]'), { length: 0 });
+    // });
 
     if (pending) {
       checkWrap(wrapper.find('[data-test-id="pending"]'), {

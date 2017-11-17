@@ -1,13 +1,13 @@
 const React = require('react');
 const {Provider} = require('react-redux');
-const {IntlProvider, addLocaleData} = require('react-intl');
 const {expect} = require('chai');
 const {mount, configure} = require('enzyme');
 const Adapter = require('enzyme-adapter-react-15');
 configure({ adapter: new Adapter() });
 
+const ConnectedIntlProvider = require('../../../app/ConnectedIntlProvider').default;
 const initialState = require('../../../app/reducers/_initial').default;
-const lang = require('../../../app/helpers/lang').default;
+const langHelper = require('../../../app/helpers/lang').default;
 
 const configureMockStore = require('redux-mock-store').default;
 const thunk = require('redux-thunk').default;
@@ -16,18 +16,14 @@ let mockStore = configureMockStore(middlewares);
 
 const setupComponent = (NewComponent, state = initialState, props = {}) => {
 
-  const i18n = require('../../../app/helpers/i18n').default;
-  const _lang = state.common.userLanguage || lang.defaultLang;
-  const i18nLang = require('react-intl/locale-data/' + _lang);
-  addLocaleData([...i18nLang]);
-
+  langHelper.setUserLanguage(state.common.userLanguage || langHelper.defaultLang);
   const store = mockStore(state);
 
   const wrapper = mount(
     <Provider store={store}>
-      <IntlProvider locale={_lang} messages={i18n.data[_lang]}>
+      <ConnectedIntlProvider>
         <NewComponent {...props} />
-      </IntlProvider>
+      </ConnectedIntlProvider>
     </Provider>
   );
   return {wrapper, store, props}
