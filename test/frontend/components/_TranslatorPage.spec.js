@@ -6,7 +6,6 @@ const Adapter = require('enzyme-adapter-react-15');
 configure({ adapter: new Adapter() });
 
 const {initialState, users, translators, admin, languages, appPath} = require('../_shared.js');
-
 const TestTranslatorPage = require(appPath + 'components/TranslatorPage').default.WrappedComponent;
 
 describe('Testing TranslatorPage Component.', () => {
@@ -40,9 +39,8 @@ describe('Testing TranslatorPage Component.', () => {
   };
 
   it('should show component correctly', () => {
-
     const spy = sinon.spy(TestTranslatorPage.prototype, 'componentWillMount');
-    const wrapper = shallow(<TestTranslatorPage dispatch={() => {}} {...props} />);
+    const wrapper = shallow(<TestTranslatorPage {...props} dispatch={() => {}} />);
 
     expect(wrapper.find('[data-test-id="TranslatorPage"]').exists()).equal(true);
     expect(spy.calledOnce).to.equal(true);
