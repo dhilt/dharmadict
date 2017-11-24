@@ -10,6 +10,8 @@ const TestTranslatorPage = require(appPath + 'components/TranslatorPage').defaul
 
 describe('Testing TranslatorPage Component.', () => {
 
+  let arrIntlStringsId = [];
+
   const user = users[0];
   const translator = translators[0];
   const props = {
@@ -56,8 +58,7 @@ describe('Testing TranslatorPage Component.', () => {
         pending: true
       }
     });
-    const i18nLoadingTextId = 'TranslatorPage.loading_text';
-    expect(wrapper.find(pendingId).children().props().id).equal(i18nLoadingTextId);
+    arrIntlStringsId.push(wrapper.find(pendingId).children().props().id);
     expect(wrapper.find(translatorId).exists()).equal(false);
     expect(wrapper.find(contentId).exists()).equal(false);
     expect(wrapper.find(adminId).exists()).equal(false);
@@ -83,10 +84,9 @@ describe('Testing TranslatorPage Component.', () => {
     const nameId = '[data-test-id="name"]';
     const descId = '[data-test-id="description"]';
     const langId = '[data-test-id="language"]';
-    const i18nLangTextId = 'TranslatorPage.translations_language';
     expect(wrapper.find(nameId).text()).equal(user.name);
     expect(wrapper.find(descId).text()).equal(user.description);
-    expect(wrapper.find(langId).children().props().id).equal(i18nLangTextId);
+    arrIntlStringsId.push(wrapper.find(langId).children().props().id);
     expect(wrapper.find(langId).children().props().values.translatorLanguage)
       .equal(languages.find(e => e.id === user.language)['name_' + user.language]);
 
@@ -98,9 +98,8 @@ describe('Testing TranslatorPage Component.', () => {
     expect(wrapper.find(translatorId).exists()).equal(true);
     expect(wrapper.find(adminId).exists()).equal(false);
     const refForTranslator = '/translator/' + translator.id + '/password';
-    const i18nButtonForTranslator = 'TranslatorPage.button_edit_password';
     expect(wrapper.find(translatorId).props().to).equal(refForTranslator);
-    expect(wrapper.find(translatorId).children().props().id).equal(i18nButtonForTranslator);
+    arrIntlStringsId.push(wrapper.find(translatorId).children().props().id);
 
     wrapper.setProps({...props,
       userInfo: {
@@ -110,9 +109,8 @@ describe('Testing TranslatorPage Component.', () => {
     expect(wrapper.find(adminId).exists()).equal(true);
     expect(wrapper.find(translatorId).exists()).equal(false);
     const refForAdmin = '/translator/' + translator.id + '/edit';
-    const i18nButtonForAdmin = 'TranslatorPage.button_edit';
     expect(wrapper.find(adminId).props().to).equal(refForAdmin);
-    expect(wrapper.find(adminId).children().props().id).equal(i18nButtonForAdmin);
+    arrIntlStringsId.push(wrapper.find(adminId).children().props().id);
 
     wrapper.unmount();
   });
@@ -120,12 +118,7 @@ describe('Testing TranslatorPage Component.', () => {
   it('should exists all i18n-texts for the component', () => {
     languages.forEach(lang => {
       const i18n = require(appPath + 'i18n/' + lang.id);
-      [
-        'TranslatorPage.loading_text',
-        'TranslatorPage.translations_language',
-        'TranslatorPage.button_edit',
-        'TranslatorPage.button_edit_password'
-      ].forEach(elem => expect(i18n.hasOwnProperty(elem)).equal(true));
+      arrIntlStringsId.forEach(elem => expect(i18n.hasOwnProperty(elem)).equal(true));
     });
   });
 });

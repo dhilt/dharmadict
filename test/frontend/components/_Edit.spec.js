@@ -13,6 +13,8 @@ describe('Testing Edit Component.', () => {
 
   beforeEach(() => console.log = jest.fn());
 
+  let arrIntlStringsId = [];
+
   const term = terms[0];
   const termId = term.id;
   const translations = term.translations[0];
@@ -52,22 +54,19 @@ describe('Testing Edit Component.', () => {
     expect(spy.calledOnce).to.equal(true);
 
     const backLinkId = '[data-test-id="back-link"]';
-    const i18nGoBackId = 'Edit.go_back';
     wrapper.find(backLinkId).simulate('click');
     expect(onButtonClick).to.have.property('callCount', 1);
-    expect(wrapper.find(backLinkId).children().props().id).equal(i18nGoBackId);
+    arrIntlStringsId.push(wrapper.find(backLinkId).children().props().id);
 
     wrapper.setProps({...props,
       editState: {...props.editState,
         pending: true
       }
     });
-    const i18nPendingId = 'Edit.query_is_performed';
     expect(wrapper.find(pendingId).exists()).equal(true);
     expect(wrapper.find(errorId).exists()).equal(false);
-    expect(wrapper.find(pendingId).children().props().id).equal(i18nPendingId);
+    arrIntlStringsId.push(wrapper.find(pendingId).children().props().id);
 
-    const i18nErrorMsgId = 'Edit.request_error';
     const errorMsgId = '[data-test-id="errorMsg"]';
     const errorMessage = 'Some error happened';
     wrapper.setProps({...props,
@@ -77,9 +76,9 @@ describe('Testing Edit Component.', () => {
         }
       }
     });
+    arrIntlStringsId.push(wrapper.find(errorId).children().first().props().id);
     expect(wrapper.find(errorId).exists()).equal(true);
     expect(wrapper.find(pendingId).exists()).equal(false);
-    expect(wrapper.find(errorId).children().first().props().id).equal(i18nErrorMsgId);
     expect(wrapper.find(errorMsgId).text()).equal(errorMessage);
 
     wrapper.unmount();
@@ -148,18 +147,17 @@ describe('Testing Edit Component.', () => {
 
     const {wrapper} = setupComponent(ConnectedEdit, _initialState, _props);
     expect(wrapper.find(meaningsId).exists()).equal(false);
+
+    const blockMessageId = '[data-test-id="blockMessage"]';
+    arrIntlStringsId.push(wrapper.find(blockMessageId).children().props().id);
+
     wrapper.unmount();
   });
 
   it('should exists all i18n-texts for the component', () => {
     languages.forEach(lang => {
       const i18n = require(appPath + 'i18n/' + lang.id);
-      [
-        'Edit.should_select_term',
-        'Edit.query_is_performed',
-        'Edit.request_error',
-        'Edit.go_back'
-      ].forEach(elem => expect(i18n.hasOwnProperty(elem)).equal(true));
+      arrIntlStringsId.forEach(elem => expect(i18n.hasOwnProperty(elem)).equal(true));
     });
   });
 });
