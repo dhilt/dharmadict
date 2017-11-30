@@ -1,18 +1,60 @@
 const React = require('react');
+const {IntlProvider, intlShape} = require('react-intl');
+const {mount, shallow, configure} = require('enzyme');
+const Adapter = require('enzyme-adapter-react-15');
 const {Provider} = require('react-redux');
 const {expect} = require('chai');
-const {mount, configure} = require('enzyme');
-const Adapter = require('enzyme-adapter-react-15');
 configure({ adapter: new Adapter() });
 
-const ConnectedIntlProvider = require('../../../app/ConnectedIntlProvider').default;
 const initialState = require('../../../app/reducers/_initial').default;
-const langHelper = require('../../../app/helpers/lang').default;
+const i18n = require('../../../app/helpers/i18n').default;
 
 const configureMockStore = require('redux-mock-store').default;
 const thunk = require('redux-thunk').default;
 let middlewares = [thunk];
 let mockStore = configureMockStore(middlewares);
+
+const getIntlContext = (lang) => {
+  const messages = i18n.data[lang];
+  const intlProvider = new IntlProvider({ locale: lang, messages });
+  const {intl} = intlProvider.getChildContext();
+  return intl;
+};
+
+const nodeWithIntlProp = (node, lang = 'en') =>
+  React.cloneElement(node, { intl: getIntlContext(lang) });
+
+const shallowWithIntl = (node, lang = 'en', {context} = {}) => {
+  return shallow(
+    nodeWithIntlProp(node, lang),
+    {
+      context: Object.assign({}, context, { intl: getIntlContext(lang) })
+    }
+  );
+};
+
+const mountWithIntl = (node, lang = 'en', {context, childContextTypes} = {}, state = initialState) => {
+  return mount(
+    <Provider store={mockStore(state)}>
+      {nodeWithIntlProp(node, lang)}
+    </Provider>,
+    {
+      context: Object.assign({}, context, { intl: getIntlContext(lang) }),
+      childContextTypes: Object.assign({}, {intl: intlShape}, childContextTypes)
+    }
+  );
+};
+
+module.exports = {
+  shallowWithIntl,
+  mountWithIntl
+};
+
+
+// Delete all code below
+
+const ConnectedIntlProvider = require('../../../app/ConnectedIntlProvider').default;
+const langHelper = require('../../../app/helpers/lang').default;
 
 const setupComponent = (NewComponent, state = initialState, props = {}) => {
 
@@ -77,8 +119,8 @@ const checkWrapActions = (store, amount) => {
   return
 };
 
-module.exports = {
+module.exports = Object.assign(module.exports, {
   setupComponent,
   checkWrap,
   checkWrapActions
-};
+});

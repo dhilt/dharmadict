@@ -16,6 +16,8 @@ const {
 const {cloneState} = require('./__test-methods/cloneInitialState');
 const {getNotificationAction} = require('./__test-methods/getNotificationAction');
 const {
+  shallowWithIntl,
+  mountWithIntl,
   setupComponent,
   checkWrap,
   checkWrapActions
@@ -27,6 +29,8 @@ module.exports = {
   defaultLang: lang.defaultLang,
   initialState,
   cloneState,
+  shallowWithIntl,
+  mountWithIntl,
   setupComponent,
   checkWrap,
   checkWrapActions,
