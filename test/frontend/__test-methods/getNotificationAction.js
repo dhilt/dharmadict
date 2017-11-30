@@ -12,6 +12,4 @@ const getNotificationAction = (successMessage, error, values = {}) => {
   return store.getActions()[0]
 };
 
-module.exports = {
-  getNotificationAction
-};
+module.exports = getNotificationAction;

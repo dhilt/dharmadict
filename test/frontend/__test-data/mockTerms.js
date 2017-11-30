@@ -1,4 +1,4 @@
-const terms = [{
+module.exports = [{
   "id": "chos",
   "wylie" : "chos",
   "sanskrit_ru" : "дхамма, дхарма",
@@ -319,7 +319,3 @@ const terms = [{
     }
   ]
 }];
-
-module.exports = {
-  terms
-};

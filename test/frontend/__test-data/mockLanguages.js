@@ -1,4 +1,4 @@
-const languages = [{
+module.exports = [{
   id: 'ru',
   name: 'русский',
   name_ru: 'русский',
@@ -9,7 +9,3 @@ const languages = [{
   name_ru: 'английский',
   name_en: 'english'
 }];
-
-module.exports = {
-  languages
-};

@@ -1,45 +1,16 @@
 global.window.localStorage = {};
 
-const initialState = require('../../app/reducers/_initial').default;
-const lang = require('../../app/helpers/lang').default;
-
-const {terms} = require('./__test-data/mockTerms');
-const {languages} = require('./__test-data/mockLanguages');
-const {
-  userMutableProperties,
-  roles,
-  admin,
-  translators,
-  users
-} = require('./__test-data/mockUsers');
-
-const {cloneState} = require('./__test-methods/cloneInitialState');
-const {getNotificationAction} = require('./__test-methods/getNotificationAction');
-const {
-  shallowWithIntl,
-  mountWithIntl,
-  setupComponent,
-  checkWrap,
-  checkWrapActions
-} = require('./__test-methods/mountTestedComponent');
-
-module.exports = {
-  appPath: '../../../app/',
+module.exports = Object.assign({}, {
+  getNotificationAction: require('./__test-methods/getNotificationAction'),
+  defaultLang: require('../../app/helpers/lang').default.defaultLang,
+  initialState: require('../../app/reducers/_initial').default,
+  cloneState: require('./__test-methods/cloneInitialState'),
+  languages: require('./__test-data/mockLanguages'),
+  lang: require('../../app/helpers/lang').default,
+  terms: require('./__test-data/mockTerms'),
   _appPath: '../../../../app/',
-  defaultLang: lang.defaultLang,
-  initialState,
-  cloneState,
-  shallowWithIntl,
-  mountWithIntl,
-  setupComponent,
-  checkWrap,
-  checkWrapActions,
-  getNotificationAction,
-  admin,
-  translators,
-  users,
-  userMutableProperties,
-  roles,
-  languages,
-  terms
-};
+  appPath: '../../../app/'
+},
+  require('./__test-methods/mountTestedComponent'),
+  require('./__test-data/mockUsers')
+);

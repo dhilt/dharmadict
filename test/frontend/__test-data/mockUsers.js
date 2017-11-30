@@ -1,4 +1,4 @@
-const {languages} = require('./mockLanguages');
+const languages = require('./mockLanguages');
 
 const roles = ['user', 'translator', 'admin'];
 

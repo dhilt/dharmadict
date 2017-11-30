@@ -47,7 +47,8 @@ const mountWithIntl = (node, lang = 'en', {context, childContextTypes} = {}, sta
 
 module.exports = {
   shallowWithIntl,
-  mountWithIntl
+  mountWithIntl,
+  shallow
 };
 
 
