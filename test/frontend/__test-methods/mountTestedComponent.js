@@ -33,7 +33,8 @@ const shallowWithIntl = (node, lang = 'en', {context} = {}) => {
   );
 };
 
-const mountWithIntl = (node, lang = 'en', {context, childContextTypes} = {}, state = initialState) => {
+// ! context and childContextTypes probably worth removing. Or state
+const mountWithIntl = (node, lang = 'en', state = initialState, {context, childContextTypes} = {}) => {
   return mount(
     <Provider store={mockStore(state)}>
       {nodeWithIntlProp(node, lang)}

@@ -55,6 +55,8 @@ const translators = [{
   language: 'en'
 }];
 
+// Creation of users occurs with each import into the component.
+// This process needs to be done only once.
 let users = [];
 
 languages.forEach(lang => {

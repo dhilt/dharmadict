@@ -1,14 +1,16 @@
-const {setupComponent, checkWrap, appPath} = require('../_shared.js');
+const React = require('react');
+const {expect} = require('chai');
 
+const {appPath, shallow} = require('../_shared.js');
 const About = require(appPath + 'components/About').default;
 
 describe('Testing About Component.', () => {
-  beforeEach(() => console.error = jest.fn());
 
-  it('should show component', () => {
-    const {wrapper} = setupComponent(About);
+  it('should show component correctly', () => {
+    const wrapper = shallow(<About />);
 
-    checkWrap(wrapper.find('[data-test-id="About"]'));
+    const aboutArticleId = '[data-test-id="About"]';
+    expect(wrapper.find(aboutArticleId).exists()).equal(true);
 
     wrapper.unmount();
   });
