@@ -2,9 +2,8 @@ const React = require('react');
 const {expect} = require('chai');
 const sinon = require('sinon');
 
-const {appPath, initialState, users, translators, admin, languages, shallow} = require('../_shared.js');
+const {appPath, initialState, users, translators, admin, languages, shallow, newMountWithIntl, getLang} = require('../_shared.js');
 const TranslatorPage = require(appPath + 'components/TranslatorPage').default.WrappedComponent;
-const MountedTranslatorPage = require(appPath + 'components/TranslatorPage').default;
 
 describe('Testing TranslatorPage Component.', () => {
 
@@ -17,16 +16,14 @@ describe('Testing TranslatorPage Component.', () => {
     routeParams: {
       id: translator.id
     },
-    common: { ...initialState.common,
+    common: {...initialState.common,
       userLanguage: user.language,
       languages
     },
-    userInfo: { ...initialState.auth.userInfo,
+    userInfo: {...initialState.auth.userInfo,
       data: user
     },
-    translatorInfo: {
-      pending: false,
-      error: null,
+    translatorInfo: {...initialState.translatorInfo,
       data: {
         name: translator.name,
         role: translator.role,
@@ -108,23 +105,83 @@ describe('Testing TranslatorPage Component.', () => {
     wrapper.unmount();
   });
 
+  const arrIntlStringsId = [
+    ['[data-test-id="changeTranslatorPassword"]', 'TranslatorPage.button_edit_password'],
+    ['[data-test-id="language"]', 'TranslatorPage.translations_language'],
+    ['[data-test-id="changeUser"]', 'TranslatorPage.button_edit'],
+    ['[data-test-id="pending"]', 'TranslatorPage.loading_text']
+  ];
+
   it('should exists all i18n-texts for the component', () => {
-    const arrIntlStringsId = [
-      'TranslatorPage.translations_language',
-      'TranslatorPage.button_edit',
-      'TranslatorPage.button_edit_password',
-      'TranslatorPage.loading_text'
-    ];
+    const _arrIntlStringsId = arrIntlStringsId.map(elem => elem[1]);
 
     languages.forEach(lang => {
       const i18n = require(appPath + 'i18n/' + lang.id);
-      arrIntlStringsId.forEach(elemId =>
+      _arrIntlStringsId.forEach(elemId =>
         expect(i18n.hasOwnProperty(elemId)).equal(true)
       );
     });
   });
 
   it('should show i18n-texts on the component', () => {
-    // Still can't change context of component...
+    languages.forEach(userLang => {
+      const wrapper = newMountWithIntl(
+        <TranslatorPage {...props} dispatch={() => {}} />, userLang.id
+      );
+      const i18n = require(appPath + 'i18n/' + userLang.id);
+
+      const checkStringsWithoutValues = (wrapper, coupleStrings) => {
+        const existedStr = wrapper.find(coupleStrings[0]).first().text();
+        const expectedStr = i18n[coupleStrings[1]];
+        return expect(existedStr).equal(expectedStr);
+      };
+
+      languages.forEach(translatorLang => {
+        wrapper.setProps({...props,
+          translatorInfo: {...props.translatorInfo,
+            data: {...props.translatorInfo.data,
+              language: translatorLang.id
+            }
+          },
+          common: {...props.common,
+            userLanguage: userLang.id
+          }
+        });
+
+        const i18nCoupleId = arrIntlStringsId[1];
+        const existedStr = wrapper.find(i18nCoupleId[0]).text();
+        const expectedStr = i18n[i18nCoupleId[1]].replace(
+          '{translatorLanguage}',
+          getLang(translatorLang.id)['name_' + userLang.id]
+        );
+        expect(existedStr).equal(expectedStr);
+      });
+
+      wrapper.setProps({...props,
+        translatorInfo: {...props.translatorInfo,
+          pending: true
+        }
+      });
+      checkStringsWithoutValues(wrapper, arrIntlStringsId[3]);
+
+      wrapper.setProps({...props,
+        userInfo: {...props.userInfo,
+          data: admin
+        }
+      });
+      checkStringsWithoutValues(wrapper, arrIntlStringsId[2]);
+
+      wrapper.setProps({...props,
+        translatorInfo: {...props.translatorInfo,
+          data: translator
+        },
+        userInfo: {...props.userInfo,
+          data: translator
+        }
+      });
+      checkStringsWithoutValues(wrapper, arrIntlStringsId[0]);
+
+      wrapper.unmount();
+    });
   });
 });
