@@ -46,8 +46,19 @@ const mountWithIntl = (node, lang = 'en', state = initialState, {context, childC
   );
 };
 
+const newMountWithIntl = (node, lang = 'en', {context, childContextTypes} = {}) => {
+  return mount(
+    nodeWithIntlProp(node, lang),
+    {
+      context: Object.assign({}, context, { intl: getIntlContext(lang) }),
+      childContextTypes: Object.assign({}, {intl: intlShape}, childContextTypes)
+    }
+  );
+};
+
 module.exports = {
   shallowWithIntl,
+  newMountWithIntl,
   mountWithIntl,
   shallow
 };
