@@ -2,7 +2,7 @@ const React = require('react');
 const {expect} = require('chai');
 const sinon = require('sinon');
 
-const {appPath, defaultLang, initialState, terms, languages, shallow, mountWithIntl} = require('../_shared.js');
+const {appPath, defaultLang, initialState, terms, languages, shallow, mountWithStore, newMountWithIntl} = require('../_shared.js');
 const Edit = require(appPath + 'components/Edit').default.WrappedComponent;
 const MountedEdit = require(appPath + 'components/Edit').default;
 
@@ -77,10 +77,10 @@ describe('Testing Edit Component.', () => {
     wrapper.unmount();
   });
 
-  it('should show blockMessage on component (no termId and/or no translatorId)', () => {
-    [
+  it('should show blockMessage on component (no termId and/or no translatorId)',
+    () => [
       Object.assign({}, props, {query: {translatorId, termId: ''}}),
-      Object.assign({}, props, {query: {translatorId, termId: ''}}),
+      Object.assign({}, props, {query: {translatorId: '', termId}}),
       Object.assign({}, props, {query: {translatorId: '', termId: ''}})
     ].forEach(props => {
       const wrapper = shallow(<Edit {...props} />);
@@ -89,8 +89,8 @@ describe('Testing Edit Component.', () => {
       expect(wrapper.find(pendingId).exists()).equal(false);
       expect(wrapper.find(errorId).exists()).equal(false);
       wrapper.unmount();
-    });
-  });
+    })
+  );
 
   it('should contain component Meanings inside', () => {
     const _initialState = {...initialState,
@@ -103,7 +103,7 @@ describe('Testing Edit Component.', () => {
       }
     };
 
-    const wrapper = mountWithIntl(<MountedEdit {...props} />, defaultLang, _initialState);
+    const wrapper = mountWithStore(<MountedEdit {...props} />, _initialState);
     expect(wrapper.find(meaningsId).exists()).equal(true);
     wrapper.unmount();
   });
@@ -125,6 +125,6 @@ describe('Testing Edit Component.', () => {
   });
 
   it('should show i18n-texts on the component', () => {
-    // Still can't change context of component...
+    // Can't change state on component with Intl and Store
   });
 });

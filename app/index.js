@@ -1,6 +1,6 @@
 import 'babel-polyfill'
 
-import React, {Component} from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom'
 import {browserHistory, Router} from 'react-router'
 import {createStore, applyMiddleware} from 'redux'

@@ -56,9 +56,20 @@ const newMountWithIntl = (node, lang = 'en', {context, childContextTypes} = {}) 
   );
 };
 
+const mountWithStore = (node, state = initialState) => {
+  return mount(
+    <Provider store={mockStore(state)}>{node}</Provider>,
+    {
+      context: Object.assign({ intl: getIntlContext('en') }),
+      childContextTypes: Object.assign({ intl: intlShape })
+    }
+  );
+};
+
 module.exports = {
   shallowWithIntl,
   newMountWithIntl,
+  mountWithStore,
   mountWithIntl,
   shallow
 };
