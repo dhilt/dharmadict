@@ -1,4 +1,5 @@
 const React = require('react');
+const PropTypes = require('prop-types');
 const {IntlProvider, intlShape} = require('react-intl');
 const {mount, shallow, configure} = require('enzyme');
 const Adapter = require('enzyme-adapter-react-15');
@@ -22,55 +23,39 @@ const getIntlContext = (lang) => {
 };
 
 const nodeWithIntlProp = (node, lang = 'en') =>
-  React.cloneElement(node, { intl: getIntlContext(lang) });
+  React.cloneElement(node, {intl: getIntlContext(lang)});
 
-const shallowWithIntl = (node, lang = 'en', {context} = {}) => {
-  return shallow(
+const shallowWithIntl = (node, lang = 'en') =>
+  shallow(
+    nodeWithIntlProp(node, lang),
+    {context: {intl: getIntlContext(lang)}}
+  );
+
+const mountWithIntl = (node, lang = 'en', state = initialState) =>
+  mount(
     nodeWithIntlProp(node, lang),
     {
-      context: Object.assign({}, context, { intl: getIntlContext(lang) })
+      context: {store: mockStore(state), intl: getIntlContext(lang)},
+      childContextTypes: {store: PropTypes.object, intl: intlShape}
     }
   );
-};
 
-// ! context and childContextTypes probably worth removing. Or state
-const mountWithIntl = (node, lang = 'en', state = initialState, {context, childContextTypes} = {}) => {
-  return mount(
-    <Provider store={mockStore(state)}>
-      {nodeWithIntlProp(node, lang)}
-    </Provider>,
+const mountWithStore = (node, state = initialState) =>
+  mount(
+    nodeWithIntlProp(node),
     {
-      context: Object.assign({}, context, { intl: getIntlContext(lang) }),
-      childContextTypes: Object.assign({}, {intl: intlShape}, childContextTypes)
+      context: {store: mockStore(state), intl: getIntlContext('en')},
+      childContextTypes: {store: PropTypes.object, intl: intlShape}
     }
   );
-};
 
-const newMountWithIntl = (node, lang = 'en', {context, childContextTypes} = {}) => {
-  return mount(
-    nodeWithIntlProp(node, lang),
-    {
-      context: Object.assign({}, context, { intl: getIntlContext(lang) }),
-      childContextTypes: Object.assign({}, {intl: intlShape}, childContextTypes)
-    }
-  );
-};
-
-const mountWithStore = (node, state = initialState) => {
-  return mount(
-    <Provider store={mockStore(state)}>{node}</Provider>,
-    {
-      context: Object.assign({ intl: getIntlContext('en') }),
-      childContextTypes: Object.assign({ intl: intlShape })
-    }
-  );
-};
+const newStore = (state = initialState) => mockStore(state);
 
 module.exports = {
   shallowWithIntl,
-  newMountWithIntl,
   mountWithStore,
   mountWithIntl,
+  newStore,  // probably later it should be removed
   shallow
 };
 

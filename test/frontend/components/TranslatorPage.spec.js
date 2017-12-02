@@ -2,7 +2,7 @@ const React = require('react');
 const {expect} = require('chai');
 const sinon = require('sinon');
 
-const {appPath, initialState, users, translators, admin, languages, shallow, newMountWithIntl, getLang} = require('../_shared.js');
+const {appPath, initialState, users, translators, admin, languages, shallow, mountWithIntl, getLang} = require('../_shared.js');
 const TranslatorPage = require(appPath + 'components/TranslatorPage').default.WrappedComponent;
 
 describe('Testing TranslatorPage Component.', () => {
@@ -125,7 +125,7 @@ describe('Testing TranslatorPage Component.', () => {
 
   it('should show i18n-texts on the component', () => {
     languages.forEach(userLang => {
-      const wrapper = newMountWithIntl(
+      const wrapper = mountWithIntl(
         <TranslatorPage {...props} dispatch={() => {}} />, userLang.id
       );
       const i18n = require(appPath + 'i18n/' + userLang.id);

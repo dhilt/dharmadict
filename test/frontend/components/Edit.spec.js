@@ -2,7 +2,7 @@ const React = require('react');
 const {expect} = require('chai');
 const sinon = require('sinon');
 
-const {appPath, defaultLang, initialState, terms, languages, shallow, mountWithStore, newMountWithIntl} = require('../_shared.js');
+const {appPath, initialState, terms, languages, shallow, mountWithStore, mountWithIntl} = require('../_shared.js');
 const Edit = require(appPath + 'components/Edit').default.WrappedComponent;
 const MountedEdit = require(appPath + 'components/Edit').default;
 
@@ -94,13 +94,7 @@ describe('Testing Edit Component.', () => {
 
   it('should contain component Meanings inside', () => {
     const _initialState = {...initialState,
-      edit: {...initialState.edit,
-        started: true,
-        termId,
-        translatorId,
-        source: translations,
-        change: translations
-      }
+      edit: Object.assign(initialState.edit, props.editState)
     };
 
     const wrapper = mountWithStore(<MountedEdit {...props} />, _initialState);
@@ -124,7 +118,24 @@ describe('Testing Edit Component.', () => {
     });
   });
 
-  it('should show i18n-texts on the component', () => {
-    // Can't change state on component with Intl and Store
-  });
+  // it('should show i18n-texts on the component', () => {
+  //   languages.forEach(lang => {
+  //     const _props = {...props,
+  //       common: {...initialState.common,
+  //         userLanguage: lang.id,
+  //         languages
+  //       }
+  //     };
+  //     const wrapper = mountWithIntl(<Edit {..._props} dispatch={() => {}} />, lang.id);
+  //     const i18n = require(appPath + 'i18n/' + lang.id);
+  //
+  //     console.log(wrapper.text());
+  //     wrapper.setProps({...props,
+  //       editState: {...props.editState,
+  //         started: false
+  //       }
+  //     });
+  //     console.log(wrapper.text());
+  //   });
+  // });
 });
