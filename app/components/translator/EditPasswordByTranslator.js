@@ -14,10 +14,10 @@ class EditPasswordByTranslator extends Component {
   constructor (props) {
     super(props)
     this.changeCurrentPassword = this.changeCurrentPassword.bind(this)
-    this.changeNewPassword = this.changeNewPassword.bind(this)
     this.changeConfirmPassword = this.changeConfirmPassword.bind(this)
-    this.resetChanges = this.resetChanges.bind(this)
+    this.changeNewPassword = this.changeNewPassword.bind(this)
     this.sendNewPassword = this.sendNewPassword.bind(this)
+    this.resetChanges = this.resetChanges.bind(this)
   }
 
   changeCurrentPassword (event) {
@@ -60,9 +60,11 @@ class EditPasswordByTranslator extends Component {
     const {currentPassword, newPassword, confirmPassword} = this.props.stateData
     return (
       <div data-test-id="EditPasswordByTranslator">
-        <form data-test-id="main-form" className="col-md-6">
-          <h3 data-test-id="title"><FormattedMessage id="EditPasswordByTranslator.title" values={{id}} /></h3>
-          <div data-test-id="group-current-pass" className="form-group">
+        <form className="col-md-6">
+          <h3 data-test-id="title">
+            <FormattedMessage id="EditPasswordByTranslator.title" values={{id}} />
+          </h3>
+          <div className="form-group">
             <label data-test-id="label-current-pass">
               <FormattedMessage id="EditPasswordByTranslator.current_password" />
             </label>
@@ -73,12 +75,12 @@ class EditPasswordByTranslator extends Component {
               onChange={this.changeCurrentPassword}
             />
           </div>
-          <div data-test-id="group-new-pass" className="form-group">
+          <div className="form-group">
             <label data-test-id="label-new-pass">
               <FormattedMessage id="EditPasswordByTranslator.new_password" />
-                <span data-test-id="hint-new-pass" className="hint">
-                  <FormattedMessage id="EditPasswordByTranslator.new_password_hint" />
-                </span>
+              <span data-test-id="hint-new-pass" className="hint">
+                <FormattedMessage id="EditPasswordByTranslator.new_password_hint" />
+              </span>
             </label>
             <input data-test-id="input-new-pass"
               type="password"
@@ -87,7 +89,7 @@ class EditPasswordByTranslator extends Component {
               onChange={this.changeNewPassword}
             />
           </div>
-          <div data-test-id="group-confirm-pass" className="form-group">
+          <div className="form-group">
             <label data-test-id="label-confirm-pass">
               <FormattedMessage id="EditPasswordByTranslator.new_password_confirm" />
             </label>
@@ -98,7 +100,7 @@ class EditPasswordByTranslator extends Component {
               onChange={this.changeConfirmPassword}
             />
           </div>
-          <div data-test-id="group-button" className="form-group">
+          <div className="form-group">
             <button data-test-id="btn-save"
               className="btn btn-primary"
               onClick={this.sendNewPassword}
