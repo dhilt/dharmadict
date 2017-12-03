@@ -1,7 +1,8 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const {IntlProvider, intlShape} = require('react-intl');
-const {mount, shallow, configure} = require('enzyme');
+const {mount, configure} = require('enzyme');
+const _shallow = require('enzyme').shallow;
 const Adapter = require('enzyme-adapter-react-15');
 const {Provider} = require('react-redux');
 const {expect} = require('chai');
@@ -23,7 +24,21 @@ const getIntlContext = (lang) => {
 };
 
 const nodeWithIntlProp = (node, lang = 'en') =>
-  React.cloneElement(node, {intl: getIntlContext(lang)});
+  React.cloneElement({...node,
+    props: {...node.props,
+      dispatch: () => true
+    }
+  }, {
+    intl: getIntlContext(lang)
+  });
+
+const shallow = (node) => _shallow(
+  React.cloneElement({...node,
+    props: {...node.props,
+      dispatch: () => true
+    }
+  })
+);
 
 const shallowWithIntl = (node, lang = 'en') =>
   shallow(
@@ -55,7 +70,7 @@ module.exports = {
   shallowWithIntl,
   mountWithStore,
   mountWithIntl,
-  newStore,  // probably later it should be removed
+  newStore,
   shallow
 };
 
