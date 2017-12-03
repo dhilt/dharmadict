@@ -2,34 +2,36 @@ const React = require('react');
 const {expect} = require('chai');
 const sinon = require('sinon');
 
-const {appPath, initialState, terms, languages, shallow, mountWithStore, mountWithIntl} = require('../_shared.js');
+const {
+  mountWithStore,
+  mountWithIntl,
+  initialState,
+  defaultTerm,
+  languages,
+  shallow,
+  appPath
+} = require('../_shared.js');
+
 const Edit = require(appPath + 'components/Edit').default.WrappedComponent;
 
 describe('Testing Edit Component.', () => {
 
   beforeEach(() => console.log = jest.fn());
 
-  const term = terms[0];
-  const termId = term.id;
-  const translations = term.translations[0];
+  const translations = defaultTerm.translations[0];
   const translatorId = translations.translatorId;
+  const termId = defaultTerm.id;
   const props = {
     editState: {
-      started: true,
-      termId,
-      translatorId,
       source: translations,
-      change: translations
+      change: translations,
+      started: true,
+      translatorId,
+      termId,
     },
     query: {
       translatorId,
       termId
-    },
-    location: {
-      query: {
-        translatorId,
-        termId
-      }
     }
   };
 
@@ -41,12 +43,15 @@ describe('Testing Edit Component.', () => {
   it('should show component correctly', () => {
     const onButtonClick = sinon.spy(Edit.prototype, '_goBack');
     const spy = sinon.spy(Edit.prototype, 'componentWillMount');
-    const wrapper = shallow(<Edit {...props} dispatch={() => {}} />);
+    const wrapper = shallow(<Edit {...props} />);
+
+    expect(spy.calledOnce).to.equal(true);
 
     const editId = '[data-test-id="Edit"]';
     expect(wrapper.find(editId).exists()).equal(true);
     expect(wrapper.find(blockMessageId).exists()).equal(false);
-    expect(spy.calledOnce).to.equal(true);
+    expect(wrapper.find(pendingId).exists()).equal(false);
+    expect(wrapper.find(errorId).exists()).equal(false);
 
     const backLinkId = '[data-test-id="back-link"]';
     wrapper.find(backLinkId).simulate('click');
@@ -58,6 +63,8 @@ describe('Testing Edit Component.', () => {
       }
     });
     expect(wrapper.find(pendingId).exists()).equal(true);
+    expect(wrapper.find(blockMessageId).exists()).equal(false);
+    expect(wrapper.find(meaningsId).exists()).equal(false);
     expect(wrapper.find(errorId).exists()).equal(false);
 
     const errorMsgId = '[data-test-id="errorMsg"]';
@@ -70,8 +77,10 @@ describe('Testing Edit Component.', () => {
       }
     });
     expect(wrapper.find(errorId).exists()).equal(true);
-    expect(wrapper.find(pendingId).exists()).equal(false);
     expect(wrapper.find(errorMsgId).text()).equal(errorMessage);
+    expect(wrapper.find(blockMessageId).exists()).equal(false);
+    expect(wrapper.find(meaningsId).exists()).equal(false);
+    expect(wrapper.find(pendingId).exists()).equal(false);
 
     wrapper.unmount();
   });
@@ -96,7 +105,7 @@ describe('Testing Edit Component.', () => {
       edit: Object.assign(initialState.edit, props.editState)
     };
 
-    const wrapper = mountWithStore(<Edit {...props} dispatch={() => {}} />, _initialState);
+    const wrapper = mountWithStore(<Edit {...props} />, _initialState);
     expect(wrapper.find(meaningsId).exists()).equal(true);
     wrapper.unmount();
   });
@@ -108,25 +117,23 @@ describe('Testing Edit Component.', () => {
     ['[data-test-id="back-link"]', 'Edit.go_back']
   ];
 
-  it('should exists all i18n-texts for the component', () =>
-    languages.forEach(lang => {
-      const i18n = require(appPath + 'i18n/' + lang.id);
+  languages.forEach(lang => {
+    const i18n = require(appPath + 'i18n/' + lang.id);
+
+    it(`should exists all i18n-texts for the component ${lang.id}`, () =>
       arrIntlStringsId.forEach(elem =>
         expect(i18n.hasOwnProperty(elem[1])).equal(true)
-      );
-    })
-  );
+      )
+    );
 
-  it('should show i18n-texts on the component', () => {
-    languages.forEach(lang => {
+    it(`should show i18n-texts on the component ${lang.id}`, () => {
       const _props = {...props,
         common: {...initialState.common,
           userLanguage: lang.id,
           languages
         }
       };
-      const wrapper = mountWithIntl(<Edit {..._props} dispatch={() => {}} />, lang.id);
-      const i18n = require(appPath + 'i18n/' + lang.id);
+      const wrapper = mountWithIntl(<Edit {..._props} />, lang.id);
 
       const backLinkId = arrIntlStringsId[3];
       expect(wrapper.find(backLinkId[0]).first().text()).equal(i18n[backLinkId[1]]);

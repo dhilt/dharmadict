@@ -20,20 +20,26 @@ describe('Testing Home Component.', () => {
     wrapper.unmount();
   });
 
-  it('should exists all i18n-texts for the component', () => {
-    const arrIntlStringsId = [
-      ['[data-test-id="em-title"]', 'Home.search_title_em'],
-      ['[data-test-id="span-title"]', 'Home.search_title_h1']
-    ];
+  const arrIntlStringsId = [
+    ['[data-test-id="span-title"]', 'Home.search_title_h1'],
+    ['[data-test-id="em-title"]', 'Home.search_title_em']
+  ];
 
-    languages.forEach(lang => {
+  languages.forEach(lang => {
+    const i18n = require(appPath + 'i18n/' + lang.id);
+
+    it(`should exists all i18n-texts for the component (${lang.id})`, () =>
+      arrIntlStringsId.forEach(couple =>
+        expect(i18n.hasOwnProperty(couple[1])).equal(true)
+      )
+    );
+
+    it(`should show i18n-texts on the component (${lang.id})`, () => {
       const wrapper = mountWithIntl(<Home />, lang.id);
-      const i18n = require(appPath + 'i18n/' + lang.id);
 
-      arrIntlStringsId.forEach(couple => {
-        expect(i18n.hasOwnProperty(couple[1])).equal(true);
-        expect(wrapper.find(couple[0]).text()).equal(i18n[couple[1]]);
-      });
+      arrIntlStringsId.forEach(couple =>
+        expect(wrapper.find(couple[0]).text()).equal(i18n[couple[1]])
+      );
 
       wrapper.unmount();
     });
