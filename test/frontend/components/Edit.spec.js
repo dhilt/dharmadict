@@ -4,7 +4,6 @@ const sinon = require('sinon');
 
 const {appPath, initialState, terms, languages, shallow, mountWithStore, mountWithIntl} = require('../_shared.js');
 const Edit = require(appPath + 'components/Edit').default.WrappedComponent;
-const MountedEdit = require(appPath + 'components/Edit').default;
 
 describe('Testing Edit Component.', () => {
 
@@ -97,45 +96,69 @@ describe('Testing Edit Component.', () => {
       edit: Object.assign(initialState.edit, props.editState)
     };
 
-    const wrapper = mountWithStore(<MountedEdit {...props} />, _initialState);
+    const wrapper = mountWithStore(<Edit {...props} dispatch={() => {}} />, _initialState);
     expect(wrapper.find(meaningsId).exists()).equal(true);
     wrapper.unmount();
   });
 
-  it('should exists all i18n-texts for the component', () => {
-    const arrIntlStringsId = [
-      'Edit.should_select_term',
-      'Edit.query_is_performed',
-      'Edit.request_error',
-      'Edit.go_back',
-    ];
+  const arrIntlStringsId = [
+    ['[data-test-id="blockMessage"]', 'Edit.should_select_term'],
+    ['[data-test-id="request_error"]', 'Edit.request_error'],
+    ['[data-test-id="pending"]', 'Edit.query_is_performed'],
+    ['[data-test-id="back-link"]', 'Edit.go_back']
+  ];
 
+  it('should exists all i18n-texts for the component', () =>
     languages.forEach(lang => {
       const i18n = require(appPath + 'i18n/' + lang.id);
       arrIntlStringsId.forEach(elem =>
-        expect(i18n.hasOwnProperty(elem)).equal(true)
+        expect(i18n.hasOwnProperty(elem[1])).equal(true)
       );
+    })
+  );
+
+  it('should show i18n-texts on the component', () => {
+    languages.forEach(lang => {
+      const _props = {...props,
+        common: {...initialState.common,
+          userLanguage: lang.id,
+          languages
+        }
+      };
+      const wrapper = mountWithIntl(<Edit {..._props} dispatch={() => {}} />, lang.id);
+      const i18n = require(appPath + 'i18n/' + lang.id);
+
+      const backLinkId = arrIntlStringsId[3];
+      expect(wrapper.find(backLinkId[0]).first().text()).equal(i18n[backLinkId[1]]);
+
+      const blockMessageId = arrIntlStringsId[0];
+      wrapper.setProps({...props,
+        query: {
+          translatorId: null,
+          termId: null
+        }
+      });
+      wrapper.unmount().mount();  // Calling 'componentWillMount'
+      expect(wrapper.find(blockMessageId[0]).text()).equal(i18n[blockMessageId[1]]);
+
+      const errorId = arrIntlStringsId[1];
+      const errMsg = 'error message';
+      wrapper.setProps({...props,
+        editState: {...props.editState,
+          error: {
+            message: errMsg
+          }
+        }
+      });
+      expect(wrapper.find(errorId[0]).text()).equal(i18n[errorId[1]] + errMsg);
+
+      const pendingId = arrIntlStringsId[2];
+      wrapper.setProps({...props,
+        editState: {...props.editState,
+          pending: true
+        }
+      });
+      expect(wrapper.find(pendingId[0]).first().text()).equal(i18n[pendingId[1]]);
     });
   });
-
-  // it('should show i18n-texts on the component', () => {
-  //   languages.forEach(lang => {
-  //     const _props = {...props,
-  //       common: {...initialState.common,
-  //         userLanguage: lang.id,
-  //         languages
-  //       }
-  //     };
-  //     const wrapper = mountWithIntl(<Edit {..._props} dispatch={() => {}} />, lang.id);
-  //     const i18n = require(appPath + 'i18n/' + lang.id);
-  //
-  //     console.log(wrapper.text());
-  //     wrapper.setProps({...props,
-  //       editState: {...props.editState,
-  //         started: false
-  //       }
-  //     });
-  //     console.log(wrapper.text());
-  //   });
-  // });
 });
