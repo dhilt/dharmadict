@@ -21,8 +21,7 @@ describe('Testing EditPasswordByTranslator Component.', () => {
     stateData: {...initialState.translator.editPassword,
       currentPassword: 'current password',
       confirmPassword: 'new password',
-      newPassword: 'new password',
-      pending: false
+      newPassword: 'new password'
     },
     params: {
       id: defaultTranslator.id
@@ -108,8 +107,6 @@ describe('Testing EditPasswordByTranslator Component.', () => {
 
   it('should disable save button on the component', () => {
     const wrapper = shallow(<TestedComponent {...props} />);
-
-    expect(!!wrapper.find(btnSaveId).props().disabled).equal(false);
 
     wrapper.setProps({...props,
       stateData: {...props.stateData,
