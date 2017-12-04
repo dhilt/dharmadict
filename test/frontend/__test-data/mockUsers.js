@@ -1,5 +1,5 @@
 const languages = require('../../../prod/helper').languages.data;
-const defaultLang = require('../../../prod/helper').languages.getLang();
+const defaultLang = require('../../../prod/helper').languages.getLang().id;
 
 // probably can be removed
 const roles = ['user', 'translator', 'admin'];
