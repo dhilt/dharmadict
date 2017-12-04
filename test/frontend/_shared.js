@@ -13,6 +13,7 @@ module.exports = {
   admin: require('./__test-data/mockUsers').admin,
   defaultTerm: require('./__test-data/mockTerms')[0],
 
+  getEditableUserDataObject: require('../../app/actions/admin/changeUser').getEditableUserDataObject,
   defaultLang: require('../../prod/helper').languages.getLang().id,
   initialState: require('../../app/reducers/_initial').default,
   getLang: require('../../prod/helper').languages.getLang,
