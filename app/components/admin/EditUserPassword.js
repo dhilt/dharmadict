@@ -9,10 +9,10 @@ class EditUserPassword extends Component {
 
   constructor(props) {
     super(props)
+    this.changeUserConfirmPassword = this.changeUserConfirmPassword.bind(this)
+    this.changeUserPassword = this.changeUserPassword.bind(this)
     this.sendNewUserData = this.sendNewUserData.bind(this)
     this.resetChanges = this.resetChanges.bind(this)
-    this.changeUserPassword = this.changeUserPassword.bind(this)
-    this.changeUserConfirmPassword = this.changeUserConfirmPassword.bind(this)
   }
 
   componentWillMount() {
@@ -55,9 +55,11 @@ class EditUserPassword extends Component {
     const {password, confirmPassword} = this.props.stateData
     return (
       <div data-test-id="EditUserPassword">
-        <form data-test-id="main-form" className="col-md-6">
-          <h3 data-test-id="title"><FormattedMessage id="EditUserPassword.title" values={{id}} /></h3>
-          <div data-test-id="group-new-pass" className="form-group">
+        <form className="col-md-6">
+          <h3 data-test-id="title">
+            <FormattedMessage id="EditUserPassword.title" values={{id}} />
+          </h3>
+          <div className="form-group">
             <label data-test-id="label-new-pass">
               <FormattedMessage id="EditUserPassword.new_password" />
               <span data-test-id="hint-new-pass" className="hint">
@@ -71,7 +73,7 @@ class EditUserPassword extends Component {
               onChange={this.changeUserPassword}
             />
           </div>
-          <div data-test-id="group-confirm-pass" className="form-group">
+          <div className="form-group">
             <label data-test-id="label-confirm-pass">
               <FormattedMessage id="EditUserPassword.new_password_confirm" />
             </label>
@@ -82,7 +84,7 @@ class EditUserPassword extends Component {
               onChange={this.changeUserConfirmPassword}
             />
           </div>
-          <div data-test-id="group-button" className="form-group">
+          <div className="form-group">
             <button data-test-id="btn-save"
               className="btn btn-primary"
               onClick={this.sendNewUserData}
@@ -92,7 +94,7 @@ class EditUserPassword extends Component {
             <button data-test-id="btn-reset"
               className="btn btn-default"
               onClick={this.resetChanges}
-            ><FormattedMessage id="Common.reset" />
+              ><FormattedMessage id="Common.reset" />
             </button>
             <Link data-test-id="btn-cancel" to={`/translator/${id}/edit`}>
               <FormattedMessage id="Common.cancel" />
