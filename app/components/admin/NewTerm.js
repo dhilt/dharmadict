@@ -9,49 +9,56 @@ import {changeWylie, saveTermAsync, changeSanskrit} from '../../actions/admin/ne
 class NewTerm extends Component {
   constructor (props) {
     super(props)
-    this._onWylieChange = this._onWylieChange.bind(this)
-    this._onSanskritChange = this._onSanskritChange.bind(this)
-    this._onTermSave = this._onTermSave.bind(this)
+    this.onSanskritChange = this.onSanskritChange.bind(this)
+    this.onWylieChange = this.onWylieChange.bind(this)
+    this.onTermSave = this.onTermSave.bind(this)
   }
 
   render () {
-    const {pending, wylie, termId, sanskrit} = this.props.data
+    const {pending, wylie, sanskrit} = this.props.data
     const {languages} = this.props
     return (
       <div data-test-id="NewTerm">
-        <h3 data-test-id="title"><FormattedMessage id="NewTerm.title_new_term" /></h3>
-        <form data-test-id="main-form" className="col-md-6">
-          <div data-test-id="form-wylie" className="form-group">
+        <h3 data-test-id="title">
+          <FormattedMessage id="NewTerm.title_new_term" />
+        </h3>
+        <form className="col-md-6">
+          <div className="form-group">
             <input data-test-id="input-wylie"
+              onChange={this.onWylieChange}
+              value={wylie}
               className="form-control"
+              placeholder="wylie"
               name="wylie"
               type="text"
-              placeholder="wylie"
-              value={wylie}
-              onChange={this._onWylieChange}/>
+            />
           </div>
           {
             languages && languages.map(langItem =>
               <div data-test-id="form-sanskrit" className="form-group" key={langItem.id}>
                 <input data-test-id="input-sanskrit"
+                  placeholder={'sanskrit_' + langItem.id + ' (' + langItem.name + ')'}
+                  onChange={(event) => this.onSanskritChange(event, langItem.id)}
+                  value={sanskrit['sanskrit_' + langItem.id]}
                   className="form-control"
                   name={langItem.id}
                   type="text"
-                  placeholder={'sanskrit_' + langItem.id + ' (' + langItem.name + ')'}
-                  onChange={(event) => this._onSanskritChange(event, langItem.id)}
                 />
               </div>
             )
           }
-          <div data-test-id="button-group" className="form-group">
+          <div className="form-group">
             <Button data-test-id="button-save"
-              bsStyle='primary'
-              type="button"
+              onClick={(event) => this.onTermSave(event)}
               className={pending ? 'loader' : ''}
               disabled={this.disabled()}
-              onClick={(event) => this._onTermSave(event)}
-            ><FormattedMessage id="Common.save" /></Button>
-            <Link data-test-id="button-cancel" to={`/`}><FormattedMessage id="Common.cancel" /></Link>
+              bsStyle='primary'
+              type="button"
+            ><FormattedMessage id="Common.save" />
+            </Button>
+            <Link data-test-id="button-cancel" to={`/`}>
+              <FormattedMessage id="Common.cancel" />
+            </Link>
           </div>
         </form>
       </div>
@@ -69,15 +76,15 @@ class NewTerm extends Component {
     return !wylie || pending || !this.isSanskritOk()
   }
 
-  _onWylieChange (event) {
+  onWylieChange (event) {
     this.props.dispatch(changeWylie(event.target.value))
   }
 
-  _onSanskritChange (event, langId) {
+  onSanskritChange (event, langId) {
     this.props.dispatch(changeSanskrit('sanskrit_' + langId, event.target.value))
   }
 
-  _onTermSave (event) {
+  onTermSave (event) {
     this.props.dispatch(saveTermAsync())
   }
 }
