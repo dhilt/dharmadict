@@ -50,10 +50,14 @@ class EditUser extends Component {
     const {name, language, description} = this.props.editUser.data
     return !sourcePending ? (
       <div data-test-id="EditUser">
-        <form data-test-id="main-form" className="col-md-6">
-          <h3 data-test-id="heading"><FormattedMessage id="EditUser.title_edit_user" values={{id}} /></h3>
-          <div data-test-id="form-name" className="form-group">
-            <label data-test-id="label-name"><FormattedMessage id="EditUser.name_of_translator" /></label>
+        <form className="col-md-6">
+          <h3 data-test-id="heading">
+            <FormattedMessage id="EditUser.title_edit_user" values={{id}} />
+          </h3>
+          <div className="form-group">
+            <label data-test-id="label-name">
+              <FormattedMessage id="EditUser.name_of_translator" />
+            </label>
             <input data-test-id="input-name"
               type="text"
               value={name}
@@ -61,11 +65,13 @@ class EditUser extends Component {
               onChange={this.changeUserName}
             />
           </div>
-          <div data-test-id="form-lang" className="form-group">
-            <label data-test-id="label-lang"><FormattedMessage id="EditUser.language_of_translations" /></label>
+          <div className="form-group">
+            <label data-test-id="label-lang">
+              <FormattedMessage id="EditUser.language_of_translations" />
+            </label>
             {languages && languages.map((langItem, langIndex) =>
               <div data-test-id="radio-lang" className="radio" key={langIndex}>
-                <label data-test-id="radio-label-lang">
+                <label>
                   <input data-test-id="input-lang"
                     type="radio"
                     name="lang_radio"
@@ -76,8 +82,10 @@ class EditUser extends Component {
               </div>
             )}
           </div>
-          <div data-test-id="form-desc" className="form-group">
-            <label data-test-id="label-desc"><FormattedMessage id="EditUser.description_of_translator" /></label>
+          <div className="form-group">
+            <label data-test-id="label-desc">
+              <FormattedMessage id="EditUser.description_of_translator" />
+            </label>
             <textarea data-test-id="textarea-desc"
               type="text"
               value={description}
@@ -85,7 +93,7 @@ class EditUser extends Component {
               onChange={this.changeUserDescription}
             />
           </div>
-          <div data-test-id="button-group" className="form-group">
+          <div className="form-group">
             <button data-test-id="button-save"
               className="btn btn-primary"
               onClick={this.sendNewUserData}
@@ -101,7 +109,7 @@ class EditUser extends Component {
               <FormattedMessage id="Common.cancel" />
             </Link>
           </div>
-          <div data-test-id="password-group" className="form-group">
+          <div className="form-group">
             <Link data-test-id="link-password" to={`/translator/${id}/edit/password`}>
               <FormattedMessage id="EditUser.link_reset_password" />
             </Link>

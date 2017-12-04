@@ -171,13 +171,13 @@ describe('Testing EditPasswordByTranslator Component.', () => {
   languages.forEach(lang => {
     const i18n = require(_appPath + 'i18n/' + lang.id);
 
-    it(`should exists all i18n-texts for the component ${lang.id}`, () =>
+    it(`should exists all i18n-texts for the component (${lang.id})`, () =>
       arrIntlStringsId.forEach(couple =>
         expect(i18n.hasOwnProperty(couple[1])).equal(true)
       )
     );
 
-    it(`should show i18n-texts on the component ${lang.id}`, () => {
+    it(`should show i18n-texts on the component (${lang.id})`, () => {
       const wrapper = mountWithIntl(
         <TestedComponent {...props} />, lang.id
       );
