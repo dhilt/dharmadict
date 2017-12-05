@@ -20,21 +20,21 @@ class EditControls extends Component {
           onClick={(event) => this.onSave(event, true)}
           disabled={this.props.data.pending}
           bsStyle='primary'
-          type="button"
-          ><FormattedMessage id="EditControls.button_save_and_close" />
+          type="button">
+          <FormattedMessage id="EditControls.button_save_and_close" />
         </Button>
         <Button data-test-id="button-save"
           className={this.props.data.pending ? 'loader' : ''}
           disabled={this.props.data.pending}
           onClick={this.onSave}
           bsStyle='primary'
-          type="button"
-          ><FormattedMessage id="EditControls.button_save" />
+          type="button">
+          <FormattedMessage id="EditControls.button_save" />
         </Button>
         <a data-test-id="cancel-link"
           onClick={this.onCancel}
-          className="cancel-link"
-          ><FormattedMessage id="EditControls.button_reset" />
+          className="cancel-link">
+          <FormattedMessage id="EditControls.button_reset" />
         </a>
       </div>
     )
