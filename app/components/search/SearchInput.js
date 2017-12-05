@@ -9,34 +9,36 @@ import {changeSearchString, doSearchRequestAsync} from '../../actions/search'
 class SearchInput extends Component {
   constructor (props) {
     super(props)
-    this._onSearchStringChange = this._onSearchStringChange.bind(this)
-    this._onSubmit = this._onSubmit.bind(this)
+    this.onSearchStringChange = this.onSearchStringChange.bind(this)
+    this.onSubmit = this.onSubmit.bind(this)
   }
 
   render () {
     let search = this.props.data
     return (
-      <div data-test-id="SearchInput" className='row'>
-        <form data-test-id="main-form">
-          <div data-test-id="form-group1" className='form-group'>
-            <div data-test-id="form-group1.col-md-6" className='col-md-6'>
-              <input className='form-control col-md-7'
-                data-test-id="form-group1.input"
-                name='search' type='search'
+      <div data-test-id="SearchInput" className="row">
+        <form>
+          <div className="form-group">
+            <div className="col-md-6">
+              <input data-test-id="search-string-input"
+                onChange={this.onSearchStringChange}
+                className="form-control col-md-7"
                 value={search.searchString}
-                onChange={this._onSearchStringChange}/>
+                name="search"
+                type="search"
+              />
             </div>
           </div>
-          <div data-test-id="div.col-md-2" className='col-md-2'>
-            <div data-test-id="form-group2" className='form-group'>
-              <Button
-                data-test-id="searchButton"
-                bsStyle='default'
-                type='submit'
-                className={search.pending ? 'loader' : ''}
+          <div className="col-md-2">
+            <div className="form-group">
+              <Button data-test-id="searchButton"
                 disabled={!search.searchString || search.pending}
-                onClick={this._onSubmit}>
-                <span data-test-id="button-pending" className={search.pending ? 'invisible' : ''}>
+                className={search.pending ? 'loader' : ''}
+                onClick={this.onSubmit}
+                bsStyle='default'
+                type="submit">
+                <span data-test-id="text-btn-search"
+                  className={search.pending ? 'invisible' : ''}>
                   <FormattedMessage id="SearchInput.button_find" />
                 </span>
               </Button>
@@ -47,11 +49,11 @@ class SearchInput extends Component {
     )
   }
 
-  _onSearchStringChange (event) {
+  onSearchStringChange (event) {
     this.props.dispatch(changeSearchString(event.target.value))
   }
 
-  _onSubmit (event) {
+  onSubmit (event) {
     event.preventDefault()
     this.props.dispatch(doSearchRequestAsync())
   }
@@ -59,8 +61,8 @@ class SearchInput extends Component {
 
 function select (state) {
   return {
-    data: state.search,
-    lang: state.common.userLanguage
+    lang: state.common.userLanguage,
+    data: state.search
   }
 }
 
