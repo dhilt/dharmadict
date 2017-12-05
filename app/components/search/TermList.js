@@ -11,13 +11,16 @@ class TermList extends Component {
   }
 
   render() {
+    const {termList} = this.props
     return (
-      <div data-test-id="TermList"> {
-        this.props.termList.map((item, i) =>
+      <div data-test-id="TermList">
+      {
+        termList && termList.map((item, i) =>
           <div data-test-id={item.wylie}
             className={'list-group-item' + (this.props.isTermSelected(item) ? ' selected' : '') }
-            key={i} onClick={()=>this._selectTerm(item)}>
-            {item.wylie}
+            onClick={()=>this._selectTerm(item)}
+            key={i}
+          >{item.wylie}
           </div>
         )
       }

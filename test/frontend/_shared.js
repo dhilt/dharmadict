@@ -12,6 +12,7 @@ module.exports = {
   defaultUser: require('./__test-data/mockUsers').defaultUser,
   admin: require('./__test-data/mockUsers').admin,
   defaultTerm: require('./__test-data/mockTerms')[0],
+  terms: require('./__test-data/mockTerms'),
 
   getEditableUserDataObject: require('../../app/actions/admin/changeUser').getEditableUserDataObject,
   defaultLang: require('../../prod/helper').languages.getLang().id,
@@ -30,7 +31,5 @@ module.exports = {
   userMutableProperties: require('./__test-data/mockUsers').userMutableProperties,
   roles: require('./__test-data/mockUsers').roles,
   translators: require('./__test-data/mockUsers').translators,
-  users: require('./__test-data/mockUsers').users,
-
-  terms: require('./__test-data/mockTerms')
+  users: require('./__test-data/mockUsers').users
 };
