@@ -67,7 +67,6 @@ describe('Testing NewTerm Component.', () => {
     });
     expect(wrapper.find(inputWylieId).props().value).equal(editedWylie);
 
-    // problem here...
     languages.forEach((lang, langIndex) => {
       const editedSanskrit = 'new sanskrit on ' + lang.id;
       wrapper.setProps({...props,
