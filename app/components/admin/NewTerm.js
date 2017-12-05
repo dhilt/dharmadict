@@ -39,7 +39,7 @@ class NewTerm extends Component {
                 <input data-test-id="input-sanskrit"
                   placeholder={'sanskrit_' + langItem.id + ' (' + langItem.name + ')'}
                   onChange={(event) => this.onSanskritChange(event, langItem.id)}
-                  value={sanskrit['sanskrit_' + langItem.id]}
+                  value={sanskrit['sanskrit_' + langItem.id] || ''}
                   className="form-control"
                   name={langItem.id}
                   type="text"
