@@ -7,18 +7,17 @@ import {selectTerm} from '../../actions/search'
 class TermList extends Component {
   constructor(props) {
     super(props)
-    this._selectTerm = this._selectTerm.bind(this)
+    this.onSelectTerm = this.onSelectTerm.bind(this)
   }
 
   render() {
-    const {termList} = this.props
     return (
       <div data-test-id="TermList">
       {
-        termList && termList.map((item, i) =>
-          <div data-test-id={item.wylie}
-            className={'list-group-item' + (this.props.isTermSelected(item) ? ' selected' : '') }
-            onClick={()=>this._selectTerm(item)}
+        this.props.termList && this.props.termList.map((item, i) =>
+          <div className={'list-group-item' + (this.props.isTermSelected(item) ? ' selected' : '') }
+            onClick={() => this.onSelectTerm(item)}
+            data-test-id="item-term"
             key={i}
           >{item.wylie}
           </div>
@@ -28,7 +27,7 @@ class TermList extends Component {
     )
   }
 
-  _selectTerm(term) {
+  onSelectTerm(term) {
     if (this.props.isTermSelected(term)) {
       return
     }
