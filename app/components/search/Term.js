@@ -11,8 +11,8 @@ import editIcon from '../../styles/images/edit2.png'
 class Term extends Component {
   constructor (props) {
     super(props)
-    this.userInfo = this.props.userInfo
-    this._toggleComment = this._toggleComment.bind(this)
+    this.state = {userInfo: this.props.userInfo}
+    this.onToggleComment = this.onToggleComment.bind(this)
   }
 
   render () {
@@ -20,30 +20,27 @@ class Term extends Component {
     let term = this.props.data.term
     return (
       <div data-test-id="Term" className="term">
-        <div data-test-id="term-header" className="term-header">
+        <div className="term-header">
           <div data-test-id="wylie-header" className="wylie">{term.wylie}</div>
           {
             term.sanskrit_ru ? (
               <div data-test-id="sanskrit" className="sanskrit">
-                <FormattedMessage
-                  id="Term.sanskrit_term"
+                <FormattedMessage id="Term.sanskrit_term"
                   values={{sanskrit_ru: term.sanskrit_ru, sanskrit_en: term.sanskrit_en}}
                 />
               </div>
             ) : ( null )
           }
         </div>
-        <ul data-test-id="translation-list" className="translation-list">
+        <ul className="translation-list">
         {
           term.translations.map((translation, translationIndex) =>
             <li data-test-id="translation" key={translationIndex} className="translation">
-              <div data-test-id="wrap-translator-ref" className="wrap-translator-ref">
+              <div className="wrap-translator-ref">
                 <Link data-test-id="link-translator"
                   to={`translator/${translation.translatorId}`}
-                  className="translator=ref"
-                >{translators &&
-                    translators.find(elem => elem.id === translation.translatorId).name
-                  }
+                  className="translator=ref">{translators &&
+                    translators.find(elem => elem.id === translation.translatorId).name}
                 </Link>
                 {
                   this.canEdit(translation.translatorId) ?
@@ -51,8 +48,7 @@ class Term extends Component {
                     <Link data-test-id="link-to-edit" to={{
                       pathname: '/edit',
                       query: { termId: term.id, translatorId: translation.translatorId }
-                    }}>
-                        <img data-test-id="edit-icon" src={editIcon} className="edit-icon" />
+                    }}><img src={editIcon} className="edit-icon" />
                     </Link>
                   ) : ( null )
                 }
@@ -70,17 +66,17 @@ class Term extends Component {
                     )
                   }
                   {
-                    meaning.comment ?
-                    (<a data-test-id="commentLink"
-                      className="commentLink"
-                      onClick={()=>this._toggleComment(translationIndex, meaningIndex)}
-                     >&gt;&gt;&gt;</a>
+                    meaning.comment ? (
+                      <a onClick={() => this.onToggleComment(translationIndex, meaningIndex)}
+                        data-test-id="comment-link"
+                        className="commentLink"
+                      >&gt;&gt;&gt;</a>
                     ) : ( null )
                   }
                   {
-                    meaning.openComment ?
-                    (<span className="translation-comment"> {meaning.comment} </span>) :
-                    ( null )
+                    meaning.openComment ? (
+                      <span data-test-id="opened-comment" className="translation-comment">{meaning.comment}</span>
+                    ) : ( null )
                   }
                 </li>
                 )
@@ -92,12 +88,10 @@ class Term extends Component {
         </ul>
         {
           this.canAdd(term) ? (
-            <div data-test-id="add-translation" className="add-translation">
+            <div className="add-translation">
               <Link data-test-id="link-add-translation" to={{
-                pathname: '/edit',
-                query: { termId: term.id, translatorId: this.userInfo.id }
-              }}>
-                <FormattedMessage id="Term.add_translation" />
+                query: { termId: term.id, translatorId: this.state.userInfo.id },
+                pathname: '/edit'}}><FormattedMessage id="Term.add_translation" />
               </Link>
             </div>
           ) : ( null )
@@ -107,35 +101,35 @@ class Term extends Component {
   }
 
   canEdit(translatorId) {
-    if(!this.userInfo) {
+    if(!this.state.userInfo) {
       return false;
     }
-    return this.userInfo.id === translatorId || this.userInfo.role === 'admin'
+    return this.state.userInfo.id === translatorId || this.state.userInfo.role === 'admin'
   }
 
   canAdd(term) {
-    if(!this.userInfo || this.userInfo.role !== "translator") {
+    if(!this.state.userInfo || this.state.userInfo.role !== 'translator') {
       return false;
     }
-    return !term.translations.find(t => t.translatorId === this.userInfo.id)
+    return !term.translations.find(t => t.translatorId === this.state.userInfo.id)
   }
 
-  _toggleComment(translationIndex, meaningIndex) {
+  onToggleComment(translationIndex, meaningIndex) {
     this.props.dispatch(toggleComment(translationIndex, meaningIndex))
   }
 }
 
 Term.propTypes = {
-  data: PropTypes.object,
-  dispatch: PropTypes.func
+  dispatch: PropTypes.func,
+  data: PropTypes.object
 }
 
 function select (state) {
   return {
+    userInfo: state.auth.userInfo ? state.auth.userInfo.data : null,  // ???
     translators: state.common.translators,
-    data: state.selected,
-    userInfo: state.auth.userInfo ? state.auth.userInfo.data : null,
-    lang: state.common.userLanguage
+    lang: state.common.userLanguage,
+    data: state.selected
   }
 }
 

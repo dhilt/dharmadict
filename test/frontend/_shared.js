@@ -1,17 +1,18 @@
 global.window.localStorage = {};
 
 module.exports = {
+  getNotificationAction: require('./__test-methods/getNotificationAction'),
   shallowWithIntl: require('./__test-methods/mountTestedComponent').shallowWithIntl,
   mountWithStore: require('./__test-methods/mountTestedComponent').mountWithStore,
   mountWithIntl: require('./__test-methods/mountTestedComponent').mountWithIntl,
   shallow: require('./__test-methods/mountTestedComponent').shallow,
-  getNotificationAction: require('./__test-methods/getNotificationAction'),
   cloneState: require('./__test-methods/cloneInitialState'),
 
   defaultTranslator: require('./__test-data/mockUsers').defaultTranslator,
   defaultUser: require('./__test-data/mockUsers').defaultUser,
-  admin: require('./__test-data/mockUsers').admin,
+  translators: require('./__test-data/mockUsers').translators,
   defaultTerm: require('./__test-data/mockTerms')[0],
+  admin: require('./__test-data/mockUsers').admin,
   terms: require('./__test-data/mockTerms'),
 
   getEditableUserDataObject: require('../../app/actions/admin/changeUser').getEditableUserDataObject,
@@ -30,6 +31,5 @@ module.exports = {
 
   userMutableProperties: require('./__test-data/mockUsers').userMutableProperties,
   roles: require('./__test-data/mockUsers').roles,
-  translators: require('./__test-data/mockUsers').translators,
   users: require('./__test-data/mockUsers').users
 };

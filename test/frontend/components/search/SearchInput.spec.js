@@ -39,7 +39,7 @@ describe('Testing SearchInput Component.', () => {
     wrapper.find(btnSearchId).simulate('click', defaultEvent);
 
     expect(spySearchString.calledOnce).equal(true);
-    expect(spyOnSubmit.calledOnce).to.equal(true);
+    expect(spyOnSubmit.calledOnce).equal(true);
 
     wrapper.unmount();
   });

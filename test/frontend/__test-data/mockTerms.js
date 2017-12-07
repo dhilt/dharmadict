@@ -17,7 +17,7 @@ module.exports = [{
             "духовное учение",
             "духовность"
           ],
-          "comment" : "",
+          "comment" : "test comment",
           "versions_lower" : [
             "дхарма",
             "учение",
@@ -32,7 +32,7 @@ module.exports = [{
             "феномены",
             "явления"
           ],
-          "comment" : "",
+          "comment" : "another test component",
           "versions_lower" : [
             "дхарма",
             "элементы бытия",
