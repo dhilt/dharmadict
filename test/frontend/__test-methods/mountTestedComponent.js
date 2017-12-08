@@ -16,8 +16,8 @@ const thunk = require('redux-thunk').default;
 let middlewares = [thunk];
 let mockStore = configureMockStore(middlewares);
 
-const getIntlContext = (lang) => {
-  const messages = i18n.data[lang];
+const getIntlContext = (lang, messages) => {
+  messages = messages || i18n.data[lang];
   const intlProvider = new IntlProvider({ locale: lang, messages });
   const {intl} = intlProvider.getChildContext();
   return intl;
@@ -68,6 +68,7 @@ const newStore = (state = initialState) => mockStore(state);
 
 module.exports = {
   shallowWithIntl,
+  getIntlContext,
   mountWithStore,
   mountWithIntl,
   newStore,

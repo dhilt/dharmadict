@@ -8,9 +8,7 @@ const {
   shallow
 } = require('../../_shared.js');
 
-const LoadingIndicator = require(
-  _appPath + 'components/common/LoadingIndicator'
-).default;
+const LoadingIndicator = require(_appPath + 'components/common/LoadingIndicator').default;
 
 describe('Testing LoadingIndicator Component.', () => {
 
