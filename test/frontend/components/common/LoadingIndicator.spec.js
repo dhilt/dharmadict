@@ -1,32 +1,40 @@
-const {setupComponent, checkWrap, initialState, languages, _appPath} = require('../../_shared.js');
-const LoadingIndicator = require(_appPath + 'components/common/LoadingIndicator').default;
+const React = require('react');
+const {expect} = require('chai');
+
+const {
+  mountWithIntl,
+  languages,
+  _appPath,
+  shallow
+} = require('../../_shared.js');
+
+const LoadingIndicator = require(
+  _appPath + 'components/common/LoadingIndicator'
+).default;
 
 describe('Testing LoadingIndicator Component.', () => {
 
+  const LoadingIndicatorId = '[data-test-id="LoadingIndicator"]';
+
+  it('should correctly show the component', () => {
+    const wrapper = shallow(<LoadingIndicator />);
+    expect(wrapper.find(LoadingIndicatorId).exists()).equal(true);
+    wrapper.unmount();
+  });
+
+  const intlStringId = 'LoadingIndicator.main_text';
+
   languages.forEach(lang => {
-    it(`should show the ${lang.id}component`, () => {
-      const _initialState = { ...initialState,
-        common: { ...initialState.common,
-          userLanguage: lang.id
-        }
-      };
-      const {wrapper} = setupComponent(LoadingIndicator, _initialState);
-      const i18n = require(_appPath + 'i18n/' + lang.id);
+    const i18n = require(_appPath + 'i18n/' + lang.id);
 
-      checkWrap(wrapper.find('[data-test-id="LoadingIndicator"]'), {
-        text: i18n['LoadingIndicator.main_text']
-      });
+    it(`should exists all i18n-texts for the component (${lang.id})`, () => {
+      expect(i18n.hasOwnProperty(intlStringId)).equal(true);
+    });
 
-      checkWrap(wrapper.find('[data-test-id="LoadingIndicator.sk-fading-circle"]'), {
-        className: 'sk-fading-circle'
-      });
+    it(`should show i18n-texts on the component (${lang.id})`, () => {
+      const wrapper = mountWithIntl(<LoadingIndicator />, lang.id);
 
-      const countOfCircles = 12;
-      for (let i = 1; i <= countOfCircles; i++) {
-        checkWrap(wrapper.find(`[data-test-id="LoadingIndicator.circle-${i}"]`), {
-          className: `sk-circle${i} sk-circle`
-        });
-      }
+      expect(wrapper.find(LoadingIndicatorId).text()).equal(i18n[intlStringId]);
 
       wrapper.unmount();
     });

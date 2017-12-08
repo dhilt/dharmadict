@@ -1,18 +1,30 @@
-const {setupComponent, checkWrap, initialState, _appPath} = require('../../_shared.js');
+const React = require('react');
+const {expect} = require('chai');
+
+const {
+  _appPath,
+  shallow
+} = require('../../_shared.js');
+
 const LoadingButton = require(_appPath + 'components/common/LoadingButton').default;
 
 describe('Testing LoadingButton Component.', () => {
 
-  it('should show the component', () => {
-    const _props = {className: 'some className'};
-    const {wrapper} = setupComponent(LoadingButton, initialState, _props);
+  const LoadingButtonId = '[data-test-id="LoadingButton"]';
+  const nestedLoadingIndicatorId = '[data-test-id="LoadingButton.LoadingIndicator"]';
 
-    checkWrap(wrapper.find('[data-test-id="LoadingButton"]'), {
-      className: _props.className + ' btn btn--loading',
-      disabled: 'true'
+  it('should correctly show the component', () => {
+    const wrapper = shallow(<LoadingButton />);
+
+    expect(wrapper.find(LoadingButtonId).exists()).equal(true);
+    expect(wrapper.find(nestedLoadingIndicatorId).exists()).equal(true);
+
+    const givenClassName = 'some className';
+    wrapper.setProps({
+      className: givenClassName
     });
-
-    checkWrap(wrapper.find('[data-test-id="LoadingButton.LoadingIndicator"]'));
+    expect(wrapper.find(LoadingButtonId).props().className)
+      .equal(givenClassName + ' btn btn--loading');
 
     wrapper.unmount();
   });
