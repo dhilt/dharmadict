@@ -17,49 +17,52 @@ const Login = props => {
 
   return (
     <span data-test-id="Login">
-      <a data-test-id="Login.header_button_log_in" href="/login" onClick={openModal}>
+      <a data-test-id="Login.link_open_modal" href="/login" onClick={openModal}>
         <FormattedMessage id="Login.header_button_log_in" />
       </a>
       <Modal data-test-id="Login.modal"
-        contentLabel="Log In Dialog"
         isOpen={props.data.modalIsOpen}
+        contentLabel="Log In Dialog"
         onRequestClose={closeModal}
         style={customStyles}>
         <h1 data-test-id="Login.title_log_in">
           <FormattedMessage id="Login.please_log_in"/>
         </h1>
-        <div data-test-id="Login.modal-content" className="login-modal-content">
-          <form data-test-id="Login.form">
-            <div data-test-id="Login.form-login" className="form-group">
+        <div className="login-modal-content">
+          <form data-test-id="Login.auth-form">
+            <div className="form-group">
               <input data-test-id="Login.input-login"
-                type="text"
-                name="login"
-                placeholder="login"
-                className="form-control"
                 value={props.data.login}
-                onChange={onLoginChange} />
-            </div>
-            <div data-test-id="Login.form-password" className="form-group">
-              <input data-test-id="Login.input-password"
-                type="password"
-                name="password"
-                placeholder="password"
+                onChange={onLoginChange}
                 className="form-control"
+                placeholder="login"
+                name="login"
+                type="text"
+              />
+            </div>
+            <div className="form-group">
+              <input data-test-id="Login.input-password"
                 value={props.data.password}
-                onChange={onPasswordChange} />
+                onChange={onPasswordChange}
+                className="form-control"
+                placeholder="password"
+                name="password"
+                type="password"
+              />
             </div>
             <button data-test-id="Login.button_do_login"
+              disabled={!props.data.login || !props.data.password || props.data.pending}
               className={"btn btn-primary" + (props.data.pending ? " loader" : "")}
-              onClick={doLogin} type="submit"
-              disabled={!props.data.login || !props.data.password || props.data.pending}>
+              onClick={doLogin} type="submit">
               <span data-test-id="Login.button_do_login_text"
-                className={props.data.pending ? "invisible" : ""}
-              ><FormattedMessage id="Login.button_log_in" />
+                className={props.data.pending ? "invisible" : ""}>
+                <FormattedMessage id="Login.button_log_in" />
               </span>
             </button>
-            <button data-test-id="Login.button_cancel" className="btn btn-default"
-              onClick={closeModal}
-            ><FormattedMessage id="Common.cancel" />
+            <button data-test-id="Login.button_cancel"
+              className="btn btn-default"
+              onClick={closeModal}>
+              <FormattedMessage id="Common.cancel" />
             </button>
           </form>
         </div>
