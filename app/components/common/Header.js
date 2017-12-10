@@ -3,27 +3,34 @@ import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import {Link} from 'react-router'
 import {FormattedMessage} from 'react-intl'
-import lang from '../../helpers/lang'
 
-import {openLoginModal, closeLoginModal, changeLoginString, changePasswordString, doLoginAsync, doLogout} from '../../actions/auth'
+import lang from '../../helpers/lang'
 import {changeUserLanguage} from '../../actions/common'
+import {
+  changePasswordString,
+  changeLoginString,
+  closeLoginModal,
+  openLoginModal,
+  doLoginAsync,
+  doLogout
+} from '../../actions/auth'
 
 import LoadingButton from './LoadingButton'
-import Login from './header/Login'
-import Logout from './header/Logout'
 import Languages from './header/Languages'
+import Logout from './header/Logout'
+import Login from './header/Login'
 
 class Header extends Component {
 
   constructor (props) {
     super(props)
-    this.doLogout = this.doLogout.bind(this)
-    this.openModal = this.openModal.bind(this)
-    this.closeModal = this.closeModal.bind(this)
-    this.doLogin = this.doLogin.bind(this)
-    this.onLoginChange = this.onLoginChange.bind(this)
     this.onPasswordChange = this.onPasswordChange.bind(this)
+    this.onLoginChange = this.onLoginChange.bind(this)
     this.doChangeLang = this.doChangeLang.bind(this)
+    this.closeModal = this.closeModal.bind(this)
+    this.openModal = this.openModal.bind(this)
+    this.doLogout = this.doLogout.bind(this)
+    this.doLogin = this.doLogin.bind(this)
   }
 
   render () {
@@ -32,15 +39,15 @@ class Header extends Component {
 
     const navButtons = this.props.data.loggedIn ? (
       <div data-test-id="Header.navButtons-loggedIn">
-        <Link
-          data-test-id="Header.link_to_user"
-          to={`/translator/${userInfo.id}`}>{userInfo.name}
+        <Link data-test-id="Header.link_to_user"
+          to={`/translator/${userInfo.id}`}>
+          {userInfo.name}
         </Link>
         <Logout data-test-id="Header.Logout" doLogout={this.doLogout} />
         {userInfo.role === 'admin' ?
           <Link data-test-id="Header.link_create_term" to={`/newTerm`}>
             <FormattedMessage id="Header.create_new_term" />
-          </Link> : null
+          </Link> : ( null )
         }
       </div>
     ) : (
@@ -49,12 +56,12 @@ class Header extends Component {
           <LoadingButton data-test-id="Header.LoadingButton" className='btn--nav' />
           :
           <Login data-test-id="Header.Login"
-            data={this.props.data}
-            openModal={this.openModal}
-            closeModal={this.closeModal}
-            doLogin={this.doLogin}
-            onLoginChange={this.onLoginChange}
             onPasswordChange={this.onPasswordChange}
+            onLoginChange={this.onLoginChange}
+            closeModal={this.closeModal}
+            openModal={this.openModal}
+            doLogin={this.doLogin}
+            data={this.props.data}
           />
         }
       </div>
@@ -62,16 +69,16 @@ class Header extends Component {
 
     return (
       <div data-test-id="Header" className='nav'>
-        <div data-test-id="Header.nav" className='nav__wrapper'>
+        <div className='nav__wrapper'>
           <Link data-test-id="Header.about_project" to={'/about'}>
             <FormattedMessage id="Header.about_project" />
           </Link>
           {navButtons}
         </div>
-        <Languages
-          languages={languages}
-          current={userLanguage}
+        <Languages data-test-id="Header.Languages"
           doChangeLang={this.doChangeLang}
+          current={userLanguage}
+          languages={languages}
         />
       </div>
     )
