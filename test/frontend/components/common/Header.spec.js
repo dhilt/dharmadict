@@ -1,6 +1,5 @@
 const React = require('react');
 const {expect} = require('chai');
-const sinon = require('sinon');
 
 const {
   mountWithIntl,
