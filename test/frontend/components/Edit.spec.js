@@ -40,7 +40,7 @@ describe('Testing Edit Component.', () => {
   const pendingId = '[data-test-id="pending"]';
 
   it('should show component correctly', () => {
-    const onButtonClick = sinon.spy(Edit.prototype, '_goBack');
+    const onButtonClick = sinon.spy(Edit.prototype, 'goBack');
     const spy = sinon.spy(Edit.prototype, 'componentWillMount');
     const wrapper = shallow(<Edit {...props} />);
 
