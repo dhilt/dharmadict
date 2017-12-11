@@ -44,10 +44,11 @@ class Header extends Component {
           {userInfo.name}
         </Link>
         <Logout data-test-id="Header.Logout" doLogout={this.doLogout} />
-        {userInfo.role === 'admin' ?
-          <Link data-test-id="Header.link_create_term" to={`/newTerm`}>
-            <FormattedMessage id="Header.create_new_term" />
-          </Link> : ( null )
+        {
+          userInfo.role === 'admin' ?
+            <Link data-test-id="Header.link_create_term" to={`/newTerm`}>
+              <FormattedMessage id="Header.create_new_term" />
+            </Link> : ( null )
         }
       </div>
     ) : (

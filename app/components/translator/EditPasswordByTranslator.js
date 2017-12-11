@@ -69,10 +69,10 @@ class EditPasswordByTranslator extends Component {
               <FormattedMessage id="EditPasswordByTranslator.current_password" />
             </label>
             <input data-test-id="input-current-pass"
-              type="password"
+              onChange={this.changeCurrentPassword}
               value={currentPassword}
               className="form-control"
-              onChange={this.changeCurrentPassword}
+              type="password"
             />
           </div>
           <div className="form-group">
@@ -83,10 +83,10 @@ class EditPasswordByTranslator extends Component {
               </span>
             </label>
             <input data-test-id="input-new-pass"
-              type="password"
-              value={newPassword}
-              className="form-control"
               onChange={this.changeNewPassword}
+              className="form-control"
+              value={newPassword}
+              type="password"
             />
           </div>
           <div className="form-group">
@@ -94,23 +94,23 @@ class EditPasswordByTranslator extends Component {
               <FormattedMessage id="EditPasswordByTranslator.new_password_confirm" />
             </label>
             <input data-test-id="input-confirm-pass"
-              type="password"
+              onChange={this.changeConfirmPassword}
               value={confirmPassword}
               className="form-control"
-              onChange={this.changeConfirmPassword}
+              type="password"
             />
           </div>
           <div className="form-group">
             <button data-test-id="btn-save"
-              className="btn btn-primary"
               onClick={this.sendNewPassword}
               disabled={this.disabled()}
-              ><FormattedMessage id="Common.save" />
+              className="btn btn-primary">
+              <FormattedMessage id="Common.save" />
             </button>
             <button data-test-id="btn-reset"
-              className="btn btn-default"
               onClick={this.resetChanges}
-            ><FormattedMessage id="Common.reset" />
+              className="btn btn-default">
+              <FormattedMessage id="Common.reset" />
             </button>
             <Link data-test-id="btn-cancel" to={`/translator/${id}`}>
               <FormattedMessage id="Common.cancel" />

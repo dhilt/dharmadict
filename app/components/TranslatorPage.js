@@ -13,8 +13,7 @@ class TranslatorPage extends Component {
   }
 
   componentWillMount () {
-    const userId = this.props.params.id
-    this.props.dispatch(getTranslatorInfoAsync(userId))
+    this.props.dispatch(getTranslatorInfoAsync(this.props.params.id))
   }
 
   getTranslatorContent (translator) {
@@ -25,20 +24,26 @@ class TranslatorPage extends Component {
     return (
       <div data-test-id="translatorContent">
         <h3 data-test-id="name">{translator.name}</h3>
-        <h4 data-test-id="language"><FormattedMessage
-          id="TranslatorPage.translations_language"
-          values={{translatorLanguage: translatorLang ? translatorLang['name_' + lang.get(userLanguage)] : ''}}
-        /></h4>
+        <h4 data-test-id="language">
+          <FormattedMessage id="TranslatorPage.translations_language"
+            values={{translatorLanguage: translatorLang ?
+              translatorLang['name_' + lang.get(userLanguage)] : ''}}
+          />
+        </h4>
         <pre data-test-id="description">{translator.description}</pre>
         {
           userData && userData.role === 'admin' &&
-          <Link data-test-id="changeUser" className="btn btn-default" to={`/translator/${translatorId}/edit`}>
+          <Link data-test-id="changeUser"
+            to={`/translator/${translatorId}/edit`}
+            className="btn btn-default">
             <FormattedMessage id="TranslatorPage.button_edit" />
           </Link>
         }
         {
           userData && userData.role === 'translator' && userData.id === translatorId &&
-          <Link data-test-id="changeTranslatorPassword" className="btn btn-default" to={`/translator/${translatorId}/password`}>
+          <Link data-test-id="changeTranslatorPassword"
+            to={`/translator/${translatorId}/password`}
+            className="btn btn-default">
             <FormattedMessage id="TranslatorPage.button_edit_password" />
           </Link>
         }
@@ -49,7 +54,9 @@ class TranslatorPage extends Component {
   render () {
     const {translatorInfo} = this.props
     let content = translatorInfo.pending ? (
-      <h3 data-test-id="pending"><FormattedMessage id="TranslatorPage.loading_text" /></h3>
+      <h3 data-test-id="pending">
+        <FormattedMessage id="TranslatorPage.loading_text" />
+      </h3>
     ) : (
       translatorInfo.error ? (
         <h3 data-test-id="error">{translatorInfo.error.message}</h3>

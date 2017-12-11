@@ -21,18 +21,16 @@ class Notifier extends Component {
     const {notifications} = this.props
     return (
       <div data-test-id="Notifier" className="alert-column">
-        {
-          notifications.length !== 0 && notifications.map((elem, index) =>
-            <Alert data-test-id="Notifier.notification"
-              onDismiss={() => this.closeAlert(elem.id)}
-              bsStyle={elem.type}
-              key={index}>
-              <span data-test-id="Notifier.message">
-                <FormattedMessage id={elem.text} values={elem.values} />
-              </span>
-            </Alert>
-          )
-        }
+        {notifications.length !== 0 && notifications.map((elem, index) =>
+          <Alert data-test-id="Notifier.notification"
+            onDismiss={() => this.closeAlert(elem.id)}
+            bsStyle={elem.type}
+            key={index}>
+            <span data-test-id="Notifier.message">
+              <FormattedMessage id={elem.text} values={elem.values} />
+            </span>
+          </Alert>
+        )}
       </div>
     )
   }

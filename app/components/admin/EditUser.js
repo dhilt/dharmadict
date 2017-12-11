@@ -4,16 +4,21 @@ import {Link} from 'react-router'
 import {FormattedMessage} from 'react-intl'
 
 import lang from '../../helpers/lang'
-import {changeAdminUserData, resetAdminUserData, updateAdminUserDataAsync, getAdminUserDataAsync} from '../../actions/admin/changeUser'
+import {
+  updateAdminUserDataAsync,
+  getAdminUserDataAsync,
+  changeAdminUserData,
+  resetAdminUserData
+} from '../../actions/admin/changeUser'
 
 class EditUser extends Component {
 
   constructor(props) {
     super(props)
+    this.changeUserDescription = this.changeUserDescription.bind(this)
+    this.changeUserLanguage = this.changeUserLanguage.bind(this)
     this.sendNewUserData = this.sendNewUserData.bind(this)
     this.changeUserName = this.changeUserName.bind(this)
-    this.changeUserLanguage = this.changeUserLanguage.bind(this)
-    this.changeUserDescription = this.changeUserDescription.bind(this)
     this.resetChanges = this.resetChanges.bind(this)
   }
 
@@ -59,10 +64,10 @@ class EditUser extends Component {
               <FormattedMessage id="EditUser.name_of_translator" />
             </label>
             <input data-test-id="input-name"
-              type="text"
-              value={name}
-              className="form-control"
               onChange={this.changeUserName}
+              className="form-control"
+              value={name}
+              type="text"
             />
           </div>
           <div className="form-group">
@@ -73,10 +78,10 @@ class EditUser extends Component {
               <div data-test-id="radio-lang" className="radio" key={langIndex}>
                 <label>
                   <input data-test-id="input-lang"
-                    type="radio"
-                    name="lang_radio"
                     onChange={() => this.changeUserLanguage(langItem.id)}
                     checked={language === langItem.id}
+                    name="lang_radio"
+                    type="radio"
                   />{langItem['name_' + lang.get(userLanguage)]}
                 </label>
               </div>
@@ -87,23 +92,23 @@ class EditUser extends Component {
               <FormattedMessage id="EditUser.description_of_translator" />
             </label>
             <textarea data-test-id="textarea-desc"
-              type="text"
-              value={description}
-              className="form-control"
               onChange={this.changeUserDescription}
+              className="form-control"
+              value={description}
+              type="text"
             />
           </div>
           <div className="form-group">
             <button data-test-id="button-save"
-              className="btn btn-primary"
               onClick={this.sendNewUserData}
-              disabled={pending}
-              ><FormattedMessage id="Common.save" />
+              className="btn btn-primary"
+              disabled={pending}>
+              <FormattedMessage id="Common.save" />
             </button>
             <button data-test-id="button-reset"
               className="btn btn-default"
-              onClick={this.resetChanges}
-            ><FormattedMessage id="Common.reset" />
+              onClick={this.resetChanges}>
+              <FormattedMessage id="Common.reset" />
             </button>
             <Link data-test-id="button-cancel" to={`/translator/${id}`}>
               <FormattedMessage id="Common.cancel" />

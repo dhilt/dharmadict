@@ -7,8 +7,8 @@ function LoadingButton (props) {
     <a data-test-id="LoadingButton"
       className={props.className + ' btn btn--loading'}
       disabled="true"
-      href="#"
-    ><LoadingIndicator data-test-id="LoadingButton.LoadingIndicator" />
+      href="#">
+      <LoadingIndicator data-test-id="LoadingButton.LoadingIndicator" />
     </a>
   )
 }

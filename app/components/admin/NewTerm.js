@@ -26,35 +26,33 @@ class NewTerm extends Component {
           <div className="form-group">
             <input data-test-id="input-wylie"
               onChange={this.onWylieChange}
-              value={wylie}
               className="form-control"
               placeholder="wylie"
+              value={wylie}
               name="wylie"
               type="text"
             />
           </div>
-          {
-            languages && languages.map(langItem =>
-              <div data-test-id="form-sanskrit" className="form-group" key={langItem.id}>
-                <input data-test-id="input-sanskrit"
-                  placeholder={'sanskrit_' + langItem.id + ' (' + langItem.name + ')'}
-                  onChange={(event) => this.onSanskritChange(event, langItem.id)}
-                  value={sanskrit['sanskrit_' + langItem.id] || ''}
-                  className="form-control"
-                  name={langItem.id}
-                  type="text"
-                />
-              </div>
-            )
-          }
+          {languages && languages.map(langItem =>
+            <div data-test-id="form-sanskrit" className="form-group" key={langItem.id}>
+              <input data-test-id="input-sanskrit"
+                placeholder={'sanskrit_' + langItem.id + ' (' + langItem.name + ')'}
+                onChange={(event) => this.onSanskritChange(event, langItem.id)}
+                value={sanskrit['sanskrit_' + langItem.id] || ''}
+                className="form-control"
+                name={langItem.id}
+                type="text"
+              />
+            </div>
+          )}
           <div className="form-group">
             <Button data-test-id="button-save"
               onClick={(event) => this.onTermSave(event)}
               className={pending ? 'loader' : ''}
               disabled={this.disabled()}
               bsStyle='primary'
-              type="button"
-            ><FormattedMessage id="Common.save" />
+              type="button">
+              <FormattedMessage id="Common.save" />
             </Button>
             <Link data-test-id="button-cancel" to={`/`}>
               <FormattedMessage id="Common.cancel" />

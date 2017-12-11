@@ -3,7 +3,12 @@ import {connect} from 'react-redux'
 import {Link} from 'react-router'
 import {FormattedMessage} from 'react-intl'
 
-import {setUserId, changeAdminUserPassword, resetAdminUserPassword, updateAdminUserPasswordAsync} from '../../actions/admin/changeUserPassword'
+import {
+  updateAdminUserPasswordAsync,
+  changeAdminUserPassword,
+  resetAdminUserPassword,
+  setUserId
+} from '../../actions/admin/changeUserPassword'
 
 class EditUserPassword extends Component {
 
@@ -67,10 +72,10 @@ class EditUserPassword extends Component {
               </span>
             </label>
             <input data-test-id="input-new-pass"
-              type="password"
-              value={password}
-              className="form-control"
               onChange={this.changeUserPassword}
+              className="form-control"
+              value={password}
+              type="password"
             />
           </div>
           <div className="form-group">
@@ -78,23 +83,23 @@ class EditUserPassword extends Component {
               <FormattedMessage id="EditUserPassword.new_password_confirm" />
             </label>
             <input data-test-id="input-confirm-pass"
-              type="password"
+              onChange={this.changeUserConfirmPassword}
               value={confirmPassword}
               className="form-control"
-              onChange={this.changeUserConfirmPassword}
+              type="password"
             />
           </div>
           <div className="form-group">
             <button data-test-id="btn-save"
-              className="btn btn-primary"
               onClick={this.sendNewUserData}
-              disabled={this.disabled()}
-              ><FormattedMessage id="Common.save" />
+              className="btn btn-primary"
+              disabled={this.disabled()}>
+              <FormattedMessage id="Common.save" />
             </button>
             <button data-test-id="btn-reset"
               className="btn btn-default"
-              onClick={this.resetChanges}
-              ><FormattedMessage id="Common.reset" />
+              onClick={this.resetChanges}>
+              <FormattedMessage id="Common.reset" />
             </button>
             <Link data-test-id="btn-cancel" to={`/translator/${id}/edit`}>
               <FormattedMessage id="Common.cancel" />

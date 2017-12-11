@@ -13,16 +13,14 @@ class TermList extends Component {
   render() {
     return (
       <div data-test-id="TermList">
-      {
-        this.props.termList && this.props.termList.map((item, i) =>
-          <div className={'list-group-item' + (this.props.isTermSelected(item) ? ' selected' : '') }
-            onClick={() => this.onSelectTerm(item)}
-            data-test-id="item-term"
-            key={i}
-          >{item.wylie}
-          </div>
-        )
-      }
+      {this.props.termList && this.props.termList.map((item, i) =>
+        <div className={'list-group-item' + (this.props.isTermSelected(item) ? ' selected' : '') }
+          onClick={() => this.onSelectTerm(item)}
+          data-test-id="item-term"
+          key={i}>
+          {item.wylie}
+        </div>
+      )}
       </div>
     )
   }
@@ -38,8 +36,8 @@ class TermList extends Component {
 function select(state) {
   return {
     termList: state.search.result,
-    isTermSelected: (term) =>
-      state.selected.term && state.selected.term.wylie === term.wylie
+    isTermSelected: (term) => state.selected.term &&
+      state.selected.term.wylie === term.wylie
   }
 }
 
