@@ -5,12 +5,12 @@ const sinon = require('sinon');
 const {
   mountWithIntl,
   initialState,
+  getAppPath,
   languages,
-  _appPath,
   shallow
 } = require('../../../_shared.js');
 
-const Login = require('../' + _appPath + 'components/common/header/Login').default;
+const Login = require(getAppPath(3) + 'components/common/header/Login').default;
 
 describe('Testing Login Component.', () => {
 

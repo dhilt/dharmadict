@@ -3,12 +3,12 @@ const {expect} = require('chai');
 
 const {
   mountWithIntl,
+  getAppPath,
   languages,
-  _appPath,
   shallow
 } = require('../../_shared.js');
 
-const LoadingIndicator = require(_appPath + 'components/common/LoadingIndicator').default;
+const LoadingIndicator = require(getAppPath(2) + 'components/common/LoadingIndicator').default;
 
 describe('Testing LoadingIndicator Component.', () => {
 
@@ -23,7 +23,7 @@ describe('Testing LoadingIndicator Component.', () => {
   const intlStringId = 'LoadingIndicator.main_text';
 
   languages.forEach(lang => {
-    const i18n = require(_appPath + 'i18n/' + lang.id);
+    const i18n = require(getAppPath(2) + 'i18n/' + lang.id);
 
     it(`should exists all i18n-texts for the component (${lang.id})`, () => {
       expect(i18n.hasOwnProperty(intlStringId)).equal(true);

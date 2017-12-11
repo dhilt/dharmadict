@@ -6,13 +6,13 @@ const {
   defaultTranslator,
   mountWithIntl,
   initialState,
+  getAppPath,
   languages,
-  _appPath,
   shallow
 } = require('../../_shared.js');
 
 const TestedComponent = require(
-  _appPath + 'components/translator/EditPasswordByTranslator'
+  getAppPath(2) + 'components/translator/EditPasswordByTranslator'
 ).default.WrappedComponent;
 
 describe('Testing EditPasswordByTranslator Component.', () => {
@@ -166,7 +166,7 @@ describe('Testing EditPasswordByTranslator Component.', () => {
   ];
 
   languages.forEach(lang => {
-    const i18n = require(_appPath + 'i18n/' + lang.id);
+    const i18n = require(getAppPath(2) + 'i18n/' + lang.id);
 
     it(`should exists all i18n-texts for the component (${lang.id})`, () =>
       arrIntlStringsId.forEach(couple =>

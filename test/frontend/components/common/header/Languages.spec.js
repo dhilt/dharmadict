@@ -5,12 +5,12 @@ const sinon = require('sinon');
 const {
   mountWithIntl,
   defaultLang,
+  getAppPath,
   languages,
-  _appPath,
   shallow
 } = require('../../../_shared.js');
 
-const Languages = require('../' + _appPath + 'components/common/header/Languages').default;
+const Languages = require(getAppPath(3) + 'components/common/header/Languages').default;
 
 describe('Testing Languages Component.', () => {
 

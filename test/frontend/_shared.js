@@ -1,5 +1,13 @@
 global.window.localStorage = {};
 
+const getAppPath = (level = 1) => {
+  let result = '../../../app/';
+  for (let i = 1; i < level; i++) {
+    result = '../' + result
+  }
+  return result
+};
+
 module.exports = {
   getNotificationAction: require('./__test-methods/getNotificationAction'),
   shallowWithIntl: require('./__test-methods/mountTestedComponent').shallowWithIntl,
@@ -20,6 +28,6 @@ module.exports = {
   initialState: require('../../app/reducers/_initial').default,
   getLang: require('../../prod/helper').languages.getLang,
   languages: require('../../prod/helper').languages.data,
-  _appPath: '../../../../app/',
-  appPath: '../../../app/'
+  appPath: '../../../app/',
+  getAppPath
 };

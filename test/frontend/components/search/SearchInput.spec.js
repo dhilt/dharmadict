@@ -6,12 +6,12 @@ const {
   mountWithIntl,
   initialState,
   defaultLang,
+  getAppPath,
   languages,
-  _appPath,
   shallow
 } = require('../../_shared.js');
 
-const SearchInput = require(_appPath + 'components/search/SearchInput').default.WrappedComponent;
+const SearchInput = require(getAppPath(2) + 'components/search/SearchInput').default.WrappedComponent;
 
 describe('Testing SearchInput Component.', () => {
 
@@ -118,7 +118,7 @@ describe('Testing SearchInput Component.', () => {
   const intlStringId = 'SearchInput.button_find';
 
   languages.forEach(lang => {
-    const i18n = require(_appPath + 'i18n/' + lang.id);
+    const i18n = require(getAppPath(2) + 'i18n/' + lang.id);
 
     it(`should exists all i18n-texts for the component (${lang.id})`, () => {
       expect(i18n.hasOwnProperty(intlStringId)).equal(true)

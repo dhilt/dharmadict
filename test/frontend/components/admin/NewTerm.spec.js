@@ -5,12 +5,12 @@ const sinon = require('sinon');
 const {
   mountWithIntl,
   initialState,
+  getAppPath,
   languages,
-  _appPath,
   shallow
 } = require('../../_shared.js');
 
-const NewTerm = require(_appPath + 'components/admin/NewTerm').default.WrappedComponent;
+const NewTerm = require(getAppPath(2) + 'components/admin/NewTerm').default.WrappedComponent;
 
 describe('Testing NewTerm Component.', () => {
 
@@ -141,7 +141,7 @@ describe('Testing NewTerm Component.', () => {
   ];
 
   languages.forEach(lang => {
-    const i18n = require(_appPath + 'i18n/' + lang.id);
+    const i18n = require(getAppPath(2) + 'i18n/' + lang.id);
 
     it(`should exists all i18n-texts for the component (${lang.id})`, () =>
       arrIntlStringsId.forEach(couple =>

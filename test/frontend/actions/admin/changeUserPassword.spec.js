@@ -3,11 +3,11 @@ const thunk = require('redux-thunk').default;
 const nock = require('nock');
 const expect = require('expect');
 
-const {translators, initialState, getNotificationAction, _appPath} = require('../../_shared.js');
+const {translators, initialState, getNotificationAction, getAppPath} = require('../../_shared.js');
 
-const actionsCreators = require(_appPath + 'actions/admin/changeUserPassword');
-const types = require(_appPath + 'actions/_constants');
-const reducer = require(_appPath + 'reducers').default;
+const actionsCreators = require(getAppPath(2) + 'actions/admin/changeUserPassword');
+const types = require(getAppPath(2) + 'actions/_constants');
+const reducer = require(getAppPath(2) + 'reducers').default;
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);

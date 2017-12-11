@@ -6,12 +6,12 @@ const {
   mountWithIntl,
   initialState,
   defaultLang,
+  getAppPath,
   languages,
-  _appPath,
   shallow
 } = require('../../_shared.js');
 
-const EditControls = require(_appPath + 'components/edit/EditControls').default.WrappedComponent;
+const EditControls = require(getAppPath(2) + 'components/edit/EditControls').default.WrappedComponent;
 
 describe('Testing EditControls Component.', () => {
 
@@ -77,7 +77,7 @@ describe('Testing EditControls Component.', () => {
   ];
 
   languages.forEach(lang => {
-    const i18n = require(_appPath + 'i18n/' + lang.id);
+    const i18n = require(getAppPath(2) + 'i18n/' + lang.id);
 
     it(`should exists all i18n-texts for the component (${lang.id})`, () =>
       arrIntlStringsId.forEach(couple =>

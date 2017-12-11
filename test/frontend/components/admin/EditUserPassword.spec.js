@@ -7,13 +7,13 @@ const {
   initialState,
   defaultUser,
   defaultLang,
+  getAppPath,
   languages,
-  _appPath,
   shallow
 } = require('../../_shared.js');
 
 const EditUserPassword = require(
-  _appPath + 'components/admin/EditUserPassword'
+  getAppPath(2) + 'components/admin/EditUserPassword'
 ).default.WrappedComponent;
 
 describe('Testing EditUserPassword Component.', () => {
@@ -153,7 +153,7 @@ describe('Testing EditUserPassword Component.', () => {
   ];
 
   languages.forEach(lang => {
-    const i18n = require(_appPath + 'i18n/' + lang.id);
+    const i18n = require(getAppPath(2) + 'i18n/' + lang.id);
 
     it(`should exists all i18n-texts for the component (${lang.id})`, () =>
       arrIntlStringsId.forEach(couple =>

@@ -2,11 +2,11 @@ const React = require('react');
 const {expect} = require('chai');
 
 const {
-  _appPath,
+  getAppPath,
   shallow
 } = require('../../_shared.js');
 
-const ErrorMessage = require(_appPath + 'components/common/ErrorMessage').default;
+const ErrorMessage = require(getAppPath(2) + 'components/common/ErrorMessage').default;
 
 describe('Testing ErrorMessage Component.', () => {
 

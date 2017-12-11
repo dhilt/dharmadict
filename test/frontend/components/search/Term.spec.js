@@ -8,12 +8,12 @@ const {
   defaultTerm,
   defaultUser,
   translators,
+  getAppPath,
   languages,
-  _appPath,
   shallow
 } = require('../../_shared.js');
 
-const Term = require(_appPath + 'components/search/Term').default.WrappedComponent;
+const Term = require(getAppPath(2) + 'components/search/Term').default.WrappedComponent;
 
 describe('Testing Term Component.', () => {
 
@@ -199,7 +199,7 @@ describe('Testing Term Component.', () => {
   ];
 
   languages.forEach(lang => {
-    const i18n = require(_appPath + 'i18n/' + lang.id);
+    const i18n = require(getAppPath(2) + 'i18n/' + lang.id);
 
     it(`should exists all i18n-texts for the component (${lang.id})`, () =>
       arrIntlStringsId.forEach(couple =>

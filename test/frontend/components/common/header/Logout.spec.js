@@ -4,12 +4,12 @@ const sinon = require('sinon');
 
 const {
   mountWithIntl,
+  getAppPath,
   languages,
-  _appPath,
   shallow
 } = require('../../../_shared.js');
 
-const Logout = require('../' + _appPath + 'components/common/header/Logout').default;
+const Logout = require(getAppPath(3) + 'components/common/header/Logout').default;
 
 describe('Testing Logout Component.', () => {
 
@@ -43,7 +43,7 @@ describe('Testing Logout Component.', () => {
   const intlStringsId = [btnLogoutId, 'Logout.button_logout'];
 
   languages.forEach(lang => {
-    const i18n = require('../' + _appPath + 'i18n/' + lang.id);
+    const i18n = require(getAppPath(3) + 'i18n/' + lang.id);
 
     it(`should exists all i18n-texts for the component (${lang.id})`, () => {
       expect(i18n.hasOwnProperty(intlStringsId[1])).equal(true);

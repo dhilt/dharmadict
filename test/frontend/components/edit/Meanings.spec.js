@@ -7,12 +7,12 @@ const {
   initialState,
   defaultTerm,
   defaultLang,
+  getAppPath,
   languages,
-  _appPath,
   shallow
 } = require('../../_shared.js');
 
-const Meanings = require(_appPath + 'components/edit/Meanings').default.WrappedComponent;
+const Meanings = require(getAppPath(2) + 'components/edit/Meanings').default.WrappedComponent;
 
 describe('Testing Meanings Component.', () => {
 
@@ -160,7 +160,7 @@ describe('Testing Meanings Component.', () => {
   ];
 
   languages.forEach(lang => {
-    const i18n = require(_appPath + 'i18n/' + lang.id);
+    const i18n = require(getAppPath(2) + 'i18n/' + lang.id);
 
     it(`should exists all i18n-texts for the component (${lang.id})`, () =>
       arrIntlStringsId.forEach(couple =>

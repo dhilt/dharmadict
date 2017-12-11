@@ -6,11 +6,11 @@ const {
   getNotificationAction,
   getIntlContext,
   mountWithIntl,
-  languages,
-  _appPath
+  getAppPath,
+  languages
 } = require('../../_shared.js');
 
-const Notifier = require(_appPath + 'components/common/Notifier').default.WrappedComponent;
+const Notifier = require(getAppPath(2) + 'components/common/Notifier').default.WrappedComponent;
 
 describe('Testing Notifier Component.', () => {
 

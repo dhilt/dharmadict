@@ -6,14 +6,13 @@ const {
   initialState,
   defaultTerm,
   defaultLang,
+  getAppPath,
   languages,
-  _appPath,
   shallow,
   terms
 } = require('../../_shared.js');
 
-const SearchResults = require(
-  _appPath + 'components/search/SearchResults').default.WrappedComponent;
+const SearchResults = require(getAppPath(2) + 'components/search/SearchResults').default.WrappedComponent;
 
 describe('Testing SearchResults Component.', () => {
 
@@ -102,7 +101,7 @@ describe('Testing SearchResults Component.', () => {
   const intlStringId = 'SearchResults.Not_found';
 
   languages.forEach(lang => {
-    const i18n = require(_appPath + 'i18n/' + lang.id);
+    const i18n = require(getAppPath(2) + 'i18n/' + lang.id);
 
     it(`should exists all i18n-texts for the component (${lang.id})`, () => {
       expect(i18n.hasOwnProperty(intlStringId)).equal(true)

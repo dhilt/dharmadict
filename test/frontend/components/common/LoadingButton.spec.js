@@ -2,11 +2,11 @@ const React = require('react');
 const {expect} = require('chai');
 
 const {
-  _appPath,
+  getAppPath,
   shallow
 } = require('../../_shared.js');
 
-const LoadingButton = require(_appPath + 'components/common/LoadingButton').default;
+const LoadingButton = require(getAppPath(2) + 'components/common/LoadingButton').default;
 
 describe('Testing LoadingButton Component.', () => {
 

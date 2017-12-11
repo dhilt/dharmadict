@@ -6,12 +6,12 @@ const {
   initialState,
   defaultLang,
   defaultUser,
+  getAppPath,
   languages,
-  _appPath,
   admin
 } = require('../../_shared.js');
 
-const Header = require(_appPath + 'components/common/Header').default.WrappedComponent;
+const Header = require(getAppPath(2) + 'components/common/Header').default.WrappedComponent;
 
 describe('Testing Header Component.', () => {
 
@@ -102,7 +102,7 @@ describe('Testing Header Component.', () => {
   ];
 
   languages.forEach(lang => {
-    const i18n = require(_appPath + 'i18n/' + lang.id);
+    const i18n = require(getAppPath(2) + 'i18n/' + lang.id);
 
     it(`should exists all i18n-texts for the component (${lang.id})`, () =>
       arrIntlStringsId.forEach(couple =>

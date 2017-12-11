@@ -2,13 +2,9 @@ const React = require('react');
 const {expect} = require('chai');
 const sinon = require('sinon');
 
-const {
-  _appPath,
-  shallow,
-  terms
-} = require('../../_shared.js');
+const {getAppPath, shallow, terms} = require('../../_shared.js');
 
-const TermList = require(_appPath + 'components/search/TermList').default.WrappedComponent;
+const TermList = require(getAppPath(2) + 'components/search/TermList').default.WrappedComponent;
 
 describe('Testing TermList Component.', () => {
 

@@ -8,12 +8,12 @@ const {
   mountWithIntl,
   initialState,
   defaultLang,
+  getAppPath,
   languages,
-  _appPath,
   shallow
 } = require('../../_shared.js');
 
-const EditUser = require(_appPath + 'components/admin/EditUser').default.WrappedComponent;
+const EditUser = require(getAppPath(2) + 'components/admin/EditUser').default.WrappedComponent;
 
 describe('Testing EditUser Component.', () => {
 
@@ -152,7 +152,7 @@ describe('Testing EditUser Component.', () => {
   ];
 
   languages.forEach(lang => {
-    const i18n = require(_appPath + 'i18n/' + lang.id);
+    const i18n = require(getAppPath(2) + 'i18n/' + lang.id);
 
     it(`should show correctly languages on the component`, () => {
       const wrapper = mountWithIntl(<EditUser {...props} />, lang.id);
