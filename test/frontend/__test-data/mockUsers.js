@@ -1,13 +1,5 @@
-const languages = require('../../../prod/helper').languages.data;
 const defaultLang = require('../../../prod/helper').languages.getLang().id;
 
-// probably can be removed
-const roles = ['user', 'translator', 'admin'];
-
-// probably can be removed
-const userMutableProperties = ['name', 'description', 'language'];
-
-// probably can be removed
 const translators = [{
   id: 'ZAG',
   name: 'Б.И. Загуменнов',
@@ -52,22 +44,6 @@ const translators = [{
   language: 'en'
 }];
 
-// Creation of users occurs with each import into the component.
-// This process needs to be done only once.
-let users = [];
-
-languages.forEach(lang => {
-  roles.forEach(role => {
-    users.push({
-      id: 'ID',
-      name: `${lang.id}-${role}`,
-      role: role,
-      description: '',
-      language: lang.id
-    });
-  });
-});
-
 const admin = {
   id: 'ADMIN_ID',
   name: 'Admin name',
@@ -92,11 +68,8 @@ const defaultTranslator = {
 };
 
 module.exports = {
-  userMutableProperties,
   defaultTranslator,
   defaultUser,
-  roles,
-  admin,
   translators,
-  users
+  admin
 };

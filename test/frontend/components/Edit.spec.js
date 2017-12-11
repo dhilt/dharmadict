@@ -3,7 +3,6 @@ const {expect} = require('chai');
 const sinon = require('sinon');
 
 const {
-  mountWithStore,
   mountWithIntl,
   initialState,
   defaultTerm,
@@ -105,7 +104,7 @@ describe('Testing Edit Component.', () => {
       edit: Object.assign(initialState.edit, props.editState)
     };
 
-    const wrapper = mountWithStore(<Edit {...props} />, _initialState);
+    const wrapper = mountWithIntl(<Edit {...props} />);
     expect(wrapper.find(meaningsId).exists()).equal(true);
     wrapper.unmount();
   });
