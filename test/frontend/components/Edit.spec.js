@@ -5,6 +5,7 @@ const sinon = require('sinon');
 const {
   mountWithIntl,
   initialState,
+  defaultLang,
   defaultTerm,
   languages,
   shallow,
@@ -36,25 +37,26 @@ describe('Testing Edit Component.', () => {
 
   const blockMessageId = '[data-test-id="blockMessage"]';
   const errorId = '[data-test-id="request_error"]';
+  const backLinkId = '[data-test-id="back-link"]';
   const meaningsId = '[data-test-id="Meanings"]';
+  const errorMsgId = '[data-test-id="errorMsg"]';
   const pendingId = '[data-test-id="pending"]';
+  const editId = '[data-test-id="Edit"]';
 
   it('should show component correctly', () => {
     const onButtonClick = sinon.spy(Edit.prototype, 'goBack');
-    const spy = sinon.spy(Edit.prototype, 'componentWillMount');
+    const spyCompWillMount = sinon.spy(Edit.prototype, 'componentWillMount');
     const wrapper = shallow(<Edit {...props} />);
 
-    expect(spy.calledOnce).to.equal(true);
+    expect(spyCompWillMount.calledOnce).equal(true);
 
-    const editId = '[data-test-id="Edit"]';
     expect(wrapper.find(editId).exists()).equal(true);
     expect(wrapper.find(blockMessageId).exists()).equal(false);
     expect(wrapper.find(pendingId).exists()).equal(false);
     expect(wrapper.find(errorId).exists()).equal(false);
 
-    const backLinkId = '[data-test-id="back-link"]';
     wrapper.find(backLinkId).simulate('click');
-    expect(onButtonClick).to.have.property('callCount', 1);
+    expect(onButtonClick.calledOnce).equal(true);
 
     wrapper.setProps({...props,
       editState: {...props.editState,
@@ -66,7 +68,6 @@ describe('Testing Edit Component.', () => {
     expect(wrapper.find(meaningsId).exists()).equal(false);
     expect(wrapper.find(errorId).exists()).equal(false);
 
-    const errorMsgId = '[data-test-id="errorMsg"]';
     const errorMessage = 'Some error happened';
     wrapper.setProps({...props,
       editState: {...props.editState,
@@ -99,21 +100,21 @@ describe('Testing Edit Component.', () => {
     })
   );
 
-  it('should contain component Meanings inside', () => {
-    const _initialState = {...initialState,
-      edit: Object.assign(initialState.edit, props.editState)
-    };
+  const _initialState = {...initialState,
+    edit: Object.assign({}, initialState.edit, props.editState)
+  };
 
-    const wrapper = mountWithIntl(<Edit {...props} />);
+  it('should contain component Meanings inside', () => {
+    const wrapper = mountWithIntl(<Edit {...props} />, defaultLang, _initialState);
     expect(wrapper.find(meaningsId).exists()).equal(true);
     wrapper.unmount();
   });
 
   const arrIntlStringsId = [
-    ['[data-test-id="blockMessage"]', 'Edit.should_select_term'],
-    ['[data-test-id="request_error"]', 'Edit.request_error'],
-    ['[data-test-id="pending"]', 'Edit.query_is_performed'],
-    ['[data-test-id="back-link"]', 'Edit.go_back']
+    [blockMessageId, 'Edit.should_select_term'],
+    [pendingId, 'Edit.query_is_performed'],
+    [errorId, 'Edit.request_error'],
+    [backLinkId, 'Edit.go_back']
   ];
 
   languages.forEach(lang => {
@@ -132,7 +133,7 @@ describe('Testing Edit Component.', () => {
           languages
         }
       };
-      const wrapper = mountWithIntl(<Edit {..._props} />, lang.id);
+      const wrapper = mountWithIntl(<Edit {..._props} />, lang.id, _initialState);
 
       const backLinkId = arrIntlStringsId[3];
       expect(wrapper.find(backLinkId[0]).first().text()).equal(i18n[backLinkId[1]]);
@@ -147,7 +148,7 @@ describe('Testing Edit Component.', () => {
       wrapper.unmount().mount();  // Calling 'componentWillMount'
       expect(wrapper.find(blockMessageId[0]).text()).equal(i18n[blockMessageId[1]]);
 
-      const errorId = arrIntlStringsId[1];
+      const errorId = arrIntlStringsId[2];
       const errMsg = 'error message';
       wrapper.setProps({...props,
         editState: {...props.editState,
@@ -158,7 +159,7 @@ describe('Testing Edit Component.', () => {
       });
       expect(wrapper.find(errorId[0]).text()).equal(i18n[errorId[1]] + errMsg);
 
-      const pendingId = arrIntlStringsId[2];
+      const pendingId = arrIntlStringsId[1];
       wrapper.setProps({...props,
         editState: {...props.editState,
           pending: true
