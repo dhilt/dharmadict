@@ -31,6 +31,14 @@ let initialState = {
     pending: false,
     error: null
   },
+  pages: {
+    list: [],
+    pending: false,
+    current: {
+      page: null,
+      pending: false
+    }
+  },
   search: {
     searchString: '',
     started: false,
@@ -74,6 +82,19 @@ let initialState = {
     }
   },
   admin: {
+    editPage: {
+      url: '',
+      dataSource: {
+        title: '',
+        text: ''
+      },
+      data: {
+        title: '',
+        text: ''
+      },
+      sourcePending: false,
+      pending: false
+    },
     newTerm: {
       wylie: '',
       sanskrit: {},

@@ -37,7 +37,7 @@ app.get('/api/pages/all', apiPages.searchAll);
 app.get('/api/pages', apiPages.search);
 // app.post('/api/pages', apiPages.create);  // ???
 app.patch('/api/pages', apiPages.edit);
-app.delete('/api/pages', apiPages.remove);
+// app.delete('/api/pages', apiPages.remove);  // ???
 
 // serve static
 app.use(express.static(path.join(__dirname, '/client')));

@@ -76,5 +76,13 @@
   "EditPasswordByTranslator.new_password": "New password",
   "EditPasswordByTranslator.new_password_hint": "(at least 6 symbols)",
   "EditPasswordByTranslator.new_password_confirm": "Confirm password",
-  "EditPasswordByTranslator.new_password_success": "Password was successfully changed"
+  "EditPasswordByTranslator.new_password_success": "Password was successfully changed",
+
+  "EditPage.success": "Page was successfully edited",
+  "EditPage.link_to_edit": "Edit",
+  "EditPage.edit_title": "Title of page",
+  "EditPage.edit_text": "Text of page",
+  "EditPage.title_of_page": "Edit page",
+
+  "PagesList.title": "Pages"
 }

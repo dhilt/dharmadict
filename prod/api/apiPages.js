@@ -17,7 +17,7 @@ const search = (req, res) =>
 
 const edit = (req, res) =>
   doAuthorize(req)
-    .then(user => pagesController.update(req.query.url, req.body))
+    .then(user => pagesController.update(req.query.url, req.body.payload))
     .then(page => res.json({success: true, page}))
     .catch(error => sendApiError(res, 'Can\'t update page.', error));
 

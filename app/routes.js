@@ -7,10 +7,13 @@ import About from './components/About'
 import NotFound from './components/NotFound'
 import Edit from './components/Edit'
 import TranslatorPage from './components/TranslatorPage'
+import PagesList from './components/pages/PagesList'
+import Page from './components/pages/Page'
 
 import NewTerm from './components/admin/NewTerm'
 import EditUser from './components/admin/EditUser'
 import EditUserPassword from './components/admin/EditUserPassword'
+import EditPage from './components/admin/EditPage'
 
 import EditPasswordByTranslator from './components/translator/EditPasswordByTranslator'
 
@@ -79,6 +82,14 @@ const getRoutes = (store) => ({
       exactly: true,
       component: EditPasswordByTranslator,
       onEnter: (...args) => checkAccess(...args, store, 'translator', args[0].params.id)
+    },
+    { path: '/pages', exactly: true, component: PagesList },
+    { path: '/pages/:pageUrl', exactly: true, component: Page },
+    {
+      path: '/pages/:pageUrl/edit',
+      exactly: true,
+      component: EditPage,
+      onEnter: (...args) => checkAccess(...args, store, 'admin')
     },
     { path: '/not_authorized', exactly: true, component: NotFound },
     { path: '/not_permitted', exactly: true, component: NotFound },

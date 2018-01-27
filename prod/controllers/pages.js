@@ -9,14 +9,18 @@ const findAll = () => new Promise((resolve, reject) => {
     index: config.db.index,
     type: 'pages'
   }).then(result => {
-    const pages = result.hits.hits;
+    let pages = result.hits.hits;
     if (!pages.length) {
-      throw new ApiError(`No pages found`, 404)
+      reject(new ApiError(`No pages found`, 404))
     }
-    resolve(pages.map(page => page._id))
+    pages = pages.map(page => ({
+      url: page._id,
+      title: page._source.title
+    }));
+    resolve(pages)
   }, error => {
     logger.error(error.message);
-    throw new ApiError('Database error')
+    reject(new ApiError('Database error'))
   });
 });
 
@@ -36,17 +40,17 @@ const findByUrl = pageUrl => new Promise((resolve, reject) => {
       }
     }
   }).then(response => {
-      const result = response.hits.hits[0];
-      if (!result || !result._source) {
-        return reject(new ApiError('No page found', 404))
-      }
-      result._source.url = result._id;
-      resolve(result._source)
-    },
-    error => {
-      logger.error(error);
-      reject(new ApiError('Database error'))
-    })
+    let result = response.hits.hits[0];
+    if (!result || !result._source) {
+      reject(new ApiError('No page found', 404))
+    }
+    result._source.url = result._id;
+    resolve(result._source)
+  },
+  error => {
+    logger.error(error);
+    reject(new ApiError('Database error'))
+  })
 });
 
 const update = (pageUrl, payload) => validator.update(payload)

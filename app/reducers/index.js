@@ -25,6 +25,15 @@ import {
   CHANGE_NEW_TERM_SANSKRIT,
   ADD_TERM_START,
   ADD_TERM_END,
+  GET_ALL_PAGES_START,
+  GET_ALL_PAGES_END,
+  GET_PAGE_START,
+  GET_PAGE_END,
+  CHANGE_PAGE_DATA,
+  GET_PAGE_ADMIN_START,
+  GET_PAGE_ADMIN_END,
+  UPDATE_ADMIN_PAGE_START,
+  UPDATE_ADMIN_PAGE_END,
   GET_COMMON_DATA_START,
   GET_COMMON_DATA_END,
   SET_LANGUAGE,
@@ -59,6 +68,80 @@ function reducer(state = initialState, action = {}) {
         common: {...state.common,
           translators: action.translators,
           languages: action.languages
+        }
+      }
+    case GET_ALL_PAGES_START:
+      return {...state,
+        pages: {...state.pages,
+          pending: true
+        }
+      }
+    case GET_ALL_PAGES_END:
+      return {...state,
+        pages: {...state.pages,
+          pending: false,
+          list: action.data
+        }
+      }
+    case GET_PAGE_START:
+      return {...state,
+        pages: {...state.pages,
+          current: {...state.pages.current,
+            pending: true
+          }
+        }
+      }
+    case GET_PAGE_END:
+      return {...state,
+        pages: {...state.pages,
+          current: {...state.pages.current,
+            page: action.data,
+            pending: false
+          }
+        }
+      }
+    case CHANGE_PAGE_DATA:
+      return {...state,
+        admin: {...state.admin,
+          editPage: {...state.admin.editPage,
+            data: action.payload
+          }
+        }
+      }
+    case GET_PAGE_ADMIN_START:
+      return {...state,
+        admin: {...state.admin,
+          editPage: {...state.admin.editPage,
+            sourcePending: true
+          }
+        }
+      }
+    case GET_PAGE_ADMIN_END:
+      return {...state,
+        admin: {...state.admin,
+          editPage: {...state.admin.editPage,
+            sourcePending: false,
+            dataSource: action.data,
+            data: action.data,
+            url: action.url
+          }
+        }
+      }
+    case UPDATE_ADMIN_PAGE_START:
+      return {...state,
+        admin: {...state.admin,
+          editPage: {...state.admin.editPage,
+            pending: true
+          }
+        }
+      }
+    case UPDATE_ADMIN_PAGE_END:
+      return {...state,
+        admin: {...state.admin,
+          editPage: {...state.admin.editPage,
+            dataSource: action.data,
+            pending: false
+          }
         }
       }
     case CREATE_NOTIFICATION:
