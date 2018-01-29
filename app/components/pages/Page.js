@@ -21,7 +21,7 @@ class Page extends Component {
     return !pending && page && (
       <div>
         <h3>{page.title}</h3>
-        <article>{page.text}</article>
+        <article dangerouslySetInnerHTML={{__html: page.text}} />
         {
           userData && userData.role === 'admin' &&
           <div>
