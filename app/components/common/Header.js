@@ -63,7 +63,7 @@ class Header extends Component {
     return (
       <div data-test-id="Header" className='nav'>
         <div data-test-id="Header.nav" className='nav__wrapper'>
-          <Link data-test-id="Header.about_project" to={'/about'}>
+          <Link data-test-id="Header.about_project" to={'/pages/about'}>
             <FormattedMessage id="Header.about_project" />
           </Link>
           {navButtons}

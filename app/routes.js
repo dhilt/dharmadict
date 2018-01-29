@@ -3,7 +3,6 @@ import {Router, Route, browserHistory} from 'react-router'
 
 import App from './components/App'
 import Home from './components/Home'
-import About from './components/About'
 import NotFound from './components/NotFound'
 import Edit from './components/Edit'
 import TranslatorPage from './components/TranslatorPage'
@@ -57,7 +56,6 @@ const getRoutes = (store) => ({
   component: App,
   childRoutes: [
     { path: '/', exactly: true, component: Home },
-    { path: '/about', exactly: true, component: About },
     { path: '/edit', exactly: true, component: Edit },
     {
       path: '/newTerm',
