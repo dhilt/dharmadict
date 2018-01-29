@@ -15,9 +15,17 @@ const search = (req, res) =>
     .then(result => res.json(result))
     .catch(error => sendApiError(res, 'Search error.', error));
 
+const create = (req, res) =>
+  doAuthorize(req)
+    .then(user => isAdmin(user))
+    .then(() => pagesController.create(req.body.payload))
+    .then(page => res.json({success: true, page}))
+    .catch(error => sendApiError(res, 'Can\'t create new page.', error));
+
 const edit = (req, res) =>
   doAuthorize(req)
-    .then(user => pagesController.update(req.query.url, req.body.payload))
+    .then(user => isAdmin(user))
+    .then(() => pagesController.update(req.query.url, req.body.payload))
     .then(page => res.json({success: true, page}))
     .catch(error => sendApiError(res, 'Can\'t update page.', error));
 
@@ -31,6 +39,7 @@ const remove = (req, res) =>
 module.exports = {
   searchAll,
   search,
+  create,
   remove,
   edit
 };

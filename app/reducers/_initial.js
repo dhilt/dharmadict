@@ -93,6 +93,15 @@ let initialState = {
         text: ''
       },
       sourcePending: false,
+      pending: false,
+      removePending: false
+    },
+    newPage: {
+      data: {
+        url: '',
+        title: '',
+        text: ''
+      },
       pending: false
     },
     newTerm: {

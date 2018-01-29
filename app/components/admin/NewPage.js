@@ -3,36 +3,25 @@ import {connect} from 'react-redux'
 import {Link} from 'react-router'
 import {FormattedMessage} from 'react-intl'
 
-import {changePageData, resetPage, getPageAdminAsync, updatePageAsync, removePageAsync} from '../../actions/admin/changePage'
+import {changePageData, createPageAsync} from '../../actions/admin/newPage'
 
-class EditPage extends Component {
+class NewPage extends Component {
 
   constructor(props) {
     super(props)
     this.sendNewPageData = this.sendNewPageData.bind(this)
     this.changePageTitle = this.changePageTitle.bind(this)
     this.changePageText = this.changePageText.bind(this)
-    this.resetChanges = this.resetChanges.bind(this)
-    this.deletePage = this.deletePage.bind(this)
-  }
-
-  componentWillMount () {
-    this.props.dispatch(getPageAdminAsync(this.props.params.pageUrl))
-  }
-
-  resetChanges (event) {
-    event.preventDefault()
-    this.props.dispatch(resetPage())
-  }
-
-  deletePage (event) {
-    event.preventDefault()
-    this.props.dispatch(removePageAsync())
+    this.changePageUrl = this.changePageUrl.bind(this)
   }
 
   sendNewPageData (event) {
     event.preventDefault()
-    this.props.dispatch(updatePageAsync())
+    this.props.dispatch(createPageAsync())
+  }
+
+  changePageUrl (event) {
+    this.props.dispatch(changePageData({url: event.target.value}))
   }
 
   changePageTitle (event) {
@@ -44,14 +33,22 @@ class EditPage extends Component {
   }
 
   render () {
-    const { sourcePending, removePending, pending } = this.props.pageInfo
-    const { title, text } = this.props.pageInfo.data
-    return !sourcePending && (
+    const { pending } = this.props.pageInfo
+    const { url, title, text } = this.props.pageInfo.data
+    return (
       <div>
         <form className="col-md-6">
-          <h3><FormattedMessage id="EditPage.title_of_page" /></h3>
+          <h3><FormattedMessage id="NewPage.title_of_page" /></h3>
           <div className="form-group">
-            <label><FormattedMessage id="EditPage.edit_title" /></label>
+            <label><FormattedMessage id="NewPage.edit_url" /></label>
+            <input type="text"
+              value={url || ''}
+              className="form-control"
+              onChange={this.changePageUrl}
+            />
+          </div>
+          <div className="form-group">
+            <label><FormattedMessage id="NewPage.edit_title" /></label>
             <input type="text"
               value={title || ''}
               className="form-control"
@@ -59,7 +56,7 @@ class EditPage extends Component {
             />
           </div>
           <div className="form-group">
-            <label><FormattedMessage id="EditPage.edit_text" /></label>
+            <label><FormattedMessage id="NewPage.edit_text" /></label>
             <textarea type="text"
               value={text || ''}
               className="form-control page-textarea"
@@ -72,16 +69,7 @@ class EditPage extends Component {
               disabled={pending}>
               <FormattedMessage id="Common.save" />
             </button>
-            <button className="btn btn-default"
-              onClick={this.resetChanges}>
-              <FormattedMessage id="Common.reset" />
-            </button>
-            <button className="btn btn-danger"
-              onClick={this.deletePage}
-              disabled={removePending}>
-              <FormattedMessage id="Common.delete" />
-            </button>
-            <Link to={`/pages/${this.props.params.pageUrl}`}>
+            <Link to={`/pages`}>
               <FormattedMessage id="Common.cancel" />
             </Link>
           </div>
@@ -93,8 +81,8 @@ class EditPage extends Component {
 
 function select (state, ownProps) {
   return {
-    pageInfo: state.admin.editPage
+    pageInfo: state.admin.newPage
   }
 }
 
-export default connect(select)(EditPage)
+export default connect(select)(NewPage)

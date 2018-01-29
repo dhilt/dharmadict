@@ -34,6 +34,11 @@ import {
   GET_PAGE_ADMIN_END,
   UPDATE_ADMIN_PAGE_START,
   UPDATE_ADMIN_PAGE_END,
+  DELETE_PAGE_START,
+  DELETE_PAGE_END,
+  CREATE_PAGE_START,
+  CREATE_PAGE_END,
+  CHANGE_NEW_PAGE_DATA,
   GET_COMMON_DATA_START,
   GET_COMMON_DATA_END,
   SET_LANGUAGE,
@@ -140,6 +145,46 @@ function reducer(state = initialState, action = {}) {
         admin: {...state.admin,
           editPage: {...state.admin.editPage,
             dataSource: action.data,
+            pending: false
+          }
+        }
+      }
+    case DELETE_PAGE_START:
+      return {...state,
+        admin: {...state.admin,
+          editPage: {...state.admin.editPage,
+            removePending: true
+          }
+        }
+      }
+    case DELETE_PAGE_END:
+      return {...state,
+        admin: {...state.admin,
+          editPage: {...state.admin.editPage,
+            removePending: false
+          }
+        }
+      }
+    case CHANGE_NEW_PAGE_DATA:
+      return {...state,
+        admin: {...state.admin,
+          newPage: {...state.admin.newPage,
+            data: action.payload
+          }
+        }
+      }
+    case CREATE_PAGE_START:
+      return {...state,
+        admin: {...state.admin,
+          newPage: {...state.admin.newPage,
+            pending: true
+          }
+        }
+      }
+    case CREATE_PAGE_END:
+      return {...state,
+        admin: {...state.admin,
+          newPage: {...state.admin.newPage,
             pending: false
           }
         }

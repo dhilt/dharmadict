@@ -4,12 +4,14 @@
   "Common.save": "Save",
   "Common.reset": "Reset",
   "Common.cancel": "Cancel",
+  "Common.delete": "Delete",
 
   "App.get_common_error": "Error getting data",
 
   "Home.search_title_em": "Buddhist terminology",
   "Home.search_title_h1": " in english translations",
 
+  "TranslatorPage.link_to_desc_page": "Description of translator",
   "TranslatorPage.translations_language": "Translations language: {translatorLanguage}",
   "TranslatorPage.button_edit": "Edit",
   "TranslatorPage.loading_text": "Loading...",
@@ -83,6 +85,14 @@
   "EditPage.edit_title": "Title of page",
   "EditPage.edit_text": "Text of page",
   "EditPage.title_of_page": "Edit page",
+  "EditPage.successful_remove": "The page was successfully deleted",
 
-  "PagesList.title": "Pages"
+  "NewPage.success": "New page was successfully created",
+  "NewPage.title_of_page": "Create a new page",
+  "NewPage.edit_url": "URL-address of new page",
+  "NewPage.edit_title": "Title of page",
+  "NewPage.edit_text": "Text of page",
+
+  "PagesList.title": "Pages",
+  "PagesList.link_to_create": "Create page"
 }

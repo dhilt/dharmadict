@@ -29,7 +29,9 @@ class TranslatorPage extends Component {
           id="TranslatorPage.translations_language"
           values={{translatorLanguage: translatorLang ? translatorLang['name_' + lang.get(userLanguage)] : ''}}
         /></h4>
-        <pre data-test-id="description">{translator.description}</pre>
+        <Link to={`/pages/${translatorId}`}>
+          <FormattedMessage id="TranslatorPage.link_to_desc_page" />
+        </Link>&nbsp;
         {
           userData && userData.role === 'admin' &&
           <Link data-test-id="changeUser" className="btn btn-default" to={`/translator/${translatorId}/edit`}>

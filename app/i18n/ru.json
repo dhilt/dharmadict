@@ -4,12 +4,14 @@
   "Common.save": "Сохранить",
   "Common.reset": "Сбросить",
   "Common.cancel": "Отмена",
+  "Common.delete": "Удалить",
 
   "App.get_common_error": "Ошибка получения данных",
 
   "Home.search_title_em": "Буддийская терминология",
   "Home.search_title_h1": " в русских переводах",
 
+  "TranslatorPage.link_to_desc_page": "Описание переводчика",
   "TranslatorPage.translations_language": "Язык переводов: {translatorLanguage}",
   "TranslatorPage.button_edit": "Редактировать",
   "TranslatorPage.loading_text": "Идет загрузка...",
@@ -83,6 +85,14 @@
   "EditPage.edit_title": "Заголовок страницы",
   "EditPage.edit_text": "Текст страницы",
   "EditPage.title_of_page": "Редактирование страницы",
+  "EditPage.successful_remove": "Страница была успешно удалена",
 
-  "PagesList.title": "Страницы"
+  "NewPage.success": "Новая страница была успешно создана",
+  "NewPage.title_of_page": "Создание новой страницы",
+  "NewPage.edit_url": "URL-адрес новой страницы",
+  "NewPage.edit_title": "Заголовок страницы",
+  "NewPage.edit_text": "Текст страницы",
+
+  "PagesList.title": "Страницы",
+  "PagesList.link_to_create": "Создать страницу"
 }

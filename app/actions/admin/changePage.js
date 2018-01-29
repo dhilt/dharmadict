@@ -6,7 +6,9 @@ import {
   UPDATE_ADMIN_PAGE_END,
   GET_PAGE_ADMIN_START,
   GET_PAGE_ADMIN_END,
-  CHANGE_PAGE_DATA
+  CHANGE_PAGE_DATA,
+  DELETE_PAGE_START,
+  DELETE_PAGE_END
 } from '../_constants'
 
 export function getPageAdminAsync(pageUrl) {
@@ -64,6 +66,22 @@ export function updatePageAsync() {
         data: error ? dataSource : data.page
       })
       dispatch(notifier.onResponse('EditPage.success', error))
+    })
+  }
+}
+
+export function removePageAsync() {
+  return (dispatch, getState) => {
+    dispatch({
+      type: DELETE_PAGE_START
+    })
+    const {url} = getState().admin.editPage
+    const query = 'pages?url=' + url
+    return asyncRequest(query, 'delete', null, (data, error) => {
+      dispatch({
+        type: DELETE_PAGE_END
+      })
+      dispatch(notifier.onResponse('EditPage.successful_remove', error))
     })
   }
 }

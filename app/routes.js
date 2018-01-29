@@ -14,6 +14,7 @@ import NewTerm from './components/admin/NewTerm'
 import EditUser from './components/admin/EditUser'
 import EditUserPassword from './components/admin/EditUserPassword'
 import EditPage from './components/admin/EditPage'
+import NewPage from './components/admin/NewPage'
 
 import EditPasswordByTranslator from './components/translator/EditPasswordByTranslator'
 
@@ -84,6 +85,12 @@ const getRoutes = (store) => ({
       onEnter: (...args) => checkAccess(...args, store, 'translator', args[0].params.id)
     },
     { path: '/pages', exactly: true, component: PagesList },
+    {
+      path: '/pages/new',
+      exactly: true,
+      component: NewPage,
+      onEnter: (...args) => checkAccess(...args, store, 'admin')
+    },
     { path: '/pages/:pageUrl', exactly: true, component: Page },
     {
       path: '/pages/:pageUrl/edit',

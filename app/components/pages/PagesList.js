@@ -17,14 +17,22 @@ class PagesList extends Component {
 
   render () {
     const { pending, list } = this.props.pages
+    const { userData } = this.props
     return (
       <div>
         <h3><FormattedMessage id="PagesList.title" /></h3>
-        {!pending && (
+        {
+          userData && userData.role === 'admin' &&
+          <Link className="btn btn-default" to={`/pages/new`}>
+            <FormattedMessage id="PagesList.link_to_create" />
+          </Link>
+        }
+        {
+          !pending &&
           <ul>
             { list.map((page, i) => <li key={i}><Link to={`/pages/${page.url}`}>{page.title}</Link></li>) }
           </ul>
-        )}
+        }
       </div>
     )
   }
@@ -32,7 +40,8 @@ class PagesList extends Component {
 
 function select (state, ownProps) {
   return {
-    pages: state.pages
+    pages: state.pages,
+    userData: state.auth.userInfo.data
   }
 }
 
