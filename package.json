@@ -55,7 +55,6 @@
     "snazzy": "^5.0.0",
     "standard": "^8.2.0",
     "style-loader": "^0.13.1",
-    "surge": "^0.18.0",
     "url-loader": "^0.5.7",
     "webpack": "^1.13.1",
     "webpack-dev-server": "^1.14.1"
