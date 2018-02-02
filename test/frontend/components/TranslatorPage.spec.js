@@ -42,7 +42,7 @@ describe('Testing TranslatorPage Component.', () => {
   const adminId = '[data-test-id="changeUser"]';
   const pendingId = '[data-test-id="pending"]';
   const errorId = '[data-test-id="error"]';
-  const descId = '[data-test-id="description"]';
+  const descId = '[data-test-id="desc"]';
   const langId = '[data-test-id="language"]';
   const nameId = '[data-test-id="name"]';
 
@@ -77,13 +77,22 @@ describe('Testing TranslatorPage Component.', () => {
     expect(wrapper.find(pendingId).exists()).equal(false);
     expect(wrapper.find(adminId).exists()).equal(false);
 
+    wrapper.setProps({...props,
+      translatorInfo: {...props.translatorInfo,
+        data: {...props.translatorInfo.data,
+          description: null
+        }
+      }
+    });
+    expect(wrapper.find(descId).exists()).equal(false);
+
     wrapper.setProps(props);
     expect(wrapper.find(contentId).exists()).equal(true);
     expect(wrapper.find(translatorId).exists()).equal(false);
     expect(wrapper.find(pendingId).exists()).equal(false);
     expect(wrapper.find(errorId).exists()).equal(false);
     expect(wrapper.find(adminId).exists()).equal(false);
-    expect(wrapper.find(descId).text()).equal(defaultTranslator.description);
+    expect(wrapper.find(descId).exists()).equal(true);
     expect(wrapper.find(nameId).text()).equal(defaultTranslator.name);
     expect(wrapper.find(langId).exists()).equal(true);
 
@@ -113,6 +122,7 @@ describe('Testing TranslatorPage Component.', () => {
   const arrIntlStringsId = [
     [translatorId, 'TranslatorPage.button_edit_password'],
     [langId, 'TranslatorPage.translations_language'],
+    [descId, 'TranslatorPage.link_to_desc_page'],
     [pendingId, 'TranslatorPage.loading_text'],
     [adminId, 'TranslatorPage.button_edit']
   ];
@@ -155,19 +165,22 @@ describe('Testing TranslatorPage Component.', () => {
         expect(existedStr).equal(expectedStr);
       });
 
+      wrapper.setProps(props);
+      checkStringsWithoutValues(wrapper, arrIntlStringsId[2]);
+
       wrapper.setProps({...props,
         translatorInfo: {...props.translatorInfo,
           pending: true
         }
       });
-      checkStringsWithoutValues(wrapper, arrIntlStringsId[2]);
+      checkStringsWithoutValues(wrapper, arrIntlStringsId[3]);
 
       wrapper.setProps({...props,
         userInfo: {...props.userInfo,
           data: admin
         }
       });
-      checkStringsWithoutValues(wrapper, arrIntlStringsId[3]);
+      checkStringsWithoutValues(wrapper, arrIntlStringsId[4]);
 
       wrapper.setProps({...props,
         translatorInfo: {...props.translatorInfo,

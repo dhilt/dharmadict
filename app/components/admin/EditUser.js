@@ -90,7 +90,7 @@ class EditUser extends Component {
           <div data-test-id="form-desc" className="form-group">
             <label data-test-id="label-desc">
               <FormattedMessage id="EditUser.description_of_translator" />
-              <span className="label-help">
+              <span data-test-id="desc-help" className="label-help">
                 <FormattedMessage id="EditUser.description_of_translator_help" />
               </span>
             </label>

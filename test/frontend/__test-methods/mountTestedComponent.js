@@ -10,7 +10,7 @@ configure({ adapter: new Adapter() });
 const initialState = require('../../../app/reducers/_initial').default;
 const i18n = require('../../../app/helpers/i18n').default;
 
-const configureMockStore = require('redux-mock-store').default;
+const configureMockStore = require('redux-mock-store');
 const thunk = require('redux-thunk').default;
 let middlewares = [thunk];
 let mockStore = configureMockStore(middlewares);

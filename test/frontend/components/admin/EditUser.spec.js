@@ -141,6 +141,7 @@ describe('Testing EditUser Component.', () => {
   });
 
   const arrIntlStringsId = [
+    ['[data-test-id="desc-help"]', 'EditUser.description_of_translator_help'],
     ['[data-test-id="label-desc"]', 'EditUser.description_of_translator'],
     ['[data-test-id="label-lang"]', 'EditUser.language_of_translations'],
     ['[data-test-id="label-name"]', 'EditUser.name_of_translator'],
@@ -184,26 +185,31 @@ describe('Testing EditUser Component.', () => {
       expect(wrapper.find(couple[0]).text()).equal(i18n[couple[1]]);
 
       couple = arrIntlStringsId[1];
-      expect(wrapper.find(couple[0]).text()).equal(i18n[couple[1]]);
+      expect(wrapper.find(couple[0]).text()).equal(
+        i18n[arrIntlStringsId[1][1]] + i18n[arrIntlStringsId[0][1]]
+      );
 
       couple = arrIntlStringsId[2];
       expect(wrapper.find(couple[0]).text()).equal(i18n[couple[1]]);
 
       couple = arrIntlStringsId[3];
+      expect(wrapper.find(couple[0]).text()).equal(i18n[couple[1]]);
+
+      couple = arrIntlStringsId[4];
       expect(wrapper.find(couple[0]).text()).equal(
         i18n[couple[1]].replace('{id}', defaultTranslator.id)
       );
-
-      couple = arrIntlStringsId[4];
-      expect(wrapper.find(couple[0]).first().text()).equal(i18n[couple[1]]);
 
       couple = arrIntlStringsId[5];
       expect(wrapper.find(couple[0]).first().text()).equal(i18n[couple[1]]);
 
       couple = arrIntlStringsId[6];
-      expect(wrapper.find(couple[0]).text()).equal(i18n[couple[1]]);
+      expect(wrapper.find(couple[0]).first().text()).equal(i18n[couple[1]]);
 
       couple = arrIntlStringsId[7];
+      expect(wrapper.find(couple[0]).text()).equal(i18n[couple[1]]);
+
+      couple = arrIntlStringsId[8];
       expect(wrapper.find(couple[0]).text()).equal(i18n[couple[1]]);
 
       wrapper.unmount();

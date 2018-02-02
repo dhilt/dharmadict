@@ -31,7 +31,7 @@ class TranslatorPage extends Component {
         </h4>
         {
           translator.description &&
-          <Link to={translator.description}>
+          <Link data-test-id="desc" to={translator.description}>
             <FormattedMessage id="TranslatorPage.link_to_desc_page" />
           </Link>
         }
