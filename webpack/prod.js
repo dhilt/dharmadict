@@ -1,5 +1,5 @@
-'use strict'
+'use strict';
 
-let makeWebpackConfig = require('./makeConfig')
+let makeWebpackConfig = require('./makeConfig');
 
-module.exports = makeWebpackConfig({prod: true})
+module.exports = makeWebpackConfig({prod: true});

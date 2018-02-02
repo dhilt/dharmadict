@@ -1,18 +1,26 @@
-'use strict'
+'use strict';
 
-let path = require('path')
-let webpack = require('webpack')
-let HtmlWebpackPlugin = require('html-webpack-plugin')
+const path = require('path');
+const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+const pkg = require('../package.json');
 
-function makeWebpackConfig (options) {
-  let entry, plugins, devtool
+function makeWebpackConfig(options) {
+  let entry, plugins, devtool;
 
   if (options.prod) {
-    entry = [
-      path.resolve(__dirname, '../app/index.js')
-    ]
+    entry = {
+      app: path.resolve(__dirname, '../app/index.js'),
+      vendor: Object.keys(pkg.dependencies)
+    };
 
     plugins = [
+      new CleanWebpackPlugin(['client'], {
+        root: path.resolve(__dirname, '../', 'prod'),
+        allowExternal: true
+      }),
+      new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.min.js'),
       new webpack.optimize.UglifyJsPlugin({
         compress: {
           warnings: false
@@ -40,13 +48,13 @@ function makeWebpackConfig (options) {
       })
     ]
   } else {
-    devtool = 'source-map'
+    devtool = 'source-map';
 
     entry = [
       'webpack-dev-server/client?http://localhost:5000',
       'webpack/hot/only-dev-server',
       path.resolve(__dirname, '../app/index.js')
-    ]
+    ];
 
     plugins = [
       new webpack.HotModuleReplacementPlugin(),
@@ -62,7 +70,7 @@ function makeWebpackConfig (options) {
     entry: entry,
     output: {
       path: path.resolve(__dirname, '../', 'prod', 'client'),
-      filename: 'bundle.js'
+      filename: 'bundle.min.js'
     },
     module: {
       loaders: [
@@ -114,4 +122,4 @@ function makeWebpackConfig (options) {
   }
 }
 
-module.exports = makeWebpackConfig
+module.exports = makeWebpackConfig;

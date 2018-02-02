@@ -90,6 +90,19 @@ const script = {
                 "type": "text"
               }
             }
+          },
+          "pages": {
+            "properties": {
+              "url": {
+                "type": "keyword"
+              },
+              "title": {
+                "type": "text"
+              },
+              "text": {
+                "type": "text"
+              }
+            }
           }
         }
       }

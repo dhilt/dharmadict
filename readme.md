@@ -28,7 +28,20 @@ Dharma Dictionary
 
 ### Database
 
-#### Installation
+#### Java
+
+* sudo apt-get update
+* sudo apt-get install openjdk-7-jre
+* java -version
+
+OR
+
+* sudo add-apt-repository -y ppa:webupd8team/java
+* sudo apt-get update
+* sudo apt-get -y install oracle-java8-installer
+* java -version
+
+#### Elasticsearch
 
 * wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.5.2.deb
 * sudo dpkg -i elasticsearch-5.5.2.deb
@@ -69,7 +82,7 @@ curl -XPUT 'http://localhost:9200/_snapshot/my_backup' -H 'Content-Type: applica
 }'
 ```
 
-Then "my_backup" folder should appear in "/path_to_backups" folder. If not (permission issue?), create it manually.
+Then "my_backup" folder should appear in "/path_to_backups" folder (/path_to_backups/my_backup). If not (permission issue?), create it manually.
 
 2. Check if the repository has been created properly
 
@@ -77,7 +90,7 @@ Then "my_backup" folder should appear in "/path_to_backups" folder. If not (perm
 curl -XGET 'http://localhost:9200/_snapshot/my_backup'
 ```
 
-3. Make a snapshot for "dharmadict" index
+3. Make a snapshot of "dharmadict" index
 
 ```
 curl -XPUT 'http://localhost:9200/_snapshot/my_backup/snap1' {
@@ -87,7 +100,7 @@ curl -XPUT 'http://localhost:9200/_snapshot/my_backup/snap1' {
 }
 ```
 
-This will create "/path_to_backups/my_backup/snap1" folder and fill it with elastic snapshot stuff.
+This will create "/path_to_backups/my_backup/snap1" folder and fill it up with elastic snapshot data.
 
 4. Check if the snapshot has been created properly
 

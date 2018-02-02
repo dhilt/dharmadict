@@ -4,12 +4,14 @@
   "Common.save": "Save",
   "Common.reset": "Reset",
   "Common.cancel": "Cancel",
+  "Common.delete": "Delete",
 
   "App.get_common_error": "Error getting data",
 
   "Home.search_title_em": "Buddhist terminology",
   "Home.search_title_h1": " in english translations",
 
+  "TranslatorPage.link_to_desc_page": "Translator's Page",
   "TranslatorPage.translations_language": "Translations language: {translatorLanguage}",
   "TranslatorPage.button_edit": "Edit",
   "TranslatorPage.loading_text": "Loading...",
@@ -46,6 +48,7 @@
 
   "Header.create_new_term": "Create new term",
   "Header.about_project": "About",
+  "Header.home_link": "Home",
   "Header.change_language": "Change language",
 
   "Logout.button_logout": "Log out",
@@ -61,7 +64,8 @@
   "EditUser.title_edit_user": "Editing a user {id}",
   "EditUser.name_of_translator": "Name of the translator",
   "EditUser.language_of_translations": "Language of translations",
-  "EditUser.description_of_translator": "Description of the translator",
+  "EditUser.description_of_translator": "Translator's Page",
+  "EditUser.description_of_translator_help": "(for example /pages/DON)",
   "EditUser.link_reset_password": "Change password",
   "EditUser.success": "User information was successfully changed",
 
@@ -76,5 +80,21 @@
   "EditPasswordByTranslator.new_password": "New password",
   "EditPasswordByTranslator.new_password_hint": "(at least 6 symbols)",
   "EditPasswordByTranslator.new_password_confirm": "Confirm password",
-  "EditPasswordByTranslator.new_password_success": "Password was successfully changed"
+  "EditPasswordByTranslator.new_password_success": "Password was successfully changed",
+
+  "EditPage.success": "Page was successfully edited",
+  "EditPage.link_to_edit": "Edit",
+  "EditPage.edit_title": "Title of page",
+  "EditPage.edit_text": "Text of page",
+  "EditPage.title_of_page": "Edit page",
+  "EditPage.successful_remove": "The page was successfully deleted",
+
+  "NewPage.success": "New page was successfully created",
+  "NewPage.title_of_page": "Create a new page",
+  "NewPage.edit_url": "URL-address of new page",
+  "NewPage.edit_title": "Title of page",
+  "NewPage.edit_text": "Text of page",
+
+  "PagesList.title": "Pages",
+  "PagesList.link_to_create": "Create page"
 }

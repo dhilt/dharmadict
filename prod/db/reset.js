@@ -5,7 +5,9 @@ let scripts = [
   '20170908161900_create_index',
   '20170908174900_add_terms',
   '20170908184600_add_users',
-  '20170908205600_add_translations'
+  '20170908205600_add_translations',
+  '20180125205500_add_pages',
+  '20180202050300_add_users_descriptions',
 ];
 
 console.log('DB reset scripts running');

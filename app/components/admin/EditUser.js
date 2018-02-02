@@ -87,11 +87,14 @@ class EditUser extends Component {
               </div>
             )}
           </div>
-          <div className="form-group">
+          <div data-test-id="form-desc" className="form-group">
             <label data-test-id="label-desc">
               <FormattedMessage id="EditUser.description_of_translator" />
+              <span className="label-help">
+                <FormattedMessage id="EditUser.description_of_translator_help" />
+              </span>
             </label>
-            <textarea data-test-id="textarea-desc"
+            <input data-test-id="textarea-desc"
               onChange={this.changeUserDescription}
               className="form-control"
               value={description}

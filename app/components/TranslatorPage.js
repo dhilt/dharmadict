@@ -26,18 +26,23 @@ class TranslatorPage extends Component {
         <h3 data-test-id="name">{translator.name}</h3>
         <h4 data-test-id="language">
           <FormattedMessage id="TranslatorPage.translations_language"
-            values={{translatorLanguage: translatorLang ?
-              translatorLang['name_' + lang.get(userLanguage)] : ''}}
+            values={{translatorLanguage: translatorLang ? translatorLang['name_' + lang.get(userLanguage)] : ''}}
           />
         </h4>
-        <pre data-test-id="description">{translator.description}</pre>
+        {
+          translator.description &&
+          <Link to={translator.description}>
+            <FormattedMessage id="TranslatorPage.link_to_desc_page" />
+          </Link>
+        }
         {
           userData && userData.role === 'admin' &&
-          <Link data-test-id="changeUser"
-            to={`/translator/${translatorId}/edit`}
-            className="btn btn-default">
-            <FormattedMessage id="TranslatorPage.button_edit" />
-          </Link>
+          <div>
+            <br />
+            <Link data-test-id="changeUser" className="btn btn-default" to={`/translator/${translatorId}/edit`}>
+              <FormattedMessage id="TranslatorPage.button_edit" />
+            </Link>
+          </div>
         }
         {
           userData && userData.role === 'translator' && userData.id === translatorId &&
