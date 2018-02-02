@@ -11,7 +11,7 @@
   "Home.search_title_em": "Buddhist terminology",
   "Home.search_title_h1": " in english translations",
 
-  "TranslatorPage.link_to_desc_page": "Description of translator",
+  "TranslatorPage.link_to_desc_page": "Translator's Page",
   "TranslatorPage.translations_language": "Translations language: {translatorLanguage}",
   "TranslatorPage.button_edit": "Edit",
   "TranslatorPage.loading_text": "Loading...",
@@ -64,7 +64,8 @@
   "EditUser.title_edit_user": "Editing a user {id}",
   "EditUser.name_of_translator": "Name of the translator",
   "EditUser.language_of_translations": "Language of translations",
-  "EditUser.description_of_translator": "Description of the translator",
+  "EditUser.description_of_translator": "Translator's Page",
+  "EditUser.description_of_translator_help": "(for example /pages/DON)",
   "EditUser.link_reset_password": "Change password",
   "EditUser.success": "User information was successfully changed",
 

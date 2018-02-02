@@ -11,7 +11,7 @@
   "Home.search_title_em": "Буддийская терминология",
   "Home.search_title_h1": " в русских переводах",
 
-  "TranslatorPage.link_to_desc_page": "Описание переводчика",
+  "TranslatorPage.link_to_desc_page": "Страница переводчика",
   "TranslatorPage.translations_language": "Язык переводов: {translatorLanguage}",
   "TranslatorPage.button_edit": "Редактировать",
   "TranslatorPage.loading_text": "Идет загрузка...",
@@ -64,7 +64,8 @@
   "EditUser.title_edit_user": "Редактирование пользователя {id}",
   "EditUser.name_of_translator": "Имя переводчика",
   "EditUser.language_of_translations": "Язык переводов",
-  "EditUser.description_of_translator": "Описание переводчика",
+  "EditUser.description_of_translator": "Страница переводчика",
+  "EditUser.description_of_translator_help": "(например /pages/DON)",
   "EditUser.link_reset_password": "Изменить пароль",
   "EditUser.success": "Информация о пользователе была успешно изменена",
 

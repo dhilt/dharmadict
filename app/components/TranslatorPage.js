@@ -31,12 +31,15 @@ class TranslatorPage extends Component {
         /></h4>
         <Link to={`/pages/${translatorId}`}>
           <FormattedMessage id="TranslatorPage.link_to_desc_page" />
-        </Link>&nbsp;
+        </Link> &nbsp;
         {
           userData && userData.role === 'admin' &&
-          <Link data-test-id="changeUser" className="btn btn-default" to={`/translator/${translatorId}/edit`}>
-            <FormattedMessage id="TranslatorPage.button_edit" />
-          </Link>
+          <div>
+            <br />
+            <Link data-test-id="changeUser" className="btn btn-default" to={`/translator/${translatorId}/edit`}>
+              <FormattedMessage id="TranslatorPage.button_edit" />
+            </Link>
+          </div>
         }
         {
           userData && userData.role === 'translator' && userData.id === translatorId &&

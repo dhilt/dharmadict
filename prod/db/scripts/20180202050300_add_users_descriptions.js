@@ -14,11 +14,11 @@ const script = {
   run: (client) => new Promise((resolve, reject) => {
     const process = new Process(resolve, reject, users.length);
     users.forEach(user =>
-      client.index({
+      client.update({
         index: config.index,
         type: 'users',
         id: user.id,
-        body: user.body
+        body: {doc: user.body}
       })
       .then(() => process.done(), error => process.done(error || true))
     );
