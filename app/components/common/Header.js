@@ -54,7 +54,7 @@ class Header extends Component {
     ) : (
       <div data-test-id="Header.navButtons-notLoggedIn">
         {this.props.data.userInfo.pending ?
-          <LoadingButton data-test-id="Header.LoadingButton" className='btn--nav' />
+          <LoadingButton data-test-id="Header.LoadingButton" className="btn--nav" />
           :
           <Login data-test-id="Header.Login"
             onPasswordChange={this.onPasswordChange}
