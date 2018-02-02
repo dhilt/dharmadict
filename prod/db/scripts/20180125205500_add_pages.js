@@ -1,4 +1,5 @@
 const config = require('../config.js');
+const {Process} = require('./helpers.js');
 
 const pages = [{
   url: 'about',
@@ -46,14 +47,14 @@ const pages = [{
 
 <ul>
 <li><a href="/pages/DON">А.М. Донец</a> (по изданию "Введение в Мадхьямику" Чандракирти)</li>
-<li><a href="/pages/ZAG">Б.И. Загуменнов</a> (по глоссарию с сайта переводчика)</li>
-<li><a href="/pages/MK">М.Н. Кожевникова</a> (по глоссарию предоставленному переводчиком в электронном виде)</li>
-<li><a href="/pages/AKT">А. Кугявичус и А.А. Терентьев</a> (по предоставленной переводчиками, электронной версии индексов к "Большому руководству к этапам Пути Пробуждения" Чже Цонкапы)</li>
+<li>Б.И. Загуменнов (по глоссарию с сайта переводчика)</li>
+<li>М.Н. Кожевникова (по глоссарию предоставленному переводчиком в электронном виде)</li>
+<li><a href="/pages/AK">А. Кугявичус</a> и А.А. Терентьев (по предоставленной переводчиками, электронной версии индексов к "Большому руководству к этапам Пути Пробуждения" Чже Цонкапы)</li>
 <li><a href="/pages/HOP">J. Hopkins</a></li>
-<li><a href="/pages/BRZ">A. Berzin</a></li>
+<li>A. Berzin</li>
 <li><a href="/pages/MM">М. Малыгина</a></li>
 <li><a href="/pages/RAG">В.К. Рагимов</a></li>
-<li><a href="/pages/JRK">Ю. Жиронкина</a></li>
+<li>Ю. Жиронкина</li>
 </ul>
 
 </p>
@@ -235,29 +236,8 @@ const pages = [{
 const script = {
   title: `Add pages`,
   run: (client) => new Promise((resolve, reject) => {
-
-    let count = 0, countError = 0, lastError;
-    const _done = (error) => {
-      if (error) {
-        countError++;
-        lastError = error;
-      }
-      else {
-        count++;
-      }
-
-      if (count + countError === pages.length) {
-        if (countError) {
-          lastError.text = countError + ' errors have been occurred. Last error:';
-          reject(lastError);
-        }
-        else {
-          resolve({text: count + ' pages have been added'});
-        }
-      }
-    };
-
-    pages.forEach(page => {
+    const process = new Process(resolve, reject, pages.length);
+    pages.forEach(page =>
       client.index({
         index: config.index,
         type: 'pages',
@@ -267,8 +247,8 @@ const script = {
           text: page.text
         }
       })
-        .then(() => _done(), error => _done(error || true))
-    });
+      .then(() => process.done(), error => process.done(error || true))
+    );
   })
 };
 
