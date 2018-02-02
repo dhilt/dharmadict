@@ -17,7 +17,7 @@ import {selectTermAsync} from './actions/search'
 
 import getRoutes from './routes'
 import './styles/main.css'
-import './styles/images/favicon.ico';
+import './styles/images/favicon.ico'
 
 let middleware = [ thunkMiddleware ]
 

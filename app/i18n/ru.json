@@ -4,12 +4,14 @@
   "Common.save": "Сохранить",
   "Common.reset": "Сбросить",
   "Common.cancel": "Отмена",
+  "Common.delete": "Удалить",
 
   "App.get_common_error": "Ошибка получения данных",
 
   "Home.search_title_em": "Буддийская терминология",
   "Home.search_title_h1": " в русских переводах",
 
+  "TranslatorPage.link_to_desc_page": "Страница переводчика",
   "TranslatorPage.translations_language": "Язык переводов: {translatorLanguage}",
   "TranslatorPage.button_edit": "Редактировать",
   "TranslatorPage.loading_text": "Идет загрузка...",
@@ -46,6 +48,7 @@
 
   "Header.create_new_term": "Создать новый термин",
   "Header.about_project": "О проекте",
+  "Header.home_link": "На главную",
   "Header.change_language": "Сменить язык",
 
   "Logout.button_logout": "Выйти",
@@ -61,7 +64,8 @@
   "EditUser.title_edit_user": "Редактирование пользователя {id}",
   "EditUser.name_of_translator": "Имя переводчика",
   "EditUser.language_of_translations": "Язык переводов",
-  "EditUser.description_of_translator": "Описание переводчика",
+  "EditUser.description_of_translator": "Страница переводчика",
+  "EditUser.description_of_translator_help": "(например /pages/DON)",
   "EditUser.link_reset_password": "Изменить пароль",
   "EditUser.success": "Информация о пользователе была успешно изменена",
 
@@ -76,5 +80,21 @@
   "EditPasswordByTranslator.new_password": "Новый пароль",
   "EditPasswordByTranslator.new_password_hint": "(не менее 6 символов)",
   "EditPasswordByTranslator.new_password_confirm": "Подтверждение пароля",
-  "EditPasswordByTranslator.new_password_success": "Пароль был успешно изменен"
+  "EditPasswordByTranslator.new_password_success": "Пароль был успешно изменен",
+
+  "EditPage.success": "Страница была успешно отредактирована",
+  "EditPage.link_to_edit": "Редактировать",
+  "EditPage.edit_title": "Заголовок страницы",
+  "EditPage.edit_text": "Текст страницы",
+  "EditPage.title_of_page": "Редактирование страницы",
+  "EditPage.successful_remove": "Страница была успешно удалена",
+
+  "NewPage.success": "Новая страница была успешно создана",
+  "NewPage.title_of_page": "Создание новой страницы",
+  "NewPage.edit_url": "URL-адрес новой страницы",
+  "NewPage.edit_title": "Заголовок страницы",
+  "NewPage.edit_text": "Текст страницы",
+
+  "PagesList.title": "Страницы",
+  "PagesList.link_to_create": "Создать страницу"
 }

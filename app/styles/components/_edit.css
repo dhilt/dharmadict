@@ -1,22 +1,22 @@
 .meaningList, .versionList {
-    list-style-type: none;
-    padding: 0;
+  list-style-type: none;
+  padding: 0;
 }
 
 .meaningList li {
-    padding-left: 10px;
-    margin-bottom: 20px;
-    clear: both;
+  padding-left: 10px;
+  margin-bottom: 20px;
+  clear: both;
 }
 
 .meaningList .meaning {
-    margin-right: 15px;
-    margin-bottom: 20px;
-    float: left;
+  margin-right: 15px;
+  margin-bottom: 20px;
+  float: left;
 }
 
 .meaningList .meaning .title {
-    font-style: italic;
+  font-style: italic;
 }
 
 .meaningList .comment {
@@ -25,11 +25,11 @@
 }
 
 .meaningList .comment textarea {
-    width: 220px;
+  width: 220px;
 }
 
 .meaningList .comment .title {
-    font-style: italic;
+  font-style: italic;
 }
 
 .meaningList .remove .remove-link {
@@ -46,12 +46,12 @@
 }
 
 .versionList li {
-    padding-left: 10px;
-    margin-bottom: 0px;
+  padding-left: 10px;
+  margin-bottom: 0;
 }
 
 .remove-btn {
-    background: url('images/remove2.gif') no-repeat center #ececec;
+  background: url('images/remove2.gif') no-repeat center #ececec;
 }
 
 .cancel-link {
@@ -61,4 +61,11 @@
 
 .back-link {
   cursor: pointer;
+}
+
+.label-help {
+  font-weight: normal;
+  margin-left: 5px;
+  font-size: smaller;
+  color: #555;
 }

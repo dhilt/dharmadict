@@ -1,16 +1,19 @@
 import React, {Component} from 'react'
-import {Router, Route, browserHistory} from 'react-router'
+import {browserHistory} from 'react-router'
 
 import App from './components/App'
 import Home from './components/Home'
-import About from './components/About'
 import NotFound from './components/NotFound'
 import Edit from './components/Edit'
 import TranslatorPage from './components/TranslatorPage'
+import Pages from './components/Pages'
+import Page from './components/Page'
 
 import NewTerm from './components/admin/NewTerm'
 import EditUser from './components/admin/EditUser'
 import EditUserPassword from './components/admin/EditUserPassword'
+import EditPage from './components/admin/EditPage'
+import NewPage from './components/admin/NewPage'
 
 import EditPasswordByTranslator from './components/translator/EditPasswordByTranslator'
 
@@ -53,7 +56,6 @@ const getRoutes = (store) => ({
   component: App,
   childRoutes: [
     { path: '/', exactly: true, component: Home },
-    { path: '/about', exactly: true, component: About },
     { path: '/edit', exactly: true, component: Edit },
     {
       path: '/newTerm',
@@ -79,6 +81,20 @@ const getRoutes = (store) => ({
       exactly: true,
       component: EditPasswordByTranslator,
       onEnter: (...args) => checkAccess(...args, store, 'translator', args[0].params.id)
+    },
+    { path: '/pages', exactly: true, component: Pages },
+    {
+      path: '/pages/new',
+      exactly: true,
+      component: NewPage,
+      onEnter: (...args) => checkAccess(...args, store, 'admin')
+    },
+    { path: '/pages/:pageUrl', exactly: true, component: Page },
+    {
+      path: '/pages/:pageUrl/edit',
+      exactly: true,
+      component: EditPage,
+      onEnter: (...args) => checkAccess(...args, store, 'admin')
     },
     { path: '/not_authorized', exactly: true, component: NotFound },
     { path: '/not_permitted', exactly: true, component: NotFound },

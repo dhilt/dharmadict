@@ -31,6 +31,7 @@
     "babel-runtime": "^6.9.2",
     "chai": "^4.1.2",
     "chai-http": "^3.0.0",
+    "clean-webpack-plugin": "^0.1.18",
     "concurrently": "^3.1.0",
     "cross-env": "^5.0.5",
     "css-loader": "^0.24.0",
@@ -55,7 +56,6 @@
     "snazzy": "^5.0.0",
     "standard": "^8.2.0",
     "style-loader": "^0.13.1",
-    "surge": "^0.18.0",
     "url-loader": "^0.5.7",
     "webpack": "^1.13.1",
     "webpack-dev-server": "^1.14.1"

@@ -1,4 +1,5 @@
 const config = require('../config.js');
+const {Process} = require('./helpers.js');
 
 const users = [{
   id: 'ADMIN',
@@ -113,37 +114,16 @@ const users = [{
 const script = {
   title: `Add users`,
   run: (client) => new Promise((resolve, reject) => {
-
-    let count = 0, countError = 0, lastError;
-    const _done = (error) => {
-      if (error) {
-        countError++;
-        lastError = error;
-      }
-      else {
-        count++;
-      }
-
-      if (count + countError === users.length) {
-        if (countError) {
-          lastError.text = countError + ' errors have been occurred. Last error:';
-          reject(lastError);
-        }
-        else {
-          resolve({text: count + ' users have been added'});
-        }
-      }
-    };
-
-    users.forEach(user => {
+    const process = new Process(resolve, reject, users.length);
+    users.forEach(user =>
       client.index({
         index: config.index,
         type: 'users',
         id: user.id,
         body: user.body
       })
-        .then(() => _done(), error => _done(error || true))
-    });
+      .then(() => process.done(), error => process.done(error || true))
+    );
   })
 };
 
