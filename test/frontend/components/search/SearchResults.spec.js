@@ -7,7 +7,6 @@ const {
   defaultTerm,
   defaultLang,
   getAppPath,
-  languages,
   shallow,
   terms
 } = require('../../_shared.js');
@@ -96,27 +95,5 @@ describe('Testing SearchResults Component.', () => {
     expect(wrapper.find(termId).exists()).equal(true);
 
     wrapper.unmount();
-  });
-
-  const intlStringId = 'SearchResults.Not_found';
-
-  languages.forEach(lang => {
-    const i18n = require(getAppPath(2) + 'i18n/' + lang.id);
-
-    it(`should exists all i18n-texts for the component (${lang.id})`, () => {
-      expect(i18n.hasOwnProperty(intlStringId)).equal(true)
-    });
-
-    it(`should show i18n-texts on the component (${lang.id})`, () => {
-      const wrapper = mountWithIntl(<SearchResults {...props} />, lang.id);
-      wrapper.setProps({...props,
-        data: {...props.data,
-          started: true
-        }
-      });
-
-      expect(wrapper.find(notFoundId).text()).equal(i18n[intlStringId]);
-      wrapper.unmount();
-    });
   });
 });

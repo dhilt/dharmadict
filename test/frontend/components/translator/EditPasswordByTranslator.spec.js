@@ -4,10 +4,8 @@ const sinon = require('sinon');
 
 const {
   defaultTranslator,
-  mountWithIntl,
   initialState,
   getAppPath,
-  languages,
   shallow
 } = require('../../_shared.js');
 
@@ -152,62 +150,5 @@ describe('Testing EditPasswordByTranslator Component.', () => {
     expect(wrapper.find(btnSaveId).props().disabled).equal(true);
 
     wrapper.unmount();
-  });
-
-  const arrIntlStringsId = [
-    ['[data-test-id="label-confirm-pass"]', 'EditPasswordByTranslator.new_password_confirm'],
-    ['[data-test-id="label-current-pass"]', 'EditPasswordByTranslator.current_password'],
-    ['[data-test-id="hint-new-pass"]', 'EditPasswordByTranslator.new_password_hint'],
-    ['[data-test-id="label-new-pass"]', 'EditPasswordByTranslator.new_password'],
-    ['[data-test-id="title"]', 'EditPasswordByTranslator.title'],
-    [btnCancelId, 'Common.cancel'],
-    [btnResetId, 'Common.reset'],
-    [btnSaveId, 'Common.save']
-  ];
-
-  languages.forEach(lang => {
-    const i18n = require(getAppPath(2) + 'i18n/' + lang.id);
-
-    it(`should exists all i18n-texts for the component (${lang.id})`, () =>
-      arrIntlStringsId.forEach(couple =>
-        expect(i18n.hasOwnProperty(couple[1])).equal(true)
-      )
-    );
-
-    it(`should show i18n-texts on the component (${lang.id})`, () => {
-      const wrapper = mountWithIntl(
-        <TestedComponent {...props} />, lang.id
-      );
-
-      let couple = arrIntlStringsId[0];
-      expect(wrapper.find(couple[0]).text()).equal(i18n[couple[1]]);
-
-      couple = arrIntlStringsId[1];
-      expect(wrapper.find(couple[0]).text()).equal(i18n[couple[1]]);
-
-      couple = arrIntlStringsId[2];
-      expect(wrapper.find(couple[0]).text()).equal(i18n[couple[1]]);
-
-      couple = arrIntlStringsId[3];
-      expect(wrapper.find(couple[0]).text()).equal(
-        i18n[couple[1]] + i18n[arrIntlStringsId[2][1]]
-      );
-
-      couple = arrIntlStringsId[4];
-      expect(wrapper.find(couple[0]).text()).equal(
-        i18n[couple[1]].replace('{id}', defaultTranslator.id)
-      );
-
-      couple = arrIntlStringsId[5];
-      expect(wrapper.find(couple[0]).first().text()).equal(i18n[couple[1]]);
-
-      couple = arrIntlStringsId[6];
-      expect(wrapper.find(couple[0]).text()).equal(i18n[couple[1]]);
-
-      couple = arrIntlStringsId[7];
-      expect(wrapper.find(couple[0]).text()).equal(i18n[couple[1]]);
-
-      wrapper.unmount();
-    });
   });
 });

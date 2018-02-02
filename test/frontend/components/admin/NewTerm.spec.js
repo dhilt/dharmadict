@@ -3,7 +3,6 @@ const {expect} = require('chai');
 const sinon = require('sinon');
 
 const {
-  mountWithIntl,
   initialState,
   getAppPath,
   languages,
@@ -132,36 +131,5 @@ describe('Testing NewTerm Component.', () => {
     });
 
     wrapper.unmount();
-  });
-
-  const arrIntlStringsId = [
-    ['[data-test-id="title"]', 'NewTerm.title_new_term'],
-    ['[data-test-id="button-cancel"]', 'Common.cancel'],
-    [btnSaveId, 'Common.save']
-  ];
-
-  languages.forEach(lang => {
-    const i18n = require(getAppPath(2) + 'i18n/' + lang.id);
-
-    it(`should exists all i18n-texts for the component (${lang.id})`, () =>
-      arrIntlStringsId.forEach(couple =>
-        expect(i18n.hasOwnProperty(couple[1])).equal(true)
-      )
-    );
-
-    it(`should show i18n-texts on the component (${lang.id})`, () => {
-      const wrapper = mountWithIntl(<NewTerm {...props} />, lang.id);
-
-      let couple = arrIntlStringsId[0];
-      expect(wrapper.find(couple[0]).text()).equal(i18n[couple[1]]);
-
-      couple = arrIntlStringsId[1];
-      expect(wrapper.find(couple[0]).first().text()).equal(i18n[couple[1]]);
-
-      couple = arrIntlStringsId[2];
-      expect(wrapper.find(couple[0]).first().text()).equal(i18n[couple[1]]);
-
-      wrapper.unmount();
-    });
   });
 });

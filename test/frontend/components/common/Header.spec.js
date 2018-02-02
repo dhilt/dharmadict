@@ -7,7 +7,6 @@ const {
   defaultLang,
   defaultUser,
   getAppPath,
-  languages,
   admin
 } = require('../../_shared.js');
 
@@ -18,8 +17,7 @@ describe('Testing Header Component.', () => {
   const props = {
     data: initialState.auth,
     common: {
-      userLanguage: defaultLang,
-      languages
+      userLanguage: defaultLang
     }
   };
 
@@ -94,40 +92,5 @@ describe('Testing Header Component.', () => {
     expect(wrapper.find(notLoggedInId).exists()).equal(false);
 
     wrapper.unmount();
-  });
-
-  const arrIntlStringsId = [
-    ['[data-test-id="Header.about_project"]', 'Header.about_project'],
-    [linkCreateTermId, 'Header.create_new_term']
-  ];
-
-  languages.forEach(lang => {
-    const i18n = require(getAppPath(2) + 'i18n/' + lang.id);
-
-    it(`should exists all i18n-texts for the component (${lang.id})`, () =>
-      arrIntlStringsId.forEach(couple =>
-        expect(i18n.hasOwnProperty(couple[1])).equal(true)
-      )
-    );
-
-    it(`should show i18n-texts on the component (${lang.id})`, () => {
-      const wrapper = mountWithIntl(<Header {...props} />, lang.id);
-
-      let couple = arrIntlStringsId[0];
-      expect(wrapper.find(couple[0]).first().text()).equal(i18n[couple[1]]);
-
-      wrapper.setProps({...props,
-        data: {...props.data,
-          loggedIn: true,
-          userInfo: {...props.data.userInfo,
-            data: admin
-          }
-        }
-      });
-      couple = arrIntlStringsId[1];
-      expect(wrapper.find(couple[0]).first().text()).equal(i18n[couple[1]]);
-
-      wrapper.unmount();
-    });
   });
 });

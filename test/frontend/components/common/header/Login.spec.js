@@ -6,7 +6,6 @@ const {
   mountWithIntl,
   initialState,
   getAppPath,
-  languages,
   shallow
 } = require('../../../_shared.js');
 

@@ -2,22 +2,14 @@ const React = require('react');
 const {expect} = require('chai');
 const sinon = require('sinon');
 
-const {
-  mountWithIntl,
-  initialState,
-  defaultLang,
-  getAppPath,
-  languages,
-  shallow
-} = require('../../_shared.js');
+const {initialState, getAppPath, shallow} = require('../../_shared.js');
 
 const SearchInput = require(getAppPath(2) + 'components/search/SearchInput').default.WrappedComponent;
 
 describe('Testing SearchInput Component.', () => {
 
   const props = {
-    data: initialState.search,
-    lang: defaultLang
+    data: initialState.search
   };
 
   const inputSearchId = '[data-test-id="search-string-input"]';
@@ -113,21 +105,5 @@ describe('Testing SearchInput Component.', () => {
     expect(wrapper.find(btnSearchId).props().disabled).equal(false);
 
     wrapper.unmount();
-  });
-
-  const intlStringId = 'SearchInput.button_find';
-
-  languages.forEach(lang => {
-    const i18n = require(getAppPath(2) + 'i18n/' + lang.id);
-
-    it(`should exists all i18n-texts for the component (${lang.id})`, () => {
-      expect(i18n.hasOwnProperty(intlStringId)).equal(true)
-    });
-
-    it(`should show i18n-texts on the component (${lang.id})`, () => {
-      const wrapper = mountWithIntl(<SearchInput {...props} />, lang.id);
-      expect(wrapper.find(btnSearchId).first().text()).equal(i18n[intlStringId]);
-      wrapper.unmount();
-    });
   });
 });

@@ -3,9 +3,7 @@ const {expect} = require('chai');
 const sinon = require('sinon');
 
 const {
-  mountWithIntl,
   getAppPath,
-  languages,
   shallow
 } = require('../../../_shared.js');
 
@@ -38,23 +36,5 @@ describe('Testing Logout Component.', () => {
     expect(wrapper.find(btnLogoutId).exists()).equal(true);
 
     wrapper.unmount();
-  });
-
-  const intlStringsId = [btnLogoutId, 'Logout.button_logout'];
-
-  languages.forEach(lang => {
-    const i18n = require(getAppPath(3) + 'i18n/' + lang.id);
-
-    it(`should exists all i18n-texts for the component (${lang.id})`, () => {
-      expect(i18n.hasOwnProperty(intlStringsId[1])).equal(true);
-    });
-
-    it(`should show i18n-texts on the component (${lang.id})`, () => {
-      const wrapper = mountWithIntl(<Logout {...props} />, lang.id);
-
-      expect(wrapper.find(intlStringsId[0]).first().text()).equal(i18n[intlStringsId[1]]);
-
-      wrapper.unmount();
-    });
   });
 });

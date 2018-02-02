@@ -4,12 +4,9 @@ const sinon = require('sinon');
 
 const {
   defaultTranslator,
-  mountWithIntl,
   initialState,
   defaultUser,
-  languages,
   shallow,
-  getLang,
   appPath,
   admin
 } = require('../_shared.js');
@@ -26,8 +23,7 @@ describe('Testing TranslatorPage Component.', () => {
       data: defaultUser
     },
     common: {...initialState.common,
-      userLanguage: defaultUser.language,
-      languages
+      userLanguage: defaultUser.language
     },
     params: {
       id: defaultTranslator.id
@@ -117,82 +113,5 @@ describe('Testing TranslatorPage Component.', () => {
     expect(wrapper.find(adminId).exists()).equal(true);
 
     wrapper.unmount();
-  });
-
-  const arrIntlStringsId = [
-    [translatorId, 'TranslatorPage.button_edit_password'],
-    [langId, 'TranslatorPage.translations_language'],
-    [descId, 'TranslatorPage.link_to_desc_page'],
-    [pendingId, 'TranslatorPage.loading_text'],
-    [adminId, 'TranslatorPage.button_edit']
-  ];
-
-  languages.forEach(lang => {
-    const i18n = require(appPath + 'i18n/' + lang.id);
-
-    it(`should exists all i18n-texts for the component ${lang.id}`, () =>
-      arrIntlStringsId.forEach(couple =>
-        expect(i18n.hasOwnProperty(couple[1])).equal(true)
-      )
-    );
-
-    it(`should show i18n-texts on the component ${lang.id}`, () => {
-      const wrapper = mountWithIntl(
-        <TranslatorPage {...props} />, lang.id
-      );
-
-      const checkStringsWithoutValues = (wrapper, coupleStrings) =>
-        expect(wrapper.find(coupleStrings[0]).first().text()).equal(i18n[coupleStrings[1]]);
-
-      languages.forEach(translatorLang => {
-        wrapper.setProps({...props,
-          translatorInfo: {...props.translatorInfo,
-            data: {...props.translatorInfo.data,
-              language: translatorLang.id
-            }
-          },
-          common: {...props.common,
-            userLanguage: lang.id
-          }
-        });
-
-        const langId = arrIntlStringsId[1];
-        const existedStr = wrapper.find(langId[0]).text();
-        const expectedStr = i18n[langId[1]].replace(
-          '{translatorLanguage}',
-          getLang(translatorLang.id)['name_' + lang.id]
-        );
-        expect(existedStr).equal(expectedStr);
-      });
-
-      wrapper.setProps(props);
-      checkStringsWithoutValues(wrapper, arrIntlStringsId[2]);
-
-      wrapper.setProps({...props,
-        translatorInfo: {...props.translatorInfo,
-          pending: true
-        }
-      });
-      checkStringsWithoutValues(wrapper, arrIntlStringsId[3]);
-
-      wrapper.setProps({...props,
-        userInfo: {...props.userInfo,
-          data: admin
-        }
-      });
-      checkStringsWithoutValues(wrapper, arrIntlStringsId[4]);
-
-      wrapper.setProps({...props,
-        translatorInfo: {...props.translatorInfo,
-          data: defaultTranslator
-        },
-        userInfo: {...props.userInfo,
-          data: defaultTranslator
-        }
-      });
-      checkStringsWithoutValues(wrapper, arrIntlStringsId[0]);
-
-      wrapper.unmount();
-    });
   });
 });

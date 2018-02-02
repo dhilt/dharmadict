@@ -3,11 +3,8 @@ const {expect} = require('chai');
 const sinon = require('sinon');
 
 const {
-  mountWithIntl,
   initialState,
-  defaultLang,
   getAppPath,
-  languages,
   shallow
 } = require('../../_shared.js');
 
@@ -16,8 +13,7 @@ const EditControls = require(getAppPath(2) + 'components/edit/EditControls').def
 describe('Testing EditControls Component.', () => {
 
   const props = {
-    data: initialState.edit.update,
-    userLang: defaultLang
+    data: initialState.edit.update
   };
 
   const btnSaveAndCloseId = '[data-test-id="button-save-and-close"]';
@@ -68,31 +64,5 @@ describe('Testing EditControls Component.', () => {
     expect(wrapper.find(btnSaveId).props().disabled).equal(true);
 
     wrapper.unmount();
-  });
-
-  const arrIntlStringsId = [
-    [btnSaveAndCloseId, 'EditControls.button_save_and_close'],
-    [linkCancelId, 'EditControls.button_reset'],
-    [btnSaveId, 'EditControls.button_save']
-  ];
-
-  languages.forEach(lang => {
-    const i18n = require(getAppPath(2) + 'i18n/' + lang.id);
-
-    it(`should exists all i18n-texts for the component (${lang.id})`, () =>
-      arrIntlStringsId.forEach(couple =>
-        expect(i18n.hasOwnProperty(couple[1])).equal(true)
-      )
-    );
-
-    it(`should show i18n-texts on the component (${lang.id})`, () => {
-      const wrapper = mountWithIntl(<EditControls {...props} />, lang.id);
-
-      arrIntlStringsId.forEach(couple =>
-        expect(wrapper.find(couple[0]).first().text()).equal(i18n[couple[1]])
-      );
-
-      wrapper.unmount();
-    });
   });
 });

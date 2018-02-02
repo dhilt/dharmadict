@@ -4,12 +4,10 @@ const sinon = require('sinon');
 
 const {
   defaultTranslator,
-  mountWithIntl,
   defaultTerm,
   defaultUser,
   translators,
   getAppPath,
-  languages,
   shallow
 } = require('../../_shared.js');
 
@@ -191,43 +189,5 @@ describe('Testing Term Component.', () => {
     });
 
     wrapper.unmount();
-  });
-
-  const arrIntlStringsId = [
-    ['[data-test-id="link-add-translation"]', 'Term.add_translation'],
-    ['[data-test-id="sanskrit"]', 'Term.sanskrit_term']
-  ];
-
-  languages.forEach(lang => {
-    const i18n = require(getAppPath(2) + 'i18n/' + lang.id);
-
-    it(`should exists all i18n-texts for the component (${lang.id})`, () =>
-      arrIntlStringsId.forEach(couple =>
-        expect(i18n.hasOwnProperty(couple[1])).equal(true)
-      )
-    );
-
-    it(`should show i18n-texts on the component (${lang.id})`, () => {
-      const wrapper = mountWithIntl(<Term {...props} />, lang.id);
-
-      let couple = arrIntlStringsId[0];
-      wrapper.setState({
-        userInfo: {...props.userInfo,
-          role: 'translator',
-          id: 'nonexistent'
-        }
-      });
-      expect(wrapper.find(couple[0]).first().text()).equal(i18n[couple[1]]);
-
-      couple = arrIntlStringsId[1];
-      expect(wrapper.find(couple[0]).text()).equal(
-        i18n[couple[1]].replace(
-          `{sanskrit_${lang.id}}`,
-          defaultTerm['sanskrit_' + lang.id]
-        )
-      );
-
-      wrapper.unmount();
-    });
   });
 });
