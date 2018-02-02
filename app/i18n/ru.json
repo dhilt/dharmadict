@@ -95,6 +95,6 @@
   "NewPage.edit_title": "Заголовок страницы",
   "NewPage.edit_text": "Текст страницы",
 
-  "PagesList.title": "Страницы",
-  "PagesList.link_to_create": "Создать страницу"
+  "Pages.title": "Страницы",
+  "Pages.link_to_create": "Создать страницу"
 }

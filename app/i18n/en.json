@@ -95,6 +95,6 @@
   "NewPage.edit_title": "Title of page",
   "NewPage.edit_text": "Text of page",
 
-  "PagesList.title": "Pages",
-  "PagesList.link_to_create": "Create page"
+  "Pages.title": "Pages",
+  "Pages.link_to_create": "Create page"
 }
