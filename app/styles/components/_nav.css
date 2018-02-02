@@ -17,6 +17,10 @@
   margin: 0 auto;
 }
 
+.nav__wrapper-left {
+  float: left;
+}
+
 .nav__logo-wrapper {
   text-decoration: none;
 }

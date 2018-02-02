@@ -48,6 +48,7 @@
 
   "Header.create_new_term": "Create new term",
   "Header.about_project": "About",
+  "Header.home_link": "Home",
   "Header.change_language": "Change language",
 
   "Logout.button_logout": "Log out",
