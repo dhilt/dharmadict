@@ -73,7 +73,7 @@ describe('Testing Term Component.', () => {
         }
       });
       expect(wrapper.find(linkEditMeaningId).length).equal(1);
-      const {termId, translatorId} = wrapper.find(linkEditMeaningId).first().props().to.query;
+      const {termId, translatorId} = wrapper.find(linkEditMeaningId).first().prop('to').query;
       expect(termId).equal(defaultTerm.wylie);
       expect(translatorId).equal(translator);
 
@@ -148,14 +148,14 @@ describe('Testing Term Component.', () => {
     defaultTerm.translations.forEach((translation, i) => {
       expect(wrapper.find(translationId).at(i).exists()).equal(true);
 
-      expect(wrapper.find(linkTranslatorId).at(i).props().to).equal(
+      expect(wrapper.find(linkTranslatorId).at(i).prop('to')).equal(
         'translator/' + translation.translatorId
       );
-      expect(wrapper.find(linkTranslatorId).at(i).props().children).equal(
+      expect(wrapper.find(linkTranslatorId).at(i).prop('children')).equal(
         translators.find(t => t.id === translation.translatorId).name
       );
 
-      expect(wrapper.find(listMeaningsId).at(i).props().className).equal(
+      expect(wrapper.find(listMeaningsId).at(i).prop('className')).equal(
         'meanings' + (translation.meanings.length === 1 ? ' single-item' : '')
       );
 
@@ -171,7 +171,7 @@ describe('Testing Term Component.', () => {
         let _wrap = wrapper.find(translationId).at(i).find(meaningId).at(meaningIndex).find(openCommentId);
         if (meaning.comment !== '') {
           expect(_wrap.exists()).equal(true);
-          expect(_wrap.props().children).equal('>>>');
+          expect(_wrap.prop('children')).equal('>>>');
 
           expect(_wrap.find(openedCommentId).exists()).equal(false);
           defaultTerm.translations[i].meanings[meaningIndex].openComment = true;
@@ -181,7 +181,7 @@ describe('Testing Term Component.', () => {
             }
           });
           _wrap = wrapper.find(translationId).at(i).find(meaningId).at(meaningIndex).find(openedCommentId);
-          expect(_wrap.props().children).equal(defaultTerm.translations[i].meanings[meaningIndex].comment);
+          expect(_wrap.prop('children')).equal(defaultTerm.translations[i].meanings[meaningIndex].comment);
         } else {
           expect(_wrap.find(openCommentId).exists()).equal(false);
         }

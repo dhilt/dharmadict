@@ -55,11 +55,11 @@ describe('Testing EditUserPassword Component.', () => {
     wrapper.find(btnResetId).simulate('click', defaultEvent);
     wrapper.find(btnSaveId).simulate('click', defaultEvent);
 
-    expect(spyChangeConfPass.calledOnce).to.equal(true);
-    expect(spyChangePass.calledOnce).to.equal(true);
-    expect(spyWillMount.calledOnce).to.equal(true);
-    expect(spyBtnReset.calledOnce).to.equal(true);
-    expect(spyBtnSave.calledOnce).to.equal(true);
+    expect(spyChangeConfPass.calledOnce).equal(true);
+    expect(spyChangePass.calledOnce).equal(true);
+    expect(spyWillMount.calledOnce).equal(true);
+    expect(spyBtnReset.calledOnce).equal(true);
+    expect(spyBtnSave.calledOnce).equal(true);
 
     wrapper.unmount();
   });
@@ -78,7 +78,7 @@ describe('Testing EditUserPassword Component.', () => {
         password: editedNewPassword
       }
     });
-    expect(wrapper.find(inputPassId).props().value).equal(editedNewPassword);
+    expect(wrapper.find(inputPassId).prop('value')).equal(editedNewPassword);
 
     const editedConfirmPassword = props.stateData.confirmPassword + ' new';
     wrapper.setProps({...props,
@@ -86,13 +86,13 @@ describe('Testing EditUserPassword Component.', () => {
         confirmPassword: editedConfirmPassword
       }
     });
-    expect(wrapper.find(inputConfPassId).props().value).equal(editedConfirmPassword);
+    expect(wrapper.find(inputConfPassId).prop('value')).equal(editedConfirmPassword);
 
     wrapper.setProps(props);
-    expect(!!wrapper.find(btnSaveId).props().disabled).equal(false);
+    expect(!!wrapper.find(btnSaveId).prop('disabled')).equal(false);
 
     const expectedLink = '/translator/' + defaultUser.id + '/edit';
-    expect(wrapper.find(linkCancelId).props().to).equal(expectedLink);
+    expect(wrapper.find(linkCancelId).prop('to')).equal(expectedLink);
 
     wrapper.unmount();
   });
@@ -105,21 +105,21 @@ describe('Testing EditUserPassword Component.', () => {
         pending: true
       }
     });
-    expect(wrapper.find(btnSaveId).props().disabled).equal(true);
+    expect(wrapper.find(btnSaveId).prop('disabled')).equal(true);
 
     wrapper.setProps({...props,
       stateData: {...props.stateData,
         password: ''
       }
     });
-    expect(wrapper.find(btnSaveId).props().disabled).equal(true);
+    expect(wrapper.find(btnSaveId).prop('disabled')).equal(true);
 
     wrapper.setProps({...props,
       stateData: {...props.stateData,
         confirmPassword: ''
       }
     });
-    expect(wrapper.find(btnSaveId).props().disabled).equal(true);
+    expect(wrapper.find(btnSaveId).prop('disabled')).equal(true);
 
     wrapper.setProps({...props,
       stateData: {...props.stateData,
@@ -127,14 +127,14 @@ describe('Testing EditUserPassword Component.', () => {
         password: 'Valid password'
       }
     });
-    expect(wrapper.find(btnSaveId).props().disabled).equal(true);
+    expect(wrapper.find(btnSaveId).prop('disabled')).equal(true);
 
     wrapper.setProps({...props,
       stateData: {...props.stateData,
         password: 'short'  // less than 6 characters
       }
     });
-    expect(wrapper.find(btnSaveId).props().disabled).equal(true);
+    expect(wrapper.find(btnSaveId).prop('disabled')).equal(true);
 
     wrapper.unmount();
   });

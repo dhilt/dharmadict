@@ -23,7 +23,7 @@ describe('Testing LoadingButton Component.', () => {
     wrapper.setProps({
       className: givenClassName
     });
-    expect(wrapper.find(LoadingButtonId).props().className)
+    expect(wrapper.find(LoadingButtonId).prop('className'))
       .equal(givenClassName + ' btn btn--loading');
 
     wrapper.unmount();

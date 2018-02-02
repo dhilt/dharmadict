@@ -64,7 +64,7 @@ describe('Testing Notifier Component.', () => {
       wrapper.setProps(props);
 
       props.notifications.forEach((notification, i) => {
-        expect(wrapper.find(alertId).at(i * 2).props().bsStyle).equal(notification.type);
+        expect(wrapper.find(alertId).at(i * 2).prop('bsStyle')).equal(notification.type);
         // wrapper.find(alertId).at(i * 2).simulate('click');  // doesn't work
       });
 

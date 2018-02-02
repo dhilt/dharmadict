@@ -49,19 +49,19 @@ describe('Testing EditControls Component.', () => {
 
     expect(wrapper.find(mainId).exists()).equal(true);
 
-    expect(wrapper.find(btnSaveAndCloseId).props().disabled).equal(false);
-    expect(wrapper.find(btnSaveAndCloseId).props().className).equal('');
-    expect(wrapper.find(btnSaveId).props().disabled).equal(false);
-    expect(wrapper.find(btnSaveId).props().className).equal('');
+    expect(wrapper.find(btnSaveAndCloseId).prop('disabled')).equal(false);
+    expect(wrapper.find(btnSaveAndCloseId).prop('className')).equal('');
+    expect(wrapper.find(btnSaveId).prop('disabled')).equal(false);
+    expect(wrapper.find(btnSaveId).prop('className')).equal('');
     wrapper.setProps({...props,
       data: {...props.data,
         pending: true
       }
     });
-    expect(wrapper.find(btnSaveAndCloseId).props().className).equal('loader');
-    expect(wrapper.find(btnSaveAndCloseId).props().disabled).equal(true);
-    expect(wrapper.find(btnSaveId).props().className).equal('loader');
-    expect(wrapper.find(btnSaveId).props().disabled).equal(true);
+    expect(wrapper.find(btnSaveAndCloseId).prop('className')).equal('loader');
+    expect(wrapper.find(btnSaveAndCloseId).prop('disabled')).equal(true);
+    expect(wrapper.find(btnSaveId).prop('className')).equal('loader');
+    expect(wrapper.find(btnSaveId).prop('disabled')).equal(true);
 
     wrapper.unmount();
   });

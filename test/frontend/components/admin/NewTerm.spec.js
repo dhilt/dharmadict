@@ -45,8 +45,8 @@ describe('Testing NewTerm Component.', () => {
     }
 
     expect(spyChangeSanskrit.callCount).equal(langLength);
-    expect(spyChangeWylie.calledOnce).to.equal(true);
-    expect(spySaveTerm.calledOnce).to.equal(true);
+    expect(spyChangeWylie.calledOnce).equal(true);
+    expect(spySaveTerm.calledOnce).equal(true);
 
     wrapper.unmount();
   });
@@ -64,7 +64,7 @@ describe('Testing NewTerm Component.', () => {
         wylie: editedWylie
       }
     });
-    expect(wrapper.find(inputWylieId).props().value).equal(editedWylie);
+    expect(wrapper.find(inputWylieId).prop('value')).equal(editedWylie);
 
     languages.forEach((lang, langIndex) => {
       const editedSanskrit = 'new sanskrit on ' + lang.id;
@@ -75,17 +75,17 @@ describe('Testing NewTerm Component.', () => {
           }
         }
       });
-      expect(wrapper.find(inputSanskritId).at(langIndex).props().value).equal(editedSanskrit);
+      expect(wrapper.find(inputSanskritId).at(langIndex).prop('value')).equal(editedSanskrit);
     });
 
-    expect(wrapper.find(btnSaveId).props().className).equal('');
+    expect(wrapper.find(btnSaveId).prop('className')).equal('');
     const expectedClassName = 'loader';
     wrapper.setProps({...props,
       data: {...props.data,
         pending: true
       }
     });
-    expect(wrapper.find(btnSaveId).props().className).equal(expectedClassName);
+    expect(wrapper.find(btnSaveId).prop('className')).equal(expectedClassName);
 
     wrapper.unmount();
   });
@@ -98,14 +98,14 @@ describe('Testing NewTerm Component.', () => {
         pending: true
       }
     });
-    expect(wrapper.find(btnSaveId).props().disabled).equal(true);
+    expect(wrapper.find(btnSaveId).prop('disabled')).equal(true);
 
     wrapper.setProps({...props,
       data: {...props.data,
         wylie: ''
       }
     });
-    expect(wrapper.find(btnSaveId).props().disabled).equal(true);
+    expect(wrapper.find(btnSaveId).prop('disabled')).equal(true);
 
     let fullWritedSanskrit = {};
     languages.forEach(lang =>
@@ -117,7 +117,7 @@ describe('Testing NewTerm Component.', () => {
         sanskrit: fullWritedSanskrit
       }
     });
-    expect(wrapper.find(btnSaveId).props().disabled).equal(false);
+    expect(wrapper.find(btnSaveId).prop('disabled')).equal(false);
 
     languages.forEach(lang => {
       let invalidSanskrit = Object.assign({}, fullWritedSanskrit);
@@ -127,7 +127,7 @@ describe('Testing NewTerm Component.', () => {
           sanskrit: invalidSanskrit
         }
       });
-      expect(wrapper.find(btnSaveId).props().disabled).equal(true);
+      expect(wrapper.find(btnSaveId).prop('disabled')).equal(true);
     });
 
     wrapper.unmount();

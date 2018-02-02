@@ -69,7 +69,7 @@ describe('Testing Header Component.', () => {
     expect(wrapper.find(loggedInId).exists()).equal(true);
     expect(wrapper.find(LogoutComponentId).exists()).equal(true);
     expect(wrapper.find(linkToUserId).first().text()).equal(defaultUser.name);
-    expect(wrapper.find(linkToUserId).first().props().to).equal('/translator/' + defaultUser.id);
+    expect(wrapper.find(linkToUserId).first().prop('to')).equal('/translator/' + defaultUser.id);
     expect(wrapper.find(LoadingBtnComponentId).exists()).equal(false);
     expect(wrapper.find(LoginComponentId).exists()).equal(false);
     expect(wrapper.find(linkCreateTermId).exists()).equal(false);

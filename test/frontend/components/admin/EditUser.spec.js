@@ -63,12 +63,12 @@ describe('Testing EditUser Component.', () => {
     wrapper.find(btnResetId).simulate('click', defaultEvent);
     wrapper.find(btnSaveId).simulate('click', defaultEvent);
 
-    expect(spyChangeLang.callCount).to.equal(langLength);
-    expect(spyChangeDesc.calledOnce).to.equal(true);
-    expect(spyChangeName.calledOnce).to.equal(true);
-    expect(spyWillMount.calledOnce).to.equal(true);
-    expect(spyBtnReset.calledOnce).to.equal(true);
-    expect(spyBtnSave.calledOnce).to.equal(true);
+    expect(spyChangeLang.callCount).equal(langLength);
+    expect(spyChangeDesc.calledOnce).equal(true);
+    expect(spyChangeName.calledOnce).equal(true);
+    expect(spyWillMount.calledOnce).equal(true);
+    expect(spyBtnReset.calledOnce).equal(true);
+    expect(spyBtnSave.calledOnce).equal(true);
 
     wrapper.unmount();
   });
@@ -97,7 +97,7 @@ describe('Testing EditUser Component.', () => {
         }
       }
     });
-    expect(wrapper.find(inputNameId).props().value).equal(editedName);
+    expect(wrapper.find(inputNameId).prop('value')).equal(editedName);
 
     const editedDesc = defaultTranslator.description + ' new';
     wrapper.setProps({...props,
@@ -107,7 +107,7 @@ describe('Testing EditUser Component.', () => {
         }
       }
     });
-    expect(wrapper.find(inputDescId).props().value).equal(editedDesc);
+    expect(wrapper.find(inputDescId).prop('value')).equal(editedDesc);
 
     languages.forEach((lang, index) => {
       wrapper.setProps({...props,
@@ -118,7 +118,7 @@ describe('Testing EditUser Component.', () => {
         }
       });
       languages.forEach((_lang, _index) =>
-        expect(wrapper.find(inputLangId).at(_index).props().checked)
+        expect(wrapper.find(inputLangId).at(_index).prop('checked'))
           .equal(lang.id === _lang.id)
       );
     });
@@ -128,13 +128,13 @@ describe('Testing EditUser Component.', () => {
         pending: true
       }
     });
-    expect(wrapper.find(btnSaveId).props().disabled).equal(true);
+    expect(wrapper.find(btnSaveId).prop('disabled')).equal(true);
 
     const expectedLinkCancel = '/translator/' + defaultTranslator.id;
-    expect(wrapper.find(linkCancelId).props().to).equal(expectedLinkCancel);
+    expect(wrapper.find(linkCancelId).prop('to')).equal(expectedLinkCancel);
 
     const expectedLinkPassword = expectedLinkCancel + '/edit/password';
-    expect(wrapper.find(linkPasswordId).props().to).equal(expectedLinkPassword);
+    expect(wrapper.find(linkPasswordId).prop('to')).equal(expectedLinkPassword);
 
     wrapper.unmount();
   });

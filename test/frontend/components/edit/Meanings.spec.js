@@ -61,11 +61,11 @@ describe('Testing Meanings Component.', () => {
       });
     });
 
-    expect(spyOnMeaningRemoved.callCount).to.equal(removeMeaningCalls);
-    expect(spyOnCommentChanged.callCount).to.equal(changeCommentCalls);
-    expect(spyOnVerChanged.callCount).to.equal(changeVersionCalls);
-    expect(spyOnVerRemoved.callCount).to.equal(removeVersionCalls);
-    expect(spyOnMeaningAdd.calledOnce).to.equal(true);
+    expect(spyOnMeaningRemoved.callCount).equal(removeMeaningCalls);
+    expect(spyOnCommentChanged.callCount).equal(changeCommentCalls);
+    expect(spyOnVerChanged.callCount).equal(changeVersionCalls);
+    expect(spyOnVerRemoved.callCount).equal(removeVersionCalls);
+    expect(spyOnMeaningAdd.calledOnce).equal(true);
 
     wrapper.unmount();
   });
@@ -105,30 +105,30 @@ describe('Testing Meanings Component.', () => {
 
         const initVersionValue = props.data.change.meanings[meaningIndex].versions[versionIndex];
         _wrap = wrapper.find(meaningId).at(meaningIndex).find(inputVersionId).at(versionIndex);
-        expect(_wrap.props().value).equal(initVersionValue);
+        expect(_wrap.prop('value')).equal(initVersionValue);
 
         const newVersionValue = props.data.change.meanings[meaningIndex].versions[versionIndex] + ' new ' + versionIndex;
         let _props = JSON.parse(JSON.stringify(props));
         _props.data.change.meanings[meaningIndex].versions[versionIndex] = newVersionValue;
         wrapper.setProps(_props);
         _wrap = wrapper.find(meaningId).at(meaningIndex).find(inputVersionId).at(versionIndex);
-        expect(_wrap.props().value).equal(newVersionValue);
+        expect(_wrap.prop('value')).equal(newVersionValue);
       });
 
       const lastVersionOfMeaning = wrapper.find(meaningId).find(btnVersionId).at(meaning.versions.length - 1);
-      expect(lastVersionOfMeaning.props().disabled).equal('disabled');
+      expect(lastVersionOfMeaning.prop('disabled')).equal('disabled');
 
       const commentTextId = '[data-test-id="comment-textarea"]';
       let _wrap = wrapper.find(commentTextId).at(meaningIndex);
       let expectedStr = props.data.change.meanings[meaningIndex].comment;
-      expect(_wrap.props().value).equal(expectedStr);
+      expect(_wrap.prop('value')).equal(expectedStr);
 
       let _props = JSON.parse(JSON.stringify(props));
       expectedStr = 'new comment on meaning ' + meaningIndex;
       _props.data.change.meanings[meaningIndex].comment = expectedStr;
       wrapper.setProps(_props);
       _wrap = wrapper.find(commentTextId).at(meaningIndex);
-      expect(_wrap.props().value).equal(expectedStr);
+      expect(_wrap.prop('value')).equal(expectedStr);
     });
 
     const divNoMeaningsId = '[data-test-id="div-no-meanings"]';

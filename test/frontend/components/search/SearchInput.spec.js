@@ -50,23 +50,23 @@ describe('Testing SearchInput Component.', () => {
         searchString: editedSearchString
       }
     });
-    expect(wrapper.find(inputSearchId).props().value).equal(editedSearchString);
+    expect(wrapper.find(inputSearchId).prop('value')).equal(editedSearchString);
 
     wrapper.setProps({...props,
       data: {...props.data,
         pending: false
       }
     });
-    expect(wrapper.find(btnSearchTextId).props().className).equal('');
-    expect(wrapper.find(btnSearchId).props().className).equal('');
+    expect(wrapper.find(btnSearchTextId).prop('className')).equal('');
+    expect(wrapper.find(btnSearchId).prop('className')).equal('');
 
     wrapper.setProps({...props,
       data: {...props.data,
         pending: true
       }
     });
-    expect(wrapper.find(btnSearchTextId).props().className).equal('invisible');
-    expect(wrapper.find(btnSearchId).props().className).equal('loader');
+    expect(wrapper.find(btnSearchTextId).prop('className')).equal('invisible');
+    expect(wrapper.find(btnSearchId).prop('className')).equal('loader');
 
     wrapper.unmount();
   });
@@ -79,14 +79,14 @@ describe('Testing SearchInput Component.', () => {
         searchString: ''
       }
     });
-    expect(wrapper.find(btnSearchId).props().disabled).equal(true);
+    expect(wrapper.find(btnSearchId).prop('disabled')).equal(true);
 
     wrapper.setProps({...props,
       data: {...props.data,
         pending: true
       }
     });
-    expect(wrapper.find(btnSearchId).props().disabled).equal(true);
+    expect(wrapper.find(btnSearchId).prop('disabled')).equal(true);
 
     wrapper.setProps({...props,
       data: {...props.data,
@@ -94,7 +94,7 @@ describe('Testing SearchInput Component.', () => {
         pending: true
       }
     });
-    expect(wrapper.find(btnSearchId).props().disabled).equal(true);
+    expect(wrapper.find(btnSearchId).prop('disabled')).equal(true);
 
     wrapper.setProps({...props,
       data: {...props.data,
@@ -102,7 +102,7 @@ describe('Testing SearchInput Component.', () => {
         pending: false
       }
     });
-    expect(wrapper.find(btnSearchId).props().disabled).equal(false);
+    expect(wrapper.find(btnSearchId).prop('disabled')).equal(false);
 
     wrapper.unmount();
   });
