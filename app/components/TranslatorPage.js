@@ -29,9 +29,12 @@ class TranslatorPage extends Component {
           id="TranslatorPage.translations_language"
           values={{translatorLanguage: translatorLang ? translatorLang['name_' + lang.get(userLanguage)] : ''}}
         /></h4>
-        <Link to={`/pages/${translatorId}`}>
-          <FormattedMessage id="TranslatorPage.link_to_desc_page" />
-        </Link> &nbsp;
+        {
+          translator.description &&
+          <Link to={translator.description}>
+            <FormattedMessage id="TranslatorPage.link_to_desc_page" />
+          </Link>
+        }
         {
           userData && userData.role === 'admin' &&
           <div>

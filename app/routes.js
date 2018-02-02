@@ -1,13 +1,13 @@
 import React, {Component} from 'react'
-import {Router, Route, browserHistory} from 'react-router'
+import {browserHistory} from 'react-router'
 
 import App from './components/App'
 import Home from './components/Home'
 import NotFound from './components/NotFound'
 import Edit from './components/Edit'
 import TranslatorPage from './components/TranslatorPage'
-import PagesList from './components/pages/PagesList'
-import Page from './components/pages/Page'
+import Pages from './components/Pages'
+import Page from './components/Page'
 
 import NewTerm from './components/admin/NewTerm'
 import EditUser from './components/admin/EditUser'
@@ -82,7 +82,7 @@ const getRoutes = (store) => ({
       component: EditPasswordByTranslator,
       onEnter: (...args) => checkAccess(...args, store, 'translator', args[0].params.id)
     },
-    { path: '/pages', exactly: true, component: PagesList },
+    { path: '/pages', exactly: true, component: Pages },
     {
       path: '/pages/new',
       exactly: true,

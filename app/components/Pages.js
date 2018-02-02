@@ -3,9 +3,9 @@ import {connect} from 'react-redux'
 import {Link} from 'react-router'
 import {FormattedMessage} from 'react-intl'
 
-import {getAllPagesAsync} from '../../actions/pages'
+import {getAllPagesAsync} from '../actions/pages'
 
-class PagesList extends Component {
+class Pages extends Component {
 
   constructor(props) {
     super(props)
@@ -22,16 +22,18 @@ class PagesList extends Component {
       <div>
         <h3><FormattedMessage id="PagesList.title" /></h3>
         {
-          userData && userData.role === 'admin' &&
-          <Link className="btn btn-default" to={`/pages/new`}>
-            <FormattedMessage id="PagesList.link_to_create" />
-          </Link>
-        }
-        {
           !pending &&
           <ul>
             { list.map((page, i) => <li key={i}><Link to={`/pages/${page.url}`}>{page.title}</Link></li>) }
           </ul>
+        }
+        {
+          userData && userData.role === 'admin' &&
+          <div>
+            <Link className="btn btn-default" to={`/pages/new`}>
+              <FormattedMessage id="PagesList.link_to_create" />
+            </Link>
+          </div>
         }
       </div>
     )
@@ -45,4 +47,4 @@ function select (state, ownProps) {
   }
 }
 
-export default connect(select)(PagesList)
+export default connect(select)(Pages)
