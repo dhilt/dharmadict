@@ -3,6 +3,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 const pkg = require('../package.json');
 
 function makeWebpackConfig(options) {
@@ -15,7 +16,11 @@ function makeWebpackConfig(options) {
     };
 
     plugins = [
-      new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.min-[hash:6].js'),
+      new CleanWebpackPlugin(['client'], {
+        root: path.resolve(__dirname, '../', 'prod'),
+        allowExternal: true
+      }),
+      new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.min.js'),
       new webpack.optimize.UglifyJsPlugin({
         compress: {
           warnings: false
@@ -65,7 +70,7 @@ function makeWebpackConfig(options) {
     entry: entry,
     output: {
       path: path.resolve(__dirname, '../', 'prod', 'client'),
-      filename: 'bundle.js'
+      filename: 'bundle.min.js'
     },
     module: {
       loaders: [
