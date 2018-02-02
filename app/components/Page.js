@@ -15,6 +15,13 @@ class Page extends Component {
     this.props.dispatch(getPageAsync(this.props.params.pageUrl))
   }
 
+  componentWillReceiveProps () {
+    const {pageInfo, dispatch, params, router} = this.props
+    if (!pageInfo.pending && pageInfo.page && pageInfo.page.url !== router.params.pageUrl) {
+      dispatch(getPageAsync(params.pageUrl))
+    }
+  }
+
   render () {
     const { page, pending } = this.props.pageInfo
     const { userData } = this.props
