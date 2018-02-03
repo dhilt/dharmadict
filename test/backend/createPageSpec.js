@@ -131,7 +131,6 @@ describe('Create page API', () => {
       )
   });
 
-  // Why it doesn't work?
   it('should not create new page (invalid url)', (done) => {
     let page = copyPage(testPage);
     page.url = { key: 'value' };
@@ -140,7 +139,6 @@ describe('Create page API', () => {
       .send({payload: page})
       .end(
         (err, res) => {
-          console.log(res.body);
           assert.notEqual(res.body.success, true);
           assert.equal(res.body.message, "Can't create new page. Invalid url");
           done();

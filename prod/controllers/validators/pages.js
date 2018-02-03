@@ -26,9 +26,6 @@ const create = (payload) => new Promise(resolve => {
   if (!payload.hasOwnProperty('url')) {
     throw new ApiError('No url')
   }
-  if (payload.url.indexOf('/') !== -1) {
-    throw new ApiError(`Url can't contain next symbol: "/"`)
-  }
   if (!payload.hasOwnProperty('title')) {
     throw new ApiError('No title')
   }
@@ -37,6 +34,9 @@ const create = (payload) => new Promise(resolve => {
   }
   if (typeof payload.url !== 'string') {
     throw new ApiError('Invalid url')
+  }
+  if (payload.url.indexOf('/') !== -1) {
+    throw new ApiError(`Url can't contain next symbol: "/"`)
   }
   if (typeof payload.title !== 'string') {
     throw new ApiError('Invalid title')
