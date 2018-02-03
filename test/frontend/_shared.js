@@ -22,6 +22,7 @@ module.exports = {
   defaultTerm: require('./__test-data/mockTerms')[0],
   admin: require('./__test-data/mockUsers').admin,
   terms: require('./__test-data/mockTerms'),
+  pages: require('./__test-data/mockPages'),
 
   getEditableUserDataObject: require('../../app/actions/admin/changeUser').getEditableUserDataObject,
   defaultLang: require('../../prod/helper').languages.getLang().id,
