@@ -47,41 +47,47 @@ class EditPage extends Component {
     const { sourcePending, removePending, pending } = this.props.pageInfo
     const { title, text } = this.props.pageInfo.data
     return !sourcePending && (
-      <div>
+      <div data-test-id="EditPage">
         <form className="col-md-6">
           <h3><FormattedMessage id="EditPage.title_of_page" /></h3>
           <div className="form-group">
             <label><FormattedMessage id="EditPage.edit_title" /></label>
-            <input type="text"
-              value={title || ''}
-              className="form-control"
+            <input data-test-id="input-title"
               onChange={this.changePageTitle}
+              className="form-control"
+              value={title || ''}
+              type="text"
             />
           </div>
           <div className="form-group">
             <label><FormattedMessage id="EditPage.edit_text" /></label>
-            <textarea type="text"
-              value={text || ''}
+            <textarea data-test-id="input-text"
               className="form-control page-textarea"
               onChange={this.changePageText}
+              value={text || ''}
+              type="text"
             />
           </div>
           <div className="form-group">
-            <button className="btn btn-primary"
+            <button data-test-id="btn-save"
+              className="btn btn-primary"
               onClick={this.sendNewPageData}
               disabled={pending}>
               <FormattedMessage id="Common.save" />
             </button>
-            <button className="btn btn-default"
+            <button data-test-id="btn-reset"
+              className="btn btn-default"
               onClick={this.resetChanges}>
               <FormattedMessage id="Common.reset" />
             </button>
-            <button className="btn btn-danger"
+            <button data-test-id="btn-delete"
+              className="btn btn-danger"
               onClick={this.deletePage}
               disabled={removePending}>
               <FormattedMessage id="Common.delete" />
             </button>
-            <Link to={`/pages/${this.props.params.pageUrl}`}>
+            <Link data-test-id="link-cancel"
+              to={`/pages/${this.props.params.pageUrl}`}>
               <FormattedMessage id="Common.cancel" />
             </Link>
           </div>
