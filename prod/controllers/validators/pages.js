@@ -10,6 +10,12 @@ const update = (payload) => new Promise(resolve => {
   if (!payload.hasOwnProperty('text')) {
     throw new ApiError('No text')
   }
+  if (typeof payload.title !== 'string') {
+    throw new ApiError('Invalid title')
+  }
+  if (typeof payload.text !== 'string') {
+    throw new ApiError('Invalid text')
+  }
   resolve(payload)
 });
 
@@ -28,6 +34,15 @@ const create = (payload) => new Promise(resolve => {
   }
   if (!payload.hasOwnProperty('text')) {
     throw new ApiError('No text')
+  }
+  if (typeof payload.url !== 'string') {
+    throw new ApiError('Invalid url')
+  }
+  if (typeof payload.title !== 'string') {
+    throw new ApiError('Invalid title')
+  }
+  if (typeof payload.text !== 'string') {
+    throw new ApiError('Invalid text')
   }
   resolve(payload)
 });

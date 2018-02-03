@@ -60,6 +60,18 @@ const testTerm2 = {
   }
 };
 
+const testPage = {
+  url: 'test_page_url',
+  title: 'test page title',
+  text: 'test page text'
+};
+
+const testPage2 = {
+  url: 'test_page_url_two',
+  title: 'test page title two',
+  text: 'test page text two'
+};
+
 const testTermTranslation = {
   termId: testTerm.id,
   translation: {
@@ -174,6 +186,8 @@ module.exports = {
   testTranslator2,
   testTerm,
   testTerm2,
+  testPage,
+  testPage2,
   testTermTranslation,
   testTermTranslation2,
   shouldLogIn,
