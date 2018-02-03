@@ -70,12 +70,12 @@ class Header extends Component {
 
     return (
       <div data-test-id="Header" className="nav">
-        <div data-test-id="Header.nav" className="nav__wrapper">
+        <div className="nav__wrapper">
           <div className="nav__wrapper-left">
-            <Link data-test-id="Header.home_link" to={'/'}>
+            <Link to={'/'}>
               <FormattedMessage id="Header.home_link" />
             </Link>
-            <Link data-test-id="Header.about_project" to={'/pages/about'}>
+            <Link to={'/pages/about'}>
               <FormattedMessage id="Header.about_project" />
             </Link>
           </div>

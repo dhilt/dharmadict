@@ -91,13 +91,9 @@ describe('Testing Meanings Component.', () => {
     const btnVersionId = '[data-test-id="button-version"]';
     const versionId = '[data-test-id="li-version"]';
     const meaningId = '[data-test-id="meaning"]';
-    const commentId = '[data-test-id="comment"]';
-    const removeId = '[data-test-id="remove"]';
 
     defaultTranslation.meanings.forEach((meaning, meaningIndex) => {
       expect(wrapper.find(meaningId).at(meaningIndex).exists()).equal(true);
-      expect(wrapper.find(commentId).at(meaningIndex).exists()).equal(true);
-      expect(wrapper.find(removeId).at(meaningIndex).exists()).equal(true);
 
       meaning.versions.forEach((version, versionIndex) => {
         let _wrap = wrapper.find(meaningId).at(meaningIndex).find(versionId);

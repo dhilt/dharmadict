@@ -19,9 +19,7 @@ class NewTerm extends Component {
     const {languages} = this.props
     return (
       <div data-test-id="NewTerm">
-        <h3 data-test-id="title">
-          <FormattedMessage id="NewTerm.title_new_term" />
-        </h3>
+        <h3><FormattedMessage id="NewTerm.title_new_term" /></h3>
         <form className="col-md-6">
           <div className="form-group">
             <input data-test-id="input-wylie"
@@ -34,7 +32,7 @@ class NewTerm extends Component {
             />
           </div>
           {languages && languages.map(langItem =>
-            <div data-test-id="form-sanskrit" className="form-group" key={langItem.id}>
+            <div className="form-group" key={langItem.id}>
               <input data-test-id="input-sanskrit"
                 placeholder={'sanskrit_' + langItem.id + ' (' + langItem.name + ')'}
                 onChange={(event) => this.onSanskritChange(event, langItem.id)}
@@ -54,9 +52,7 @@ class NewTerm extends Component {
               type="button">
               <FormattedMessage id="Common.save" />
             </Button>
-            <Link data-test-id="button-cancel" to={`/`}>
-              <FormattedMessage id="Common.cancel" />
-            </Link>
+            <Link to={`/`}><FormattedMessage id="Common.cancel" /></Link>
           </div>
         </form>
       </div>

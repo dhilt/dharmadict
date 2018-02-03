@@ -61,13 +61,11 @@ class EditUserPassword extends Component {
     return (
       <div data-test-id="EditUserPassword">
         <form className="col-md-6">
-          <h3 data-test-id="title">
-            <FormattedMessage id="EditUserPassword.title" values={{id}} />
-          </h3>
+          <h3><FormattedMessage id="EditUserPassword.title" values={{id}} /></h3>
           <div className="form-group">
-            <label data-test-id="label-new-pass">
+            <label>
               <FormattedMessage id="EditUserPassword.new_password" />
-              <span data-test-id="hint-new-pass" className="hint">
+              <span className="hint">
                 <FormattedMessage id="EditUserPassword.new_password_hint" />
               </span>
             </label>
@@ -79,7 +77,7 @@ class EditUserPassword extends Component {
             />
           </div>
           <div className="form-group">
-            <label data-test-id="label-confirm-pass">
+            <label>
               <FormattedMessage id="EditUserPassword.new_password_confirm" />
             </label>
             <input data-test-id="input-confirm-pass"

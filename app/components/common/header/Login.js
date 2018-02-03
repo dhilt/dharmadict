@@ -25,11 +25,9 @@ const Login = props => {
         contentLabel="Log In Dialog"
         onRequestClose={closeModal}
         style={customStyles}>
-        <h1 data-test-id="Login.title_log_in">
-          <FormattedMessage id="Login.please_log_in"/>
-        </h1>
+        <h1><FormattedMessage id="Login.please_log_in"/></h1>
         <div className="login-modal-content">
-          <form data-test-id="Login.auth-form">
+          <form>
             <div className="form-group">
               <input data-test-id="Login.input-login"
                 value={props.data.login}

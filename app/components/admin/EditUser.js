@@ -56,11 +56,9 @@ class EditUser extends Component {
     return !sourcePending ? (
       <div data-test-id="EditUser">
         <form className="col-md-6">
-          <h3 data-test-id="heading">
-            <FormattedMessage id="EditUser.title_edit_user" values={{id}} />
-          </h3>
+          <h3><FormattedMessage id="EditUser.title_edit_user" values={{id}} /></h3>
           <div className="form-group">
-            <label data-test-id="label-name">
+            <label>
               <FormattedMessage id="EditUser.name_of_translator" />
             </label>
             <input data-test-id="input-name"
@@ -71,7 +69,7 @@ class EditUser extends Component {
             />
           </div>
           <div className="form-group">
-            <label data-test-id="label-lang">
+            <label>
               <FormattedMessage id="EditUser.language_of_translations" />
             </label>
             {languages && languages.map((langItem, langIndex) =>
@@ -87,10 +85,10 @@ class EditUser extends Component {
               </div>
             )}
           </div>
-          <div data-test-id="form-desc" className="form-group">
-            <label data-test-id="label-desc">
+          <div className="form-group">
+            <label>
               <FormattedMessage id="EditUser.description_of_translator" />
-              <span data-test-id="desc-help" className="label-help">
+              <span className="label-help">
                 <FormattedMessage id="EditUser.description_of_translator_help" />
               </span>
             </label>

@@ -57,7 +57,7 @@ class Meanings extends Component {
                 )}
                 </ul>
               </div>
-              <div data-test-id="comment" className="comment">
+              <div className="comment">
                 <span data-test-id="comment-title" className="title">
                   <FormattedMessage id="Meanings.comment_for_meaning"
                     values={{indexOfMeaning: meaningIndex + 1}}
@@ -72,7 +72,7 @@ class Meanings extends Component {
                   />
                 </div>
               </div>
-              <div data-test-id="remove" className="remove">
+              <div className="remove">
                 <a data-test-id="remove-link"
                   onClick={(event) => this.onMeaningRemoved(event, meaningIndex)}
                   className="remove-link">

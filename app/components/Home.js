@@ -17,9 +17,7 @@ class Home extends Component {
           <div className="row header-row">
             <div className="col-md-12">
               <h1>
-                <em data-test-id="em-title">
-                  <FormattedMessage id="Home.search_title_em" />
-                </em>
+                <em><FormattedMessage id="Home.search_title_em" /></em>
                 <span data-test-id="span-title">
                   <FormattedMessage id="Home.search_title_h1" />
                 </span>

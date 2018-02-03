@@ -24,10 +24,8 @@ class TranslatorPage extends Component {
     return (
       <div data-test-id="translatorContent">
         <h3 data-test-id="name">{translator.name}</h3>
-        <h4 data-test-id="language">
-          <FormattedMessage id="TranslatorPage.translations_language"
-            values={{translatorLanguage: translatorLang ? translatorLang['name_' + lang.get(userLanguage)] : ''}}
-          />
+        <h4><FormattedMessage id="TranslatorPage.translations_language"
+          values={{translatorLanguage: translatorLang ? translatorLang['name_' + lang.get(userLanguage)] : ''}} />
         </h4>
         {
           translator.description &&
