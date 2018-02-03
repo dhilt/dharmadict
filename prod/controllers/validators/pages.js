@@ -1,6 +1,9 @@
 const ApiError = require('../../helper').ApiError;
 
-const update = (payload) => new Promise(resolve => {
+const update = (pageUrl, payload) => new Promise(resolve => {
+  if (!pageUrl) {
+    throw new ApiError('Incorrect query, no url')
+  }
   if (!payload || typeof payload !== 'object') {
     throw new ApiError('Invalid payload')
   }
@@ -16,7 +19,7 @@ const update = (payload) => new Promise(resolve => {
   if (typeof payload.text !== 'string') {
     throw new ApiError('Invalid text')
   }
-  resolve(payload)
+  resolve({pageUrl, payload})
 });
 
 const create = (payload) => new Promise(resolve => {

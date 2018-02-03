@@ -1,5 +1,6 @@
 test/backend/createUserSpec.js
 test/backend/updateUserSpec.js
+
 test/backend/updateTranslatorSpec.js
 test/backend/commonSpec.js
 test/backend/loginSpec.js
@@ -9,6 +10,7 @@ test/backend/updateTermSpec.js
 test/backend/searchTermSpec.js
 
 test/backend/createPageSpec.js
+test/backend/updatePageSpec.js
 
 test/backend/deleteTermSpec.js
 test/backend/deletePageSpec.js
