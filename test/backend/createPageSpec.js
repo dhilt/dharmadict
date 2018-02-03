@@ -5,6 +5,7 @@ const testAdmin = require('./_shared.js').testAdmin;
 const testTranslator = require('./_shared.js').testTranslator;
 const testPage = require('./_shared.js').testPage;
 const testPage2 = require('./_shared.js').testPage2;
+const testPage3 = require('./_shared.js').testPage3;
 
 describe('Create page API', () => {
 
@@ -207,9 +208,8 @@ describe('Create page API', () => {
   });
 
   it('should create new page with valid url', (done) => {
-    let page = copyPage(testPage);
-    page.url = 'Some new url with spaces';
-    const expectedUrl = 'Some_new_url_with_spaces';
+    let page = copyPage(testPage3);
+    const expectedUrl = page.url.replace(/ /g, '_');
     request.post('/api/pages')
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .send({payload: page})
@@ -217,8 +217,8 @@ describe('Create page API', () => {
         (err, res) => {
           assert.equal(res.body.success, true);
           assert.equal(res.body.page.url, expectedUrl);
-          assert.equal(res.body.page.title, testPage.title);
-          assert.equal(res.body.page.text, testPage.text);
+          assert.equal(res.body.page.title, testPage3.title);
+          assert.equal(res.body.page.text, testPage3.text);
           done();
         }
       )
