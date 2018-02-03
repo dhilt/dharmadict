@@ -11,4 +11,5 @@ test/backend/searchTermSpec.js
 test/backend/createPageSpec.js
 
 test/backend/deleteTermSpec.js
+test/backend/deletePageSpec.js
 test/backend/deleteUserSpec.js

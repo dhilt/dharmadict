@@ -224,6 +224,8 @@ describe('Create page API', () => {
       )
   });
 
+  testPage3.url = testPage3.url.replace(/ /g, '_');
+
   it('should not create duplicate page', (done) => {
     request.post('/api/pages')
       .set('Authorization', 'Bearer ' + testAdmin.token)
