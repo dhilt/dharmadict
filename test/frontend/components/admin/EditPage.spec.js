@@ -2,15 +2,11 @@ const React = require('react');
 const {expect} = require('chai');
 const sinon = require('sinon');
 
-const {
-  initialState,
-  getAppPath,
-  shallow
-} = require('../../_shared.js');
+const {initialState, getAppPath, shallow} = require('../../_shared.js');
 
 const EditPage = require(getAppPath(2) + 'components/admin/EditPage').default.WrappedComponent;
 
-describe('Testing NewPage Component.', () => {
+describe('Testing EditPage Component.', () => {
 
   const props = {
     pageInfo: initialState.admin.editPage,
