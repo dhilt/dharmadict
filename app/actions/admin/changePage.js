@@ -60,7 +60,7 @@ export function updatePageAsync() {
     const {url, data, dataSource} = getState().admin.editPage
     const query = 'pages?url=' + url
     return asyncRequest(query, 'patch', {payload: data}, (data, error) => {
-      delete data.page.url
+      data && delete data.page.url
       dispatch({
         type: UPDATE_ADMIN_PAGE_END,
         data: error ? dataSource : data.page
