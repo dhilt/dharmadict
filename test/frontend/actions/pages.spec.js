@@ -199,4 +199,4 @@ describe('pages actions', () => {
         .then(() => expect(store.getActions()).toEqual(actionsFail));
     });
   });
-})
+});

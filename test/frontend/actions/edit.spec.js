@@ -415,4 +415,4 @@ describe('edit actions', () => {
     };
     testChangeTranslationLocal(term, translation, actionsCreators.onVersionChanged(meaningIndex, versionIndex, value));
   });
-})
+});

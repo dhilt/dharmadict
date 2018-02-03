@@ -416,4 +416,4 @@ describe('edit actions', () => {
       expect(auth.getToken()).toEqual(null);
     });
   });
-})
+});

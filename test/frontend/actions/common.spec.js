@@ -161,4 +161,4 @@ describe('common actions', () => {
     testChangeUserLanguage('ru');
     testChangeUserLanguage('inexistent language');
   });
-})
+});

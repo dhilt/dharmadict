@@ -247,4 +247,4 @@ describe('admin/changeUserPassword actions', () => {
         .then(() => expect(store.getActions()).toEqual(actionsFail));
     });
   });
-})
+});

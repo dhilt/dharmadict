@@ -345,4 +345,4 @@ describe('search actions', () => {
       expect(store.getActions()[0]).toEqual(expectedAction);
     });
   });
-})
+});

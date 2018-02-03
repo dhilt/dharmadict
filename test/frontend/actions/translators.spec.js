@@ -119,4 +119,4 @@ describe('translators actions', () => {
         .then(() => expect(store.getActions()).toEqual(actionsFail));
     });
   });
-})
+});

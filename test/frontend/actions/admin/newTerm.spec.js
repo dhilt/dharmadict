@@ -206,4 +206,4 @@ describe('admin/newTerm actions', () => {
         .then(() => expect(store.getActions()).toEqual(actionsFail));
     });
   });
-})
+});

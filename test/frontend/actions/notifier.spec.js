@@ -107,4 +107,4 @@ describe('notifier actions', () => {
     testFunctionRemoveNotify(6, false);
     testFunctionRemoveNotify(7, true);
   });
-})
+});
