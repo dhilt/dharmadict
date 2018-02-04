@@ -100,4 +100,74 @@ describe('Testing Page Component.', () => {
 
     wrapper.unmount();
   });
+
+  it('should retry request for new page', () => {
+
+    const spyOnDispatch = sinon.spy();
+    const _props = {
+      dispatch: spyOnDispatch,
+      pageInfo: {
+        pending: false,
+        page: {
+          url: 'page_url',
+          title: 'text',
+          text: 'text'
+        }
+      },
+      params: {
+        pageUrl: 'page_url'
+      },
+      router: {
+        params: {
+          pageUrl: 'page_url'
+        }
+      }
+    };
+    const wrapper = shallow(<Page {..._props} />);
+
+    let index = spyOnDispatch.callCount;
+    expect(spyOnDispatch.calledOnce).equal(true);
+
+    const newUrl = _props.router.params.pageUrl + 'new';
+    wrapper.setProps({..._props,
+      router: {
+        params: {
+          pageUrl: newUrl
+        }
+      }
+    });
+    wrapper.setProps({..._props,
+      pageInfo: {..._props.pageInfo,
+        page: {..._props.pageInfo.page,
+          url: newUrl
+        }
+      },
+      router: {
+        params: {
+          pageUrl: newUrl
+        }
+      }
+    });
+    // should request for new page
+    expect(spyOnDispatch.callCount).equal(++index);
+
+    // should not request for new page
+    wrapper.setProps({..._props,
+      pageInfo: {..._props.pageInfo,
+        page: {..._props.pageInfo.page,
+          url: newUrl
+        }
+      },
+      router: {
+        params: {
+          pageUrl: newUrl
+        }
+      }
+    });
+    expect(spyOnDispatch.callCount).equal(index);
+
+    // should not request for new page
+    wrapper.setProps();
+    expect(spyOnDispatch.callCount).equal(index);
+  });
 });

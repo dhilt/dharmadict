@@ -25,7 +25,7 @@ const getIntlContext = (lang, messages) => {
 const nodeWithIntlProp = (node, lang = 'en') =>
   React.cloneElement({...node,
     props: {...node.props,
-      dispatch: () => true
+      dispatch: node.props.dispatch ? node.props.dispatch : () => true
     }
   }, {
     intl: getIntlContext(lang)
@@ -34,16 +34,10 @@ const nodeWithIntlProp = (node, lang = 'en') =>
 const shallow = (node) => _shallow(
   React.cloneElement({...node,
     props: {...node.props,
-      dispatch: () => true
+      dispatch: node.props.dispatch ? node.props.dispatch : () => true
     }
   })
 );
-
-const shallowWithIntl = (node, lang = 'en') =>
-  shallow(
-    nodeWithIntlProp(node, lang),
-    {context: {intl: getIntlContext(lang)}}
-  );
 
 const mountWithIntl = (node, lang = 'en', state = initialState) =>
   mount(
@@ -55,7 +49,6 @@ const mountWithIntl = (node, lang = 'en', state = initialState) =>
   );
 
 module.exports = {
-  shallowWithIntl,
   getIntlContext,
   mountWithIntl,
   shallow

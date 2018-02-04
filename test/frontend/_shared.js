@@ -10,7 +10,6 @@ const getAppPath = (level = 1) => {
 
 module.exports = {
   getNotificationAction: require('./__test-methods/getNotificationAction'),
-  shallowWithIntl: require('./__test-methods/mountTestedComponent').shallowWithIntl,
   getIntlContext: require('./__test-methods/mountTestedComponent').getIntlContext,
   mountWithIntl: require('./__test-methods/mountTestedComponent').mountWithIntl,
   shallow: require('./__test-methods/mountTestedComponent').shallow,
