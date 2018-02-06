@@ -13,7 +13,7 @@ import reducer from './reducers'
 import {changeRoute} from './actions/route'
 import {getUserInfoAsync} from './actions/auth'
 import {getCommonDataAsync} from './actions/common'
-import {selectTermAsync} from './actions/search'
+import {setStartLocation} from './actions/route'
 
 import getRoutes from './routes'
 import './styles/main.css'
@@ -36,10 +36,7 @@ if(store.getState().auth.token) {
 
 store.dispatch(getCommonDataAsync())
 
-let location = browserHistory.getCurrentLocation()
-if(location.query.term) {
-  store.dispatch(selectTermAsync(location.query.term))
-}
+store.dispatch(setStartLocation(browserHistory.getCurrentLocation()))
 
 browserHistory.listenBefore((location) => {
   return store.dispatch(changeRoute(location))

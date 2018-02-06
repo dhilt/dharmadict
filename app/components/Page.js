@@ -3,23 +3,10 @@ import {connect} from 'react-redux'
 import {Link} from 'react-router'
 import {FormattedMessage} from 'react-intl'
 
-import {getPageAsync} from '../actions/pages'
-
 class Page extends Component {
 
   constructor(props) {
     super(props)
-  }
-
-  componentWillMount () {
-    this.props.dispatch(getPageAsync(this.props.params.pageUrl))
-  }
-
-  componentWillReceiveProps () {
-    const {pageInfo, dispatch, params, router} = this.props
-    if (!pageInfo.pending && pageInfo.page && pageInfo.page.url !== router.params.pageUrl) {
-      dispatch(getPageAsync(params.pageUrl))
-    }
   }
 
   render () {
