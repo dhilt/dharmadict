@@ -1,6 +1,5 @@
 .nav {
   margin-top: 1.2em;
-  height: $nav-height;
   box-shadow: 0 0 2px rgba(0,0,0,.5);
   padding: 1em;
   align-items: center;
@@ -96,6 +95,4 @@
 }
 
 .languages-bar-header {
-  float: right;
-  margin-top: -2.0em;
 }

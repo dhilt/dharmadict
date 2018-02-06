@@ -37,7 +37,15 @@ class Header extends Component {
     const {languages, userLanguage} = this.props.common
     const userInfo = !this.props.data.userInfo.pending ? this.props.data.userInfo.data : {}
 
-    const navButtons = this.props.data.loggedIn ? (
+    const languagesDropdown = (
+      <Languages data-test-id="Header.Languages"
+                 doChangeLang={this.doChangeLang}
+                 current={userLanguage}
+                 languages={languages}
+      />
+    )
+
+    const authLinks = this.props.data.loggedIn ? (
       <div data-test-id="Header.navButtons-loggedIn">
         <Link data-test-id="Header.link_to_user"
           to={`/translator/${userInfo.id}`}>
@@ -79,13 +87,9 @@ class Header extends Component {
               <FormattedMessage id="Header.about_project" />
             </Link>
           </div>
-          {navButtons}
+          {authLinks}
+          {languagesDropdown}
         </div>
-        <Languages data-test-id="Header.Languages"
-          doChangeLang={this.doChangeLang}
-          current={userLanguage}
-          languages={languages}
-        />
       </div>
     )
   }
