@@ -1,8 +1,7 @@
 const React = require('react');
 const {expect} = require('chai');
-const sinon = require('sinon');
 
-const {initialState, appPath, shallow, pages, admin} = require('../_shared.js');
+const {appPath, shallow, pages, admin} = require('../_shared.js');
 
 const Page = require(appPath + 'components/Page').default.WrappedComponent;
 
@@ -13,14 +12,6 @@ describe('Testing Page Component.', () => {
       pending: false,
       page: null
     },
-    params: {
-      pageUrl: 'page_url'
-    },
-    router: {
-      params: {
-        pageUrl: 'page_url'
-      }
-    },
     userData: null
   };
 
@@ -28,15 +19,6 @@ describe('Testing Page Component.', () => {
   const titleId = '[data-test-id="title"]';
   const textId = '[data-test-id="text"]';
   const linkEditId = '[data-test-id="link-to-edit"]';
-
-  it('should correctly handle actions on the component', () => {
-    const spyComponentWillMount = sinon.spy(Page.prototype, 'componentWillMount');
-
-    const wrapper = shallow(<Page {...props} />);
-    expect(spyComponentWillMount.calledOnce).equal(true);
-
-    wrapper.unmount();
-  });
 
   it('should show component correctly', () => {
     const wrapper = shallow(<Page {...props} />);
@@ -99,75 +81,5 @@ describe('Testing Page Component.', () => {
       .equal('/pages/' + pages[0].url + '/edit');
 
     wrapper.unmount();
-  });
-
-  it('should retry request for new page', () => {
-
-    const spyOnDispatch = sinon.spy();
-    const _props = {
-      dispatch: spyOnDispatch,
-      pageInfo: {
-        pending: false,
-        page: {
-          url: 'page_url',
-          title: 'text',
-          text: 'text'
-        }
-      },
-      params: {
-        pageUrl: 'page_url'
-      },
-      router: {
-        params: {
-          pageUrl: 'page_url'
-        }
-      }
-    };
-    const wrapper = shallow(<Page {..._props} />);
-
-    let index = spyOnDispatch.callCount;
-    expect(spyOnDispatch.calledOnce).equal(true);
-
-    const newUrl = _props.router.params.pageUrl + 'new';
-    wrapper.setProps({..._props,
-      router: {
-        params: {
-          pageUrl: newUrl
-        }
-      }
-    });
-    wrapper.setProps({..._props,
-      pageInfo: {..._props.pageInfo,
-        page: {..._props.pageInfo.page,
-          url: newUrl
-        }
-      },
-      router: {
-        params: {
-          pageUrl: newUrl
-        }
-      }
-    });
-    // should request for new page
-    expect(spyOnDispatch.callCount).equal(++index);
-
-    // should not request for new page
-    wrapper.setProps({..._props,
-      pageInfo: {..._props.pageInfo,
-        page: {..._props.pageInfo.page,
-          url: newUrl
-        }
-      },
-      router: {
-        params: {
-          pageUrl: newUrl
-        }
-      }
-    });
-    expect(spyOnDispatch.callCount).equal(index);
-
-    // should not request for new page
-    wrapper.setProps();
-    expect(spyOnDispatch.callCount).equal(index);
   });
 });
