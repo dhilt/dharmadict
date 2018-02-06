@@ -3,12 +3,15 @@ import { selectTerm, selectTermAsync } from './search'
 import { CHANGE_ROUTE } from './_constants'
 import { getPageAsync } from './pages';
 
+const excludeAdminRoutes = (_pathname) =>
+  _pathname.indexOf('/edit') === -1 && _pathname.indexOf('/new') === -1
+
 export function setStartLocation(location) {
   return (dispatch, getState) => {
     if(location.query.term) {
       dispatch(selectTermAsync(location.query.term))
     }
-    else if (location.pathname.indexOf('/pages/') === 0) {
+    else if (location.pathname.indexOf('/pages/') === 0 && excludeAdminRoutes(location.pathname)) {
       dispatch(getPageAsync(location.pathname.replace('/pages/', '')))
     }
   }
@@ -47,7 +50,7 @@ export function changeRoute(location) {
       }
     }
     // pages/about
-    if (location.pathname.indexOf('/pages/') === 0) {
+    if (location.pathname.indexOf('/pages/') === 0 && excludeAdminRoutes(location.pathname)) {
       if(!prevLocation || prevLocation.pathname !== location.pathname) {
         dispatch(getPageAsync(location.pathname.replace('/pages/', '')))
       }
