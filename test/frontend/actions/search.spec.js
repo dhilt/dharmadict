@@ -1,4 +1,4 @@
-const configureMockStore = require('redux-mock-store').default;
+const configureMockStore = require('redux-mock-store');
 const thunk = require('redux-thunk').default;
 const nock = require('nock');
 const expect = require('expect');
@@ -345,4 +345,4 @@ describe('search actions', () => {
       expect(store.getActions()[0]).toEqual(expectedAction);
     });
   });
-})
+});

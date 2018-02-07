@@ -14,10 +14,10 @@ class EditPasswordByTranslator extends Component {
   constructor (props) {
     super(props)
     this.changeCurrentPassword = this.changeCurrentPassword.bind(this)
-    this.changeNewPassword = this.changeNewPassword.bind(this)
     this.changeConfirmPassword = this.changeConfirmPassword.bind(this)
-    this.resetChanges = this.resetChanges.bind(this)
+    this.changeNewPassword = this.changeNewPassword.bind(this)
     this.sendNewPassword = this.sendNewPassword.bind(this)
+    this.resetChanges = this.resetChanges.bind(this)
   }
 
   changeCurrentPassword (event) {
@@ -60,55 +60,55 @@ class EditPasswordByTranslator extends Component {
     const {currentPassword, newPassword, confirmPassword} = this.props.stateData
     return (
       <div data-test-id="EditPasswordByTranslator">
-        <form data-test-id="main-form" className="col-md-6">
-          <h3 data-test-id="title"><FormattedMessage id="EditPasswordByTranslator.title" values={{id}} /></h3>
-          <div data-test-id="group-current-pass" className="form-group">
-            <label data-test-id="label-current-pass">
+        <form className="col-md-6">
+          <h3><FormattedMessage id="EditPasswordByTranslator.title" values={{id}} /></h3>
+          <div className="form-group">
+            <label>
               <FormattedMessage id="EditPasswordByTranslator.current_password" />
             </label>
             <input data-test-id="input-current-pass"
-              type="password"
+              onChange={this.changeCurrentPassword}
               value={currentPassword}
               className="form-control"
-              onChange={this.changeCurrentPassword}
+              type="password"
             />
           </div>
-          <div data-test-id="group-new-pass" className="form-group">
-            <label data-test-id="label-new-pass">
+          <div className="form-group">
+            <label>
               <FormattedMessage id="EditPasswordByTranslator.new_password" />
-                <span data-test-id="hint-new-pass" className="hint">
-                  <FormattedMessage id="EditPasswordByTranslator.new_password_hint" />
-                </span>
+              <span className="hint">
+                <FormattedMessage id="EditPasswordByTranslator.new_password_hint" />
+              </span>
             </label>
             <input data-test-id="input-new-pass"
-              type="password"
-              value={newPassword}
-              className="form-control"
               onChange={this.changeNewPassword}
+              className="form-control"
+              value={newPassword}
+              type="password"
             />
           </div>
-          <div data-test-id="group-confirm-pass" className="form-group">
-            <label data-test-id="label-confirm-pass">
+          <div className="form-group">
+            <label>
               <FormattedMessage id="EditPasswordByTranslator.new_password_confirm" />
             </label>
             <input data-test-id="input-confirm-pass"
-              type="password"
+              onChange={this.changeConfirmPassword}
               value={confirmPassword}
               className="form-control"
-              onChange={this.changeConfirmPassword}
+              type="password"
             />
           </div>
-          <div data-test-id="group-button" className="form-group">
+          <div className="form-group">
             <button data-test-id="btn-save"
-              className="btn btn-primary"
               onClick={this.sendNewPassword}
               disabled={this.disabled()}
-              ><FormattedMessage id="Common.save" />
+              className="btn btn-primary">
+              <FormattedMessage id="Common.save" />
             </button>
             <button data-test-id="btn-reset"
-              className="btn btn-default"
               onClick={this.resetChanges}
-            ><FormattedMessage id="Common.reset" />
+              className="btn btn-default">
+              <FormattedMessage id="Common.reset" />
             </button>
             <Link data-test-id="btn-cancel" to={`/translator/${id}`}>
               <FormattedMessage id="Common.cancel" />

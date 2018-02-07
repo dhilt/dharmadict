@@ -1,4 +1,4 @@
-const configureMockStore = require('redux-mock-store').default;
+const configureMockStore = require('redux-mock-store');
 const thunk = require('redux-thunk').default;
 let middlewares = [thunk];
 let mockStore = configureMockStore(middlewares);
@@ -12,6 +12,4 @@ const getNotificationAction = (successMessage, error, values = {}) => {
   return store.getActions()[0]
 };
 
-module.exports = {
-  getNotificationAction
-};
+module.exports = getNotificationAction;

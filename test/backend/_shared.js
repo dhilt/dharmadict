@@ -8,6 +8,7 @@ process.env.NODE_ENV = 'test';
 const server = require('../../prod/server.js');
 const usersController = require('../../prod/controllers/users.js');
 const termsController = require('../../prod/controllers/terms.js');
+const pagesController = require('../../prod/controllers/pages.js');
 const languages = require('../../prod/helper').languages;
 
 chai.use(chaiHttp);
@@ -58,6 +59,24 @@ const testTerm2 = {
     sanskrit_ru: 'Термин 2 на санскрите, RUSSIAN',
     sanskrit_en: 'Sanskrit of test term 2, ENGLISH'
   }
+};
+
+const testPage = {
+  url: 'test_page_url',
+  title: 'test page title',
+  text: 'test page text'
+};
+
+const testPage2 = {
+  url: 'test_page_url_two',
+  title: 'test page title two',
+  text: 'test page text two'
+};
+
+const testPage3 = {
+  url: 'test   page   url   three',
+  title: 'test page title three',
+  text: 'test page text three'
 };
 
 const testTermTranslation = {
@@ -138,6 +157,15 @@ const forceCleanUp = () => {
       termsController.removeById(testTerm2.id)
         .then(() => logAndDone('Test term 2 was successfully deleted'))
         .catch(_done);
+      pagesController.removeByUrl(testPage.url)
+        .then(() => logAndDone('Test page was successfully deleted'))
+        .catch(_done);
+      pagesController.removeByUrl(testPage2.url)
+        .then(() => logAndDone('Test page 2 was successfully deleted'))
+        .catch(_done);
+      pagesController.removeByUrl(testPage3.url.replace(/ /g, '_'))
+        .then(() => logAndDone('Test page 3 was successfully deleted'))
+        .catch(_done);
     });
   });
 };
@@ -174,6 +202,9 @@ module.exports = {
   testTranslator2,
   testTerm,
   testTerm2,
+  testPage,
+  testPage2,
+  testPage3,
   testTermTranslation,
   testTermTranslation2,
   shouldLogIn,

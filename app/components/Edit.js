@@ -11,7 +11,7 @@ class Edit extends Component {
 
   constructor(props) {
     super(props)
-    this._goBack = this._goBack.bind(this)
+    this.goBack = this.goBack.bind(this)
   }
 
   componentWillMount() {
@@ -23,7 +23,7 @@ class Edit extends Component {
     this.props.dispatch(selectTranslation(translatorId, termId))
   }
 
-  _goBack() {
+  goBack() {
     this.props.dispatch(goBack(true))
   }
 
@@ -32,7 +32,9 @@ class Edit extends Component {
     let allOk = editState.started && !this.blockMessage && !editState.pending && !editState.error
     return (
       <div data-test-id="Edit">
-        <a data-test-id="back-link" className="back-link" onClick={() => this._goBack()}>
+        <a data-test-id="back-link"
+          onClick={() => this.goBack()}
+          className="back-link">
           <FormattedMessage id="Edit.go_back" />
         </a>
         {
@@ -53,14 +55,14 @@ class Edit extends Component {
           editState.error ? (
             <div data-test-id="request_error">
               <FormattedMessage id="Edit.request_error" />
-              <div data-test-id="errorMsg" className="error">{editState.error.message}</div>
+              <div data-test-id="errorMsg" className="error">
+                {editState.error.message}
+              </div>
             </div>
           ) : ( null )
         }
         {
-          allOk ? (
-            <Meanings />
-          ) : ( null )
+          allOk ? ( <Meanings /> ) : ( null )
         }
       </div>
     )

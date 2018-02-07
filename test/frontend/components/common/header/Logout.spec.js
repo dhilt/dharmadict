@@ -1,68 +1,40 @@
-global.window.localStorage = {};
+const React = require('react');
+const {expect} = require('chai');
+const sinon = require('sinon');
 
 const {
-  setupComponent,
-  checkWrap,
-  checkWrapActions,
-  initialState,
-  languages,
-  users,
-  _appPath
+  getAppPath,
+  shallow
 } = require('../../../_shared.js');
 
-const Logout = require('../' + _appPath + 'components/common/header/Logout').default;
+const Logout = require(getAppPath(3) + 'components/common/header/Logout').default;
 
-describe('Testing Logout, presentational Component.', () => {
+describe('Testing Logout Component.', () => {
 
-  const checkShowLogout = (userLooking) => {
-    const _initialState = { ...initialState,
-      common: { ...initialState.common,
-        userLanguage: userLooking.language,
-        languages
-      },
-      auth: { ...initialState.auth,
-        loggedIn: true,
-        userInfo: { ...initialState.auth.userInfo,
-          data: userLooking
-        }
-      }
-    };
-    const {wrapper} = setupComponent(Logout, _initialState);
-    const i18n = require('../' + _appPath + 'i18n/' + userLooking.language);
-
-    checkWrap(wrapper.find('[data-test-id="Logout"]'));
-    checkWrap(wrapper.find('[data-test-id="Logout.button_logout"]'), {
-      text: i18n['Logout.button_logout']
-    });
-
-    wrapper.unmount();
+  const props = {
+    doLogout: sinon.spy()
   };
 
-  users.forEach(user =>
-    it(`should show the ${user.language}-component for authorized user`,
-      () => checkShowLogout(user)
-    )
-  );
+  const LogoutId = '[data-test-id="Logout"]';
+  const btnLogoutId = '[data-test-id="Logout.button_logout"]';
 
-  it('should correctly handle actions on component', () => {
-    const defaultUser = users[0];
-    const _initialState = { ...initialState,
-      common: { ...initialState.common,
-        userLanguage: defaultUser.language,
-        languages
-      },
-      auth: { ...initialState.auth,
-        loggedIn: true,
-        userInfo: { ...initialState.auth.userInfo,
-          data: defaultUser
-        }
-      }
-    };
-    const _props = {
-      doLogout: () => null
-    };
-    const {wrapper} = setupComponent(Logout, _initialState, _props);
+  it('should correctly handle actions', () => {
+    const wrapper = shallow(<Logout {...props} />);
 
-    wrapper.find('[data-test-id="Logout.button_logout"]').first().props().onClick({preventDefault: () => {}});
+    wrapper.find(btnLogoutId).simulate('click', {
+      preventDefault: () => true
+    });
+    expect(props.doLogout.calledOnce).equal(true);
+
+    wrapper.unmount();
+  });
+
+  it('should show component correctly', () => {
+    const wrapper = shallow(<Logout {...props} />);
+
+    expect(wrapper.find(LogoutId).exists()).equal(true);
+    expect(wrapper.find(btnLogoutId).exists()).equal(true);
+
+    wrapper.unmount();
   });
 });

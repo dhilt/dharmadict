@@ -1,93 +1,77 @@
-global.window.localStorage = {};
+const React = require('react');
+const {expect} = require('chai');
+const sinon = require('sinon');
 
 const {
-  setupComponent,
-  checkWrap,
+  mountWithIntl,
   initialState,
-  languages,
-  _appPath
+  getAppPath,
+  shallow
 } = require('../../../_shared.js');
 
-const Header = require('../' + _appPath + 'components/common/Header').default;
+const Login = require(getAppPath(3) + 'components/common/header/Login').default;
 
-describe('Testing Login, presentational Component.', () => {
+describe('Testing Login Component.', () => {
 
-  const checkShowLogin = (modalIsOpen, login, password, pending) => {
-    languages.forEach(lang => {
-      const _initialState = { ...initialState,
-        common: { ...initialState.common,
-          userLanguage: lang.id,
-          languages
-        },
-        auth: { ...initialState.auth,
-          loggedIn: false,
-          userInfo: { ...initialState.auth.userInfo,
-            requested: true,
-            pending: false
-          },
-          modalIsOpen,
-          pending,
-          login,
-          password
-        }
-      };
-      const {wrapper} = setupComponent(Header, _initialState);
-      const i18n = require('../' + _appPath + 'i18n/' + lang.id);
-
-      checkWrap(wrapper.find('[data-test-id="Login"]'));
-      checkWrap(wrapper.find('[data-test-id="Login.header_button_log_in"]'), {
-        text: i18n['Login.header_button_log_in']
-      });
-
-      checkWrap(wrapper.find('[data-test-id="Login.modal"]'), {
-        contentLabel: 'Log In Dialog',
-        isOpen: modalIsOpen
-      });
-
-      if (!modalIsOpen) {
-        checkWrap(wrapper.find('[data-test-id="Login.title_log_in"]'), { length: 0 });
-        checkWrap(wrapper.find('[data-test-id="login-modal-content"]'), { length: 0 });
-        checkWrap(wrapper.find('[data-test-id="Login.form"]'), { length: 0 });
-        checkWrap(wrapper.find('[data-test-id="Login.form-login"]'), { length: 0 });
-        checkWrap(wrapper.find('[data-test-id="Login.input-login"]'), { length: 0 });
-        checkWrap(wrapper.find('[data-test-id="Login.form-password"]'), { length: 0 });
-        checkWrap(wrapper.find('[data-test-id="Login.input-password"]'), { length: 0 });
-        checkWrap(wrapper.find('[data-test-id="Login.button_do_login"]'), { length: 0 });
-        checkWrap(wrapper.find('[data-test-id="Login.button_do_login_text"]'), { length: 0 });
-        checkWrap(wrapper.find('[data-test-id="Login.button_cancel"]'), { length: 0 });
-      }
-
-      if (modalIsOpen) {
-        // checkWrap(wrapper.find('[data-test-id="Login.title_log_in"]'), {
-        //   text: i18n['Login.please_log_in']
-        // });  // should work
-      }
-
-      wrapper.unmount();
-    });
+  const defaultEvent = {
+    preventDefault: () => true,
+    target: {
+      value: 'some words'
+    }
+  };
+  const props = {
+    data: initialState.auth,
+    onPasswordChange: sinon.spy(),
+    onLoginChange: sinon.spy(),
+    closeModal: sinon.spy(),
+    openModal: sinon.spy(),
+    doLogin: sinon.spy()
   };
 
-  it(`should show the component with closed modal`,
-    () => checkShowLogin(false, '', '', false)
-  );
+  const LoginId = '[data-test-id="Login"]';
+  const btnOpenModalId = '[data-test-id="Login.link_open_modal"]';
+  const btnCloseModalId = '[data-test-id="Login.button_cancel"]';
+  const btnDoLoginId = '[data-test-id="Login.button_do_login"]';
+  const inputPassId = '[data-test-id="Login.input-password"]';
+  const inputLoginId = '[data-test-id="Login.input-login"]';
 
-  it(`should show the component with opened modal`,
-    () => checkShowLogin(true, '', '', false)
-  );
+  it('should correctly handle actions', () => {
+    const wrapper = shallow(<Login {...props} />);
 
-  it(`should show the component with entered login`,
-    () => checkShowLogin(true, 'login', '', false)
-  );
+    wrapper.find(btnCloseModalId).simulate('click', defaultEvent);
+    wrapper.find(btnOpenModalId).simulate('click', defaultEvent);
+    wrapper.find(inputLoginId).simulate('change', defaultEvent);
+    wrapper.find(inputPassId).simulate('change', defaultEvent);
+    wrapper.find(btnDoLoginId).simulate('click', defaultEvent);
 
-  it(`should show the component with entered password`,
-    () => checkShowLogin(true, '', 'password', false)
-  );
+    expect(props.onPasswordChange.calledOnce).equal(true);
+    expect(props.onLoginChange.calledOnce).equal(true);
+    expect(props.closeModal.calledOnce).equal(true);
+    expect(props.openModal.calledOnce).equal(true);
+    expect(props.doLogin.calledOnce).equal(true);
 
-  it(`should show the component with entered login and password`,
-    () => checkShowLogin(true, 'login', 'password', false)
-  );
+    wrapper.unmount();
+  });
 
-  it(`should show the component sending request`,
-    () => checkShowLogin(true, 'login', 'password', true)
-  );
+  const modalId = '[data-test-id="Login.modal"]';
+  const authFormId = '[data-test-id="Login.auth-form"]';
+
+  it('should show component correctly', () => {
+    const wrapper = mountWithIntl(<Login {...props} />);
+
+    expect(wrapper.find(LoginId).exists()).equal(true);
+    expect(wrapper.find(modalId).exists()).equal(true);
+
+    expect(wrapper.find(modalId).prop('isOpen')).equal(props.data.modalIsOpen);
+    expect(wrapper.find(authFormId).exists()).equal(props.data.modalIsOpen);
+    wrapper.setProps({...props,
+      data: {...props.data,
+        modalIsOpen: true
+      }
+    });
+    expect(wrapper.find(modalId).prop('isOpen')).equal(true);
+    // expect(wrapper.find(authFormId).exists()).equal(true);  /// should work
+
+    wrapper.unmount();
+  });
 });

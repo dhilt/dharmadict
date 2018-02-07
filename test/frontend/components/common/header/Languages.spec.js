@@ -1,50 +1,85 @@
-global.window.localStorage = {};
+const React = require('react');
+const {expect} = require('chai');
+const sinon = require('sinon');
 
 const {
-  setupComponent,
-  checkWrap,
-  initialState,
+  mountWithIntl,
+  defaultLang,
+  getAppPath,
   languages,
-  _appPath
+  shallow
 } = require('../../../_shared.js');
 
-const Languages = require('../' + _appPath + 'components/common/header/Languages').default;
+const Languages = require(getAppPath(3) + 'components/common/header/Languages').default;
 
 describe('Testing Languages Component.', () => {
 
-  languages.forEach(lang => {
-    it(`should show the ${lang.id}-component`, () => {
-      const _props = {
-        userLanguage: lang.id,
-        languages
-      };
-      const {wrapper} = setupComponent(Languages, initialState, _props);
-      const i18n = require('../' + _appPath + 'i18n/' + lang.id);
+  const defaultEvent = {
+    preventDefault: () => true
+  };
+  const props = {
+    doChangeLang: sinon.spy(),
+    current: defaultLang,
+    languages
+  };
 
-      checkWrap(wrapper.find('[data-test-id="Languages"]'), {
-        className: 'languages-bar-header'
-      });
+  const LanguagesMenuItemId = '[data-test-id="Languages.MenuItem"]';
 
-      checkWrap(wrapper.find('[data-test-id="Languages.Dropdown"]').first());
+  it('should correctly handle actions', () => {
+    const wrapper = shallow(<Languages {...props} />);
 
-      checkWrap(wrapper.find('[data-test-id="Languages.title"]'));
-
-      languages.forEach((_lang, langIndex) => {
-        checkWrap(wrapper.find('[data-test-id="Languages.langItem"]').at(langIndex), {
-          text: _lang.id + (langIndex < languages.length - 1 ? '/' : '')
-        });
-
-        checkWrap(wrapper.find('[data-test-id="Languages.MenuItem"]').at(langIndex + 2), {
-          text: _lang.id + ' - ' + _lang.name
-        });
-
-        checkWrap(wrapper.find('[data-test-id="Languages.showLangId"]').at(langIndex), {
-          // className: _lang.id === _props.userLanguage ? 'selected' : '',  // should work
-          text: _lang.id
-        });
-      });
-
-      wrapper.unmount();
+    languages.forEach((lang, i) => {
+      wrapper.find(LanguagesMenuItemId).at(i).simulate('select', defaultEvent);
     });
+
+    expect(props.doChangeLang.callCount).equal(languages.length);
+
+    wrapper.unmount();
+  });
+
+  const LanguagesId = '[data-test-id="Languages"]';
+  const dropdownBtnId = '[data-test-id="Languages.Dropdown"]';
+  const showLangId = '[data-test-id="Languages.showLangId"]';
+  const langItemId = '[data-test-id="Languages.langItem"]';
+  const titleId = '[data-test-id="Languages.title"]';
+
+  it('should show component correctly', () => {
+    const wrapper = mountWithIntl(<Languages {...props} />);
+
+    expect(wrapper.find(LanguagesId).exists()).equal(true);
+    expect(wrapper.find(dropdownBtnId).exists()).equal(true);
+
+    languages.forEach((lang, i) => {
+      wrapper.setProps({...props,
+        current: lang.id
+      });
+
+      expect(wrapper.find(titleId).exists()).equal(true);
+      const expectedTitleText = languages.reduce((init, elem, index) =>
+        init += elem.id + (index < languages.length - 1 ? '/' : ''), ''
+      );
+      expect(wrapper.find(titleId).text()).equal(expectedTitleText);
+
+      expect(wrapper.find(langItemId).at(i).exists()).equal(true);
+      const expectedLangItemText = lang.id + (i < languages.length - 1 ? '/' : '');
+      expect(wrapper.find(langItemId).at(i).text()).equal(expectedLangItemText);
+
+      languages.forEach((_lang, _i) => {
+        expect(wrapper.find(langItemId).at(_i).find(showLangId).exists()).equal(true);
+        expect(wrapper.find(langItemId).at(_i).find(showLangId).text()).equal(_lang.id);
+        expect(wrapper.find(langItemId).at(_i).find(showLangId).prop('className'))
+          .equal(lang.id === _lang.id ? 'selected' : '');
+
+        expect(wrapper.find(LanguagesMenuItemId).find(showLangId).at(_i).text()).equal(_lang.id);
+        expect(wrapper.find(LanguagesMenuItemId).find(showLangId).at(_i).prop('className'))
+          .equal(lang.id === _lang.id ? 'selected' : '');
+
+        const countOfItems = wrapper.find(LanguagesMenuItemId).length / languages.length;
+        expect(wrapper.find(LanguagesMenuItemId).at(_i * countOfItems).text())
+          .equal(_lang.id + ' - ' + _lang.name);
+      });
+    });
+
+    wrapper.unmount();
   });
 });

@@ -1,97 +1,68 @@
-global.window.localStorage = {};
+const React = require('react');
+const {expect} = require('chai');
+const sinon = require('sinon');
 
 const {
-  setupComponent,
-  checkWrap,
-  checkWrapActions,
   initialState,
-  defaultLang,
-  languages,
-  _appPath
+  getAppPath,
+  shallow
 } = require('../../_shared.js');
 
-const EditControls = require(_appPath + 'components/edit/EditControls').default;
+const EditControls = require(getAppPath(2) + 'components/edit/EditControls').default.WrappedComponent;
 
 describe('Testing EditControls Component.', () => {
 
-  beforeEach(() => console.log = jest.fn());
-
-  const checkShowEditControls = (pending, lang) => {
-    const _initialState = { ...initialState,
-      common: { ...initialState.common,
-        userLanguage: lang,
-      },
-      edit: { ...initialState.edit,
-        update: { ...initialState.edit.update,
-          pending: pending
-        }
-      }
-    };
-    const {wrapper} = setupComponent(EditControls, _initialState);
-    const i18n = require(_appPath + 'i18n/' + lang);
-
-    checkWrap(wrapper.find('[data-test-id="EditControls"]'), {
-      className: 'form-group form-inline'
-    });
-
-    checkWrap(wrapper.find('[data-test-id="button-save-and-close"]').first(), {
-      text: i18n['EditControls.button_save_and_close'],
-      className: pending ? 'loader' : '',
-      disabled: pending,
-      type: 'button'
-    });
-
-    checkWrap(wrapper.find('[data-test-id="button-save"]').first(), {
-      text: i18n['EditControls.button_save'],
-      className: pending ? 'loader' : '',
-      disabled: pending,
-      type: 'button'
-    });
-
-    checkWrap(wrapper.find('[data-test-id="cancel-link"]').first(), {
-      text: i18n['EditControls.button_reset'],
-      className: 'cancel-link'
-    });
-
-    wrapper.unmount();
+  const props = {
+    data: initialState.edit.update
   };
 
-  languages.forEach(lang => {
+  const btnSaveAndCloseId = '[data-test-id="button-save-and-close"]';
+  const linkCancelId = '[data-test-id="cancel-link"]';
+  const btnSaveId = '[data-test-id="button-save"]';
 
-    it('should show component, that is sending the request',
-      () => checkShowEditControls(true, lang.id)
-    );
+  it('should correctly handle actions on the component', () => {
+    const spyOnCancel = sinon.spy(EditControls.prototype, 'onCancel');
+    const spyOnSave = sinon.spy(EditControls.prototype, 'onSave');
 
-    it('should show component, that is not sending the request',
-      () => checkShowEditControls(false, lang.id)
-    );
-  });
-
-  it('should correctly handle actions on component', () => {
-    const _initialState = { ...initialState,
-      common: { ...initialState.common,
-        userLanguage: defaultLang
-      },
-      edit: { ...initialState.edit,
-        termName: 'termName',
-        change: { meanings: [] }
+    const defaultEvent = {
+      preventDefault: () => true,
+      target: {
+        value: 'password'
       }
     };
-    const _props = {
-      dispatch: jest.fn()
-    };
-    const {wrapper, store} = setupComponent(EditControls, _initialState, _props);
+    const wrapper = shallow(<EditControls {...props} />);
 
-    let actionsCount = 0;
-    checkWrapActions(store, actionsCount);
+    wrapper.find(btnSaveAndCloseId).simulate('click', defaultEvent);
+    wrapper.find(linkCancelId).simulate('click', defaultEvent);
+    wrapper.find(btnSaveId).simulate('click', defaultEvent);
 
-    wrapper.find('[data-test-id="button-save-and-close"]').first().props().onClick({});
-    checkWrapActions(store, ++actionsCount);
+    expect(spyOnCancel.calledOnce).to.equal(true);
+    expect(spyOnSave.callCount).to.equal(2);
 
-    wrapper.find('[data-test-id="button-save"]').first().props().onClick({});
-    checkWrapActions(store, ++actionsCount);
+    wrapper.unmount();
+  });
 
-    wrapper.find('[data-test-id="cancel-link"]').props().onClick({preventDefault: () => {}});
-    checkWrapActions(store, ++actionsCount);
+  const mainId = '[data-test-id="EditControls"]';
+
+  it('should show component correctly', () => {
+    const wrapper = shallow(<EditControls {...props} />);
+
+    expect(wrapper.find(mainId).exists()).equal(true);
+
+    expect(wrapper.find(btnSaveAndCloseId).prop('disabled')).equal(false);
+    expect(wrapper.find(btnSaveAndCloseId).prop('className')).equal('');
+    expect(wrapper.find(btnSaveId).prop('disabled')).equal(false);
+    expect(wrapper.find(btnSaveId).prop('className')).equal('');
+    wrapper.setProps({...props,
+      data: {...props.data,
+        pending: true
+      }
+    });
+    expect(wrapper.find(btnSaveAndCloseId).prop('className')).equal('loader');
+    expect(wrapper.find(btnSaveAndCloseId).prop('disabled')).equal(true);
+    expect(wrapper.find(btnSaveId).prop('className')).equal('loader');
+    expect(wrapper.find(btnSaveId).prop('disabled')).equal(true);
+
+    wrapper.unmount();
   });
 });

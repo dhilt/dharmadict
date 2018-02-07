@@ -1,197 +1,145 @@
-global.window.localStorage = {};
+const React = require('react');
+const {expect} = require('chai');
+const sinon = require('sinon');
 
 const {
-  setupComponent,
-  checkWrap,
-  checkWrapActions,
   initialState,
-  defaultLang,
-  languages,
-  terms,
-  _appPath
+  defaultTerm,
+  getAppPath,
+  shallow
 } = require('../../_shared.js');
 
-const Meanings = require(_appPath + 'components/edit/Meanings').default;
+const Meanings = require(getAppPath(2) + 'components/edit/Meanings').default.WrappedComponent;
 
 describe('Testing Meanings Component.', () => {
 
-  const checkShowMeanings = (termName, translation, lang) => {
-    const _initialState = { ...initialState,
-      common: { ...initialState.common,
-        userLanguage: lang,
-      },
-      edit: { ...initialState.edit,
-        termName,
-        change: translation
-      }
-    };
-    const {wrapper} = setupComponent(Meanings, _initialState);
-    const i18n = require(_appPath + 'i18n/' + lang);
-
-    checkWrap(wrapper.find('[data-test-id="Meanings"]'));
-
-    checkWrap(wrapper.find('[data-test-id="termName"]'), {
-      text: termName
-    });
-
-    checkWrap(wrapper.find('[data-test-id="meaningList"]'), {
-      className: 'meaningList'
-    });
-
-    let _versionIndex = -1;
-    translation.meanings.forEach((meaning, meaningIndex) => {
-
-      checkWrap(wrapper.find('[data-test-id="li-meaning"]').at(meaningIndex));
-
-      checkWrap(wrapper.find('[data-test-id="meaning"]').at(meaningIndex), {
-        className: 'meaning'
-      });
-
-      checkWrap(wrapper.find('[data-test-id="meaning-title"]').at(meaningIndex), {
-        text: i18n['Meanings.number_of_meaning'].replace(`{indexOfMeaning}`, meaningIndex + 1),
-        className: 'title'
-      });
-
-      checkWrap(wrapper.find('[data-test-id="versionList"]').at(meaningIndex), {
-        className: 'versionList'
-      });
-
-      meaning.versions.forEach((version, versionIndex) => {
-        _versionIndex++;
-
-        checkWrap(wrapper.find('[data-test-id="li-version"]').at(_versionIndex), {
-          className: 'form-group form-inline'
-        });
-
-        checkWrap(wrapper.find('[data-test-id="input-version"]').at(_versionIndex), {
-          className: 'form-control',
-          name: 'search',
-          type: 'text',
-          value: version,
-        });
-
-        checkWrap(wrapper.find('[data-test-id="button-version"]').at(_versionIndex), {
-          className: 'btn btn-link btn-sm remove-btn',
-          type: 'button',
-          text: 'X',
-          disabled: versionIndex === meaning.versions.length - 1 ? "disabled" : ""
-        });
-      });
-
-      checkWrap(wrapper.find('[data-test-id="comment"]').at(meaningIndex), {
-        className: 'comment'
-      });
-
-      checkWrap(wrapper.find('[data-test-id="comment-title"]').at(meaningIndex), {
-        text: i18n['Meanings.comment_for_meaning'].replace(`{indexOfMeaning}`, meaningIndex + 1),
-        className: 'title'
-      });
-
-      checkWrap(wrapper.find('[data-test-id="comment-group"]').at(meaningIndex), {
-        className: 'form-group form-inline'
-      });
-
-      checkWrap(wrapper.find('[data-test-id="comment-textarea"]').at(meaningIndex), {
-        className: 'form-control',
-        name: 'comment',
-        value: meaning.comment || ''
-      });
-
-      checkWrap(wrapper.find('[data-test-id="remove"]').at(meaningIndex), {
-        className: 'remove'
-      });
-
-      checkWrap(wrapper.find('[data-test-id="remove-link"]').at(meaningIndex), {
-        text: i18n['Meanings.button_delete_meaning'].replace(`{indexOfMeaning}`, meaningIndex + 1),
-        className: 'remove-link'
-      });
-    });
-
-    checkWrap(wrapper.find('[data-test-id="li-no-meanings"]'));
-
-    if (!translation.meanings.length) {
-      checkWrap(wrapper.find('[data-test-id="div-no-meanings"]'), {
-        text: i18n['Meanings.have_no_one_meaning'],
-        className: 'no-meanings'
-      })
-    } else {
-      checkWrap(wrapper.find('[data-test-id="div-no-meanings"]'), {
-        length: 0
-      })
+  const defaultTranslation = defaultTerm.translations[0];
+  const props = {
+    data: {...initialState.edit,
+      termName: 'Term name',
+      change: defaultTranslation
     }
-
-    checkWrap(wrapper.find('[data-test-id="add-new-meaning"]'), {
-      text: i18n['Meanings.add_new_meaning'],
-      className: 'add-new-meaning'
-    })
-
-    checkWrap(wrapper.find('[data-test-id="EditControls"]'), {
-      className: 'form-group form-inline'
-    });
-    // further tests in "test/frontend/components/edit/EditControls"
-
-    wrapper.unmount();
   };
 
-  terms.forEach(term =>
-    term.translations.forEach(translation =>
-      languages.forEach(lang =>
-        it(`should show component with translation of ${term.wylie} by ${translation.translatorId} correctly`,
-          () => checkShowMeanings(term.wylie, translation, lang.id)
-        )
-      )
-    )
-  );
+  const textareaCommentChangeId = '[data-test-id="comment-textarea"]';
+  const inputVersionChangeId = '[data-test-id="input-version"]';
+  const btnVersionRemoveId = '[data-test-id="button-version"]';
+  const linkAddMeaningId = '[data-test-id="add-new-meaning"]';
+  const linkMeaningRemoveId = '[data-test-id="remove-link"]';
 
-  it('should correctly handle actions on component with existing translations', () => {
-    const translation = terms[0].translations[0];
-    const _initialState = { ...initialState,
-      common: { ...initialState.common,
-        userLanguage: defaultLang
-      },
-      edit: { ...initialState.edit,
-        termName: 'termName',
-        change: translation
+  it('should correctly handle actions on the component', () => {
+    const spyOnCommentChanged = sinon.spy(Meanings.prototype, 'onCommentChanged');
+    const spyOnMeaningRemoved = sinon.spy(Meanings.prototype, 'onMeaningRemoved');
+    const spyOnVerChanged = sinon.spy(Meanings.prototype, 'onVersionChanged');
+    const spyOnVerRemoved = sinon.spy(Meanings.prototype, 'onVersionRemoved');
+    const spyOnMeaningAdd = sinon.spy(Meanings.prototype, 'addNewMeaning');
+
+    const defaultEvent = {
+      preventDefault: () => true,
+      target: {
+        value: 'some words'
       }
     };
-    const {wrapper, store} = setupComponent(Meanings, _initialState);
+    const wrapper = shallow(<Meanings {...props} />);
 
-    let actionsCount = 0;
-    checkWrapActions(store, actionsCount);
+    let removeMeaningCalls = 0;
+    let changeCommentCalls = 0;
+    let removeVersionCalls = 0;
+    let changeVersionCalls = 0;
 
-    translation.meanings.forEach((meaning, index) => {
-      wrapper.find('[data-test-id="input-version"]').at(index).props().onChange({target: {value: 'meaning'}});
-      checkWrapActions(store, ++actionsCount);
-
-      wrapper.find('[data-test-id="button-version"]').at(index).props().onClick({preventDefault: () => {}});
-      checkWrapActions(store, ++actionsCount);
-
-      wrapper.find('[data-test-id="comment-textarea"]').at(index).props().onChange({target: {value: 'comment'}});
-      checkWrapActions(store, ++actionsCount);
-
-      wrapper.find('[data-test-id="remove-link"]').at(index).props().onClick({preventDefault: () => {}});
-      checkWrapActions(store, ++actionsCount);
+    wrapper.find(linkAddMeaningId).simulate('click', defaultEvent);
+    defaultTranslation.meanings.forEach((meaning, index) => {
+      wrapper.find(textareaCommentChangeId).at(index).simulate('change', defaultEvent);
+      wrapper.find(linkMeaningRemoveId).at(index).simulate('click', defaultEvent);
+      removeMeaningCalls++;
+      changeCommentCalls++;
+      meaning.versions.forEach((version, _index) => {
+        wrapper.find(inputVersionChangeId).at(_index).simulate('change', defaultEvent);
+        wrapper.find(btnVersionRemoveId).at(_index).simulate('click', defaultEvent);
+        removeVersionCalls++;
+        changeVersionCalls++;
+      });
     });
+
+    expect(spyOnMeaningRemoved.callCount).equal(removeMeaningCalls);
+    expect(spyOnCommentChanged.callCount).equal(changeCommentCalls);
+    expect(spyOnVerChanged.callCount).equal(changeVersionCalls);
+    expect(spyOnVerRemoved.callCount).equal(removeVersionCalls);
+    expect(spyOnMeaningAdd.calledOnce).equal(true);
+
+    wrapper.unmount();
   });
 
-  it('should correctly handle actions on component with no translations', () => {
-    const _initialState = { ...initialState,
-      common: { ...initialState.common,
-        userLanguage: defaultLang
-      },
-      edit: { ...initialState.edit,
-        termName: 'termName',
-        change: { meanings: [] }
-      }
-    };
-    const _props = {
-      dispatch: jest.fn()
-    };
-    const {wrapper, store} = setupComponent(Meanings, _initialState, _props);
-    let actionsCount = 0;
-    checkWrapActions(store, actionsCount);
+  it('should show component correctly', () => {
+    const wrapper = shallow(<Meanings {...props} />);
 
-    wrapper.find('[data-test-id="add-new-meaning"]').props().onClick({preventDefault: () => {}});
-    checkWrapActions(store, ++actionsCount);
+    const mainId = '[data-test-id="Meanings"]';
+    expect(wrapper.find(mainId).exists()).equal(true);
+
+    const termNameId = '[data-test-id="termName"]';
+    expect(wrapper.find(termNameId).text()).equal(props.data.termName);
+
+    const editedTermName = props.data.termName + ' new';
+    wrapper.setProps({...props,
+      data: {...props.data,
+        termName: editedTermName
+      }
+    });
+    expect(wrapper.find(termNameId).text()).equal(editedTermName);
+
+    const inputVersionId = '[data-test-id="input-version"]';
+    const btnVersionId = '[data-test-id="button-version"]';
+    const versionId = '[data-test-id="li-version"]';
+    const meaningId = '[data-test-id="meaning"]';
+
+    defaultTranslation.meanings.forEach((meaning, meaningIndex) => {
+      expect(wrapper.find(meaningId).at(meaningIndex).exists()).equal(true);
+
+      meaning.versions.forEach((version, versionIndex) => {
+        let _wrap = wrapper.find(meaningId).at(meaningIndex).find(versionId);
+        expect(_wrap.exists()).equal(true);
+
+        const initVersionValue = props.data.change.meanings[meaningIndex].versions[versionIndex];
+        _wrap = wrapper.find(meaningId).at(meaningIndex).find(inputVersionId).at(versionIndex);
+        expect(_wrap.prop('value')).equal(initVersionValue);
+
+        const newVersionValue = props.data.change.meanings[meaningIndex].versions[versionIndex] + ' new ' + versionIndex;
+        let _props = JSON.parse(JSON.stringify(props));
+        _props.data.change.meanings[meaningIndex].versions[versionIndex] = newVersionValue;
+        wrapper.setProps(_props);
+        _wrap = wrapper.find(meaningId).at(meaningIndex).find(inputVersionId).at(versionIndex);
+        expect(_wrap.prop('value')).equal(newVersionValue);
+      });
+
+      const lastVersionOfMeaning = wrapper.find(meaningId).find(btnVersionId).at(meaning.versions.length - 1);
+      expect(lastVersionOfMeaning.prop('disabled')).equal('disabled');
+
+      const commentTextId = '[data-test-id="comment-textarea"]';
+      let _wrap = wrapper.find(commentTextId).at(meaningIndex);
+      let expectedStr = props.data.change.meanings[meaningIndex].comment;
+      expect(_wrap.prop('value')).equal(expectedStr);
+
+      let _props = JSON.parse(JSON.stringify(props));
+      expectedStr = 'new comment on meaning ' + meaningIndex;
+      _props.data.change.meanings[meaningIndex].comment = expectedStr;
+      wrapper.setProps(_props);
+      _wrap = wrapper.find(commentTextId).at(meaningIndex);
+      expect(_wrap.prop('value')).equal(expectedStr);
+    });
+
+    const divNoMeaningsId = '[data-test-id="div-no-meanings"]';
+    wrapper.setProps({...props,
+      data: {...props.data,
+        change: {...props.data.change,
+          meanings: []
+        }
+      }
+    });
+    expect(wrapper.find(divNoMeaningsId).exists()).equal(true);
+
+    wrapper.setProps(props);
+    expect(wrapper.find(divNoMeaningsId).exists()).equal(false);
+
+    wrapper.unmount();
   });
 });

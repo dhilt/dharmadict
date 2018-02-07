@@ -19,19 +19,19 @@ class Pages extends Component {
     const { pending, list } = this.props.pages
     const { userData } = this.props
     return (
-      <div>
-        <h3><FormattedMessage id="PagesList.title" /></h3>
+      <div data-test-id="Pages">
+        <h3><FormattedMessage id="Pages.title" /></h3>
         {
           !pending &&
-          <ul>
+          <ul data-test-id="list-pages">
             { list.map((page, i) => <li key={i}><Link to={`/pages/${page.url}`}>{page.title}</Link></li>) }
           </ul>
         }
         {
           userData && userData.role === 'admin' &&
-          <div>
+          <div data-test-id="link-to-create">
             <Link className="btn btn-default" to={`/pages/new`}>
-              <FormattedMessage id="PagesList.link_to_create" />
+              <FormattedMessage id="Pages.link_to_create" />
             </Link>
           </div>
         }

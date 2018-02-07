@@ -1,76 +1,39 @@
-global.window.localStorage = {};
+const React = require('react');
+const {expect} = require('chai');
+const sinon = require('sinon');
 
-const {setupComponent, checkWrap, checkWrapActions, initialState, terms, _appPath} = require('../../_shared.js');
+const {getAppPath, shallow, terms} = require('../../_shared.js');
 
-const TermList = require(_appPath + 'components/search/TermList').default;
+const TermList = require(getAppPath(2) + 'components/search/TermList').default.WrappedComponent;
 
 describe('Testing TermList Component.', () => {
 
-  const checkShowTermList = (terms, selectedTerm) => {
-    const _initialState = { ...initialState,
-      search: { ...initialState.search,
-        started: true,
-        result: terms,
-        error: false,
-        pending: false
-      },
-      selected: { ...initialState.selected,
-        term: selectedTerm
-      }
-    };
-    const {wrapper} = setupComponent(TermList, _initialState);
-
-    checkWrap(wrapper.find('[data-test-id="TermList"]'));
-
-    terms.forEach(elem =>
-      checkWrap(wrapper.find(`[data-test-id="${elem.wylie}"]`), {
-        className: selectedTerm && elem === selectedTerm ? 'list-group-item selected' : 'list-group-item',
-        text: elem.wylie
-      })
-    );
-
-    wrapper.unmount();
+  const props = {
+    termList: terms,
+    isTermSelected: () => true
   };
 
-  const result = terms;
-  const selectedTerm = terms[1];
+  const itemTermId = '[data-test-id="item-term"]';
 
-  it('should show component with terms, without selected term', () =>
-    checkShowTermList(terms, null)
-  );
+  it('should correctly handle actions on the component', () => {
+    const spyOnSelectTerm = sinon.spy(TermList.prototype, 'onSelectTerm');
+    const wrapper = shallow(<TermList {...props} />);
 
-  it('should show component with terms, with selected term', () =>
-    checkShowTermList(terms, selectedTerm)
-  );
+    let termsCount = 0;
+    terms.forEach((term, i) => {
+      wrapper.find(itemTermId).at(i).simulate('click', term);
+      termsCount++;
+    });
+    expect(spyOnSelectTerm.callCount).equal(termsCount);
 
-  // it('should correctly handle actions on component', () => {
-  //   const selectedTerm = terms[0];
-  //   const _initialState = { ...initialState,
-  //     search: { ...initialState.search,
-  //       started: true,
-  //       result: terms,
-  //       error: false,
-  //       pending: false
-  //     },
-  //     selected: { ...initialState.selected,
-  //       term: selectedTerm
-  //     }
-  //   };
-  //   const _props = {
-  //     dispatch: jest.fn()
-  //   };
-  //   const {wrapper, store} = setupComponent(TermList, _initialState, _props);
-  //
-  //   let actionsCount = 0;
-  //   checkWrapActions(store, actionsCount);
-  //
-  //   terms.forEach(term => {
-  //     wrapper.find(`[data-test-id="${term.wylie}"]`).props().onClick(term);  // SecurityError ???
-  //     if (term.wylie === selectedTerm.wylie) {
-  //       checkWrapActions(store, actionsCount);
-  //     } else {
-  //       checkWrapActions(store, ++actionsCount);
-  //     }
-  //   });
-  // });
+    wrapper.unmount();
+  });
+
+  const mainId = '[data-test-id="TermList"]';
+
+  it('should show component correctly', () => {
+    const wrapper = shallow(<TermList {...props} />);
+    expect(wrapper.find(mainId).exists()).equal(true);
+    wrapper.unmount();
+  });
 });

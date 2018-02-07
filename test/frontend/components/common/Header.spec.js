@@ -1,110 +1,96 @@
-global.window.localStorage = {};
+const React = require('react');
+const {expect} = require('chai');
 
 const {
-  setupComponent,
-  checkWrap,
+  mountWithIntl,
   initialState,
-  languages,
-  users,
-  _appPath
+  defaultLang,
+  defaultUser,
+  getAppPath,
+  admin
 } = require('../../_shared.js');
 
-const Header = require(_appPath + 'components/common/Header').default;
+const Header = require(getAppPath(2) + 'components/common/Header').default.WrappedComponent;
 
 describe('Testing Header Component.', () => {
 
-  const checkShowHeader = (userLooking, pending, langId) => {
-    const _initialState = { ...initialState,
-      common: { ...initialState.common,
-        userLanguage: userLooking ? userLooking.language : langId,
-        languages
-      },
-      auth: { ...initialState.auth,
-        loggedIn: userLooking ? true : false,
-        userInfo: { ...initialState.auth.userInfo,
-          data: userLooking,
-          pending
-        }
-      }
-    };
-    const {wrapper} = setupComponent(Header, _initialState);
-    const i18n = require(_appPath + 'i18n/' + _initialState.common.userLanguage);
-
-    checkWrap(wrapper.find('[data-test-id="Header"]'), {
-      className: 'nav'
-    });
-
-    checkWrap(wrapper.find('[data-test-id="Header.nav"]'), {
-      className: 'nav__wrapper'
-    });
-
-    checkWrap(wrapper.find('[data-test-id="Header.about_project"]').first(), {
-      text: i18n['Header.about_project']
-    });
-
-    checkWrap(wrapper.find('[data-test-id="Languages"]'), {
-      className: 'languages-bar-header'
-    });
-
-    if (userLooking) {
-
-      checkWrap(wrapper.find('[data-test-id="Header.navButtons-loggedIn"]'));
-
-      checkWrap(wrapper.find('[data-test-id="Header.link_to_user"]').first(), {
-        text: userLooking.name
-      });
-
-      checkWrap(wrapper.find('[data-test-id="Header.Logout"]'));
-
-      if (userLooking.role === 'admin') {
-        checkWrap(wrapper.find('[data-test-id="Header.link_create_term"]').first(), {
-          text: i18n['Header.create_new_term']
-        })
-      } else {
-        checkWrap(wrapper.find('[data-test-id="Header.link_create_term"]'), {
-          length: 0
-        })
-      }
-    } else {
-      checkWrap(wrapper.find('[data-test-id="Header.navButtons-loggedIn"]'), { length: 0 });
-      checkWrap(wrapper.find('[data-test-id="Header.link_to_user"]'), { length: 0 });
-      checkWrap(wrapper.find('[data-test-id="Header.Logout"]'), { length: 0 });
-      checkWrap(wrapper.find('[data-test-id="Header.link_create_term"]'), { length: 0 });
+  const props = {
+    data: initialState.auth,
+    common: {
+      userLanguage: defaultLang
     }
-
-    if (!userLooking) {
-
-      checkWrap(wrapper.find('[data-test-id="Header.navButtons-notLoggedIn"]'));
-
-      if (pending) {
-
-        checkWrap(wrapper.find('[data-test-id="Header.LoadingButton"]'), {
-          className: 'btn--nav'
-        })
-      } else {
-        checkWrap(wrapper.find('[data-test-id="Header.LoadingButton"]'), { length: 0 });
-        checkWrap(wrapper.find('[data-test-id="Header.Login"]'));
-      }
-    } else {
-      checkWrap(wrapper.find('[data-test-id="Header.navButtons-notLoggedIn"]'), { length: 0 })
-    }
-
-    wrapper.unmount();
   };
 
-  languages.forEach(lang => {
-    it(`should show the ${lang.id}-component sending request`,
-      () => checkShowHeader(null, true, lang.id)
-    );
+  const HeaderId = '[data-test-id="Header"]';
+  const notLoggedInId = '[data-test-id="Header.navButtons-notLoggedIn"]';
+  const LoadingBtnComponentId = '[data-test-id="Header.LoadingButton"]';
+  const linkCreateTermId = '[data-test-id="Header.link_create_term"]';
+  const LanguagesComponentId = '[data-test-id="Header.Languages"]';
+  const loggedInId = '[data-test-id="Header.navButtons-loggedIn"]';
+  const linkToUserId = '[data-test-id="Header.link_to_user"]';
+  const LogoutComponentId = '[data-test-id="Header.Logout"]';
+  const LoginComponentId = '[data-test-id="Header.Login"]';
 
-    it(`should show the ${lang.id}-component for non-authorized user`,
-      () => checkShowHeader(null, false, lang.id)
-    );
+  it('should show component correctly', () => {
+    const wrapper = mountWithIntl(<Header {...props} />);
+
+    expect(wrapper.find(HeaderId).exists()).equal(true);
+    expect(wrapper.find(LanguagesComponentId).exists()).equal(true);
+
+    expect(wrapper.find(notLoggedInId).exists()).equal(true);
+    expect(wrapper.find(LoginComponentId).exists()).equal(true);
+    expect(wrapper.find(LoadingBtnComponentId).exists()).equal(false);
+    expect(wrapper.find(LogoutComponentId).exists()).equal(false);
+    expect(wrapper.find(linkCreateTermId).exists()).equal(false);
+    expect(wrapper.find(loggedInId).exists()).equal(false);
+
+    wrapper.setProps({...props,
+      data: {...props.data,
+        userInfo: {...props.data.userInfo,
+          pending: true
+        }
+      }
+    });
+    expect(wrapper.find(notLoggedInId).exists()).equal(true);
+    expect(wrapper.find(LoadingBtnComponentId).exists()).equal(true);
+    expect(wrapper.find(LogoutComponentId).exists()).equal(false);
+    expect(wrapper.find(LoginComponentId).exists()).equal(false);
+    expect(wrapper.find(linkCreateTermId).exists()).equal(false);
+    expect(wrapper.find(loggedInId).exists()).equal(false);
+
+    wrapper.setProps({...props,
+      data: {...props.data,
+        loggedIn: true,
+        userInfo: {...props.data.userInfo,
+          data: defaultUser
+        }
+      }
+    });
+    expect(wrapper.find(loggedInId).exists()).equal(true);
+    expect(wrapper.find(LogoutComponentId).exists()).equal(true);
+    expect(wrapper.find(linkToUserId).first().text()).equal(defaultUser.name);
+    expect(wrapper.find(linkToUserId).first().prop('to')).equal('/translator/' + defaultUser.id);
+    expect(wrapper.find(LoadingBtnComponentId).exists()).equal(false);
+    expect(wrapper.find(LoginComponentId).exists()).equal(false);
+    expect(wrapper.find(linkCreateTermId).exists()).equal(false);
+    expect(wrapper.find(notLoggedInId).exists()).equal(false);
+
+    wrapper.setProps({...props,
+      data: {...props.data,
+        loggedIn: true,
+        userInfo: {...props.data.userInfo,
+          data: admin
+        }
+      }
+    });
+    expect(wrapper.find(loggedInId).exists()).equal(true);
+    expect(wrapper.find(linkCreateTermId).exists()).equal(true);
+    expect(wrapper.find(LogoutComponentId).exists()).equal(true);
+    expect(wrapper.find(linkToUserId).first().text()).equal(admin.name);
+    expect(wrapper.find(LoadingBtnComponentId).exists()).equal(false);
+    expect(wrapper.find(LoginComponentId).exists()).equal(false);
+    expect(wrapper.find(notLoggedInId).exists()).equal(false);
+
+    wrapper.unmount();
   });
-
-  users.forEach(user =>
-    it(`should show the ${user.language}-component for authorized user`,
-      () => checkShowHeader(user, false)
-    )
-  );
 });

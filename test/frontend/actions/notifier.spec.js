@@ -1,4 +1,4 @@
-const configureMockStore = require('redux-mock-store').default;
+const configureMockStore = require('redux-mock-store');
 const thunk = require('redux-thunk').default;
 const expect = require('expect');
 
@@ -107,4 +107,4 @@ describe('notifier actions', () => {
     testFunctionRemoveNotify(6, false);
     testFunctionRemoveNotify(7, true);
   });
-})
+});

@@ -36,12 +36,13 @@ class NewPage extends Component {
     const { pending } = this.props.pageInfo
     const { url, title, text } = this.props.pageInfo.data
     return (
-      <div>
+      <div data-test-id="NewPage">
         <form className="col-md-6">
           <h3><FormattedMessage id="NewPage.title_of_page" /></h3>
           <div className="form-group">
             <label><FormattedMessage id="NewPage.edit_url" /></label>
-            <input type="text"
+            <input data-test-id="input-url"
+              type="text"
               value={url || ''}
               className="form-control"
               onChange={this.changePageUrl}
@@ -49,27 +50,30 @@ class NewPage extends Component {
           </div>
           <div className="form-group">
             <label><FormattedMessage id="NewPage.edit_title" /></label>
-            <input type="text"
-              value={title || ''}
-              className="form-control"
+            <input data-test-id="input-title"
               onChange={this.changePageTitle}
+              className="form-control"
+              value={title || ''}
+              type="text"
             />
           </div>
           <div className="form-group">
             <label><FormattedMessage id="NewPage.edit_text" /></label>
-            <textarea type="text"
-              value={text || ''}
+            <textarea data-test-id="input-text"
               className="form-control page-textarea"
               onChange={this.changePageText}
+              value={text || ''}
+              type="text"
             />
           </div>
           <div className="form-group">
-            <button className="btn btn-primary"
+            <button data-test-id="btn-save"
               onClick={this.sendNewPageData}
+              className="btn btn-primary"
               disabled={pending}>
               <FormattedMessage id="Common.save" />
             </button>
-            <Link to={`/pages`}>
+            <Link data-test-id="link-cancel" to={`/pages`}>
               <FormattedMessage id="Common.cancel" />
             </Link>
           </div>

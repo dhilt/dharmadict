@@ -1,105 +1,99 @@
-global.window.localStorage = {};
+const React = require('react');
+const {expect} = require('chai');
 
-const {setupComponent, checkWrap, languages, initialState, terms, _appPath} = require('../../_shared.js');
+const {
+  mountWithIntl,
+  initialState,
+  defaultTerm,
+  defaultLang,
+  getAppPath,
+  shallow,
+  terms
+} = require('../../_shared.js');
 
-const SearchResults = require(_appPath + 'components/search/SearchResults').default;
+const SearchResults = require(getAppPath(2) + 'components/search/SearchResults').default.WrappedComponent;
 
 describe('Testing SearchResults Component.', () => {
 
-  const responseFail = {
-    message: 'Error happened!'
+  const props = {
+    getSelectedTerm: () => false,
+    data: initialState.search
   };
 
-  const checkShowSearchResults = (result, selectedTerm, pending, error) => {
-    languages.forEach(lang => {
-      const _initialState = { ...initialState,
-        common: { ...initialState.common,
-          userLanguage: lang.id
-        },
-        search: { ...initialState.search,
-          started: true,
-          result,
-          error,
-          pending
-        },
-        selected: { ...initialState.selected,
-          term: selectedTerm
-        }
-      };
-      const {wrapper} = setupComponent(SearchResults, _initialState);
-      const i18n = require(_appPath + 'i18n/' + lang.id);
+  const mainId = '[data-test-id="SearchResults"]';
+  const resultId = '[data-test-id="div-result"]';
+  const notFoundId = '[data-test-id="not-found"]';
+  const errorId = '[data-test-id="error"]';
 
-      checkWrap(wrapper.find('[data-test-id="SearchResults"]'), {
-        className: 'row search-results-row'
-      });
+  it('should show component correctly', () => {
+    const wrapper = shallow(<SearchResults {...props} />);
 
-      if (error) {
-        checkWrap(wrapper.find('[data-test-id="error"]'));
-        checkWrap(wrapper.find('[data-test-id="div-result"]'), { length: 0 });
+    expect(wrapper.find(mainId).exists()).equal(true);
+
+    wrapper.setProps({...props,
+      data: {...props.data,
+        pending: false,
+        started: true,
+        result: terms
       }
-
-      if (!pending && !result) {
-        checkWrap(wrapper.find('[data-test-id="not-found"]'), {
-          text: i18n['SearchResults.Not_found']
-        });
-        checkWrap(wrapper.find('[data-test-id="div-result"]'), { length: 0 });
-      }
-
-      if (!pending && result) {
-        checkWrap(wrapper.find('[data-test-id="error"]'), { length: 0 });
-        checkWrap(wrapper.find('[data-test-id="not-found"]'), { length: 0 });
-
-        checkWrap(wrapper.find('[data-test-id="div-result"]'));
-
-        checkWrap(wrapper.find('[data-test-id="div-result.col-md-3"]'), {
-          className: 'col-md-3'
-        });
-
-        checkWrap(wrapper.find('[data-test-id="div-result.list"]'), {
-          className: 'list-group terms'
-        });
-
-        checkWrap(wrapper.find('[data-test-id="TermList"]'));
-        // further tests in "test/frontend/components/search/TermList"
-
-        checkWrap(wrapper.find('[data-test-id="selectedTerm"]'), {
-          className: 'col-md-9'
-        });
-
-        if (selectedTerm) {
-          checkWrap(wrapper.find('[data-test-id="Term"]'), {
-            className: 'term'
-          })
-          // further tests in "test/frontend/components/search/Term"
-        }
-      }
-
-      wrapper.unmount();
     });
-  };
+    expect(wrapper.find(resultId).exists()).equal(true);
+    expect(wrapper.find(notFoundId).exists()).equal(false);
 
-  const result = terms;
-  const selectedTerm = terms[1];
+    wrapper.setProps({...props,
+      data: {...props.data,
+        pending: false,
+        started: true,
+        result: null
+      }
+    });
+    expect(wrapper.find(notFoundId).exists()).equal(true);
+    expect(wrapper.find(resultId).exists()).equal(false);
 
-  it('should show component with initial empty data',
-    () => checkShowSearchResults(null, null, false, null)
-  );
-  it('should show component with term searching',
-    () => checkShowSearchResults(null, null, true, null)
-  );
-  it('should show component with success request, data received',
-    () => checkShowSearchResults(result, null, false, null)
-  );
-  it('should show component with success request, data received and term selected',
-    () => checkShowSearchResults(result, selectedTerm, false, null)
-  );
-  it('should show component with success request, data not received',
-    () => checkShowSearchResults(null, null, false, null)
-  );
-  it('should show component with error request',
-    () => checkShowSearchResults(null, null, false, responseFail)
-  );
-  it('should show component with error request and starting new request',
-    () => checkShowSearchResults(null, null, true, responseFail)
-  );
+    wrapper.setProps({...props,
+      data: {...props.data,
+        error: null
+      }
+    });
+    expect(wrapper.find(errorId).exists()).equal(false);
+
+    const errMsg = 'error message';
+    wrapper.setProps({...props,
+      data: {...props.data,
+        error: {
+          message: errMsg
+        }
+      }
+    });
+    expect(wrapper.find(errorId).text()).equal(errMsg);
+
+    wrapper.unmount();
+  });
+
+  it('should contain components Term and TermList inside', () => {
+    const _props = {...initialState,
+      getSelectedTerm: () => true,
+      data: {...props.data,
+        pending: false,
+        started: true,
+        result: terms
+      }
+    };
+    const _initialState = {...initialState,
+      selected: {
+        term: defaultTerm
+      }
+    };
+    const wrapper = mountWithIntl(
+      <SearchResults {..._props} />, defaultLang, _initialState
+    );
+
+    const termListId = '[data-test-id="TermList"]';
+    const termId = '[data-test-id="Term"]';
+
+    expect(wrapper.find(termListId).exists()).equal(true);
+    expect(wrapper.find(termId).exists()).equal(true);
+
+    wrapper.unmount();
+  });
 });

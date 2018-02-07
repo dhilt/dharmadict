@@ -10,15 +10,16 @@ class SearchResults extends Component {
   render () {
     let search = this.props.data
     return (
-      <div data-test-id="SearchResults" className="row search-results-row"> {
+      <div data-test-id="SearchResults" className="row search-results-row">
+      {
         search.started && search.result && !search.pending ? (
           <div data-test-id="div-result">
-            <div data-test-id="div-result.col-md-3" className="col-md-3">
-              <div data-test-id="div-result.list" className="list-group terms">
+            <div className="col-md-3">
+              <div className="list-group terms">
                 <TermList />
               </div>
             </div>
-            <div data-test-id="selectedTerm" className="col-md-9">
+            <div className="col-md-9">
               { this.props.getSelectedTerm() ? ( <Term /> ) : ( null ) }
             </div>
           </div>

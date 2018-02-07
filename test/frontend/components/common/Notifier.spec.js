@@ -1,76 +1,85 @@
-global.window.localStorage = {};
+const React = require('react');
+const {expect} = require('chai');
+const sinon = require('sinon');
 
 const {
-  setupComponent,
-  checkWrap,
-  initialState,
-  languages,
   getNotificationAction,
-  _appPath
+  getIntlContext,
+  mountWithIntl,
+  getAppPath,
+  languages
 } = require('../../_shared.js');
 
-const Notifier = require(_appPath + 'components/common/Notifier').default;
+const Notifier = require(getAppPath(2) + 'components/common/Notifier').default.WrappedComponent;
 
 describe('Testing Notifier Component.', () => {
 
-  it('should show component with notifications', () => {
-    languages.forEach(lang => {
-      const countOfMessages = 5;
-      const numberOfMessageWithValues = 1;
-      const i18n = require(_appPath + 'i18n/' + lang.id);
+  const NotifierId = '[data-test-id="Notifier"]';
+  const alertId = '[data-test-id="Notifier.notification"]';
+  const messageId = '[data-test-id="Notifier.message"]';
+  const spyCloseAlert = sinon.spy(Notifier.prototype, 'closeAlert');
 
-      let notifications = {
-        idLast: 0,
-        list: []
-      };
+  languages.forEach(lang => {
+    const testIntlMessages = {
+      'Test.Success_message_with_values': `Test success message on ${lang.id} {testId}`,
+      'Test.Error_message_with_values': `Test error message on ${lang.id} {testId}`,
+      'Test.Success_message': `Test success message on ${lang.id}`,
+      'Test.Error_message': `Test error message on ${lang.id}`,
+      'Test.Success_simple_message': '{testId}',
+      'Test.Error_simple_message': '{testId}'
+    };
+    const arrTestIntlMsg = Object.keys(testIntlMessages);
+    const intlSuccessText = 'It\'s intl success text ' + lang.id;
+    const intlErrorText = 'It\'s intl error text ' + lang.id;
+    const simpleSuccessText = 'It\' simple success text ' + lang.id;
+    const simpleErrorText = 'It\' simple error text ' + lang.id;
+    const emptyNotifications = {
+      notifications: []
+    };
+    const props = {
+      notifications: [
+        // success simple text
+        getNotificationAction(arrTestIntlMsg[4], false, {testId: simpleSuccessText}).notification,
+        // error simple text
+        getNotificationAction(false, arrTestIntlMsg[5], {testId: simpleErrorText}).notification,
+        // success intl-message with values
+        getNotificationAction(arrTestIntlMsg[0], false, {testId: intlSuccessText}).notification,
+        // error intl-message with values
+        getNotificationAction(false, arrTestIntlMsg[1], {testId: intlErrorText}).notification,
+        // success intl-message without values
+        getNotificationAction(arrTestIntlMsg[2], false).notification,
+        // error intl-message without values
+        getNotificationAction(false, arrTestIntlMsg[3]).notification
+      ]
+    };
 
-      for (let i = 0; i < countOfMessages; i++) {
-        notifications.idLast++;
-        notifications.list.push(getNotificationAction(null, Object.keys(i18n)[i]).notification);
-      }
+    it(`should correctly show the component (${lang.id})`, () => {
+      const wrapper = mountWithIntl(<Notifier {...emptyNotifications} />, lang.id);
 
-      // Message with values
-      notifications.list[numberOfMessageWithValues] = getNotificationAction(null,
-        Object.keys(i18n)[numberOfMessageWithValues], {
-          error: 'error_message'
-      }).notification;
+      expect(wrapper.find(NotifierId).exists()).equal(true);
 
-      const _initialState = { ...initialState,
-        common: { ...initialState.common,
-          userLanguage: lang.id,
-          languages
-        },
-        notifications
-      };
-      const {wrapper} = setupComponent(Notifier, _initialState);
+      wrapper.setContext({
+        intl: getIntlContext(lang.id, testIntlMessages)
+      });
+      wrapper.setProps(props);
 
-      checkWrap(wrapper.find('[data-test-id="Notifier"]'), {
-        className: 'alert-column'
+      props.notifications.forEach((notification, i) => {
+        expect(wrapper.find(alertId).at(i * 2).prop('bsStyle')).equal(notification.type);
+        // wrapper.find(alertId).at(i * 2).simulate('click');  // doesn't work
       });
 
-      for (let i = 0; i < countOfMessages; i++) {
-        checkWrap(wrapper.find('[data-test-id="Notifier.notification"]').at(i));
-        checkWrap(wrapper.find('[data-test-id="Notifier.message"]').at(i), {
-          text: i18n[i]
-        });
-      }
+      expect(wrapper.find(messageId).at(0).text()).equal(simpleSuccessText);
+      expect(wrapper.find(messageId).at(1).text()).equal(simpleErrorText);
+      expect(wrapper.find(messageId).at(4).text()).equal(testIntlMessages['Test.Success_message']);
+      expect(wrapper.find(messageId).at(5).text()).equal(testIntlMessages['Test.Error_message']);
+      expect(wrapper.find(messageId).at(2).text()).equal(
+        testIntlMessages['Test.Success_message_with_values'].replace('{testId}', intlSuccessText)
+      );
+      expect(wrapper.find(messageId).at(3).text()).equal(
+        testIntlMessages['Test.Error_message_with_values'].replace('{testId}', intlErrorText)
+      );
 
       wrapper.unmount();
     });
-  });
-
-  it('should show the component without notifications', () => {
-
-    const {wrapper} = setupComponent(Notifier);
-
-    checkWrap(wrapper.find('[data-test-id="Notifier"]'), {
-      className: 'alert-column'
-    });
-
-    checkWrap(wrapper.find('[data-test-id="Notifier.notification"]'), {
-      length: 0
-    });
-
-    wrapper.unmount();
   });
 });

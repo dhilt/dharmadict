@@ -1,107 +1,109 @@
-global.window.localStorage = {};
+const React = require('react');
+const {expect} = require('chai');
+const sinon = require('sinon');
 
-const {
-  setupComponent,
-  checkWrap,
-  checkWrapActions,
-  initialState,
-  defaultLang,
-  languages,
-  _appPath
-} = require('../../_shared.js');
+const {initialState, getAppPath, shallow} = require('../../_shared.js');
 
-const SearchInput = require(_appPath + 'components/search/SearchInput').default;
+const SearchInput = require(getAppPath(2) + 'components/search/SearchInput').default.WrappedComponent;
 
 describe('Testing SearchInput Component.', () => {
 
-  beforeEach(() => console.log = jest.fn());
-
-  const checkShowSearchInput = (searchString, pending) => {
-    languages.forEach(lang => {
-      const _initialState = { ...initialState,
-        common: { ...initialState.common,
-          userLanguage: lang.id
-        },
-        search: { ...initialState.search,
-          searchString,
-          pending
-        }
-      };
-      const {wrapper} = setupComponent(SearchInput, _initialState);
-      const i18n = require(_appPath + 'i18n/' + lang.id);
-
-      checkWrap(wrapper.find('[data-test-id="SearchInput"]'), {
-        className: 'row'
-      });
-
-      checkWrap(wrapper.find('[data-test-id="main-form"]'));
-
-      checkWrap(wrapper.find('[data-test-id="form-group1"]'), {
-        className: 'form-group'
-      });
-
-      checkWrap(wrapper.find('[data-test-id="form-group1.col-md-6"]'), {
-        className: 'col-md-6'
-      });
-
-      checkWrap(wrapper.find('[data-test-id="form-group1.input"]'), {
-        className: 'form-control col-md-7',
-        name: 'search',
-        type: 'search',
-        value: searchString
-      });
-
-      checkWrap(wrapper.find('[data-test-id="div.col-md-2"]'), {
-        className: 'col-md-2'
-      });
-
-      checkWrap(wrapper.find('[data-test-id="form-group2"]'), {
-        className: 'form-group'
-      });
-
-      checkWrap(wrapper.find('[data-test-id="searchButton"]').first(), {
-        disabled: !searchString || pending,
-        className: pending ? 'loader' : '',
-        type: 'submit'
-      });
-
-      checkWrap(wrapper.find('[data-test-id="button-pending"]'), {
-        text: i18n['SearchInput.button_find'],
-        className: pending ? 'invisible' : ''
-      });
-
-      wrapper.unmount();
-    });
+  const props = {
+    data: initialState.search
   };
 
-  it('should show component with initial empty data',
-    () => checkShowSearchInput('', false)
-  );
-  it('should show component with term searching',
-    () => checkShowSearchInput('term', true)
-  );
-  it('should show component ready for term searching',
-    () => checkShowSearchInput('term', false)
-  );
+  const inputSearchId = '[data-test-id="search-string-input"]';
+  const btnSearchId = '[data-test-id="searchButton"]';
 
-  it('should correctly handle actions on component', () => {
-    const _initialState = { ...initialState,
-      common: { ...initialState.common,
-        userLanguage: defaultLang
+  it('should correctly handle actions on the component', () => {
+    const spySearchString = sinon.spy(SearchInput.prototype, 'onSearchStringChange');
+    const spyOnSubmit = sinon.spy(SearchInput.prototype, 'onSubmit');
+
+    const defaultEvent = {
+      preventDefault: () => true,
+      target: {
+        value: 'searched word'
       }
     };
-    const _props = {
-      dispatch: jest.fn()
-    };
-    const {wrapper, store} = setupComponent(SearchInput, _initialState, _props);
+    const wrapper = shallow(<SearchInput {...props} />);
 
-    let actionsCount = 0;
-    checkWrapActions(store, actionsCount);
+    wrapper.find(inputSearchId).simulate('change', defaultEvent);
+    wrapper.find(btnSearchId).simulate('click', defaultEvent);
 
-    wrapper.find('[data-test-id="form-group1.input"]').props().onChange({target: {value: 'term'}});
-    checkWrapActions(store, ++actionsCount);
+    expect(spySearchString.calledOnce).equal(true);
+    expect(spyOnSubmit.calledOnce).equal(true);
 
-    wrapper.find('[data-test-id="searchButton"]').first().props().onClick({preventDefault: () => {}});
-    checkWrapActions(store, ++actionsCount);
+    wrapper.unmount();
+  });
+
+  const mainId = '[data-test-id="SearchInput"]';
+  const btnSearchTextId = '[data-test-id="text-btn-search"]';
+
+  it('should show component correctly', () => {
+    const wrapper = shallow(<SearchInput {...props} />);
+
+    expect(wrapper.find(mainId).exists()).equal(true);
+
+    const editedSearchString = props.data.searchString + ' new';
+    wrapper.setProps({...props,
+      data: {...props.data,
+        searchString: editedSearchString
+      }
+    });
+    expect(wrapper.find(inputSearchId).prop('value')).equal(editedSearchString);
+
+    wrapper.setProps({...props,
+      data: {...props.data,
+        pending: false
+      }
+    });
+    expect(wrapper.find(btnSearchTextId).prop('className')).equal('');
+    expect(wrapper.find(btnSearchId).prop('className')).equal('');
+
+    wrapper.setProps({...props,
+      data: {...props.data,
+        pending: true
+      }
+    });
+    expect(wrapper.find(btnSearchTextId).prop('className')).equal('invisible');
+    expect(wrapper.find(btnSearchId).prop('className')).equal('loader');
+
+    wrapper.unmount();
+  });
+
+  it('should disable button on the component', () => {
+    const wrapper = shallow(<SearchInput {...props} />);
+
+    wrapper.setProps({...props,
+      data: {...props.data,
+        searchString: ''
+      }
+    });
+    expect(wrapper.find(btnSearchId).prop('disabled')).equal(true);
+
+    wrapper.setProps({...props,
+      data: {...props.data,
+        pending: true
+      }
+    });
+    expect(wrapper.find(btnSearchId).prop('disabled')).equal(true);
+
+    wrapper.setProps({...props,
+      data: {...props.data,
+        searchString: '',
+        pending: true
+      }
+    });
+    expect(wrapper.find(btnSearchId).prop('disabled')).equal(true);
+
+    wrapper.setProps({...props,
+      data: {...props.data,
+        searchString: 'searched string',
+        pending: false
+      }
+    });
+    expect(wrapper.find(btnSearchId).prop('disabled')).equal(false);
+
+    wrapper.unmount();
   });
 });

@@ -1,4 +1,4 @@
-const terms = [{
+module.exports = [{
   "id": "chos",
   "wylie" : "chos",
   "sanskrit_ru" : "дхамма, дхарма",
@@ -17,7 +17,7 @@ const terms = [{
             "духовное учение",
             "духовность"
           ],
-          "comment" : "",
+          "comment" : "test comment",
           "versions_lower" : [
             "дхарма",
             "учение",
@@ -32,7 +32,7 @@ const terms = [{
             "феномены",
             "явления"
           ],
-          "comment" : "",
+          "comment" : "another test component",
           "versions_lower" : [
             "дхарма",
             "элементы бытия",
@@ -319,7 +319,3 @@ const terms = [{
     }
   ]
 }];
-
-module.exports = {
-  terms
-};

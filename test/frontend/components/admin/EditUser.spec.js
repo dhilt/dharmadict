@@ -1,221 +1,141 @@
-global.window.localStorage = {};
+const React = require('react');
+const {expect} = require('chai');
+const sinon = require('sinon');
 
 const {
-  setupComponent,
-  checkWrap,
-  checkWrapActions,
+  getEditableUserDataObject,
+  defaultTranslator,
   initialState,
+  defaultLang,
+  getAppPath,
   languages,
-  translators,
-  userMutableProperties,
-  _appPath
+  shallow
 } = require('../../_shared.js');
 
-const EditUser = require(_appPath + 'components/admin/EditUser').default;
-const {getEditableUserDataObject} = require(_appPath + 'actions/admin/changeUser');
+const EditUser = require(getAppPath(2) + 'components/admin/EditUser').default.WrappedComponent;
 
 describe('Testing EditUser Component.', () => {
 
-  const checkShowEditUser = (sourcePending, pending, error, sourceTranslator, editedTranslator) => {
-    languages.forEach(lang => {
-      const _initialState = { ...initialState,
-        common: { ...initialState.common,
-          userLanguage: lang.id,
-          languages
-        },
-        admin: { ...initialState.admin,
-          editUser: { ...initialState.admin.editUser,
-            id: sourceTranslator.id,
-            dataSource: getEditableUserDataObject(sourceTranslator),
-            data: getEditableUserDataObject(editedTranslator),
-            pending,
-            sourcePending,
-            error
-          }
-        }
-      };
-      const _props = {
-        params: {
-          id: sourceTranslator.id
-        },
-        routeParams: {
-          id: sourceTranslator.id
-        }
-      };
-      const {wrapper} = setupComponent(EditUser, _initialState, _props);
-      const i18n = require(_appPath + 'i18n/' + lang.id);
-
-      if (sourcePending) {
-        checkWrap(wrapper.find('[data-test-id="EditUser"]'), {
-          length: 0
-        });
-        wrapper.unmount();
-        return
-      }
-
-      checkWrap(wrapper.find('[data-test-id="EditUser"]'));
-
-      checkWrap(wrapper.find('[data-test-id="main-form"]'), {
-        className: 'col-md-6'
-      });
-
-      checkWrap(wrapper.find('[data-test-id="heading"]'), {
-        text: i18n['EditUser.title_edit_user'].replace(`{id}`, sourceTranslator.id)
-      });
-
-      checkWrap(wrapper.find('[data-test-id="form-name"]'), {
-        className: 'form-group'
-      });
-
-      checkWrap(wrapper.find('[data-test-id="label-name"]'), {
-        text: i18n['EditUser.name_of_translator']
-      });
-
-      checkWrap(wrapper.find('[data-test-id="input-name"]'), {
-        className: 'form-control',
-        value: editedTranslator.name,
-        type: 'text'
-      });
-
-      checkWrap(wrapper.find('[data-test-id="form-lang"]'), {
-        className: 'form-group'
-      });
-
-      checkWrap(wrapper.find('[data-test-id="label-lang"]'), {
-        text: i18n['EditUser.language_of_translations']
-      });
-
-      languages.forEach((language, languageIndex) => {
-
-        checkWrap(wrapper.find('[data-test-id="radio-lang"]').at(languageIndex), {
-          className: 'radio'
-        });
-
-        checkWrap(wrapper.find('[data-test-id="radio-label-lang"]').at(languageIndex), {
-          text: language['name_' + lang.id]
-        });
-
-        checkWrap(wrapper.find('[data-test-id="input-lang"]').at(languageIndex), {
-          checked: language.id === editedTranslator.language,
-          name: 'lang_radio',
-          type: 'radio'
-        });
-      });
-
-      checkWrap(wrapper.find('[data-test-id="form-desc"]'), {
-        className: 'form-group'
-      });
-
-      checkWrap(wrapper.find('[data-test-id="label-desc"]'), {
-        text: i18n['EditUser.description_of_translator']
-      });
-
-      checkWrap(wrapper.find('[data-test-id="textarea-desc"]'), {
-        value: editedTranslator.description,
-        className: 'form-control',
-        type: 'text'
-      });
-
-      checkWrap(wrapper.find('[data-test-id="button-group"]'), {
-        className: 'form-group'
-      });
-
-      checkWrap(wrapper.find('[data-test-id="button-save"]'), {
-        text: i18n['Common.save'],
-        className: 'btn btn-primary',
-        disabled: pending
-      });
-
-      checkWrap(wrapper.find('[data-test-id="button-reset"]'), {
-        text: i18n['Common.reset'],
-        className: 'btn btn-default'
-      });
-
-      checkWrap(wrapper.find('[data-test-id="button-cancel"]').first(), {
-        text: i18n['Common.cancel']
-      });
-
-      checkWrap(wrapper.find('[data-test-id="password-group"]'), {
-        className: 'form-group'
-      });
-
-      checkWrap(wrapper.find('[data-test-id="link-password"]').first(), {
-        text: i18n['EditUser.link_reset_password']
-      });
-
-      wrapper.unmount();
-    });
+  const props = {
+    editUser: {...initialState.admin.editUser,
+      dataSource: getEditableUserDataObject(defaultTranslator),
+      data: getEditableUserDataObject(defaultTranslator),
+      id: defaultTranslator.id
+    },
+    common: {
+      userLanguage: defaultLang,
+      languages
+    },
+    params: {
+      id: defaultTranslator.id
+    }
   };
 
-  translators.forEach(translator => {
+  const inputDescId = '[data-test-id="textarea-desc"]';
+  const inputLangId = '[data-test-id="input-lang"]';
+  const inputNameId = '[data-test-id="input-name"]';
+  const radioLangId = '[data-test-id="radio-lang"]';
+  const btnResetId = '[data-test-id="button-reset"]';
+  const btnSaveId = '[data-test-id="button-save"]';
 
-    it(`should show the source pending component correctly`,
-      () => checkShowEditUser(true, false, null, translator, translator)
-    );
+  it('should correctly handle actions on the component', () => {
+    const spyWillMount = sinon.spy(EditUser.prototype, 'componentWillMount');
+    const spyChangeDesc = sinon.spy(EditUser.prototype, 'changeUserDescription');
+    const spyChangeLang = sinon.spy(EditUser.prototype, 'changeUserLanguage');
+    const spyChangeName = sinon.spy(EditUser.prototype, 'changeUserName');
+    const spyBtnSave = sinon.spy(EditUser.prototype, 'sendNewUserData');
+    const spyBtnReset = sinon.spy(EditUser.prototype, 'resetChanges');
 
-    it(`should show the component correctly`,
-      () => checkShowEditUser(false, false, null, translator, translator)
-    );
-
-    it(`should show the pending component correctly`,
-      () => checkShowEditUser(false, true, null, translator, translator)
-    );
-
-    it(`should show the component with fail request`,
-      () => checkShowEditUser(false, true, 'Error message', translator, translator)
-    );
-
-    userMutableProperties.forEach(property => {
-      let _translator = JSON.parse(JSON.stringify(translator));
-      _translator[property] = 'New description of translator property'
-      checkShowEditUser(false, false, null, translator, _translator);
-    });
-  });
-
-  it('should correctly handle actions on component', () => {
-    const defaultUser = translators[0];
-    const _initialState = { ...initialState,
-      common: { ...initialState.common,
-        userLanguage: defaultUser.language,
-        languages
-      },
-      admin: { ...initialState.admin,
-        editUser: { ...initialState.admin.editUser,
-          id: defaultUser.id,
-          dataSource: getEditableUserDataObject(defaultUser),
-          data: getEditableUserDataObject(defaultUser)
-        }
+    const defaultEvent = {
+      preventDefault: () => true,
+      target: {
+        value: 'some words'
       }
     };
-    const _props = {
-      params: {
-        id: defaultUser.id
-      },
-      routeParams: {
-        id: defaultUser.id
-      },
-      dispatch: jest.fn()
-    };
-    const {wrapper, store} = setupComponent(EditUser, _initialState, _props);
+    const wrapper = shallow(<EditUser {...props} />);
 
-    let actionsCount = 1;  // component starts with the request
-    checkWrapActions(store, actionsCount);
+    const langLength = languages.length;
+    for (let i = 0; i < langLength; i++) {
+      wrapper.find(inputLangId).at(i).simulate('change');
+    }
+    wrapper.find(inputDescId).simulate('change', defaultEvent);
+    wrapper.find(inputNameId).simulate('change', defaultEvent);
+    wrapper.find(btnResetId).simulate('click', defaultEvent);
+    wrapper.find(btnSaveId).simulate('click', defaultEvent);
 
-    wrapper.find('[data-test-id="input-name"]').props().onChange({target: {value: 'name'}});
-    checkWrapActions(store, ++actionsCount);
+    expect(spyChangeLang.callCount).equal(langLength);
+    expect(spyChangeDesc.calledOnce).equal(true);
+    expect(spyChangeName.calledOnce).equal(true);
+    expect(spyWillMount.calledOnce).equal(true);
+    expect(spyBtnReset.calledOnce).equal(true);
+    expect(spyBtnSave.calledOnce).equal(true);
+
+    wrapper.unmount();
+  });
+
+  const linkPasswordId = '[data-test-id="link-password"]';
+  const linkCancelId = '[data-test-id="button-cancel"]';
+  const mainId = '[data-test-id="EditUser"]';
+
+  it('should show component correctly', () => {
+    const wrapper = shallow(<EditUser {...props} />);
+
+    expect(wrapper.find(mainId).exists()).equal(true);
+
+    wrapper.setProps({...props,
+      editUser: {...props.editUser,
+        sourcePending: true
+      }
+    });
+    expect(wrapper.find(mainId).exists()).equal(false);
+
+    const editedName = defaultTranslator.name + ' new';
+    wrapper.setProps({...props,
+      editUser: {...props.editUser,
+        data: {...props.editUser.data,
+          name: editedName
+        }
+      }
+    });
+    expect(wrapper.find(inputNameId).prop('value')).equal(editedName);
+
+    const editedDesc = defaultTranslator.description + ' new';
+    wrapper.setProps({...props,
+      editUser: {...props.editUser,
+        data: {...props.editUser.data,
+          description: editedDesc
+        }
+      }
+    });
+    expect(wrapper.find(inputDescId).prop('value')).equal(editedDesc);
 
     languages.forEach((lang, index) => {
-      wrapper.find('[data-test-id="input-lang"]').at(index).props().onChange({target: {value: lang.id}});
-      checkWrapActions(store, ++actionsCount);
+      wrapper.setProps({...props,
+        editUser: {...props.editUser,
+          data: {...props.editUser.data,
+            language: lang.id
+          }
+        }
+      });
+      languages.forEach((_lang, _index) =>
+        expect(wrapper.find(inputLangId).at(_index).prop('checked'))
+          .equal(lang.id === _lang.id)
+      );
     });
 
-    wrapper.find('[data-test-id="textarea-desc"]').props().onChange({target: {value: 'desc'}});
-    checkWrapActions(store, ++actionsCount);
+    wrapper.setProps({...props,
+      editUser: {...props.editUser,
+        pending: true
+      }
+    });
+    expect(wrapper.find(btnSaveId).prop('disabled')).equal(true);
 
-    wrapper.find('[data-test-id="button-save"]').props().onClick({preventDefault: () => {}});
-    checkWrapActions(store, ++actionsCount);
+    const expectedLinkCancel = '/translator/' + defaultTranslator.id;
+    expect(wrapper.find(linkCancelId).prop('to')).equal(expectedLinkCancel);
 
-    wrapper.find('[data-test-id="button-reset"]').props().onClick({preventDefault: () => {}});
-    checkWrapActions(store, ++actionsCount);
+    const expectedLinkPassword = expectedLinkCancel + '/edit/password';
+    expect(wrapper.find(linkPasswordId).prop('to')).equal(expectedLinkPassword);
+
+    wrapper.unmount();
   });
 });

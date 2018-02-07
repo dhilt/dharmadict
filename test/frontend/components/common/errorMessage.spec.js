@@ -1,20 +1,28 @@
-const {setupComponent, checkWrap, initialState, _appPath} = require('../../_shared.js');
-const ErrorMessage = require(_appPath + 'components/common/ErrorMessage').default;
+const React = require('react');
+const {expect} = require('chai');
+
+const {
+  getAppPath,
+  shallow
+} = require('../../_shared.js');
+
+const ErrorMessage = require(getAppPath(2) + 'components/common/ErrorMessage').default;
 
 describe('Testing ErrorMessage Component.', () => {
 
-  it('should show the component', () => {
-    const _props = {error: 'some error'};
-    const {wrapper} = setupComponent(ErrorMessage, initialState, _props);
+  const ErrorMessageId = '[data-test-id="ErrorMessage"]';
+  const ErrorMessageTextId = '[data-test-id="ErrorMessage.text"]';
 
-    checkWrap(wrapper.find('[data-test-id="ErrorMessage"]'), {
-      className: 'form__error-wrapper js-form__err-animation'
-    });
+  it('should correctly show the component', () => {
+    const wrapper = shallow(<ErrorMessage />);
 
-    checkWrap(wrapper.find('[data-test-id="ErrorMessage.text"]'), {
-      className: 'form__error',
-      text: _props.error
+    expect(wrapper.find(ErrorMessageId).exists()).equal(true);
+
+    const givenErrorText = 'some error message';
+    wrapper.setProps({
+      error: givenErrorText
     });
+    expect(wrapper.find(ErrorMessageTextId).text()).equal(givenErrorText);
 
     wrapper.unmount();
   });

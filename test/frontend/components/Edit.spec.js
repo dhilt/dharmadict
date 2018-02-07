@@ -1,175 +1,111 @@
-global.window.localStorage = {};
+const React = require('react');
+const {expect} = require('chai');
+const sinon = require('sinon');
 
 const {
-  setupComponent,
-  checkWrap,
-  checkWrapActions,
+  mountWithIntl,
   initialState,
-  translators,
-  terms,
-  languages,
+  defaultLang,
+  defaultTerm,
+  shallow,
   appPath
 } = require('../_shared.js');
 
-const Edit = require(appPath + 'components/Edit').default;
+const Edit = require(appPath + 'components/Edit').default.WrappedComponent;
 
 describe('Testing Edit Component.', () => {
 
   beforeEach(() => console.log = jest.fn());
 
-  const responseFail = {
-    message: 'Some error. Database error'
+  const translations = defaultTerm.translations[0];
+  const translatorId = translations.translatorId;
+  const termId = defaultTerm.id;
+  const props = {
+    editState: {
+      source: translations,
+      change: translations,
+      started: true,
+      translatorId,
+      termId,
+    },
+    query: {
+      translatorId,
+      termId
+    }
   };
 
-  const checkShowEdit = (translatorId, term, started, pending, error) => {
-    languages.forEach(lang => {
-      const _initialState = { ...initialState,
-        common: { ...initialState.common,
-          userLanguage: lang.id
-        },
-        edit: { ...initialState.edit,
-          started,
-          pending,
-          error,
-          termId: term ? term.id : null,
-          translatorId,
-          source: term ? term.translations[0] : null,
-          change: term ? term.translations[0] : null
+  const blockMessageId = '[data-test-id="blockMessage"]';
+  const errorId = '[data-test-id="request_error"]';
+  const backLinkId = '[data-test-id="back-link"]';
+  const meaningsId = '[data-test-id="Meanings"]';
+  const errorMsgId = '[data-test-id="errorMsg"]';
+  const pendingId = '[data-test-id="pending"]';
+  const editId = '[data-test-id="Edit"]';
+
+  it('should show component correctly', () => {
+    const onButtonClick = sinon.spy(Edit.prototype, 'goBack');
+    const spyCompWillMount = sinon.spy(Edit.prototype, 'componentWillMount');
+    const wrapper = shallow(<Edit {...props} />);
+
+    expect(spyCompWillMount.calledOnce).equal(true);
+
+    expect(wrapper.find(editId).exists()).equal(true);
+    expect(wrapper.find(blockMessageId).exists()).equal(false);
+    expect(wrapper.find(pendingId).exists()).equal(false);
+    expect(wrapper.find(errorId).exists()).equal(false);
+
+    wrapper.find(backLinkId).simulate('click');
+    expect(onButtonClick.calledOnce).equal(true);
+
+    wrapper.setProps({...props,
+      editState: {...props.editState,
+        pending: true
+      }
+    });
+    expect(wrapper.find(pendingId).exists()).equal(true);
+    expect(wrapper.find(blockMessageId).exists()).equal(false);
+    expect(wrapper.find(meaningsId).exists()).equal(false);
+    expect(wrapper.find(errorId).exists()).equal(false);
+
+    const errorMessage = 'Some error happened';
+    wrapper.setProps({...props,
+      editState: {...props.editState,
+        error: {
+          message: errorMessage
         }
       }
-      const query = {
-        translatorId,
-        termId: term ? term.id : null
-      };
-      const _props = {
-        location: {
-          pathname: '/edit',
-          query
-        },
-        query
-      };
-      const {wrapper} = setupComponent(Edit, _initialState, _props);
-      const i18n = require(appPath + 'i18n/' + lang.id);
-
-      checkWrap(wrapper.find('[data-test-id="Edit"]'));
-
-      checkWrap(wrapper.find('[data-test-id="back-link"]'), {
-        text: i18n['Edit.go_back'],
-        className: 'back-link'
-      });
-
-      if (!translatorId || (!term || !term.id)) {
-        checkWrap(wrapper.find('[data-test-id="blockMessage"]'), {
-          text: i18n['Edit.should_select_term']
-        })
-      } else {
-        checkWrap(wrapper.find('[data-test-id="blockMessage"]'), {
-          length: 0
-        })
-      }
-
-      if (pending) {
-        checkWrap(wrapper.find('[data-test-id="pending"]'), {
-          text: i18n['Edit.query_is_performed']
-        })
-      } else {
-        checkWrap(wrapper.find('[data-test-id="pending"]'), {
-          length: 0
-        })
-      }
-
-      if (error) {
-        checkWrap(wrapper.find('[data-test-id="request_error"]'), {
-          text: i18n['Edit.request_error'] + responseFail.message
-        });
-        checkWrap(wrapper.find('[data-test-id="errorMsg"]'), {
-          text: responseFail.message,
-          className: 'error'
-        });
-      } else {
-        checkWrap(wrapper.find('[data-test-id="request_error"]'), {
-          length: 0
-        })
-      }
-
-      if (started && translatorId && term && term.id && !pending && !error) {
-        checkWrap(wrapper.find('[data-test-id="Meanings"]'))
-        // further tests in "test/frontend/components/edit/Meanings"
-      }
-
-      wrapper.unmount();
     });
-  };
+    expect(wrapper.find(errorId).exists()).equal(true);
+    expect(wrapper.find(errorMsgId).text()).equal(errorMessage);
+    expect(wrapper.find(blockMessageId).exists()).equal(false);
+    expect(wrapper.find(meaningsId).exists()).equal(false);
+    expect(wrapper.find(pendingId).exists()).equal(false);
 
-  const defaultTerm = terms[0];
-  const defaultTranslator = translators[0];
-
-  it('should show component sending request',
-    () => checkShowEdit(defaultTranslator.id, defaultTerm, true, true, null)
-  );
-
-  it('should show component showing the error',
-    () => checkShowEdit(defaultTranslator.id, defaultTerm, true, false, responseFail)
-  );
-
-  it('should show component showing block message (no termId)',
-    () => checkShowEdit(null, defaultTerm, true, false, null)
-  );
-
-  it('should show component showing block message (no translatorId)',
-    () => checkShowEdit(defaultTranslator.id, null, true, false, null)
-  );
-
-  it('should show component with no data and no request',
-    () => checkShowEdit(defaultTranslator.id, defaultTerm, false, false, null)
-  );
-
-  translators.forEach(translator =>
-    it('should show component with data',
-      () => checkShowEdit(translator.id, defaultTerm, true, false, null)
-    )
-  );
-
-  it('should correctly handle actions on component (with valid props.query)', () => {
-    const query = {
-      translatorId: 'TRANSLATOR_ID',
-      termId: 'TERM_ID'
-    };
-    const _props = {
-      location: {
-        pathname: '/edit',
-        query
-      },
-      query,
-      dispatch: jest.fn()
-    };
-    const {wrapper, store} = setupComponent(Edit, initialState, _props);
-
-    let actionsCount = 1;  // component starts with the request
-    checkWrapActions(store, actionsCount);
-
-    // wrapper.find('[data-test-id="back-link"]').props().onClick();  // SecurityError ???
-    // checkWrapActions(store, ++actionsCount);
+    wrapper.unmount();
   });
 
-  it('should correctly handle actions on component (with invalid props.query)', () => {
-    const query = {
-      translatorId: 'TRANSLATOR_ID'
-    };
-    const _props = {
-      location: {
-        pathname: '/edit',
-        query
-      },
-      query,
-      dispatch: jest.fn()
-    };
-    const {wrapper, store} = setupComponent(Edit, initialState, _props);
+  it('should show blockMessage on component (no termId and/or no translatorId)',
+    () => [
+      Object.assign({}, props, {query: {translatorId, termId: ''}}),
+      Object.assign({}, props, {query: {translatorId: '', termId}}),
+      Object.assign({}, props, {query: {translatorId: '', termId: ''}})
+    ].forEach(props => {
+      const wrapper = shallow(<Edit {...props} />);
+      expect(wrapper.find(blockMessageId).exists()).equal(true);
+      expect(wrapper.find(meaningsId).exists()).equal(false);
+      expect(wrapper.find(pendingId).exists()).equal(false);
+      expect(wrapper.find(errorId).exists()).equal(false);
+      wrapper.unmount();
+    })
+  );
 
-    let actionsCount = 0;  // component doesn't send request, because query invalid
-    checkWrapActions(store, actionsCount);
+  const _initialState = {...initialState,
+    edit: Object.assign({}, initialState.edit, props.editState)
+  };
 
-    // wrapper.find('[data-test-id="back-link"]').props().onClick();  // SecurityError ???
-    // checkWrapActions(store, ++actionsCount);
+  it('should contain component Meanings inside', () => {
+    const wrapper = mountWithIntl(<Edit {...props} />, defaultLang, _initialState);
+    expect(wrapper.find(meaningsId).exists()).equal(true);
+    wrapper.unmount();
   });
 });

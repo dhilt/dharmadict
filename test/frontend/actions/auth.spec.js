@@ -1,4 +1,4 @@
-const configureMockStore = require('redux-mock-store').default;
+const configureMockStore = require('redux-mock-store');
 const thunk = require('redux-thunk').default;
 const nock = require('nock');
 const expect = require('expect');
@@ -416,4 +416,4 @@ describe('edit actions', () => {
       expect(auth.getToken()).toEqual(null);
     });
   });
-})
+});

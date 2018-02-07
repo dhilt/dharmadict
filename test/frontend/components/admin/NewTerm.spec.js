@@ -1,163 +1,135 @@
-global.window.localStorage = {};
+const React = require('react');
+const {expect} = require('chai');
+const sinon = require('sinon');
 
 const {
-  setupComponent,
-  checkWrap,
-  checkWrapActions,
-  defaultLang,
   initialState,
+  getAppPath,
   languages,
-  _appPath
+  shallow
 } = require('../../_shared.js');
 
-const NewTerm = require(_appPath + 'components/admin/NewTerm').default;
+const NewTerm = require(getAppPath(2) + 'components/admin/NewTerm').default.WrappedComponent;
 
 describe('Testing NewTerm Component.', () => {
 
-  beforeEach(() => console.log = jest.fn());
+  const props = {
+    data: {...initialState.admin.newTerm,
+      wylie: 'wylie'
+    },
+    languages
+  };
 
-  const checkShowNewTerm = (term, lang, pending) => {
-    const _initialState = { ...initialState,
-      common: { ...initialState.common,
-        userLanguage: lang,
-        languages
-      },
-      admin: { ...initialState.admin,
-        newTerm: { ...initialState.admin.newTerm,
-          wylie: term.wylie,
-          sanskrit: term.sanskrit,
-          pending
-        }
+  const inputSanskritId = '[data-test-id="input-sanskrit"]';
+  const inputWylieId = '[data-test-id="input-wylie"]';
+  const btnSaveId = '[data-test-id="button-save"]';
+
+  it('should correctly handle actions on the component', () => {
+    const spyChangeSanskrit = sinon.spy(NewTerm.prototype, 'onSanskritChange');
+    const spyChangeWylie = sinon.spy(NewTerm.prototype, 'onWylieChange');
+    const spySaveTerm = sinon.spy(NewTerm.prototype, 'onTermSave');
+
+    const defaultEvent = {
+      target: {
+        value: 'password'
       }
     };
-    const {wrapper} = setupComponent(NewTerm, _initialState);
-    const i18n = require(_appPath + 'i18n/' + lang);
+    const wrapper = shallow(<NewTerm {...props} />);
 
-    checkWrap(wrapper.find('[data-test-id="NewTerm"]'));
+    wrapper.find(inputWylieId).simulate('change', defaultEvent);
+    wrapper.find(btnSaveId).simulate('click', defaultEvent);
 
-    checkWrap(wrapper.find('[data-test-id="title"]'), {
-      text: i18n['NewTerm.title_new_term']
+    const langLength = languages.length;
+    for (let i = 0; i < langLength; i++) {
+      wrapper.find(inputSanskritId).at(i).simulate('change', defaultEvent);
+    }
+
+    expect(spyChangeSanskrit.callCount).equal(langLength);
+    expect(spyChangeWylie.calledOnce).equal(true);
+    expect(spySaveTerm.calledOnce).equal(true);
+
+    wrapper.unmount();
+  });
+
+  const mainId = '[data-test-id="NewTerm"]';
+
+  it('should show component correctly', () => {
+    const wrapper = shallow(<NewTerm {...props} />);
+
+    expect(wrapper.find(mainId).exists()).equal(true);
+
+    const editedWylie = props.data.wylie + ' new';
+    wrapper.setProps({...props,
+      data: {...props.data,
+        wylie: editedWylie
+      }
     });
+    expect(wrapper.find(inputWylieId).prop('value')).equal(editedWylie);
 
-    checkWrap(wrapper.find('[data-test-id="main-form"]'), {
-      className: 'col-md-6'
-    });
-
-    checkWrap(wrapper.find('[data-test-id="form-wylie"]'), {
-      className: 'form-group'
-    });
-
-    checkWrap(wrapper.find('[data-test-id="input-wylie"]'), {
-      className: 'form-control',
-      placeholder: 'wylie',
-      value: term.wylie,
-      name: 'wylie',
-      type: 'text'
-    });
-
-    languages.forEach((language, languageIndex) => {
-
-      checkWrap(wrapper.find('[data-test-id="form-sanskrit"]').at(languageIndex), {
-        className: 'form-group'
+    languages.forEach((lang, langIndex) => {
+      const editedSanskrit = 'new sanskrit on ' + lang.id;
+      wrapper.setProps({...props,
+        data: {...props.data,
+          sanskrit: {...props.data.sanskrit,
+            ['sanskrit_' + lang.id]: editedSanskrit
+          }
+        }
       });
+      expect(wrapper.find(inputSanskritId).at(langIndex).prop('value')).equal(editedSanskrit);
+    });
 
-      checkWrap(wrapper.find('[data-test-id="input-sanskrit"]').at(languageIndex), {
-        placeholder: `sanskrit_${language.id} (${language.name})`,
-        className: 'form-control',
-        name: language.id,
-        type: 'text'
+    expect(wrapper.find(btnSaveId).prop('className')).equal('');
+    const expectedClassName = 'loader';
+    wrapper.setProps({...props,
+      data: {...props.data,
+        pending: true
+      }
+    });
+    expect(wrapper.find(btnSaveId).prop('className')).equal(expectedClassName);
+
+    wrapper.unmount();
+  });
+
+  it('should disable save button on the component', () => {
+    const wrapper = shallow(<NewTerm {...props} />);
+
+    wrapper.setProps({...props,
+      data: {...props.data,
+        pending: true
+      }
+    });
+    expect(wrapper.find(btnSaveId).prop('disabled')).equal(true);
+
+    wrapper.setProps({...props,
+      data: {...props.data,
+        wylie: ''
+      }
+    });
+    expect(wrapper.find(btnSaveId).prop('disabled')).equal(true);
+
+    let fullWritedSanskrit = {};
+    languages.forEach(lang =>
+      fullWritedSanskrit['sanskrit_' + lang.id] = 'sanskrit on ' + lang.id
+    );
+
+    wrapper.setProps({...props,
+      data: {...props.data,
+        sanskrit: fullWritedSanskrit
+      }
+    });
+    expect(wrapper.find(btnSaveId).prop('disabled')).equal(false);
+
+    languages.forEach(lang => {
+      let invalidSanskrit = Object.assign({}, fullWritedSanskrit);
+      invalidSanskrit['sanskrit_' + lang.id] = '';
+      wrapper.setProps({...props,
+        data: {...props.data,
+          sanskrit: invalidSanskrit
+        }
       });
-    });
-
-    checkWrap(wrapper.find('[data-test-id="button-group"]'), {
-      className: 'form-group'
-    });
-
-    checkWrap(wrapper.find('[data-test-id="button-save"]').first(), {
-      disabled: !term.wylie || pending
-        || (Object.keys(term.sanskrit).reduce(
-          (result, key) => result + !!term.sanskrit[key], 0) !== languages.length),
-      text: i18n['Common.save'],
-      className: pending ? 'loader' : '',
-      type: 'button'
-    });
-
-    checkWrap(wrapper.find('[data-test-id="button-cancel"]').first(), {
-      text: i18n['Common.cancel']
+      expect(wrapper.find(btnSaveId).prop('disabled')).equal(true);
     });
 
     wrapper.unmount();
-  };
-
-  let term = {
-    wylie: 'wylie',
-    sanskrit: {}
-  };
-
-  languages.forEach(lang =>
-    term.sanskrit[`sanskrit_${lang.id}`] = `${lang.id} sanskrit`
-  );
-
-  languages.forEach(lang => {
-
-    it(`should show the component`,
-      () => checkShowNewTerm(term, lang.id, false)
-    );
-
-    it(`should show the component sending request`,
-      () => checkShowNewTerm(term, lang.id, true)
-    );
-
-    const termWithoutWylie = {
-      wylie: '',
-      sanskrit: term.sanskrit
-    };
-
-    it(`should show the component blocking button for sending`,
-      () => checkShowNewTerm(termWithoutWylie, lang.id, false)
-    );
-
-    let termWithNoFullSanskrit = {
-      wylie: '',
-      sanskrit: term.sanskrit
-    };
-    termWithNoFullSanskrit.sanskrit[`sanskrit_${languages[0].id}`] = '';
-
-    it(`should show the component blocking button for sending`,
-      () => checkShowNewTerm(termWithNoFullSanskrit, lang.id, false)
-    );
-  });
-
-  it('should correctly handle actions on component', () => {
-    const _initialState = { ...initialState,
-      common: { ...initialState.common,
-        userLanguage: defaultLang,
-        languages
-      },
-      admin: { ...initialState.admin,
-        newTerm: { ...initialState.admin.newTerm,
-          wylie: 'wylie',
-          sanskrit: {}
-        }
-      }
-    };
-    const _props = {
-      dispatch: jest.fn()
-    };
-    const {wrapper, store} = setupComponent(NewTerm, _initialState, _props);
-
-    let actionsCount = 0;
-    checkWrapActions(store, actionsCount);
-
-    wrapper.find('[data-test-id="input-wylie"]').props().onChange({target: {value: 'wylie'}});
-    checkWrapActions(store, ++actionsCount);
-
-    languages.forEach((lang, index) => {
-      wrapper.find('[data-test-id="input-sanskrit"]').at(index).props().onChange({target: {value: `sanskrit_${lang.id}`}});
-      checkWrapActions(store, ++actionsCount);
-    });
-
-    wrapper.find('[data-test-id="button-save"]').first().props().onClick({preventDefault: () => {}});
-    checkWrapActions(store, ++actionsCount);
   });
 });

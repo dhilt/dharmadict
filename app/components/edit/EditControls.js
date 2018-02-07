@@ -8,44 +8,44 @@ import {resetTranslation, saveTranslationAsync} from '../../actions/edit'
 class EditControls extends Component {
   constructor (props) {
     super(props)
-    this._onCancel = this._onCancel.bind(this)
-    this._onSave = this._onSave.bind(this)
+    this.onCancel = this.onCancel.bind(this)
+    this.onSave = this.onSave.bind(this)
   }
 
   render () {
     return (
       <div data-test-id="EditControls" className="form-group form-inline">
         <Button data-test-id="button-save-and-close"
-          bsStyle='primary'
-          type="button"
           className={this.props.data.pending ? 'loader' : ''}
+          onClick={(event) => this.onSave(event, true)}
           disabled={this.props.data.pending}
-          onClick={(event) => this._onSave(event, true)}>
+          bsStyle='primary'
+          type="button">
           <FormattedMessage id="EditControls.button_save_and_close" />
         </Button>
         <Button data-test-id="button-save"
-          bsStyle='primary'
-          type="button"
           className={this.props.data.pending ? 'loader' : ''}
           disabled={this.props.data.pending}
-          onClick={this._onSave}>
+          onClick={this.onSave}
+          bsStyle='primary'
+          type="button">
           <FormattedMessage id="EditControls.button_save" />
         </Button>
         <a data-test-id="cancel-link"
-          className="cancel-link"
-          onClick={this._onCancel}>
+          onClick={this.onCancel}
+          className="cancel-link">
           <FormattedMessage id="EditControls.button_reset" />
         </a>
       </div>
     )
   }
 
-  _onCancel (event) {
+  onCancel (event) {
     event.preventDefault()
     this.props.dispatch(resetTranslation())
   }
 
-  _onSave (event, shouldClose) {
+  onSave (event, shouldClose) {
     this.props.dispatch(saveTranslationAsync(shouldClose))
   }
 }

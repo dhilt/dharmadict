@@ -1,225 +1,193 @@
-global.window.localStorage = {};
+const React = require('react');
+const {expect} = require('chai');
+const sinon = require('sinon');
 
 const {
-  setupComponent,
-  checkWrap,
-  checkWrapActions,
-  initialState,
-  defaultLang,
-  terms,
+  defaultTranslator,
+  defaultTerm,
+  defaultUser,
   translators,
-  users,
-  admin,
-  roles,
-  languages,
-  _appPath
+  getAppPath,
+  shallow
 } = require('../../_shared.js');
 
-const Term = require(_appPath + 'components/search/Term').default;
+const Term = require(getAppPath(2) + 'components/search/Term').default.WrappedComponent;
 
 describe('Testing Term Component.', () => {
 
-  const checkShowTerm = (selectedTerm, user, lang) => {
-    const _initialState = { ...initialState,
-      selected: { ...initialState.selected,
-        term: selectedTerm
-      },
-      common: { ...initialState.common,
-        userLanguage: lang,
-        translators
-      },
-      auth: { ...initialState.auth,
-        userInfo: { ...initialState.auth.userInfo,
-          data: { ...initialState.auth.userInfo.data,
-            role: user.role,
-            id: user.id
-          }
-        }
-      }
-    };
-    const {wrapper} = setupComponent(Term, _initialState);
-    const i18n = require(_appPath + 'i18n/' + lang);
-
-    checkWrap(wrapper.find('[data-test-id="Term"]'), {
-      className: 'term'
-    });
-
-    checkWrap(wrapper.find('[data-test-id="term-header"]'), {
-      className: 'term-header'
-    });
-
-    checkWrap(wrapper.find('[data-test-id="wylie-header"]'), {
-      className: 'wylie',
-      text: selectedTerm.wylie
-    });
-
-    checkWrap(wrapper.find('[data-test-id="sanskrit"]'), {
-      className: 'sanskrit',
-      text: i18n['Term.sanskrit_term'].replace(`{sanskrit_${lang}}`, selectedTerm[`sanskrit_${lang}`])
-    });
-
-    checkWrap(wrapper.find('[data-test-id="translation-list"]'), {
-      className: 'translation-list'
-    });
-
-    checkWrap(wrapper.find('[data-test-id="translation"]'), {
-      length: selectedTerm.translations.length
-    });
-
-    let _versionIndex = -1;
-    selectedTerm.translations.forEach((translation, translationIndex) => {
-
-      checkWrap(wrapper.find('[data-test-id="translation"]').at(translationIndex), {
-        className: 'translation'
-      });
-
-      checkWrap(wrapper.find('[data-test-id="wrap-translator-ref"]').at(translationIndex), {
-        className: 'wrap-translator-ref'
-      });
-
-      checkWrap(wrapper.find('a[data-test-id="link-translator"]').at(translationIndex), {
-        text: translators.find(e => e.id === translation.translatorId).name,
-        className: 'translator=ref'
-      });
-
-      if (user.role === 'admin') {
-        checkWrap(wrapper.find('a[data-test-id="link-to-edit"]'), {
-          length: selectedTerm.translations.length
-        });
-        checkWrap(wrapper.find('[data-test-id="edit-icon"].edit-icon'), {
-          length: selectedTerm.translations.length
-        });
-      } else if (translation.translatorId === user.id) {
-        checkWrap(wrapper.find('[data-test-id="link-to-edit"]').first());
-        checkWrap(wrapper.find('[data-test-id="edit-icon"].edit-icon'));
-      } else if (!selectedTerm.translations.find(t => t.translatorId === user.id)) {
-        checkWrap(wrapper.find('[data-test-id="link-to-edit"]'), {
-          length: 0
-        });
-        checkWrap(wrapper.find('[data-test-id="edit-icon"].edit-icon'), {
-          length: 0
-        });
-      }
-
-      checkWrap(wrapper.find('[data-test-id="list-meanings"]').at(translationIndex), {
-        length: 1,
-        className: 'meanings' + (translation.meanings.length === 1 ? ' single-item' : '')
-      });
-
-      let meaningsLength = 0;
-      selectedTerm.translations.forEach(e => meaningsLength += e.meanings.length);
-      checkWrap(wrapper.find('[data-test-id="meaning"]'), {
-        length: meaningsLength
-      });
-
-      translation.meanings.forEach((meaning, meaningIndex) => {
-
-        checkWrap(wrapper.find('[data-test-id="meaning"]').at(meaningIndex));
-
-        checkWrap(wrapper.find('[data-test-id="meaning"]').at(meaningIndex), {
-          className: 'meaning'
-        });
-
-        let versionLength = 0;
-        selectedTerm.translations.forEach(elem =>
-          elem.meanings.forEach(e =>
-            versionLength += e.versions.length
-          )
-        );
-        checkWrap(wrapper.find('[data-test-id="version"]'), {
-          length: versionLength
-        });
-
-        let amountComments = 0;
-        meaning.versions.forEach(e => e.comment ? amountComments++ : null);
-        if (amountComments) {
-          checkWrap(wrapper.find('[data-test-id="commentLink"]'), {
-            length: amountComments,
-            className: 'commentLink',
-            text: '>>>'
-          })
-        }
-
-        let amountOpenComments = 0;
-        meaning.versions.forEach(e => e.openComment ? amountComments++ : null);
-        if (amountOpenComments) {
-          checkWrap(wrapper.find('[data-test-id="translation-comment"]'), {
-            length: amountOpenComments,
-            className: 'translation-comment',
-            text: ':'
-          })
-        }
-
-        meaning.versions.forEach((version, versionIndex) => {
-          _versionIndex++;
-          checkWrap(wrapper.find('[data-test-id="version"]').at(_versionIndex), {
-            text: version + (versionIndex < meaning.versions.length - 1 ? '; ' : '')
-          });
-        });
-      });
-    });
-
-    if (!selectedTerm.translations.find(t => t.translatorId === user.id)
-      && user.role === 'translator') {
-      checkWrap(wrapper.find('[data-test-id="add-translation"].add-translation'));
-      checkWrap(wrapper.find('[data-test-id="link-add-translation"]').first());
-      checkWrap(wrapper.find('[data-test-id="link-add-translation"]').first(), {
-        text: i18n['Term.add-translation']
-      });
-    } else {
-      checkWrap(wrapper.find('[data-test-id="add-translation"]'), { length: 0 });
-      checkWrap(wrapper.find('[data-test-id="link-add-translation"]'), { length: 0 });
-    }
-
-    wrapper.unmount();
+  const translatorsOfTerm = defaultTerm.translations.map(e => e.translatorId);
+  const translationsLength = defaultTerm.translations.length;
+  const props = {
+    data: {
+      term: defaultTerm
+    },
+    lang: defaultUser.language,
+    userInfo: defaultUser,
+    translators
   };
 
-  // tests starts here
-  terms.forEach(term => {
+  const openCommentId = '[data-test-id="comment-link"]';
 
-    users.forEach(user =>
-      it(`should correctly show component for ${user.id} with role ${user.role}`,
-        () => checkShowTerm(term, user, user.language)
-      )
-    );
+  it('should work correctly, method \'toggleComment\'', () => {
+    const spyOnToggleComment = sinon.spy(Term.prototype, 'onToggleComment');
+    const wrapper = shallow(<Term {...props} />);
 
-    translators.forEach(translator =>
-      it(`should correctly show component for ${translator.id} with role ${translator.role}`,
-        () => checkShowTerm(term, translator, translator.language)
-      )
-    );
+    const openCommentId = '[data-test-id="comment-link"]';
+    let toggleCommentCalls = 0;
+    let commentsCount = 0;
+
+    defaultTerm.translations.forEach(t => t.meanings.forEach(e => commentsCount += !!e.comment));
+
+    for (let i = 0; i < commentsCount; i++) {
+      wrapper.find(openCommentId).at(i).simulate('click');
+      toggleCommentCalls++;
+    }
+
+    expect(spyOnToggleComment.callCount).equal(toggleCommentCalls);
+
+    wrapper.unmount();
   });
 
-  it('should correctly handle actions on component', () => {
-    const selectedTerm = terms[0];
-    const _initialState = { ...initialState,
-      selected: { ...initialState.selected,
-        term: selectedTerm
-      },
-      common: { ...initialState.common,
-        userLanguage: defaultLang,
-        translators
-      },
-      auth: { ...initialState.auth,
-        userInfo: { ...initialState.auth.userInfo,
-          data: { ...initialState.auth.userInfo.data,
-            role: 'user',
-            id: 'id'
-          }
-        }
-      }
-    };
-    const _props = {
-      dispatch: jest.fn()
-    };
-    const {wrapper, store} = setupComponent(Term, _initialState, _props);
-    let actionsCount = 0;
-    checkWrapActions(store, actionsCount);
+  const linkEditMeaningId = '[data-test-id="link-to-edit"]';
 
-    const _wrap = wrapper.find('[data-test-id="commentLink"]');
-    for (let i = 0; i < _wrap.length; i++) {
-      _wrap.at(i).props().onClick();
-      checkWrapActions(store, ++actionsCount);
-    }
+  it('should work correctly, local method \'canEdit\'', () => {
+    const wrapper = shallow(<Term {...props} />);
+
+    wrapper.setState({
+      userInfo: null
+    });
+    expect(wrapper.find(linkEditMeaningId).exists()).equal(false);
+
+    wrapper.setState({
+      userInfo: {...props.userInfo,
+        role: 'admin'
+      }
+    });
+    expect(wrapper.find(linkEditMeaningId).length).equal(translationsLength);
+
+    translatorsOfTerm.forEach(translator => {
+      wrapper.setState({
+        userInfo: {...props.userInfo,
+          role: 'translator',
+          id: translator
+        }
+      });
+      expect(wrapper.find(linkEditMeaningId).length).equal(1);
+      const {termId, translatorId} = wrapper.find(linkEditMeaningId).first().prop('to').query;
+      expect(termId).equal(defaultTerm.wylie);
+      expect(translatorId).equal(translator);
+
+      // wrapper.setState({
+      //   userInfo: {...props.userInfo,
+      //     role: 'user',  // maybe it's vulnerability?
+      //     id: translator
+      //   }
+      // });
+      // expect(wrapper.find(linkEditId).exists()).equal(false);
+    });
+
+    wrapper.unmount();
+  });
+
+  const linkAddTranslationId = '[data-test-id="link-add-translation"]';
+
+  it('should work correctly, local method \'canAdd\'', () => {
+    const wrapper = shallow(<Term {...props} />);
+
+    wrapper.setState({
+      userInfo: null
+    });
+    expect(wrapper.find(linkAddTranslationId).exists()).equal(false);
+
+    wrapper.setState({
+      userInfo: {...props.userInfo,
+        role: 'user'
+      }
+    });
+    expect(wrapper.find(linkAddTranslationId).exists()).equal(false);
+
+    wrapper.setState({
+      userInfo: {...props.userInfo,
+        role: 'admin'
+      }
+    });
+    expect(wrapper.find(linkAddTranslationId).exists()).equal(false);
+
+    wrapper.setState({
+      userInfo: {...defaultTranslator,
+        id: defaultTerm.translations[0].translatorId
+      }
+    });
+    expect(wrapper.find(linkAddTranslationId).exists()).equal(false);
+
+    wrapper.setState({
+      userInfo: {...defaultTranslator,
+        id: 'id of translator who not write yet'
+      }
+    });
+    expect(wrapper.find(linkAddTranslationId).exists()).equal(true);
+
+    wrapper.unmount();
+  });
+
+  const mainId = '[data-test-id="Term"]';
+  const linkTranslatorId = '[data-test-id="link-translator"]';
+  const openedCommentId = '[data-test-id="opened-comment"]';
+  const listMeaningsId = '[data-test-id="list-meanings"]';
+  const translationId = '[data-test-id="translation"]';
+  const wylieId = '[data-test-id="wylie-header"]';
+  const meaningId = '[data-test-id="meaning"]';
+  const versionId = '[data-test-id="version"]';
+
+  it('should show component correctly', () => {
+    const wrapper = shallow(<Term {...props} />);
+
+    expect(wrapper.find(mainId).exists()).equal(true);
+    expect(wrapper.find(wylieId).text()).equal(defaultTerm.wylie);
+
+    defaultTerm.translations.forEach((translation, i) => {
+      expect(wrapper.find(translationId).at(i).exists()).equal(true);
+
+      expect(wrapper.find(linkTranslatorId).at(i).prop('to')).equal(
+        'translator/' + translation.translatorId
+      );
+      expect(wrapper.find(linkTranslatorId).at(i).prop('children')).equal(
+        translators.find(t => t.id === translation.translatorId).name
+      );
+
+      expect(wrapper.find(listMeaningsId).at(i).prop('className')).equal(
+        'meanings' + (translation.meanings.length === 1 ? ' single-item' : '')
+      );
+
+      translation.meanings.forEach((meaning, meaningIndex) => {
+        expect(wrapper.find(meaningId).at(meaningIndex).exists()).equal(true);
+
+        // meaning.versions.forEach((version, versionIndex) => {
+        //   expect(wrapper.find(meaningId).find(versionId).at(versionIndex).props().children).equal(
+        //     version + (versionIndex < meaning.versions.length - 1 ? '; ' : '')
+        //   );
+        // });
+
+        let _wrap = wrapper.find(translationId).at(i).find(meaningId).at(meaningIndex).find(openCommentId);
+        if (meaning.comment !== '') {
+          expect(_wrap.exists()).equal(true);
+          expect(_wrap.prop('children')).equal('>>>');
+
+          expect(_wrap.find(openedCommentId).exists()).equal(false);
+          defaultTerm.translations[i].meanings[meaningIndex].openComment = true;
+          wrapper.setProps({...props,
+            data: {...props.data,
+              term: defaultTerm
+            }
+          });
+          _wrap = wrapper.find(translationId).at(i).find(meaningId).at(meaningIndex).find(openedCommentId);
+          expect(_wrap.prop('children')).equal(defaultTerm.translations[i].meanings[meaningIndex].comment);
+        } else {
+          expect(_wrap.find(openCommentId).exists()).equal(false);
+        }
+      });
+    });
+
+    wrapper.unmount();
   });
 });

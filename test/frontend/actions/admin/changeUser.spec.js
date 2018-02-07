@@ -1,14 +1,14 @@
-const configureMockStore = require('redux-mock-store').default;
+const configureMockStore = require('redux-mock-store');
 const thunk = require('redux-thunk').default;
 const nock = require('nock');
 const expect = require('expect');
 
-const {initialState, translators, getNotificationAction, _appPath} = require('../../_shared.js');
+const {initialState, translators, getNotificationAction, getAppPath} = require('../../_shared.js');
 
-const actionCreators = require(_appPath + 'actions/admin/changeUser');
-const types = require(_appPath + 'actions/_constants');
-const reducer = require(_appPath + 'reducers').default;
-const getUserData = require(_appPath + 'actions/admin/changeUser').getEditableUserDataObject;
+const actionCreators = require(getAppPath(2) + 'actions/admin/changeUser');
+const types = require(getAppPath(2) + 'actions/_constants');
+const reducer = require(getAppPath(2) + 'reducers').default;
+const getUserData = require(getAppPath(2) + 'actions/admin/changeUser').getEditableUserDataObject;
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);

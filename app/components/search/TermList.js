@@ -7,25 +7,25 @@ import {selectTerm} from '../../actions/search'
 class TermList extends Component {
   constructor(props) {
     super(props)
-    this._selectTerm = this._selectTerm.bind(this)
+    this.onSelectTerm = this.onSelectTerm.bind(this)
   }
 
   render() {
     return (
-      <div data-test-id="TermList"> {
-        this.props.termList.map((item, i) =>
-          <div data-test-id={item.wylie}
-            className={'list-group-item' + (this.props.isTermSelected(item) ? ' selected' : '') }
-            key={i} onClick={()=>this._selectTerm(item)}>
-            {item.wylie}
-          </div>
-        )
-      }
+      <div data-test-id="TermList">
+      {this.props.termList && this.props.termList.map((item, i) =>
+        <div className={'list-group-item' + (this.props.isTermSelected(item) ? ' selected' : '') }
+          onClick={() => this.onSelectTerm(item)}
+          data-test-id="item-term"
+          key={i}>
+          {item.wylie}
+        </div>
+      )}
       </div>
     )
   }
 
-  _selectTerm(term) {
+  onSelectTerm(term) {
     if (this.props.isTermSelected(term)) {
       return
     }
@@ -36,8 +36,8 @@ class TermList extends Component {
 function select(state) {
   return {
     termList: state.search.result,
-    isTermSelected: (term) =>
-      state.selected.term && state.selected.term.wylie === term.wylie
+    isTermSelected: (term) => state.selected.term &&
+      state.selected.term.wylie === term.wylie
   }
 }
 

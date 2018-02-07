@@ -90,7 +90,7 @@ const create = (payload) => validator.create(payload)
   })
   .then(pageUrl => findByUrl(pageUrl));
 
-const update = (pageUrl, payload) => validator.update(payload)
+const update = (pageUrl, payload) => validator.update(pageUrl, payload)
   .then(() => findByUrl(pageUrl))
   .then(page => {
     let result = Object.assign({}, page, payload);

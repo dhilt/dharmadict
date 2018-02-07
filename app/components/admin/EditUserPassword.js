@@ -3,16 +3,21 @@ import {connect} from 'react-redux'
 import {Link} from 'react-router'
 import {FormattedMessage} from 'react-intl'
 
-import {setUserId, changeAdminUserPassword, resetAdminUserPassword, updateAdminUserPasswordAsync} from '../../actions/admin/changeUserPassword'
+import {
+  updateAdminUserPasswordAsync,
+  changeAdminUserPassword,
+  resetAdminUserPassword,
+  setUserId
+} from '../../actions/admin/changeUserPassword'
 
 class EditUserPassword extends Component {
 
   constructor(props) {
     super(props)
+    this.changeUserConfirmPassword = this.changeUserConfirmPassword.bind(this)
+    this.changeUserPassword = this.changeUserPassword.bind(this)
     this.sendNewUserData = this.sendNewUserData.bind(this)
     this.resetChanges = this.resetChanges.bind(this)
-    this.changeUserPassword = this.changeUserPassword.bind(this)
-    this.changeUserConfirmPassword = this.changeUserConfirmPassword.bind(this)
   }
 
   componentWillMount() {
@@ -55,44 +60,44 @@ class EditUserPassword extends Component {
     const {password, confirmPassword} = this.props.stateData
     return (
       <div data-test-id="EditUserPassword">
-        <form data-test-id="main-form" className="col-md-6">
-          <h3 data-test-id="title"><FormattedMessage id="EditUserPassword.title" values={{id}} /></h3>
-          <div data-test-id="group-new-pass" className="form-group">
-            <label data-test-id="label-new-pass">
+        <form className="col-md-6">
+          <h3><FormattedMessage id="EditUserPassword.title" values={{id}} /></h3>
+          <div className="form-group">
+            <label>
               <FormattedMessage id="EditUserPassword.new_password" />
-              <span data-test-id="hint-new-pass" className="hint">
+              <span className="hint">
                 <FormattedMessage id="EditUserPassword.new_password_hint" />
               </span>
             </label>
             <input data-test-id="input-new-pass"
-              type="password"
-              value={password}
-              className="form-control"
               onChange={this.changeUserPassword}
+              className="form-control"
+              value={password}
+              type="password"
             />
           </div>
-          <div data-test-id="group-confirm-pass" className="form-group">
-            <label data-test-id="label-confirm-pass">
+          <div className="form-group">
+            <label>
               <FormattedMessage id="EditUserPassword.new_password_confirm" />
             </label>
             <input data-test-id="input-confirm-pass"
-              type="password"
+              onChange={this.changeUserConfirmPassword}
               value={confirmPassword}
               className="form-control"
-              onChange={this.changeUserConfirmPassword}
+              type="password"
             />
           </div>
-          <div data-test-id="group-button" className="form-group">
+          <div className="form-group">
             <button data-test-id="btn-save"
-              className="btn btn-primary"
               onClick={this.sendNewUserData}
-              disabled={this.disabled()}
-              ><FormattedMessage id="Common.save" />
+              className="btn btn-primary"
+              disabled={this.disabled()}>
+              <FormattedMessage id="Common.save" />
             </button>
             <button data-test-id="btn-reset"
               className="btn btn-default"
-              onClick={this.resetChanges}
-            ><FormattedMessage id="Common.reset" />
+              onClick={this.resetChanges}>
+              <FormattedMessage id="Common.reset" />
             </button>
             <Link data-test-id="btn-cancel" to={`/translator/${id}/edit`}>
               <FormattedMessage id="Common.cancel" />

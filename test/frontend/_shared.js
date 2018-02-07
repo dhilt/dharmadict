@@ -1,41 +1,33 @@
 global.window.localStorage = {};
 
-const initialState = require('../../app/reducers/_initial').default;
-const lang = require('../../app/helpers/lang').default;
-
-const {terms} = require('./__test-data/mockTerms');
-const {languages} = require('./__test-data/mockLanguages');
-const {
-  userMutableProperties,
-  roles,
-  admin,
-  translators,
-  users
-} = require('./__test-data/mockUsers');
-
-const {cloneState} = require('./__test-methods/cloneInitialState');
-const {getNotificationAction} = require('./__test-methods/getNotificationAction');
-const {
-  setupComponent,
-  checkWrap,
-  checkWrapActions
-} = require('./__test-methods/mountTestedComponent');
+const getAppPath = (level = 1) => {
+  let result = '../../../app/';
+  for (let i = 1; i < level; i++) {
+    result = '../' + result
+  }
+  return result
+};
 
 module.exports = {
+  getNotificationAction: require('./__test-methods/getNotificationAction'),
+  getIntlContext: require('./__test-methods/mountTestedComponent').getIntlContext,
+  mountWithIntl: require('./__test-methods/mountTestedComponent').mountWithIntl,
+  shallow: require('./__test-methods/mountTestedComponent').shallow,
+  cloneState: require('./__test-methods/cloneInitialState'),
+
+  defaultTranslator: require('./__test-data/mockUsers').defaultTranslator,
+  defaultUser: require('./__test-data/mockUsers').defaultUser,
+  translators: require('./__test-data/mockUsers').translators,
+  defaultTerm: require('./__test-data/mockTerms')[0],
+  admin: require('./__test-data/mockUsers').admin,
+  terms: require('./__test-data/mockTerms'),
+  pages: require('./__test-data/mockPages'),
+
+  getEditableUserDataObject: require('../../app/actions/admin/changeUser').getEditableUserDataObject,
+  defaultLang: require('../../prod/helper').languages.getLang().id,
+  initialState: require('../../app/reducers/_initial').default,
+  getLang: require('../../prod/helper').languages.getLang,
+  languages: require('../../prod/helper').languages.data,
   appPath: '../../../app/',
-  _appPath: '../../../../app/',
-  defaultLang: lang.defaultLang,
-  initialState,
-  cloneState,
-  setupComponent,
-  checkWrap,
-  checkWrapActions,
-  getNotificationAction,
-  admin,
-  translators,
-  users,
-  userMutableProperties,
-  roles,
-  languages,
-  terms
+  getAppPath
 };
