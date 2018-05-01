@@ -9,7 +9,8 @@
     "prod-server": "node prod/server.js",
     "test": "mocha --opts test/backend/mocha.opts -R spec --bail",
     "test-frontend": "cross-env NODE_ENV=test jest --config ./test/frontend/jest.config.json",
-    "db-reset": "node prod/db/reset.js"
+    "db-reset": "node prod/db/reset.js",
+    "genereate-hash": "node prod/db/scripts/helpers/generatePassword.js"
   },
   "repository": {
     "type": "git",
@@ -43,6 +44,7 @@
     "localStorage": "^1.0.3",
     "mocha": "^3.5.0",
     "nock": "^9.0.22",
+    "password-hash": "^1.2.2",
     "postcss-focus": "^1.0.0",
     "postcss-import": "^8.1.1",
     "postcss-loader": "^1.0.0",
