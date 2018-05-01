@@ -8,7 +8,7 @@ let scripts = [
   '20170908205600_add_translations',
   '20180125205500_add_pages',
   '20180202050300_add_users_descriptions',
-  '20180501073100_add_tengon.js',
+  '20180501073100_add_tengon.js'
 ];
 
 console.log('DB reset scripts running');

@@ -5,7 +5,8 @@ const users = [
   { id: 'DON', body: { description: '/pages/DON' } },
   { id: 'HOP', body: { description: '/pages/HOP' } },
   { id: 'MM', body: { description: '/pages/MM' } },
-  { id: 'RAG', body: { description: '/pages/RAG' } }
+  { id: 'RAG', body: { description: '/pages/RAG' } },
+  { id: 'ZAG', body: { description: '/pages/ZAG' } }
 ];
 
 const script = {
