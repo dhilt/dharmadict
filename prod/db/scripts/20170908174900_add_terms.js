@@ -3,7 +3,7 @@ const config = require('../config.js');
 const parse = require('csv-parse');
 
 const inputStream = fs.createReadStream(__dirname + '/../data/Terms.csv');
-const parser = parse({columns: true, delimiter: ','});
+const parser = parse({ columns: true, delimiter: ',' });
 
 const bulkObject = {
   body: []
@@ -52,7 +52,7 @@ const script = {
         if (err) {
           reject(err);
         }
-        resolve({text: 'really'});
+        resolve({ text: 'really' });
       });
     });
 

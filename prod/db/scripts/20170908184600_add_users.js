@@ -1,5 +1,4 @@
-const config = require('../config.js');
-const {Process} = require('./helpers.js');
+const { Users } = require('./helpers/users.js');
 
 const users = [{
   id: 'ADMIN',
@@ -113,18 +112,7 @@ const users = [{
 
 const script = {
   title: `Add users`,
-  run: (client) => new Promise((resolve, reject) => {
-    const process = new Process(resolve, reject, users.length);
-    users.forEach(user =>
-      client.index({
-        index: config.index,
-        type: 'users',
-        id: user.id,
-        body: user.body
-      })
-      .then(() => process.done(), error => process.done(error || true))
-    );
-  })
+  run: (client) => Users.run(client, users)
 };
 
 module.exports = script;

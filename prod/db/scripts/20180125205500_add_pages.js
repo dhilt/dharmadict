@@ -1,5 +1,4 @@
-const config = require('../config.js');
-const {Process} = require('./helpers.js');
+const { Pages } = require('./helpers/pages.js');
 
 const pages = [{
   url: 'about',
@@ -235,21 +234,7 @@ const pages = [{
 
 const script = {
   title: `Add pages`,
-  run: (client) => new Promise((resolve, reject) => {
-    const process = new Process(resolve, reject, pages.length);
-    pages.forEach(page =>
-      client.index({
-        index: config.index,
-        type: 'pages',
-        id: page.url,
-        body: {
-          title: page.title,
-          text: page.text
-        }
-      })
-      .then(() => process.done(), error => process.done(error || true))
-    );
-  })
+  run: (client) => Pages.run(client, pages)
 };
 
 module.exports = script;

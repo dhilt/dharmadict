@@ -7,7 +7,7 @@ const script = {
       index: config.index
     }).catch(error => {
       if (error.body.status === 404) {
-        return Promise.resolve({text: 'No index found...'});
+        return Promise.resolve({ text: 'No index found...' });
       }
       throw error;
     })

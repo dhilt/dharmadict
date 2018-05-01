@@ -1,8 +1,9 @@
 class Process {
-  constructor(resolve, reject, total) {
+  constructor(resolve, reject, total, token) {
     this.resolve = resolve;
     this.reject = reject;
     this.total = total;
+    this.token = token;
     this.count = 0;
     this.countError = 0;
     this.lastError = {};
@@ -16,14 +17,14 @@ class Process {
     else {
       this.count++;
     }
-
     if (this.count + this.countError === this.total) {
       if (this.countError) {
-        this.lastError.text = this.countError + ' errors have been occurred. Last error:';
+        console.log('Fail! ' + this.countError + ' errors have been occurred');
         this.reject(this.lastError);
       }
       else {
-        this.resolve({text: this.count + ' records have been processed'});
+        console.log(this.count + ' ' + (this.token ? this.token : 'records') + ' were processed successfully');
+        this.resolve();
       }
     }
   }
