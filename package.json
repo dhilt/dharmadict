@@ -9,7 +9,7 @@
     "prod-server": "node prod/server.js",
     "test": "mocha --opts test/backend/mocha.opts -R spec --bail",
     "test-frontend": "cross-env NODE_ENV=test jest --config ./test/frontend/jest.config.json",
-    "db-reset": "node prod/db/reset.js",
+    "db-migrate": "node prod/db/migrate.js",
     "genereate-hash": "node prod/db/scripts/helpers/generatePassword.js"
   },
   "repository": {
