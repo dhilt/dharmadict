@@ -55,7 +55,7 @@ class Translations {
             });
           });
           updateTerm({
-            wylie: record.wylie.toLowerCase(),
+            wylie: record.wylie.toLowerCase().trim(),
             translation: {
               translatorId: listItem.id,
               language: lang,
