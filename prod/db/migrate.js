@@ -9,8 +9,9 @@ let scripts = [
   '20180125205500_add_pages',
   '20180202050300_add_users_descriptions',
   '20180501073100_add_tengon.js',
-  '20180521121500_add_descriptions_for_akt_and_mk.js',*/
-  '20180521123200_reset_don_translations.js'
+  '20180521121500_add_descriptions_for_akt_and_mk.js',
+  '20180521123200_reset_don_translations.js',*/
+  '20180708230000_add_bem.js'
 ];
 
 console.log('DB migration scripts running');
