@@ -86,6 +86,12 @@ class Header extends Component {
             <Link to={'/pages/about'}>
               <FormattedMessage id="Header.about_project" />
             </Link>
+            <Link to={'/pages/translation_features'}>
+              <FormattedMessage id="Header.translation_features" />
+            </Link>
+            <Link to={'/pages/parallel_texts'}>
+              <FormattedMessage id="Header.parallel_texts" />
+            </Link>
           </div>
           {authLinks}
           {languagesDropdown}

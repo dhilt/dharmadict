@@ -50,6 +50,8 @@
   "Header.about_project": "О проекте",
   "Header.home_link": "На главную",
   "Header.change_language": "Сменить язык",
+  "Header.translation_features": "Особенности переводов",
+  "Header.parallel_texts": "Параллельные тексты",
 
   "Logout.button_logout": "Выйти",
 

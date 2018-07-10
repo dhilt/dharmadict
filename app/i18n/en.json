@@ -50,6 +50,8 @@
   "Header.about_project": "About",
   "Header.home_link": "Home",
   "Header.change_language": "Change language",
+  "Header.translation_features": "Translation features",
+  "Header.parallel_texts": "Parallel texts",
 
   "Logout.button_logout": "Log out",
 
