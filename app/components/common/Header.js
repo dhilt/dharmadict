@@ -47,17 +47,29 @@ class Header extends Component {
 
     const authLinks = this.props.data.loggedIn ? (
       <div data-test-id="Header.navButtons-loggedIn">
-        <Link data-test-id="Header.link_to_user"
-          to={`/translator/${userInfo.id}`}>
-          {userInfo.name}
-        </Link>
-        <Logout data-test-id="Header.Logout" doLogout={this.doLogout} />
+        <div>
+          <Link data-test-id="Header.link_to_user"
+            to={`/translator/${userInfo.id}`}>
+            {userInfo.name}
+          </Link>
+          <Logout data-test-id="Header.Logout" doLogout={this.doLogout} />
+        </div>
+        <div>
         {
-          userInfo.role === 'admin' ?
+          userInfo.role === 'admin' && (
             <Link data-test-id="Header.link_create_term" to={`/newTerm`}>
               <FormattedMessage id="Header.create_new_term" />
-            </Link> : ( null )
+            </Link>
+          )
         }
+        {
+          ['admin', 'translator'].find(e => e === userInfo.role) && (
+            <Link data-test-id="Header.link_create_page" to={`/pages/new`}>
+              <FormattedMessage id="Header.create_new_page" />
+            </Link>
+          )
+        }
+        </div>
       </div>
     ) : (
       <div data-test-id="Header.navButtons-notLoggedIn">
@@ -80,18 +92,22 @@ class Header extends Component {
       <div data-test-id="Header" className="nav">
         <div className="nav__wrapper">
           <div className="nav__wrapper-left">
-            <Link to={'/'}>
-              <FormattedMessage id="Header.home_link" />
-            </Link>
-            <Link to={'/pages/about'}>
-              <FormattedMessage id="Header.about_project" />
-            </Link>
-            <Link to={'/pages/translation_features'}>
-              <FormattedMessage id="Header.translation_features" />
-            </Link>
-            <Link to={'/pages/parallel_texts'}>
-              <FormattedMessage id="Header.parallel_texts" />
-            </Link>
+            <div>
+              <Link to={'/'}>
+                <FormattedMessage id="Header.home_link" />
+              </Link>
+              <Link to={'/pages/about'}>
+                <FormattedMessage id="Header.about_project" />
+              </Link>
+            </div>
+            <div>
+              <Link to={'/pages/translation_features'}>
+                <FormattedMessage id="Header.translation_features" />
+              </Link>
+              <Link to={'/pages/parallel_texts'}>
+                <FormattedMessage id="Header.parallel_texts" />
+              </Link>
+            </div>
           </div>
           {authLinks}
           {languagesDropdown}

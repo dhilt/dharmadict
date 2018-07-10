@@ -19,12 +19,16 @@ export function getPageAdminAsync(pageUrl) {
     const { dataSource } = getState().admin.editPage
     const query = 'pages?url=' + pageUrl
     return asyncRequest(query, 'get', false, (data, error) => {
+      const currentUser = getState().auth.userInfo.data
+      const noPermission = error ? true : !(currentUser.role === 'admin' || currentUser.id === data.author)
       dispatch({
         type: GET_PAGE_ADMIN_END,
         data: error ? dataSource : data,
-        url: pageUrl
+        url: pageUrl,
+        noPermission
       })
       error && dispatch(notifier.onErrorResponse(error))
+      !error && noPermission && dispatch(notifier.onErrorResponse('Common.error_message', {error: 'You can\'t edit this page'}))
     })
   }
 }

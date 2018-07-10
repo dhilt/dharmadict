@@ -9,7 +9,10 @@ const EditPage = require(getAppPath(2) + 'components/admin/EditPage').default.Wr
 describe('Testing EditPage Component.', () => {
 
   const props = {
-    pageInfo: initialState.admin.editPage,
+    pageInfo: {
+      ...initialState.admin.editPage,
+      noPermission: false
+    },
     params: {
       pageUrl: 'page_url'
     }
@@ -82,6 +85,13 @@ describe('Testing EditPage Component.', () => {
 
     const expectedUrl = '/pages/' + props.params.pageUrl;
     expect(wrapper.find(linkCancelId).prop('to')).equal(expectedUrl);
+
+    wrapper.setProps({...props,
+      pageInfo: {...props.pageInfo,
+        noPermission: true
+      }
+    })
+    expect(wrapper.find(editPageId).exists()).equal(false);
 
     wrapper.unmount();
   });

@@ -12,7 +12,8 @@ export function createPageAsync() {
     dispatch({
       type: CREATE_PAGE_START
     })
-    const {data} = getState().admin.newPage
+    const author = getState().auth.userInfo.data.id
+    const data = {...getState().admin.newPage.data, author}
     const query = 'pages'
     return asyncRequest(query, 'post', {payload: data}, (data, error) => {
       dispatch({

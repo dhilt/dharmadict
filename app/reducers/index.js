@@ -125,6 +125,7 @@ function reducer(state = initialState, action = {}) {
       return {...state,
         admin: {...state.admin,
           editPage: {...state.admin.editPage,
+            noPermission: action.noPermission,
             sourcePending: false,
             dataSource: action.data,
             data: action.data,

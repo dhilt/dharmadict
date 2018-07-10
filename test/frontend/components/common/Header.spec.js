@@ -5,6 +5,7 @@ const {
   mountWithIntl,
   initialState,
   defaultLang,
+  defaultTranslator,
   defaultUser,
   getAppPath,
   admin
@@ -25,6 +26,7 @@ describe('Testing Header Component.', () => {
   const notLoggedInId = '[data-test-id="Header.navButtons-notLoggedIn"]';
   const LoadingBtnComponentId = '[data-test-id="Header.LoadingButton"]';
   const linkCreateTermId = '[data-test-id="Header.link_create_term"]';
+  const linkCreatePageId = '[data-test-id="Header.link_create_page"]';
   const LanguagesComponentId = '[data-test-id="Header.Languages"]';
   const loggedInId = '[data-test-id="Header.navButtons-loggedIn"]';
   const linkToUserId = '[data-test-id="Header.link_to_user"]';
@@ -42,6 +44,7 @@ describe('Testing Header Component.', () => {
     expect(wrapper.find(LoadingBtnComponentId).exists()).equal(false);
     expect(wrapper.find(LogoutComponentId).exists()).equal(false);
     expect(wrapper.find(linkCreateTermId).exists()).equal(false);
+    expect(wrapper.find(linkCreatePageId).exists()).equal(false);
     expect(wrapper.find(loggedInId).exists()).equal(false);
 
     wrapper.setProps({...props,
@@ -56,6 +59,7 @@ describe('Testing Header Component.', () => {
     expect(wrapper.find(LogoutComponentId).exists()).equal(false);
     expect(wrapper.find(LoginComponentId).exists()).equal(false);
     expect(wrapper.find(linkCreateTermId).exists()).equal(false);
+    expect(wrapper.find(linkCreatePageId).exists()).equal(false);
     expect(wrapper.find(loggedInId).exists()).equal(false);
 
     wrapper.setProps({...props,
@@ -73,6 +77,7 @@ describe('Testing Header Component.', () => {
     expect(wrapper.find(LoadingBtnComponentId).exists()).equal(false);
     expect(wrapper.find(LoginComponentId).exists()).equal(false);
     expect(wrapper.find(linkCreateTermId).exists()).equal(false);
+    expect(wrapper.find(linkCreatePageId).exists()).equal(false);
     expect(wrapper.find(notLoggedInId).exists()).equal(false);
 
     wrapper.setProps({...props,
@@ -85,8 +90,26 @@ describe('Testing Header Component.', () => {
     });
     expect(wrapper.find(loggedInId).exists()).equal(true);
     expect(wrapper.find(linkCreateTermId).exists()).equal(true);
+    expect(wrapper.find(linkCreatePageId).exists()).equal(true);
     expect(wrapper.find(LogoutComponentId).exists()).equal(true);
     expect(wrapper.find(linkToUserId).first().text()).equal(admin.name);
+    expect(wrapper.find(LoadingBtnComponentId).exists()).equal(false);
+    expect(wrapper.find(LoginComponentId).exists()).equal(false);
+    expect(wrapper.find(notLoggedInId).exists()).equal(false);
+
+    wrapper.setProps({...props,
+      data: {...props.data,
+        loggedIn: true,
+        userInfo: {...props.data.userInfo,
+          data: defaultTranslator
+        }
+      }
+    });
+    expect(wrapper.find(loggedInId).exists()).equal(true);
+    expect(wrapper.find(linkCreatePageId).exists()).equal(true);
+    expect(wrapper.find(LogoutComponentId).exists()).equal(true);
+    expect(wrapper.find(linkToUserId).first().text()).equal(defaultTranslator.name);
+    expect(wrapper.find(linkCreateTermId).exists()).equal(false);
     expect(wrapper.find(LoadingBtnComponentId).exists()).equal(false);
     expect(wrapper.find(LoginComponentId).exists()).equal(false);
     expect(wrapper.find(notLoggedInId).exists()).equal(false);

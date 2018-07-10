@@ -92,6 +92,7 @@ let initialState = {
         title: '',
         text: ''
       },
+      noPermission: true,
       sourcePending: false,
       pending: false,
       removePending: false

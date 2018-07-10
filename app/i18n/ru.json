@@ -47,6 +47,7 @@
   "LoadingIndicator.main_text": "Идет загрузка...",
 
   "Header.create_new_term": "Создать новый термин",
+  "Header.create_new_page": "Создать новую страницу",
   "Header.about_project": "О проекте",
   "Header.home_link": "На главную",
   "Header.change_language": "Сменить язык",

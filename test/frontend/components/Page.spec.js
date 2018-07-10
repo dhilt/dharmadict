@@ -1,7 +1,7 @@
 const React = require('react');
 const {expect} = require('chai');
 
-const {appPath, shallow, pages, admin} = require('../_shared.js');
+const {appPath, shallow, pages, defaultTranslator, admin} = require('../_shared.js');
 
 const Page = require(appPath + 'components/Page').default.WrappedComponent;
 
@@ -79,6 +79,38 @@ describe('Testing Page Component.', () => {
     expect(wrapper.find(linkEditId).exists()).equal(true);
     expect(wrapper.find(linkEditId).children().prop('to'))
       .equal('/pages/' + pages[0].url + '/edit');
+
+    const equalId = 'equal-id';
+    wrapper.setProps({...props,
+      pageInfo: {...props.pageInfo,
+        page: {
+          ...pages[0],
+          author: equalId
+        }
+      },
+      userData: {
+        ...defaultTranslator,
+        id: equalId
+      }
+    });
+    expect(wrapper.find(linkEditId).exists()).equal(true);
+    expect(wrapper.find(linkEditId).children().prop('to'))
+      .equal('/pages/' + pages[0].url + '/edit');
+
+    const anotherId = 'another-id';
+    wrapper.setProps({...props,
+      pageInfo: {...props.pageInfo,
+        page: {
+          ...pages[0],
+          author: equalId
+        }
+      },
+      userData: {
+        ...defaultTranslator,
+        id: anotherId
+      }
+    });
+    expect(wrapper.find(linkEditId).exists()).equal(false);
 
     wrapper.unmount();
   });

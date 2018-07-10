@@ -17,7 +17,7 @@ class Page extends Component {
         <h3 data-test-id="title">{page.title}</h3>
         <article data-test-id="text" dangerouslySetInnerHTML={{__html: page.text}} />
         {
-          userData && userData.role === 'admin' &&
+          userData && (userData.role === 'admin' || (userData.role === 'translator' && userData.id === page.author)) &&
           <div data-test-id="link-to-edit">
             <Link className="btn btn-default" to={`/pages/${page.url}/edit`}>
               <span><FormattedMessage id="EditPage.link_to_edit" /></span>

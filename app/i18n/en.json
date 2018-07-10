@@ -47,6 +47,7 @@
   "LoadingIndicator.main_text": "Loading...",
 
   "Header.create_new_term": "Create new term",
+  "Header.create_new_page": "Create new page",
   "Header.about_project": "About",
   "Header.home_link": "Home",
   "Header.change_language": "Change language",

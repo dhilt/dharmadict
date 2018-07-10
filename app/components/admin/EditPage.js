@@ -44,9 +44,9 @@ class EditPage extends Component {
   }
 
   render () {
-    const { sourcePending, removePending, pending } = this.props.pageInfo
+    const { noPermission, sourcePending, removePending, pending } = this.props.pageInfo
     const { title, text } = this.props.pageInfo.data
-    return !sourcePending && (
+    return !sourcePending && !noPermission && (
       <div data-test-id="EditPage">
         <form className="col-md-6">
           <h3><FormattedMessage id="EditPage.title_of_page" /></h3>
