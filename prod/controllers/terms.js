@@ -60,6 +60,7 @@ const searchByPattern = (pattern) => validator.search(pattern)
     logger.info('Searching terms by "' + pattern + '" pattern');
     return elasticClient.search({
       index: config.db.index,
+      size: config.db.size.searchTerms,
       type: 'terms',
       body: {
         query: {

@@ -125,6 +125,7 @@ const findAll = (role) => new Promise(resolve => {
 .then(body =>
   elasticClient.search({
     index: config.db.index,
+    size: config.db.size.max,
     type: 'users',
     body
   }).then(result => {
