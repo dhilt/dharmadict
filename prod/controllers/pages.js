@@ -7,7 +7,7 @@ const config = require('../config');
 const findAll = () => new Promise((resolve, reject) => {
   elasticClient.search({
     index: config.db.index,
-    size: config.db.max,
+    size: config.db.size.max,
     type: 'pages'
   }).then(result => {
     let pages = result.hits.hits;
