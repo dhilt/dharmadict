@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {Link} from 'react-router'
 import {FormattedMessage} from 'react-intl'
 
-import {changePageData, createPageAsync} from '../../actions/admin/newPage'
+import {changePageData, createPageAsync} from '../../actions/pages/newPage'
 
 class NewPage extends Component {
 

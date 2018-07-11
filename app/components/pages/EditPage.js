@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {Link} from 'react-router'
 import {FormattedMessage} from 'react-intl'
 
-import {changePageData, resetPage, getPageAdminAsync, updatePageAsync, removePageAsync} from '../../actions/admin/changePage'
+import {changePageData, resetPage, getPageAdminAsync, updatePageAsync, removePageAsync} from '../../actions/pages/changePage'
 
 class EditPage extends Component {
 

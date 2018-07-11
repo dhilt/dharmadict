@@ -5,7 +5,7 @@ const expect = require('expect');
 
 const {initialState, pages, getNotificationAction, getAppPath} = require('../../_shared.js');
 
-const actionsCreators = require(getAppPath(2) + 'actions/admin/changePage');
+const actionsCreators = require(getAppPath(2) + 'actions/pages/changePage');
 const types = require(getAppPath(2) + 'actions/_constants');
 const reducer = require(getAppPath(2) + 'reducers').default;
 

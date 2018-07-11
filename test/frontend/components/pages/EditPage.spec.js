@@ -2,32 +2,41 @@ const React = require('react');
 const {expect} = require('chai');
 const sinon = require('sinon');
 
-const {
-  initialState,
-  getAppPath,
-  shallow
-} = require('../../_shared.js');
+const {initialState, getAppPath, shallow} = require('../../_shared.js');
 
-const NewPage = require(getAppPath(2) + 'components/admin/NewPage').default.WrappedComponent;
+const EditPage = require(getAppPath(2) + 'components/pages/EditPage').default.WrappedComponent;
 
-describe('Testing NewPage Component.', () => {
+describe('Testing EditPage Component.', () => {
 
   const props = {
-    pageInfo: initialState.admin.newPage
+    pageInfo: {
+      ...initialState.admin.editPage,
+      noPermission: false
+    },
+    userInfo: {
+      ...initialState.auth.userInfo,
+      promise: Promise.resolve()
+    },
+    params: {
+      pageUrl: 'page_url'
+    }
   };
 
-  const newPageId = '[data-test-id="NewPage"]';
-  const inputUrlId = '[data-test-id="input-url"]';
+  const editPageId = '[data-test-id="EditPage"]';
   const inputTitleId = '[data-test-id="input-title"]';
   const inputTextId = '[data-test-id="input-text"]';
   const btnSaveId = '[data-test-id="btn-save"]';
+  const btnResetId = '[data-test-id="btn-reset"]';
+  const btnDeleteId = '[data-test-id="btn-delete"]';
   const linkCancelId = '[data-test-id="link-cancel"]';
 
   it('should correctly handle actions on the component', () => {
-    const spySendNewPageData = sinon.spy(NewPage.prototype, 'sendNewPageData');
-    const spyChangePageTitle = sinon.spy(NewPage.prototype, 'changePageTitle');
-    const spyChangePageText = sinon.spy(NewPage.prototype, 'changePageText');
-    const spyChangePageUrl = sinon.spy(NewPage.prototype, 'changePageUrl');
+    const spyComponentWillMount = sinon.spy(EditPage.prototype, 'componentWillMount');
+    const spySendNewPageData = sinon.spy(EditPage.prototype, 'sendNewPageData');
+    const spyChangePageTitle = sinon.spy(EditPage.prototype, 'changePageTitle');
+    const spyChangePageText = sinon.spy(EditPage.prototype, 'changePageText');
+    const spyResetChanges = sinon.spy(EditPage.prototype, 'resetChanges');
+    const spyDeletePage = sinon.spy(EditPage.prototype, 'deletePage');
 
     const defaultEvent = {
       preventDefault: () => null,
@@ -35,35 +44,28 @@ describe('Testing NewPage Component.', () => {
         value: 'password'
       }
     };
-    const wrapper = shallow(<NewPage {...props} />);
+    const wrapper = shallow(<EditPage {...props} />);
 
     wrapper.find(inputTitleId).simulate('change', defaultEvent);
     wrapper.find(inputTextId).simulate('change', defaultEvent);
-    wrapper.find(inputUrlId).simulate('change', defaultEvent);
+    wrapper.find(btnDeleteId).simulate('click', defaultEvent);
+    wrapper.find(btnResetId).simulate('click', defaultEvent);
     wrapper.find(btnSaveId).simulate('click', defaultEvent);
 
+    expect(spyComponentWillMount.calledOnce).equal(true);
     expect(spySendNewPageData.calledOnce).equal(true);
     expect(spyChangePageTitle.calledOnce).equal(true);
     expect(spyChangePageText.calledOnce).equal(true);
-    expect(spyChangePageUrl.calledOnce).equal(true);
+    expect(spyResetChanges.calledOnce).equal(true);
+    expect(spyDeletePage.calledOnce).equal(true);
 
     wrapper.unmount();
   });
 
   it('should show component correctly', () => {
-    const wrapper = shallow(<NewPage {...props} />);
+    const wrapper = shallow(<EditPage {...props} />);
 
-    expect(wrapper.find(newPageId).exists()).equal(true);
-
-    const editedUrl = props.pageInfo.data.url + ' new';
-    wrapper.setProps({...props,
-      pageInfo: {...props.pageInfo,
-        data: {...props.pageInfo.data,
-          url: editedUrl
-        }
-      }
-    });
-    expect(wrapper.find(inputUrlId).prop('value')).equal(editedUrl);
+    expect(wrapper.find(editPageId).exists()).equal(true);
 
     const editedText = props.pageInfo.data.text + ' new';
     wrapper.setProps({...props,
@@ -85,11 +87,21 @@ describe('Testing NewPage Component.', () => {
     });
     expect(wrapper.find(inputTitleId).prop('value')).equal(editedTitle);
 
+    const expectedUrl = '/pages/' + props.params.pageUrl;
+    expect(wrapper.find(linkCancelId).prop('to')).equal(expectedUrl);
+
+    wrapper.setProps({...props,
+      pageInfo: {...props.pageInfo,
+        noPermission: true
+      }
+    })
+    expect(wrapper.find(editPageId).exists()).equal(false);
+
     wrapper.unmount();
   });
 
   it('should disable save button on the component', () => {
-    const wrapper = shallow(<NewPage {...props} />);
+    const wrapper = shallow(<EditPage {...props} />);
 
     wrapper.setProps({...props,
       pageInfo: {...props.pageInfo,

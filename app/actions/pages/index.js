@@ -1,12 +1,12 @@
-import asyncRequest from '../helpers/remote'
-import notifier from '../helpers/notifier'
+import asyncRequest from '../../helpers/remote'
+import notifier from '../../helpers/notifier'
 
 import {
   GET_ALL_PAGES_START,
   GET_ALL_PAGES_END,
   GET_PAGE_START,
   GET_PAGE_END
-} from './_constants'
+} from '../_constants'
 
 export function getAllPagesAsync() {
   return (dispatch) => {

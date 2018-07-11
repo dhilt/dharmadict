@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {Link} from 'react-router'
 import {FormattedMessage} from 'react-intl'
 
-import {getAllPagesAsync} from '../actions/pages'
+import {getAllPagesAsync} from '../../actions/pages'
 
 class Pages extends Component {
 

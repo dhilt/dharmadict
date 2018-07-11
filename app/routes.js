@@ -6,14 +6,15 @@ import Home from './components/Home'
 import NotFound from './components/NotFound'
 import Edit from './components/Edit'
 import TranslatorPage from './components/TranslatorPage'
-import Pages from './components/Pages'
-import Page from './components/Page'
 
 import NewTerm from './components/admin/NewTerm'
 import EditUser from './components/admin/EditUser'
 import EditUserPassword from './components/admin/EditUserPassword'
-import EditPage from './components/admin/EditPage'
-import NewPage from './components/admin/NewPage'
+
+import EditPage from './components/pages/EditPage'
+import NewPage from './components/pages/NewPage'
+import Pages from './components/pages/Pages'
+import Page from './components/pages/Page'
 
 import EditPasswordByTranslator from './components/translator/EditPasswordByTranslator'
 
