@@ -11,21 +11,24 @@ import {
   DELETE_PAGE_END
 } from '../_constants'
 
-export function getPageAdminAsync(pageUrl) {
+const cutPageForEdit = (page) => ({ title: page.title, text: page.text })
+
+export function getPageAdminAsync(url) {
   return (dispatch, getState) => {
     dispatch({
       type: GET_PAGE_ADMIN_START
     })
     const { dataSource } = getState().admin.editPage
-    const query = 'pages?url=' + pageUrl
+    const query = `pages?url=${url}`
     return asyncRequest(query, 'get', false, (data, error) => {
       const currentUser = getState().auth.userInfo.data
       const noPermission = error ? true : !(currentUser.role === 'admin' || currentUser.id === data.author)
       dispatch({
         type: GET_PAGE_ADMIN_END,
-        data: error ? dataSource : data,
-        url: pageUrl,
-        noPermission
+        data: error ? dataSource : cutPageForEdit(data),
+        dataSource: error ? dataSource : data,
+        noPermission,
+        url
       })
       error && dispatch(notifier.onErrorResponse(error))
       !error && noPermission && dispatch(notifier.onErrorResponse('Common.error_message', {error: 'You can\'t edit this page'}))
@@ -62,12 +65,12 @@ export function updatePageAsync() {
       type: UPDATE_ADMIN_PAGE_START
     })
     const {url, data, dataSource} = getState().admin.editPage
-    const query = 'pages?url=' + url
-    return asyncRequest(query, 'patch', {payload: data}, (data, error) => {
-      data && delete data.page.url
+    const query = `pages?url=${url}`
+    return asyncRequest(query, 'patch', {payload: data}, (_data, error) => {
       dispatch({
         type: UPDATE_ADMIN_PAGE_END,
-        data: error ? dataSource : data.page
+        data: error ? data : cutPageForEdit(_data.page),
+        dataSource: error ? dataSource : _data.page
       })
       dispatch(notifier.onResponse('EditPage.success', error))
     })
@@ -80,7 +83,7 @@ export function removePageAsync() {
       type: DELETE_PAGE_START
     })
     const {url} = getState().admin.editPage
-    const query = 'pages?url=' + url
+    const query = `pages?url=${url}`
     return asyncRequest(query, 'delete', null, (data, error) => {
       dispatch({
         type: DELETE_PAGE_END

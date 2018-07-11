@@ -13,6 +13,10 @@ describe('Testing EditPage Component.', () => {
       ...initialState.admin.editPage,
       noPermission: false
     },
+    userInfo: {
+      ...initialState.auth.userInfo,
+      promise: Promise.resolve()
+    },
     params: {
       pageUrl: 'page_url'
     }

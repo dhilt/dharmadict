@@ -3,20 +3,18 @@ const request = require('./_shared.js').request;
 const shouldLogIn = require('./_shared.js').shouldLogIn;
 const testAdmin = require('./_shared.js').testAdmin;
 const testTranslator = require('./_shared.js').testTranslator;
+const testTranslator2 = require('./_shared.js').testTranslator2;
 const testPage = require('./_shared.js').testPage;
 const testPage2 = require('./_shared.js').testPage2;
 const testPage3 = require('./_shared.js').testPage3;
 
 describe('Delete page API', () => {
 
-  const removePageUrl = '/api/pages?url=' + testPage.url;
-  const removePage2Url = '/api/pages?url=' + testPage2.url;
-  const removePage3Url = '/api/pages?url=' + testPage3.url;
-  const removeInexistentPageUrl = '/api/pages?url=inexistent_page_url';
+  const getQuery = url => `/api/pages?url=${url}`;
 
   it('should work', (done) => {
-    request.delete(removePageUrl).end(
-      (err, res) => {
+    request.delete(getQuery(testPage.url))
+      .end((err, res) => {
         res.should.have.status(200);
         done();
       }
@@ -24,7 +22,7 @@ describe('Delete page API', () => {
   });
 
   it('should not delete page (auth needed)', (done) => {
-    request.delete(removePageUrl)
+    request.delete(getQuery(testPage.url))
       .end(
         (err, res) => {
           assert.notEqual(res.body.success, true);
@@ -36,13 +34,13 @@ describe('Delete page API', () => {
 
   shouldLogIn(testTranslator);
 
-  it('should not delete page (admin only)', (done) => {
-    request.delete(removePageUrl)
+  it('should not delete page (wrong user)', (done) => {
+    request.delete(getQuery(testPage.url))
       .set('Authorization', 'Bearer ' + testTranslator.token)
       .end(
         (err, res) => {
           assert.notEqual(res.body.success, true);
-          assert.equal(res.body.message, "Can't delete page. Admin only");
+          assert.equal(res.body.message, "Can't delete page. Unpermitted success");
           done();
         }
       )
@@ -51,7 +49,7 @@ describe('Delete page API', () => {
   shouldLogIn(testAdmin);
 
   it('should not delete page (invalid url)', (done) => {
-    request.delete('/api/pages')
+    request.delete(getQuery(''))
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .end(
         (err, res) => {
@@ -64,7 +62,7 @@ describe('Delete page API', () => {
   });
 
   it('should not delete page (page with that url doesn\'t exist)', (done) => {
-    request.delete(removeInexistentPageUrl)
+    request.delete(getQuery('nonexistent'))
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .end(
         (err, res) => {
@@ -75,8 +73,19 @@ describe('Delete page API', () => {
       )
   });
 
-  it('should delete "' + testPage.url + '" page', (done) => {
-    request.delete(removePageUrl)
+  it(`should delete page by translator, url=${testPage2.url}`, (done) => {
+    request.delete(getQuery(testPage2.url))
+      .set('Authorization', 'Bearer ' + testTranslator.token)
+      .end(
+        (err, res) => {
+          assert.equal(res.body.success, true);
+          done();
+        }
+      )
+  });
+
+  it(`should delete page by admin, url=${testPage.url}`, (done) => {
+    request.delete(getQuery(testPage.url))
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .end(
         (err, res) => {
@@ -86,19 +95,8 @@ describe('Delete page API', () => {
       )
   });
 
-  it('should delete "' + testPage2.url + '" page', (done) => {
-    request.delete(removePage2Url)
-      .set('Authorization', 'Bearer ' + testAdmin.token)
-      .end(
-        (err, res) => {
-          assert.equal(res.body.success, true);
-          done();
-        }
-      )
-  });
-
-  it('should delete "' + testPage3.url + '" page', (done) => {
-    request.delete(removePage3Url)
+  it(`should delete page (created by translator) by admin, url=${testPage3.url}`, (done) => {
+    request.delete(getQuery(testPage3.url))
       .set('Authorization', 'Bearer ' + testAdmin.token)
       .end(
         (err, res) => {

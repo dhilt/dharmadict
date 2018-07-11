@@ -62,18 +62,21 @@ const testTerm2 = {
 };
 
 const testPage = {
+  // author: testAdmin.id, /* This is set in database through createPageSpec.js */
   url: 'test_page_url',
   title: 'test page title',
   text: 'test page text'
 };
 
 const testPage2 = {
+  /* author: testTranslator.id, */
   url: 'test_page_url_two',
   title: 'test page title two',
   text: 'test page text two'
 };
 
 const testPage3 = {
+  /* author: testTranslator2.id, */
   url: 'test   page   url   three',
   title: 'test page title three',
   text: 'test page text three'

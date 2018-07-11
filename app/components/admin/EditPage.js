@@ -17,7 +17,9 @@ class EditPage extends Component {
   }
 
   componentWillMount () {
-    this.props.dispatch(getPageAdminAsync(this.props.params.pageUrl))
+    this.props.userInfo.promise.then(() =>
+      this.props.dispatch(getPageAdminAsync(this.props.params.pageUrl))
+    )
   }
 
   resetChanges (event) {
@@ -99,7 +101,8 @@ class EditPage extends Component {
 
 function select (state, ownProps) {
   return {
-    pageInfo: state.admin.editPage
+    pageInfo: state.admin.editPage,
+    userInfo: state.auth.userInfo
   }
 }
 

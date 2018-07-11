@@ -56,8 +56,9 @@ const findByUrl = pageUrl => new Promise((resolve, reject) => {
   })
 });
 
-const create = (payload) => validator.create(payload)
+const create = (payload, userId) => validator.create(payload)
   .then(page => {
+    page.author = userId;
     page.url = page.url.replace(/ /g, '_');
     logger.info(`Page adding: url "${page.url}"`);
     return page
