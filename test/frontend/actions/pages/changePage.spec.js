@@ -30,7 +30,7 @@ describe('admin/changePage actions', () => {
 
   const cutPageForEdit = (page) => ({ title: page.title, text: page.text })
 
-  describe('function getPageAdminAsync', () => {
+  describe('function getPageForEditAsync', () => {
     const getTest = (page, role, id, noPermission) => {
       const pageUrl = page.url;
       const pageSource = Object.assign({}, page, { text: 'some old text' });
@@ -57,11 +57,10 @@ describe('admin/changePage actions', () => {
 
       const responseSuccess = newPage;
       let actions = [
-        { type: types.GET_PAGE_ADMIN_START },
+        { type: types.GET_PAGE_FOR_EDIT_START },
         {
-          type: types.GET_PAGE_ADMIN_END,
+          type: types.GET_PAGE_FOR_EDIT_END,
           noPermission: noPermission,
-          dataSource: newPage,
           data: cutPageForEdit(newPage),
           url: pageUrl
         }
@@ -79,7 +78,7 @@ describe('admin/changePage actions', () => {
             editPage: {...startState.admin.editPage,
               noPermission: noPermission,
               sourcePending: false,
-              dataSource: newPage,
+              dataSource: cutPageForEdit(newPage),
               data: cutPageForEdit(newPage),
               url: pageUrl
             }
@@ -95,9 +94,8 @@ describe('admin/changePage actions', () => {
       let actionsFail = [
         actions[0],
         {
-          type: types.GET_PAGE_ADMIN_END,
+          type: types.GET_PAGE_FOR_EDIT_END,
           data: pageSource,
-          dataSource: pageSource,
           noPermission: true,
           url: pageUrl
         },
@@ -137,7 +135,7 @@ describe('admin/changePage actions', () => {
           .reply(200, responseSuccess);
 
         return store
-          .dispatch(actionsCreators.getPageAdminAsync(pageUrl))
+          .dispatch(actionsCreators.getPageForEditAsync(pageUrl))
           .then(() => expect(store.getActions()).toEqual(actions));
       });
 
@@ -154,7 +152,7 @@ describe('admin/changePage actions', () => {
           .reply(200, responseFail);
 
         return store
-          .dispatch(actionsCreators.getPageAdminAsync(pageUrl))
+          .dispatch(actionsCreators.getPageForEditAsync(pageUrl))
           .then(() => expect(store.getActions()).toEqual(actionsFail));
       });
     };
@@ -172,15 +170,13 @@ describe('admin/changePage actions', () => {
   describe('function updatePageAsync', () => {
 
     const pageUrl = pages[0].url;
-    const initSource = Object.assign({}, pages[0]);
-    const initPage = Object.assign({}, cutPageForEdit(initSource));
-    const newSource = {...initSource, text: 'some new text' };
-    const newPage = Object.assign({}, cutPageForEdit(newSource));
+    const initPage = Object.assign({}, cutPageForEdit(pages[0]));
+    const newPage = Object.assign({}, cutPageForEdit(pages[0]), { text: 'new-new text' });
 
     const startState = {...initialState,
       admin: {...initialState.admin,
         editPage: {...initialState.admin.editPage,
-          dataSource: initSource,
+          dataSource: initPage,
           data: newPage,
           url: pageUrl
         }
@@ -189,13 +185,13 @@ describe('admin/changePage actions', () => {
 
     const responseSuccess = {
       success: true,
-      page: newSource
+      page: newPage
     };
     const actions = [
-      { type: types.UPDATE_ADMIN_PAGE_START },
+      { type: types.UPDATE_PAGE_START },
       {
-        type: types.UPDATE_ADMIN_PAGE_END,
-        dataSource: newSource,
+        type: types.UPDATE_PAGE_END,
+        dataSource: newPage,
         data: newPage
       },
       getNotificationAction('EditPage.success', null)
@@ -212,7 +208,7 @@ describe('admin/changePage actions', () => {
         admin: {...startState.admin,
           editPage: {...startState.admin.editPage,
             pending: false,
-            dataSource: newSource
+            dataSource: newPage
           }
         }
       }
@@ -226,8 +222,8 @@ describe('admin/changePage actions', () => {
     const actionsFail = [
       actions[0],
       {
-        type: types.UPDATE_ADMIN_PAGE_END,
-        dataSource: initSource,
+        type: types.UPDATE_PAGE_END,
+        dataSource: initPage,
         data: newPage
       },
       getNotificationAction(null, responseFail)
@@ -238,7 +234,6 @@ describe('admin/changePage actions', () => {
         admin: {...startState.admin,
           editPage: {...startState.admin.editPage,
             pending: false,
-            dataSource: initSource,
             data: newPage
           }
         }

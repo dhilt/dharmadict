@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {Link} from 'react-router'
 import {FormattedMessage} from 'react-intl'
 
-import {changePageData, resetPage, getPageAdminAsync, updatePageAsync, removePageAsync} from '../../actions/pages/changePage'
+import {changePageData, resetPage, getPageForEditAsync, updatePageAsync, removePageAsync} from '../../actions/pages/changePage'
 
 class EditPage extends Component {
 
@@ -18,7 +18,7 @@ class EditPage extends Component {
 
   componentWillMount () {
     this.props.userInfo.promise.then(() =>
-      this.props.dispatch(getPageAdminAsync(this.props.params.pageUrl))
+      this.props.dispatch(getPageForEditAsync(this.props.params.pageUrl))
     )
   }
 

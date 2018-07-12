@@ -30,10 +30,10 @@ import {
   GET_PAGE_START,
   GET_PAGE_END,
   CHANGE_PAGE_DATA,
-  GET_PAGE_ADMIN_START,
-  GET_PAGE_ADMIN_END,
-  UPDATE_ADMIN_PAGE_START,
-  UPDATE_ADMIN_PAGE_END,
+  GET_PAGE_FOR_EDIT_START,
+  GET_PAGE_FOR_EDIT_END,
+  UPDATE_PAGE_START,
+  UPDATE_PAGE_END,
   DELETE_PAGE_START,
   DELETE_PAGE_END,
   CREATE_PAGE_START,
@@ -115,7 +115,7 @@ function reducer(state = initialState, action = {}) {
           }
         }
       }
-    case GET_PAGE_ADMIN_START:
+    case GET_PAGE_FOR_EDIT_START:
       return {...state,
         admin: {...state.admin,
           editPage: {...state.admin.editPage,
@@ -123,19 +123,19 @@ function reducer(state = initialState, action = {}) {
           }
         }
       }
-    case GET_PAGE_ADMIN_END:
+    case GET_PAGE_FOR_EDIT_END:
       return {...state,
         admin: {...state.admin,
           editPage: {...state.admin.editPage,
             noPermission: action.noPermission,
             sourcePending: false,
-            dataSource: action.dataSource,
+            dataSource: action.data,
             data: action.data,
             url: action.url
           }
         }
       }
-    case UPDATE_ADMIN_PAGE_START:
+    case UPDATE_PAGE_START:
       return {...state,
         admin: {...state.admin,
           editPage: {...state.admin.editPage,
@@ -143,7 +143,7 @@ function reducer(state = initialState, action = {}) {
           }
         }
       }
-    case UPDATE_ADMIN_PAGE_END:
+    case UPDATE_PAGE_END:
       return {...state,
         admin: {...state.admin,
           editPage: {...state.admin.editPage,

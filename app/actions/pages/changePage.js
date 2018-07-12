@@ -2,10 +2,10 @@ import asyncRequest from '../../helpers/remote'
 import notifier from '../../helpers/notifier'
 
 import {
-  UPDATE_ADMIN_PAGE_START,
-  UPDATE_ADMIN_PAGE_END,
-  GET_PAGE_ADMIN_START,
-  GET_PAGE_ADMIN_END,
+  UPDATE_PAGE_START,
+  UPDATE_PAGE_END,
+  GET_PAGE_FOR_EDIT_START,
+  GET_PAGE_FOR_EDIT_END,
   CHANGE_PAGE_DATA,
   DELETE_PAGE_START,
   DELETE_PAGE_END
@@ -13,10 +13,10 @@ import {
 
 const cutPageForEdit = (page) => ({ title: page.title, text: page.text })
 
-export function getPageAdminAsync(url) {
+export function getPageForEditAsync(url) {
   return (dispatch, getState) => {
     dispatch({
-      type: GET_PAGE_ADMIN_START
+      type: GET_PAGE_FOR_EDIT_START
     })
     const { dataSource } = getState().admin.editPage
     const query = `pages?url=${url}`
@@ -24,9 +24,8 @@ export function getPageAdminAsync(url) {
       const currentUser = getState().auth.userInfo.data
       const noPermission = error ? true : !(currentUser.role === 'admin' || currentUser.id === data.author)
       dispatch({
-        type: GET_PAGE_ADMIN_END,
+        type: GET_PAGE_FOR_EDIT_END,
         data: error ? dataSource : cutPageForEdit(data),
-        dataSource: error ? dataSource : data,
         noPermission,
         url
       })
@@ -62,15 +61,15 @@ export function resetPage() {
 export function updatePageAsync() {
   return (dispatch, getState) => {
     dispatch({
-      type: UPDATE_ADMIN_PAGE_START
+      type: UPDATE_PAGE_START
     })
     const {url, data, dataSource} = getState().admin.editPage
     const query = `pages?url=${url}`
     return asyncRequest(query, 'patch', {payload: data}, (_data, error) => {
       dispatch({
-        type: UPDATE_ADMIN_PAGE_END,
-        data: error ? data : cutPageForEdit(_data.page),
-        dataSource: error ? dataSource : _data.page
+        type: UPDATE_PAGE_END,
+        dataSource: error ? dataSource : data,
+        data: error ? data : cutPageForEdit(_data.page)
       })
       dispatch(notifier.onResponse('EditPage.success', error))
     })
