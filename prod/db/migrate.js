@@ -12,7 +12,8 @@ let scripts = [
   '20180521121500_add_descriptions_for_akt_and_mk.js',
   '20180521123200_reset_don_translations.js',*/
   '20180708230000_add_bem.js',
-  '20180710110000_add_pages_translation_features_and_parallel_texts.js'
+  '20180710110000_add_pages_translation_features_and_parallel_texts.js',
+  '20180712090000_add_author_to_all_pages.js'
 ];
 
 console.log('DB migration scripts running');
