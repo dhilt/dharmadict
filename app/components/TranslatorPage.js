@@ -4,7 +4,7 @@ import {Link} from 'react-router'
 import {FormattedMessage} from 'react-intl'
 
 import lang from '../helpers/lang'
-import {getTranslatorInfoAsync} from '../actions/translators'
+import {getTranslatorInfoAsync, getPagesByTranslator} from '../actions/translators'
 
 class TranslatorPage extends Component {
 
@@ -14,9 +14,12 @@ class TranslatorPage extends Component {
 
   componentWillMount () {
     this.props.dispatch(getTranslatorInfoAsync(this.props.params.id))
+    this.props.dispatch(getPagesByTranslator(this.props.params.id))
   }
 
-  getTranslatorContent (translator) {
+  getTranslatorContent (translatorInfo) {
+    const translator = translatorInfo.data
+    const pagesInfo = translatorInfo.pages
     const translatorId = this.props.params.id // translator.id ??
     const userData = this.props.userInfo.data
     const {languages, userLanguage} = this.props.common
@@ -32,6 +35,31 @@ class TranslatorPage extends Component {
           <Link data-test-id="desc" to={translator.description}>
             <FormattedMessage id="TranslatorPage.link_to_desc_page" />
           </Link>
+        }
+        {
+          !pagesInfo.pending && !pagesInfo.error && (
+            <div>
+              <br />
+              <h4>
+                <FormattedMessage id="TranslatorPage.articles_of_translator" />
+              </h4>
+              {
+                pagesInfo.data.length === 0 ? (
+                  <h5>
+                    <FormattedMessage id="TranslatorPage.articles_not_found" />
+                  </h5>
+                ) : (
+                  <ul data-test-id="listOfPages">
+                    {
+                      pagesInfo.data.map((page, i) =>
+                        <li key={i}><Link to={`/pages/${page.url}`}>{page.title}</Link></li>
+                      )
+                    }
+                  </ul>
+                )
+              }
+            </div>
+          )
         }
         {
           userData && userData.role === 'admin' &&
@@ -64,7 +92,7 @@ class TranslatorPage extends Component {
       translatorInfo.error ? (
         <h3 data-test-id="error">{translatorInfo.error.message}</h3>
       ) :
-        this.getTranslatorContent(translatorInfo.data)
+        this.getTranslatorContent(translatorInfo)
     )
     return (
       <div data-test-id="TranslatorPage">{content}</div>

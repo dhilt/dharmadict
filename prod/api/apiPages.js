@@ -15,6 +15,11 @@ const search = (req, res) =>
     .then(result => res.json(result))
     .catch(error => sendApiError(res, 'Search error.', error));
 
+const searchByAuthorId = (req, res) =>
+  pagesController.findByAuthorId(req.query.authorId)
+    .then(result => res.json(result))
+    .catch(error => sendApiError(res, 'Search error.', error));
+
 const create = (req, res) =>
   doAuthorize(req)
     .then(user => checkPermissionByIdAndRole(user, [
@@ -52,6 +57,7 @@ const remove = (req, res) =>
     .catch(error => sendApiError(res, 'Can\'t delete page.', error));
 
 module.exports = {
+  searchByAuthorId,
   searchAll,
   search,
   create,

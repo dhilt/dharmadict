@@ -70,6 +70,11 @@ let initialState = {
       role: '',
       language: '',
       description: ''
+    },
+    pages: {
+      data: [],
+      pending: false,
+      error: null
     }
   },
   translator: {

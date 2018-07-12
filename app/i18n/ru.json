@@ -12,6 +12,8 @@
   "Home.search_title_h1": " в русских переводах",
 
   "TranslatorPage.link_to_desc_page": "Страница переводчика",
+  "TranslatorPage.articles_of_translator": "Статьи переводчика",
+  "TranslatorPage.articles_not_found": "Статьи не найдены",
   "TranslatorPage.translations_language": "Язык переводов: {translatorLanguage}",
   "TranslatorPage.button_edit": "Редактировать",
   "TranslatorPage.loading_text": "Идет загрузка...",

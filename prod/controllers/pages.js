@@ -56,6 +56,39 @@ const findByUrl = pageUrl => new Promise((resolve, reject) => {
   })
 });
 
+const findByAuthorId = author => new Promise((resolve, reject) => {
+  logger.info(`Find page by authorId ${author}`);
+  if (!author || typeof author !== 'string') {
+    return reject(new ApiError('Invalid author id'))
+  }
+  elasticClient.search({
+    index: config.db.index,
+    type: 'pages',
+    body: {
+      query: {
+        match: {
+          author: author
+        }
+      }
+    }
+  }).then(response => {
+    let pages = response.hits.hits;
+    if (!pages && !Array.isArray(pages)) {
+      reject(new ApiError('Database error', 404))
+    } else {
+      pages = pages.map(page => ({
+        url: page._id,
+        title: page._source.title
+      }));
+      resolve(pages)
+    }
+  },
+  error => {
+    logger.error(error);
+    reject(new ApiError('Database error'))
+  })
+});
+
 const create = (payload, userId) => validator.create(payload)
   .then(page => {
     page.author = userId;
@@ -133,6 +166,7 @@ const removeByUrl = pageUrl => findByUrl(pageUrl)
 
 module.exports = {
   removeByUrl,
+  findByAuthorId,
   findByUrl,
   findAll,
   create,

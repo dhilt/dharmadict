@@ -44,6 +44,8 @@ import {
   SET_LANGUAGE,
   GET_TRANSLATOR_INFO_START,
   GET_TRANSLATOR_INFO_END,
+  GET_TRANSLATOR_PAGES_START,
+  GET_TRANSLATOR_PAGES_END,
   GET_ADMIN_USER_DATA_START,
   GET_ADMIN_USER_DATA_END,
   UPDATE_ADMIN_USER_DATA_START,
@@ -422,6 +424,26 @@ function reducer(state = initialState, action = {}) {
           pending: false,
           error: action.error,
           data: action.result
+        }
+      }
+    case GET_TRANSLATOR_PAGES_START:
+      return {...state,
+        translatorInfo: {...state.translatorInfo,
+          pages: {...state.translatorInfo.pages,
+            pending: true,
+            error: null,
+            data: []
+          }
+        }
+      }
+    case GET_TRANSLATOR_PAGES_END:
+      return {...state,
+        translatorInfo: {...state.translatorInfo,
+          pages: {...state.translatorInfo.pages,
+            pending: false,
+            error: action.error,
+            data: action.payload
+          }
         }
       }
     case GET_ADMIN_USER_DATA_START:
