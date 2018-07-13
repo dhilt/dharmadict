@@ -1,13 +1,23 @@
 const config = require('../config.js');
 const { Pages } = require('./helpers/pages.js');
 
-const translatorsWithExistedPage = [
-  'DON', 'HOP', 'MM', 'RAG', 'ZAG', 'ZAG', // AK url equal AKT user id
-  'TENGON', 'AK', 'AAT', 'MK', 'BEM' // AAT - this user doesnt exist
-];
+// [pageId]: [userId]
+const pagesMap = {
+  'TENGON': 'TENGON',
+  'ZAG': 'ZAG',
+  'MM': 'MM',
+  'AK': 'AKT',
+  'AKT': 'AKT',
+  'RAG': 'RAG',
+  'BEM': 'BEM',
+  'HOP': 'HOP',
+  'AAT': 'AKT',
+  'MK': 'MK',
+  'DON': 'DON',
+}
 
 const script = {
-  title: `Add field 'author' for all pages`,
+  title: `Add author to all pages`,
   run: (client) =>
     client.search({
       index: config.index,
@@ -18,19 +28,11 @@ const script = {
       const pages = result.hits.hits;
       const newPages = [];
       pages.forEach(page => {
-        if (translatorsWithExistedPage.find(e => e === page['_id'])) {
-          newPages.push({
-            ...page['_source'],
-            author: page['_id'],
-            url: page['_id']
-          })
-        } else {
-          newPages.push({
-            ...page['_source'],
-            author: 'ADMIN',
-            url: page['_id']
-          })
-        }
+        newPages.push({
+          ...page['_source'],
+          author: pagesMap[page['_id']] || 'ADMIN',
+          url: page['_id']
+        })
       })
       return Promise.resolve(newPages)
     })

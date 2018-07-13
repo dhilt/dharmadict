@@ -16,7 +16,8 @@ const findAll = () => new Promise((resolve, reject) => {
     } else {
       pages = pages.map(page => ({
         url: page._id,
-        title: page._source.title
+        title: page._source.title,
+        author: page._source.author
       }));
       resolve(pages)
     }
