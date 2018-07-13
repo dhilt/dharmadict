@@ -48,6 +48,8 @@
 
 .nav a {
   color: #fff;
+  letter-spacing: -0.25px;
+  float: left;
 }
 
 .nav a:hover {

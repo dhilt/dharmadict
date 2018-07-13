@@ -9,6 +9,8 @@ const pkg = require('../package.json');
 function makeWebpackConfig(options) {
   let entry, plugins, devtool;
 
+  console.log('Running Webpack in ' + (options.prod ? 'prod' : 'dev') + ' mode');
+
   if (options.prod) {
     entry = {
       app: path.resolve(__dirname, '../app/index.js'),
@@ -117,7 +119,7 @@ function makeWebpackConfig(options) {
       ]
     },
     target: 'web',
-    stats: false,
+    stats: !options.prod,
     progress: true
   }
 }
