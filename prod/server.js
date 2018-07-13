@@ -33,7 +33,6 @@ app.post('/api/terms', apiTerms.create);
 app.patch('/api/terms', apiTerms.edit);
 app.get('/api/terms', apiTerms.search);
 
-app.get('/api/pagesByAuthor', apiPages.searchByAuthorId);
 app.get('/api/pages/all', apiPages.searchAll);
 app.get('/api/pages', apiPages.search);
 app.post('/api/pages', apiPages.create);

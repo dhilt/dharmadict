@@ -11,10 +11,10 @@
   "Home.search_title_em": "Буддийская терминология",
   "Home.search_title_h1": " в русских переводах",
 
-  "TranslatorPage.link_to_desc_page": "Страница переводчика",
+  "TranslatorPage.link_to_desc_page": "Перейти",
+  "TranslatorPage.no_info": "Нет информации",
   "TranslatorPage.articles_of_translator": "Статьи переводчика",
-  "TranslatorPage.articles_not_found": "Статьи не найдены",
-  "TranslatorPage.translations_language": "Язык переводов: {translatorLanguage}",
+  "TranslatorPage.translations_language": "Язык переводов",
   "TranslatorPage.button_edit": "Редактировать",
   "TranslatorPage.loading_text": "Идет загрузка...",
   "TranslatorPage.request_error": "Ошибка запроса",

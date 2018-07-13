@@ -11,10 +11,10 @@
   "Home.search_title_em": "Buddhist terminology",
   "Home.search_title_h1": " in russian translations",
 
-  "TranslatorPage.link_to_desc_page": "Translator's Page",
+  "TranslatorPage.link_to_desc_page": "Go to page",
+  "TranslatorPage.no_info": "No information",
   "TranslatorPage.articles_of_translator": "Translator's articles",
-  "TranslatorPage.articles_not_found": "Articles not found",
-  "TranslatorPage.translations_language": "Translations language: {translatorLanguage}",
+  "TranslatorPage.translations_language": "Translations language",
   "TranslatorPage.button_edit": "Edit",
   "TranslatorPage.loading_text": "Loading...",
   "TranslatorPage.request_error": "The request failed",

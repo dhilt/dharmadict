@@ -21,17 +21,6 @@ describe('Update page API', () => {
     )
   });
 
-  it('should not update page (invalid url, page does not exist)', (done) => {
-    request.patch(getQuery(''))
-      .end(
-        (err, res) => {
-          assert.notEqual(res.body.success, true);
-          assert.equal(res.body.message, "Can't update page. Invalid url");
-          done();
-        }
-      )
-  });
-
   it('should not update page (auth needed)', (done) => {
     request.patch(getQuery(testPage.url))
       .end(

@@ -79,6 +79,7 @@ const findByAuthorId = author => new Promise((resolve, reject) => {
     } else {
       pages = pages.map(page => ({
         url: page._id,
+        author: page._source.author,
         title: page._source.title
       }));
       resolve(pages)

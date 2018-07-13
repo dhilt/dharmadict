@@ -65,17 +65,13 @@ let initialState = {
   translatorInfo: {
     pending: false,
     error: null,
-    data: {
+    translator: {
       name: '',
       role: '',
       language: '',
       description: ''
     },
-    pages: {
-      data: [],
-      pending: false,
-      error: null
-    }
+    pages: []
   },
   translator: {
     editPassword: {

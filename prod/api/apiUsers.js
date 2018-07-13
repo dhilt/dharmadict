@@ -3,6 +3,7 @@ const sendApiError = require('../helper').sendApiError;
 const logger = require('../log/logger');
 
 const usersController = require('../controllers/users');
+const pagesController = require('../controllers/pages');
 
 const userInfo = (req, res) =>
   doAuthorize(req)
@@ -14,7 +15,14 @@ const userInfo = (req, res) =>
 
 const getById = (req, res) =>
   usersController.findById(req.params.id)
-    .then(user => res.json({success: true, user: usersController.getUserInfo(user)}))
+    .then(user => pagesController.findByAuthorId(user.id)
+      .then(pages => Promise.resolve({ user, pages }))
+    )
+    .then(({ user, pages }) => res.json({
+      user: usersController.getUserInfo(user),
+      pages: pages,
+      success: true
+    }))
     .catch(error => sendApiError(res, 'Can\'t find user.', error));
 
 const create = (req, res) =>

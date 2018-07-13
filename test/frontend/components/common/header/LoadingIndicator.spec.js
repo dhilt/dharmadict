@@ -4,9 +4,9 @@ const {expect} = require('chai');
 const {
   getAppPath,
   shallow
-} = require('../../_shared.js');
+} = require('../../../_shared.js');
 
-const LoadingIndicator = require(getAppPath(2) + 'components/common/LoadingIndicator').default;
+const LoadingIndicator = require(getAppPath(3) + 'components/common/header/LoadingIndicator').default;
 
 describe('Testing LoadingIndicator Component.', () => {
 

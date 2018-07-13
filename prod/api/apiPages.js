@@ -15,49 +15,43 @@ const search = (req, res) =>
     .then(result => res.json(result))
     .catch(error => sendApiError(res, 'Search error.', error));
 
-const searchByAuthorId = (req, res) =>
-  pagesController.findByAuthorId(req.query.authorId)
-    .then(result => res.json(result))
-    .catch(error => sendApiError(res, 'Search error.', error));
-
 const create = (req, res) =>
   doAuthorize(req)
     .then(user => checkPermissionByIdAndRole(user, [
-      {role: 'translator', requiredId: null},
-      {role: 'admin', requiredId: null}
+      {role: 'translator'}, {role: 'admin'}
     ]))
     .then((user) => pagesController.create(req.body.payload, user.id))
     .then(page => res.json({success: true, page}))
     .catch(error => sendApiError(res, 'Can\'t create new page.', error));
 
 const edit = (req, res) =>
-  pagesController.findByUrl(req.query.url)
-    .then(page => doAuthorize(req)
-      .then(user => checkPermissionByIdAndRole(user, [
-        {role: 'translator', requiredId: page.author},
-        {role: 'admin', requiredId: null}
-      ]))
-      .then(() => pagesController.update(req.query.url, req.body.payload))
-      .then(page => res.json({success: true, page}))
-      .catch(error => sendApiError(res, 'Can\'t update page.', error))
+  doAuthorize(req)
+    .then(user => pagesController.findByUrl(req.query.url)
+      .then(page => Promise.resolve({ page, user }))
     )
+    .then(({ page, user }) => checkPermissionByIdAndRole(user, [
+      {role: 'translator', requiredId: page.author},
+      {role: 'admin'}
+    ]))
+    .then(() => pagesController.update(req.query.url, req.body.payload))
+    .then(page => res.json({success: true, page}))
     .catch(error => sendApiError(res, 'Can\'t update page.', error));
 
-const remove = (req, res) =>
-  pagesController.findByUrl(req.query.url)
-    .then(page => doAuthorize(req)
-      .then(user => checkPermissionByIdAndRole(user, [
-        {role: 'translator', requiredId: page.author},
-        {role: 'admin', requiredId: null}
-      ]))
-      .then(() => pagesController.removeByUrl(req.query.url))
-      .then(() => res.json({success: true}))
-      .catch(error => sendApiError(res, 'Can\'t delete page.', error))
+const remove = (req, res) => {
+  doAuthorize(req)
+    .then(user => pagesController.findByUrl(req.query.url)
+      .then(page => Promise.resolve({ page, user }))
     )
-    .catch(error => sendApiError(res, 'Can\'t delete page.', error));
+    .then(({ page, user }) => checkPermissionByIdAndRole(user, [
+      {role: 'translator', requiredId: page.author},
+      {role: 'admin'}
+    ]))
+    .then(() => pagesController.removeByUrl(req.query.url))
+    .then(() => res.json({success: true}))
+    .catch(error => sendApiError(res, 'Can\'t delete page.', error))
+};
 
 module.exports = {
-  searchByAuthorId,
   searchAll,
   search,
   create,

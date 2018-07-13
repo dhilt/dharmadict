@@ -17,10 +17,8 @@ describe('Testing TranslatorPage Component.', () => {
 
   const props = {
     translatorInfo: {...initialState.translatorInfo,
-      data: defaultTranslator,
-      pages: {...initialState.pagesInfo,
-        data: ['page1', 'page2', 'page3']
-      }
+      translator: defaultTranslator,
+      pages: ['page1', 'page2', 'page3']
     },
     userInfo: {...initialState.auth.userInfo,
       data: defaultUser
@@ -80,7 +78,7 @@ describe('Testing TranslatorPage Component.', () => {
 
     wrapper.setProps({...props,
       translatorInfo: {...props.translatorInfo,
-        data: {...props.translatorInfo.data,
+        translator: {...props.translatorInfo.data,
           description: null
         }
       }
@@ -90,9 +88,7 @@ describe('Testing TranslatorPage Component.', () => {
 
     wrapper.setProps({...props,
       translatorInfo: {...props.translatorInfo,
-        pages: {...props.translatorInfo.pages,
-          data: []
-        }
+        pages: []
       }
     });
     expect(wrapper.find(pagesListId).exists()).equal(false);

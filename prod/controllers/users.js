@@ -29,19 +29,12 @@ const isAdmin = (user) => {
 };
 
 const checkPermissionByIdAndRole = (user, permissions) => {
-  const isUserValid = permissions.find((permission) => {
-    if (user.role === permission.role && (
-      permission.requiredId === user.id ||
-      permission.requiredId === null
-    )) {
-      return true
-    }
-  });
-  if (isUserValid) {
-    return Promise.resolve(user);
-  } else {
-    return Promise.reject(new ApiError('Unpermitted success', 302));
+  if (permissions.some(p =>
+    user.role === p.role && (!p.requiredId || p.requiredId === user.id)
+  )) {
+    return Promise.resolve(user)
   }
+  return Promise.reject(new ApiError('Unpermitted success', 302));
 };
 
 const isSameUser = (reqId, user) => {

@@ -16,7 +16,7 @@ const Header = require(getAppPath(2) + 'components/common/Header').default.Wrapp
 describe('Testing Header Component.', () => {
 
   const props = {
-    data: initialState.auth,
+    authData: initialState.auth,
     common: {
       userLanguage: defaultLang
     }
@@ -48,8 +48,8 @@ describe('Testing Header Component.', () => {
     expect(wrapper.find(loggedInId).exists()).equal(false);
 
     wrapper.setProps({...props,
-      data: {...props.data,
-        userInfo: {...props.data.userInfo,
+      authData: {...props.authData,
+        userInfo: {...props.authData.userInfo,
           pending: true
         }
       }
@@ -63,9 +63,9 @@ describe('Testing Header Component.', () => {
     expect(wrapper.find(loggedInId).exists()).equal(false);
 
     wrapper.setProps({...props,
-      data: {...props.data,
+      authData: {...props.authData,
         loggedIn: true,
-        userInfo: {...props.data.userInfo,
+        userInfo: {...props.authData.userInfo,
           data: defaultUser
         }
       }
@@ -81,9 +81,9 @@ describe('Testing Header Component.', () => {
     expect(wrapper.find(notLoggedInId).exists()).equal(false);
 
     wrapper.setProps({...props,
-      data: {...props.data,
+      authData: {...props.authData,
         loggedIn: true,
-        userInfo: {...props.data.userInfo,
+        userInfo: {...props.authData.userInfo,
           data: admin
         }
       }
@@ -98,9 +98,9 @@ describe('Testing Header Component.', () => {
     expect(wrapper.find(notLoggedInId).exists()).equal(false);
 
     wrapper.setProps({...props,
-      data: {...props.data,
+      authData: {...props.authData,
         loggedIn: true,
-        userInfo: {...props.data.userInfo,
+        userInfo: {...props.authData.userInfo,
           data: defaultTranslator
         }
       }
