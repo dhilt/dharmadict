@@ -15,10 +15,8 @@ import {
   doLogout
 } from '../../actions/auth'
 
-import LoadingButton from './LoadingButton'
 import Languages from './header/Languages'
-import Logout from './header/Logout'
-import Login from './header/Login'
+import AuthLinks from './header/AuthLinks'
 
 class Header extends Component {
 
@@ -34,48 +32,8 @@ class Header extends Component {
   }
 
   render () {
+    const {authData} = this.props
     const {languages, userLanguage} = this.props.common
-    const userInfo = !this.props.data.userInfo.pending ? this.props.data.userInfo.data : {}
-
-    const languagesDropdown = (
-      <Languages data-test-id="Header.Languages"
-                 doChangeLang={this.doChangeLang}
-                 current={userLanguage}
-                 languages={languages}
-      />
-    )
-
-    const authLinks = this.props.data.loggedIn ? (
-      <div data-test-id="Header.navButtons-loggedIn">
-        <Link data-test-id="Header.link_to_user"
-          to={`/translator/${userInfo.id}`}>
-          {userInfo.name}
-        </Link>
-        <Logout data-test-id="Header.Logout" doLogout={this.doLogout} />
-        {
-          userInfo.role === 'admin' ?
-            <Link data-test-id="Header.link_create_term" to={`/newTerm`}>
-              <FormattedMessage id="Header.create_new_term" />
-            </Link> : ( null )
-        }
-      </div>
-    ) : (
-      <div data-test-id="Header.navButtons-notLoggedIn">
-        {this.props.data.userInfo.pending ?
-          <LoadingButton data-test-id="Header.LoadingButton" className="btn--nav" />
-          :
-          <Login data-test-id="Header.Login"
-            onPasswordChange={this.onPasswordChange}
-            onLoginChange={this.onLoginChange}
-            closeModal={this.closeModal}
-            openModal={this.openModal}
-            doLogin={this.doLogin}
-            data={this.props.data}
-          />
-        }
-      </div>
-    )
-
     return (
       <div data-test-id="Header" className="nav">
         <div className="nav__wrapper">
@@ -93,8 +51,21 @@ class Header extends Component {
               <FormattedMessage id="Header.parallel_texts" />
             </Link>
           </div>
-          {authLinks}
-          {languagesDropdown}
+          <AuthLinks
+            data={authData}
+            onPasswordChange={this.onPasswordChange}
+            onLoginChange={this.onLoginChange}
+            closeModal={this.closeModal}
+            openModal={this.openModal}
+            doLogout={this.doLogout}
+            doLogin={this.doLogin}
+          />
+          <Languages
+            data-test-id="Header.Languages"
+            doChangeLang={this.doChangeLang}
+            current={userLanguage}
+            languages={languages}
+          />
         </div>
       </div>
     )
@@ -104,7 +75,7 @@ class Header extends Component {
     this.props.dispatch(doLogout())
   }
 
-  openModal (event) {
+  openModal () {
     this.props.dispatch(openLoginModal())
   }
 
@@ -120,7 +91,7 @@ class Header extends Component {
     this.props.dispatch(changePasswordString(value))
   }
 
-  doLogin (event) {
+  doLogin () {
     this.props.dispatch(doLoginAsync())
   }
 
@@ -138,7 +109,7 @@ Header.propTypes = {
 
 function select (state) {
   return {
-    data: state.auth,
+    authData: state.auth,
     common: state.common
   }
 }

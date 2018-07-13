@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import {FormattedMessage} from 'react-intl'
-import {Alert, Button} from 'react-bootstrap'
+import {Alert} from 'react-bootstrap'
 
 import {removeNotify} from '../../actions/notifier'
 
@@ -36,7 +36,7 @@ class Notifier extends Component {
   }
 }
 
-function select (state, ownProps) {
+function select (state) {
   return {
     notifications: state.notifications.list
   }
