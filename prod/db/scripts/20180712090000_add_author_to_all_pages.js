@@ -19,24 +19,45 @@ const pagesMap = {
 const script = {
   title: `Add author to all pages`,
   run: (client) =>
-    client.search({
+    client.indices.putMapping({
       index: config.index,
-      size: config.size.max,
-      type: 'pages'
+      type: "pages",
+      body: {
+        "properties": {
+          "url": {
+            "type": "keyword"
+          },
+          "title": {
+            "type": "text"
+          },
+          "author": {
+            "type": "text"
+          },
+          "text": {
+            "type": "text"
+          }
+        }
+      }
     })
-    .then(result => {
-      const pages = result.hits.hits;
-      const newPages = [];
-      pages.forEach(page => {
-        newPages.push({
-          ...page['_source'],
-          author: pagesMap[page['_id']] || 'ADMIN',
-          url: page['_id']
-        })
+    .then(() =>
+      client.search({
+        index: config.index,
+        size: config.size.max,
+        type: 'pages'
       })
-      return Promise.resolve(newPages)
-    })
-    .then(pages => Pages.run(client, pages))
+      .then(result => {
+        const pages = result.hits.hits;
+        const newPages = [];
+        pages.forEach(page => {
+          newPages.push({
+            ...page['_source'],
+            author: pagesMap[page['_id']] || 'ADMIN',
+            url: page['_id']
+          })
+        })
+        return Promise.resolve(newPages)
+      })
+      .then(pages => Pages.run(client, pages)))
 };
 
 module.exports = script;
