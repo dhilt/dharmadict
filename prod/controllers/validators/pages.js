@@ -13,11 +13,17 @@ const update = (pageUrl, payload) => new Promise(resolve => {
   if (!payload.hasOwnProperty('text')) {
     throw new ApiError('No text')
   }
+  if (!payload.hasOwnProperty('bio')) {
+    throw new ApiError('No bio')
+  }
   if (typeof payload.title !== 'string') {
     throw new ApiError('Invalid title')
   }
   if (typeof payload.text !== 'string') {
     throw new ApiError('Invalid text')
+  }
+  if (typeof payload.bio !== 'boolean') {
+    throw new ApiError('Invalid bio')
   }
   resolve({pageUrl, payload})
 });
@@ -35,6 +41,9 @@ const create = (payload) => new Promise(resolve => {
   if (!payload.hasOwnProperty('text')) {
     throw new ApiError('No text')
   }
+  if (!payload.hasOwnProperty('bio')) {
+    throw new ApiError('No bio')
+  }
   if (typeof payload.url !== 'string') {
     throw new ApiError('Invalid url')
   }
@@ -46,6 +55,9 @@ const create = (payload) => new Promise(resolve => {
   }
   if (typeof payload.text !== 'string') {
     throw new ApiError('Invalid text')
+  }
+  if (typeof payload.bio !== 'boolean') {
+    throw new ApiError('Invalid bio')
   }
   resolve(payload)
 });

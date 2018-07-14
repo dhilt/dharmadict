@@ -13,6 +13,15 @@ const userInfo = (req, res) =>
     })
     .catch(error => sendApiError(res, 'Can\'t get user info.', error));
 
+const getAll = (req, res) =>
+  doAuthorize(req)
+    .then(user => usersController.checkPermissionByIdAndRole(user, [
+      { role: 'admin' }
+    ]))
+    .then(() => usersController.findAll())
+    .then(users => res.json({success: true, users}))
+    .catch(error => sendApiError(res, 'Can\'t find users.', error));
+
 const getById = (req, res) =>
   usersController.findById(req.params.id)
     .then(user => pagesController.findByAuthorId(user.id)
@@ -50,6 +59,7 @@ module.exports = {
   editPassword,
   userInfo,
   getById,
+  getAll,
   create,
   edit
 };

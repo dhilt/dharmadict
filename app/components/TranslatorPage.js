@@ -18,7 +18,8 @@ class TranslatorPage extends Component {
 
   getTranslatorContent (translatorInfo) {
     const translator = translatorInfo.translator
-    const pages = translatorInfo.pages
+    const bioPages = translatorInfo.pages.filter(e => e.bio)
+    const defaultPages = translatorInfo.pages.filter(e => !e.bio)
     const translatorId = this.props.params.id // translator.id ??
     const userData = this.props.userInfo.data
     const {languages, userLanguage} = this.props.common
@@ -26,33 +27,36 @@ class TranslatorPage extends Component {
     return (
       <div data-test-id="translatorContent">
         <h3 data-test-id="name">{translator.name}</h3>
+
         <h4><FormattedMessage id="TranslatorPage.translations_language" /></h4>
         <h5>{translatorLang ? translatorLang['name_' + lang.get(userLanguage)] : ''}</h5>
 
-        <h4>Биография переводчика</h4>
+        <h4><FormattedMessage id="TranslatorPage.translator_biography_title" /></h4>
         {
-          translator.description ? (
-            <Link data-test-id="desc" to={translator.description}>
-              <FormattedMessage id="TranslatorPage.link_to_desc_page" />
-            </Link>
-          ) : (
+          bioPages.length === 0 ? (
             <h5>
               <FormattedMessage id="TranslatorPage.no_info" />
             </h5>
+          ) : (
+            <ul data-test-id="listOfBioPages">
+              {bioPages.map((page, i) =>
+                <li key={i}><Link to={`/pages/${page.url}`}>{page.title}</Link></li>
+              )}
+            </ul>
           )
         }
         <h4>
           <FormattedMessage id="TranslatorPage.articles_of_translator" />
         </h4>
         {
-          pages.length === 0 ? (
+          defaultPages.length === 0 ? (
             <h5>
               <FormattedMessage id="TranslatorPage.no_info" />
             </h5>
           ) : (
-            <ul data-test-id="listOfPages">
+            <ul data-test-id="listOfDefaultPages">
               {
-                pages.map((page, i) =>
+                defaultPages.map((page, i) =>
                   <li key={i}><Link to={`/pages/${page.url}`}>{page.title}</Link></li>
                 )
               }

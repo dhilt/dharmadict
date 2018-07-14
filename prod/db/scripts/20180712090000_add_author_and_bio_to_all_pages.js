@@ -17,7 +17,7 @@ const pagesMap = {
 }
 
 const script = {
-  title: `Add author to all pages`,
+  title: `Add author and bio to all pages`,
   run: (client) =>
     client.indices.putMapping({
       index: config.index,
@@ -30,11 +30,14 @@ const script = {
           "title": {
             "type": "text"
           },
+          "text": {
+            "type": "text"
+          },
           "author": {
             "type": "text"
           },
-          "text": {
-            "type": "text"
+          "bio": {
+            "type": "boolean"
           }
         }
       }
@@ -52,6 +55,7 @@ const script = {
           newPages.push({
             ...page['_source'],
             author: pagesMap[page['_id']] || 'ADMIN',
+            bio: !!Object.keys(pagesMap).find(userId => userId === page['_id']),
             url: page['_id']
           })
         })

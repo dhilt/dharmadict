@@ -28,7 +28,12 @@ describe('admin/changePage actions', () => {
     expect(reducer()).toEqual(initialState);
   });
 
-  const cutPageForEdit = (page) => ({ title: page.title, text: page.text })
+  const cutPageForEdit = page => ({
+    author: page.author,
+    title: page.title,
+    text: page.text,
+    bio: page.bio
+  })
 
   describe('function getPageForEditAsync', () => {
     const getTest = (page, role, id, noPermission) => {

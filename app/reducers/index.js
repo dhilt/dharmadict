@@ -49,6 +49,8 @@ import {
   UPDATE_ADMIN_USER_DATA_START,
   UPDATE_ADMIN_USER_DATA_END,
   CHANGE_ADMIN_USER_DATA,
+  GET_ALL_USERS_START,
+  GET_ALL_USERS_END,
   SET_ADMIN_USER_ID,
   UPDATE_ADMIN_USER_PASSWORD_START,
   UPDATE_ADMIN_USER_PASSWORD_END,
@@ -470,6 +472,24 @@ function reducer(state = initialState, action = {}) {
         admin: {...state.admin,
           editUser: {...state.admin.editUser,
             data: action.payload
+          }
+        }
+      }
+    case GET_ALL_USERS_START:
+      return {...state,
+        admin: {...state.admin,
+          usersList: {...state.admin.usersList,
+            pending: true
+          }
+        }
+      }
+    case GET_ALL_USERS_END:
+      return {...state,
+        admin: {...state.admin,
+          usersList: {...state.admin.usersList,
+            data: action.payload,
+            error: action.error,
+            pending: false
           }
         }
       }

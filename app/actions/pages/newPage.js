@@ -29,6 +29,7 @@ export function changePageData(_data) {
     const {data} = getState().admin.newPage
     const payload = {
       url: _data.hasOwnProperty('url') ? _data.url : data.url,
+      bio: _data.hasOwnProperty('bio') ? _data.bio : data.bio,
       title: _data.hasOwnProperty('title') ? _data.title : data.title,
       text: _data.hasOwnProperty('text') ? _data.text : data.text
     }

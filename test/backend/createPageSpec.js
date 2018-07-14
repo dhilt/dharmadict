@@ -133,6 +133,21 @@ describe('Create page API', () => {
       )
   });
 
+  it('should not create new page (no bio)', (done) => {
+    let page = copyPage(testPage);
+    delete page.bio;
+    request.post('/api/pages')
+      .set('Authorization', 'Bearer ' + testAdmin.token)
+      .send({payload: page})
+      .end(
+        (err, res) => {
+          assert.notEqual(res.body.success, true);
+          assert.equal(res.body.message, "Can't create new page. No bio");
+          done();
+        }
+      )
+  });
+
   it('should not create new page (invalid url)', (done) => {
     let page = copyPage(testPage);
     page.url = { key: 'value' };
@@ -173,6 +188,21 @@ describe('Create page API', () => {
         (err, res) => {
           assert.notEqual(res.body.success, true);
           assert.equal(res.body.message, "Can't create new page. Invalid text");
+          done();
+        }
+      )
+  });
+
+  it('should not create new page (invalid bio)', (done) => {
+    let page = copyPage(testPage);
+    page.bio = 'string';
+    request.post('/api/pages')
+      .set('Authorization', 'Bearer ' + testAdmin.token)
+      .send({payload: page})
+      .end(
+        (err, res) => {
+          assert.notEqual(res.body.success, true);
+          assert.equal(res.body.message, "Can't create new page. Invalid bio");
           done();
         }
       )

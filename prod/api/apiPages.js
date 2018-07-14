@@ -26,30 +26,31 @@ const create = (req, res) =>
 
 const edit = (req, res) =>
   doAuthorize(req)
-    .then(user => pagesController.findByUrl(req.query.url)
-      .then(page => Promise.resolve({ page, user }))
-    )
-    .then(({ page, user }) => checkPermissionByIdAndRole(user, [
-      {role: 'translator', requiredId: page.author},
-      {role: 'admin'}
-    ]))
-    .then(() => pagesController.update(req.query.url, req.body.payload))
-    .then(page => res.json({success: true, page}))
+    .then(user => {
+      pagesController.findByUrl(req.query.url)
+        .then((page) => checkPermissionByIdAndRole(user, [
+          {role: 'translator', requiredId: page.author},
+          {role: 'admin'}
+        ]))
+        .then(() => pagesController.update(req.query.url, req.body.payload, user.role))
+        .then(page => res.json({success: true, page}))
+        .catch(error => sendApiError(res, 'Can\'t update page.', error));
+    })
     .catch(error => sendApiError(res, 'Can\'t update page.', error));
 
-const remove = (req, res) => {
+const remove = (req, res) =>
   doAuthorize(req)
-    .then(user => pagesController.findByUrl(req.query.url)
-      .then(page => Promise.resolve({ page, user }))
-    )
-    .then(({ page, user }) => checkPermissionByIdAndRole(user, [
-      {role: 'translator', requiredId: page.author},
-      {role: 'admin'}
-    ]))
-    .then(() => pagesController.removeByUrl(req.query.url))
-    .then(() => res.json({success: true}))
-    .catch(error => sendApiError(res, 'Can\'t delete page.', error))
-};
+    .then(user => {
+      pagesController.findByUrl(req.query.url)
+        .then((page) => checkPermissionByIdAndRole(user, [
+          {role: 'translator', requiredId: page.author},
+          {role: 'admin'}
+        ]))
+        .then(() => pagesController.removeByUrl(req.query.url))
+        .then(() => res.json({success: true}))
+        .catch(error => sendApiError(res, 'Can\'t delete page.', error));
+    })
+    .catch(error => sendApiError(res, 'Can\'t delete page.', error));
 
 module.exports = {
   searchAll,

@@ -131,6 +131,21 @@ describe('Update page API', () => {
       )
   });
 
+  it('should not update page (no bio)', (done) => {
+    let page = copyPage(testPage);
+    delete page.bio;
+    request.patch(getQuery(testPage.url))
+      .set('Authorization', 'Bearer ' + testAdmin.token)
+      .send({payload: page})
+      .end(
+        (err, res) => {
+          assert.notEqual(res.body.success, true);
+          assert.equal(res.body.message, "Can't update page. No bio");
+          done();
+        }
+      )
+  });
+
   it('should not update page (invalid title)', (done) => {
     let page = copyPage(testPage);
     page.title = { key: 'not a string' };
@@ -161,6 +176,21 @@ describe('Update page API', () => {
       )
   });
 
+  it('should not update page (invalid bio)', (done) => {
+    let page = copyPage(testPage);
+    page.bio = { key: 'not a boolean' };
+    request.patch(getQuery(testPage.url))
+      .set('Authorization', 'Bearer ' + testAdmin.token)
+      .send({payload: page})
+      .end(
+        (err, res) => {
+          assert.notEqual(res.body.success, true);
+          assert.equal(res.body.message, "Can't update page. Invalid bio");
+          done();
+        }
+      )
+  });
+
   it('should not update page (try find nonexistent page url)', (done) => {
     request.patch(getQuery('nonexistent'))
       .set('Authorization', 'Bearer ' + testAdmin.token)
@@ -179,6 +209,7 @@ describe('Update page API', () => {
     it('should update page and return page with new data', (done) => {
       page.title = page.title + ' new words in title for ' + page.url;
       page.text = page.text + ' new words in text for ' + page.url;
+      page.bio = !page.bio;
       request.patch(getQuery(page.url))
         .set('Authorization', 'Bearer ' + user.token)
         .send({payload: page})
@@ -188,6 +219,7 @@ describe('Update page API', () => {
             assert.equal(res.body.page.url, page.url);
             assert.equal(res.body.page.title, page.title);
             assert.equal(res.body.page.text, page.text);
+            assert.equal(res.body.page.bio, page.bio);
             if (user.role === 'translator') {
               assert.equal(res.body.page.author, user.id)
             }
@@ -205,4 +237,40 @@ describe('Update page API', () => {
 
   shouldLogIn(testTranslator2);
   updatePage(testPage3, testTranslator2);
+
+  shouldLogIn(testAdmin);
+
+  it('should update page author (admin only)', (done) => {
+    const page = Object.assign({}, testPage);
+    const newAuthor = 'some new author';
+    page.author = newAuthor;
+    request.patch(getQuery(page.url))
+      .set('Authorization', 'Bearer ' + testAdmin.token)
+      .send({payload: page})
+      .end(
+        (err, res) => {
+          assert.equal(res.body.success, true);
+          assert.equal(res.body.page.author, newAuthor);
+          done();
+        }
+      )
+  });
+
+  shouldLogIn(testTranslator);
+
+  it('should not update page author (admin only)', (done) => {
+    const page = Object.assign({}, testPage2);
+    const newAuthor = 'some new author';
+    page.author = newAuthor;
+    request.patch(getQuery(page.url))
+      .set('Authorization', 'Bearer ' + testTranslator.token)
+      .send({payload: page})
+      .end(
+        (err, res) => {
+          assert.equal(res.body.success, true);
+          assert.equal(res.body.page.author === newAuthor, false);
+          done();
+        }
+      )
+  });
 });

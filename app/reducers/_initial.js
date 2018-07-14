@@ -83,14 +83,24 @@ let initialState = {
     }
   },
   admin: {
+    usersList: {
+      data: [],
+      error: null,
+      pending: false
+    },
     editPage: {
       url: '',
+      author: '',
       dataSource: {
+        author: '',
         title: '',
+        bio: false,
         text: ''
       },
       data: {
+        author: '',
         title: '',
+        bio: false,
         text: ''
       },
       noPermission: true,
@@ -101,6 +111,7 @@ let initialState = {
     newPage: {
       data: {
         url: '',
+        bio: false,
         title: '',
         text: ''
       },
@@ -117,13 +128,11 @@ let initialState = {
       id: '',
       dataSource: {
         name: '',
-        language: '',
-        description: ''
+        language: ''
       },
       data: {
         name: '',
-        language: '',
-        description: ''
+        language: ''
       },
       sourcePending: false,
       pending: false,

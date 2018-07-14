@@ -11,7 +11,7 @@
   "Home.search_title_em": "Buddhist terminology",
   "Home.search_title_h1": " in russian translations",
 
-  "TranslatorPage.link_to_desc_page": "Go to page",
+  "TranslatorPage.translator_biography_title": "Translator's biography",
   "TranslatorPage.no_info": "No information",
   "TranslatorPage.articles_of_translator": "Translator's articles",
   "TranslatorPage.translations_language": "Translations language",
@@ -69,8 +69,6 @@
   "EditUser.title_edit_user": "Editing a user {id}",
   "EditUser.name_of_translator": "Name of the translator",
   "EditUser.language_of_translations": "Language of translations",
-  "EditUser.description_of_translator": "Translator's Page",
-  "EditUser.description_of_translator_help": "(for example /pages/DON)",
   "EditUser.link_reset_password": "Change password",
   "EditUser.success": "User information was successfully changed",
 
@@ -92,6 +90,7 @@
   "EditPage.edit_title": "Title of page",
   "EditPage.edit_text": "Text of page",
   "EditPage.title_of_page": "Edit page",
+  "EditPage.its_biography_page": "It's biography page",
   "EditPage.successful_remove": "The page was successfully deleted",
 
   "NewPage.success": "New page was successfully created",

@@ -15,7 +15,6 @@ class EditUser extends Component {
 
   constructor(props) {
     super(props)
-    this.changeUserDescription = this.changeUserDescription.bind(this)
     this.changeUserLanguage = this.changeUserLanguage.bind(this)
     this.sendNewUserData = this.sendNewUserData.bind(this)
     this.changeUserName = this.changeUserName.bind(this)
@@ -34,10 +33,6 @@ class EditUser extends Component {
     this.props.dispatch(changeAdminUserData({language}))
   }
 
-  changeUserDescription (event) {
-    this.props.dispatch(changeAdminUserData({description: event.target.value}))
-  }
-
   resetChanges (event) {
     event.preventDefault()
     this.props.dispatch(resetAdminUserData())
@@ -52,7 +47,7 @@ class EditUser extends Component {
     const {id} = this.props.params
     const {languages, userLanguage} = this.props.common
     const {sourcePending, pending} = this.props.editUser
-    const {name, language, description} = this.props.editUser.data
+    const {name, language} = this.props.editUser.data
     return !sourcePending ? (
       <div data-test-id="EditUser">
         <form className="col-md-6">
@@ -84,20 +79,6 @@ class EditUser extends Component {
                 </label>
               </div>
             )}
-          </div>
-          <div className="form-group">
-            <label>
-              <FormattedMessage id="EditUser.description_of_translator" />
-              <span className="label-help">
-                <FormattedMessage id="EditUser.description_of_translator_help" />
-              </span>
-            </label>
-            <input data-test-id="textarea-desc"
-              onChange={this.changeUserDescription}
-              className="form-control"
-              value={description}
-              type="text"
-            />
           </div>
           <div className="form-group">
             <button data-test-id="button-save"

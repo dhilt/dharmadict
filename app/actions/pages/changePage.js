@@ -11,7 +11,12 @@ import {
   DELETE_PAGE_END
 } from '../_constants'
 
-const cutPageForEdit = (page) => ({ title: page.title, text: page.text })
+const cutPageForEdit = page => ({
+  author: page.author,
+  title: page.title,
+  text: page.text,
+  bio: page.bio
+})
 
 export function getPageForEditAsync(url) {
   return (dispatch, getState) => {
@@ -39,8 +44,10 @@ export function changePageData(_data) {
   return (dispatch, getState) => {
     const {data} = getState().admin.editPage
     const payload = {
+      author: _data.hasOwnProperty('author') ? _data.author : data.author,
       title: _data.hasOwnProperty('title') ? _data.title : data.title,
-      text: _data.hasOwnProperty('text') ? _data.text : data.text
+      text: _data.hasOwnProperty('text') ? _data.text : data.text,
+      bio: _data.hasOwnProperty('bio') ? _data.bio : data.bio
     }
     dispatch({
       type: CHANGE_PAGE_DATA,

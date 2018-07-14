@@ -16,6 +16,7 @@ const findAll = () => new Promise((resolve, reject) => {
     } else {
       pages = pages.map(page => ({
         url: page._id,
+        bio: page._source.bio,
         title: page._source.title,
         author: page._source.author
       }));
@@ -79,6 +80,7 @@ const findByAuthorId = author => new Promise((resolve, reject) => {
     } else {
       pages = pages.map(page => ({
         url: page._id,
+        bio: page._source.bio,
         author: page._source.author,
         title: page._source.title
       }));
@@ -127,9 +129,12 @@ const create = (payload, userId) => validator.create(payload)
   })
   .then(pageUrl => findByUrl(pageUrl));
 
-const update = (pageUrl, payload) => validator.update(pageUrl, payload)
+const update = (pageUrl, payload, userRole) => validator.update(pageUrl, payload)
   .then(() => findByUrl(pageUrl))
   .then(page => {
+    if (userRole !== 'admin') {
+      delete payload.author
+    }
     let result = Object.assign({}, page, payload);
     delete result.url;
     return result

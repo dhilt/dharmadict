@@ -23,8 +23,10 @@ describe('Testing EditPage Component.', () => {
   };
 
   const editPageId = '[data-test-id="EditPage"]';
+  const inputAuthorId = '[data-test-id="input-author-0"]';
   const inputTitleId = '[data-test-id="input-title"]';
   const inputTextId = '[data-test-id="input-text"]';
+  const inputBioId = '[data-test-id="input-bio"]';
   const btnSaveId = '[data-test-id="btn-save"]';
   const btnResetId = '[data-test-id="btn-reset"]';
   const btnDeleteId = '[data-test-id="btn-delete"]';
@@ -33,8 +35,10 @@ describe('Testing EditPage Component.', () => {
   it('should correctly handle actions on the component', () => {
     const spyComponentWillMount = sinon.spy(EditPage.prototype, 'componentWillMount');
     const spySendNewPageData = sinon.spy(EditPage.prototype, 'sendNewPageData');
+    const spyChangePageAuthor = sinon.spy(EditPage.prototype, 'changePageAuthor');
     const spyChangePageTitle = sinon.spy(EditPage.prototype, 'changePageTitle');
     const spyChangePageText = sinon.spy(EditPage.prototype, 'changePageText');
+    const spyChangePageBio = sinon.spy(EditPage.prototype, 'changePageBio');
     const spyResetChanges = sinon.spy(EditPage.prototype, 'resetChanges');
     const spyDeletePage = sinon.spy(EditPage.prototype, 'deletePage');
 
@@ -48,6 +52,7 @@ describe('Testing EditPage Component.', () => {
 
     wrapper.find(inputTitleId).simulate('change', defaultEvent);
     wrapper.find(inputTextId).simulate('change', defaultEvent);
+    wrapper.find(inputBioId).simulate('change', defaultEvent);
     wrapper.find(btnDeleteId).simulate('click', defaultEvent);
     wrapper.find(btnResetId).simulate('click', defaultEvent);
     wrapper.find(btnSaveId).simulate('click', defaultEvent);
@@ -56,8 +61,24 @@ describe('Testing EditPage Component.', () => {
     expect(spySendNewPageData.calledOnce).equal(true);
     expect(spyChangePageTitle.calledOnce).equal(true);
     expect(spyChangePageText.calledOnce).equal(true);
+    expect(spyChangePageBio.calledOnce).equal(true);
     expect(spyResetChanges.calledOnce).equal(true);
     expect(spyDeletePage.calledOnce).equal(true);
+
+    wrapper.setProps({...props,
+      userInfo: {...props.userInfo,
+        data: {...props.userInfo.data,
+          role: 'admin'
+        }
+      },
+      usersList: {
+        data: [
+          {name: 'user 1', id: 'user-id-1'}
+        ]
+      }
+    });
+    wrapper.find(inputAuthorId).simulate('select');
+    expect(spyChangePageAuthor.calledOnce).equal(true);
 
     wrapper.unmount();
   });
@@ -66,6 +87,17 @@ describe('Testing EditPage Component.', () => {
     const wrapper = shallow(<EditPage {...props} />);
 
     expect(wrapper.find(editPageId).exists()).equal(true);
+
+    [true, false].forEach(isChecked => {
+      wrapper.setProps({...props,
+        pageInfo: {...props.pageInfo,
+          data: {...props.pageInfo.data,
+            bio: isChecked
+          }
+        }
+      });
+      expect(wrapper.find(inputBioId).prop('checked')).equal(isChecked);
+    });
 
     const editedText = props.pageInfo.data.text + ' new';
     wrapper.setProps({...props,

@@ -30,8 +30,10 @@ describe('Search page API (find all pages)', () => {
           assert.equal(foundPage.hasOwnProperty('url'), true);
           assert.equal(foundPage.hasOwnProperty('title'), true);
           assert.equal(foundPage.hasOwnProperty('text'), false);
+          assert.equal(foundPage.hasOwnProperty('bio'), true);
           assert.equal(foundPage.url, page.url);
           assert.equal(foundPage.title, page.title);
+          assert.equal(foundPage.bio, page.bio);
         });
         done();
       }
@@ -85,6 +87,7 @@ describe('Search page API (find one page by url)', () => {
           assert.equal(res.body.url, _testPage.url);
           assert.equal(res.body.title, _testPage.title);
           assert.equal(res.body.text, _testPage.text);
+          assert.equal(res.body.bio, _testPage.bio);
           done();
         }
       )

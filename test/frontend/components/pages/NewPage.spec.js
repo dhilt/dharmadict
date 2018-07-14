@@ -20,6 +20,7 @@ describe('Testing NewPage Component.', () => {
   const inputUrlId = '[data-test-id="input-url"]';
   const inputTitleId = '[data-test-id="input-title"]';
   const inputTextId = '[data-test-id="input-text"]';
+  const inputBioId = '[data-test-id="input-bio"]';
   const btnSaveId = '[data-test-id="btn-save"]';
   const linkCancelId = '[data-test-id="link-cancel"]';
 
@@ -28,6 +29,7 @@ describe('Testing NewPage Component.', () => {
     const spyChangePageTitle = sinon.spy(NewPage.prototype, 'changePageTitle');
     const spyChangePageText = sinon.spy(NewPage.prototype, 'changePageText');
     const spyChangePageUrl = sinon.spy(NewPage.prototype, 'changePageUrl');
+    const spyChangePageBio = sinon.spy(NewPage.prototype, 'changePageBio');
 
     const defaultEvent = {
       preventDefault: () => null,
@@ -40,12 +42,14 @@ describe('Testing NewPage Component.', () => {
     wrapper.find(inputTitleId).simulate('change', defaultEvent);
     wrapper.find(inputTextId).simulate('change', defaultEvent);
     wrapper.find(inputUrlId).simulate('change', defaultEvent);
+    wrapper.find(inputBioId).simulate('change', defaultEvent);
     wrapper.find(btnSaveId).simulate('click', defaultEvent);
 
     expect(spySendNewPageData.calledOnce).equal(true);
     expect(spyChangePageTitle.calledOnce).equal(true);
     expect(spyChangePageText.calledOnce).equal(true);
     expect(spyChangePageUrl.calledOnce).equal(true);
+    expect(spyChangePageBio.calledOnce).equal(true);
 
     wrapper.unmount();
   });
@@ -84,6 +88,15 @@ describe('Testing NewPage Component.', () => {
       }
     });
     expect(wrapper.find(inputTitleId).prop('value')).equal(editedTitle);
+
+    wrapper.setProps({...props,
+      pageInfo: {...props.pageInfo,
+        data: {...props.pageInfo.data,
+          bio: true
+        }
+      }
+    });
+    expect(wrapper.find(inputBioId).prop('checked')).equal(true);
 
     wrapper.unmount();
   });

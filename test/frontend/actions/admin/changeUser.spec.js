@@ -164,7 +164,6 @@ describe('admin/changeUser actions', () => {
 
     testChangeAdminUserData('name', 'new name of user/translator');
     testChangeAdminUserData('language', 'new language of user/translator');
-    testChangeAdminUserData('description', 'new description of user/translator');
   });
 
   describe('function updateAdminUserDataAsync', () => {
@@ -283,8 +282,7 @@ describe('admin/changeUser actions', () => {
 
     const userData = getUserData(translators[0]);
     const changedUserData = {...userData,
-      name: 'New name of user/translator',
-      description: 'New description'
+      name: 'New name of user/translator'
     };
 
     const startState = {...initialState,

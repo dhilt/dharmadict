@@ -18,7 +18,11 @@ describe('Testing TranslatorPage Component.', () => {
   const props = {
     translatorInfo: {...initialState.translatorInfo,
       translator: defaultTranslator,
-      pages: ['page1', 'page2', 'page3']
+      pages: [
+        {title: 'page1', bio: false},
+        {title: 'page2', bio: true},
+        {title: 'page3', bio: false}
+      ]
     },
     userInfo: {...initialState.auth.userInfo,
       data: defaultUser
@@ -35,12 +39,12 @@ describe('Testing TranslatorPage Component.', () => {
   };
 
   const translatorId = '[data-test-id="changeTranslatorPassword"]';
-  const pagesListId = '[data-test-id="listOfPages"]';
+  const defaultPagesListId = '[data-test-id="listOfDefaultPages"]';
+  const bioPagesListId = '[data-test-id="listOfBioPages"]';
   const contentId = '[data-test-id="translatorContent"]';
   const adminId = '[data-test-id="changeUser"]';
   const pendingId = '[data-test-id="pending"]';
   const errorId = '[data-test-id="error"]';
-  const descId = '[data-test-id="desc"]';
   const nameId = '[data-test-id="name"]';
 
   it('should show component correctly', () => {
@@ -58,7 +62,8 @@ describe('Testing TranslatorPage Component.', () => {
       }
     });
     expect(wrapper.find(pendingId).exists()).equal(true);
-    expect(wrapper.find(pagesListId).exists()).equal(false);
+    expect(wrapper.find(defaultPagesListId).exists()).equal(false);
+    expect(wrapper.find(bioPagesListId).exists()).equal(false);
     expect(wrapper.find(translatorId).exists()).equal(false);
     expect(wrapper.find(contentId).exists()).equal(false);
     expect(wrapper.find(adminId).exists()).equal(false);
@@ -70,7 +75,8 @@ describe('Testing TranslatorPage Component.', () => {
       }
     });
     expect(wrapper.find(errorId).exists()).equal(true);
-    expect(wrapper.find(pagesListId).exists()).equal(false);
+    expect(wrapper.find(defaultPagesListId).exists()).equal(false);
+    expect(wrapper.find(bioPagesListId).exists()).equal(false);
     expect(wrapper.find(translatorId).exists()).equal(false);
     expect(wrapper.find(contentId).exists()).equal(false);
     expect(wrapper.find(pendingId).exists()).equal(false);
@@ -78,29 +84,20 @@ describe('Testing TranslatorPage Component.', () => {
 
     wrapper.setProps({...props,
       translatorInfo: {...props.translatorInfo,
-        translator: {...props.translatorInfo.data,
-          description: null
-        }
-      }
-    });
-    expect(wrapper.find(descId).exists()).equal(false);
-    expect(wrapper.find(pagesListId).exists()).equal(true);
-
-    wrapper.setProps({...props,
-      translatorInfo: {...props.translatorInfo,
         pages: []
       }
     });
-    expect(wrapper.find(pagesListId).exists()).equal(false);
+    expect(wrapper.find(defaultPagesListId).exists()).equal(false);
+    expect(wrapper.find(bioPagesListId).exists()).equal(false);
 
     wrapper.setProps(props);
     expect(wrapper.find(contentId).exists()).equal(true);
-    expect(wrapper.find(pagesListId).exists()).equal(true);
+    expect(wrapper.find(defaultPagesListId).exists()).equal(true);
+    expect(wrapper.find(bioPagesListId).exists()).equal(true);
     expect(wrapper.find(translatorId).exists()).equal(false);
     expect(wrapper.find(pendingId).exists()).equal(false);
     expect(wrapper.find(errorId).exists()).equal(false);
     expect(wrapper.find(adminId).exists()).equal(false);
-    expect(wrapper.find(descId).exists()).equal(true);
     expect(wrapper.find(nameId).text()).equal(defaultTranslator.name);
 
     wrapper.setProps({...props,

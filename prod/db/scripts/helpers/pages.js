@@ -13,7 +13,8 @@ class Pages {
           body: {
             title: page.title,
             text: page.text,
-            author: page.hasOwnProperty('author') ? page.author : 'ADMIN'
+            author: page.hasOwnProperty('author') ? page.author : 'ADMIN',
+            bio: page.hasOwnProperty('bio') ? page.bio : false
           }
         })
         .then(() => process.done(), error => process.done(error || true))

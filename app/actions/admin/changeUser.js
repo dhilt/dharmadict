@@ -11,8 +11,7 @@ import {
 
 export const getEditableUserDataObject = (user) => ({
   name: user.name,
-  language: user.language,
-  description: user.description
+  language: user.language
 })
 
 export function getAdminUserDataAsync(userId) {
@@ -39,8 +38,7 @@ export function changeAdminUserData(_data) {
     const {data} = getState().admin.editUser
     const payload = {
       name: _data.hasOwnProperty('name') ? _data.name : data.name,
-      language: _data.hasOwnProperty('language') ? _data.language : data.language,
-      description: _data.hasOwnProperty('description') ? _data.description : data.description
+      language: _data.hasOwnProperty('language') ? _data.language : data.language
     }
     dispatch({
       type: CHANGE_ADMIN_USER_DATA,

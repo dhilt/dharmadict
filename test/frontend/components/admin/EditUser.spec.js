@@ -31,7 +31,6 @@ describe('Testing EditUser Component.', () => {
     }
   };
 
-  const inputDescId = '[data-test-id="textarea-desc"]';
   const inputLangId = '[data-test-id="input-lang"]';
   const inputNameId = '[data-test-id="input-name"]';
   const radioLangId = '[data-test-id="radio-lang"]';
@@ -40,7 +39,6 @@ describe('Testing EditUser Component.', () => {
 
   it('should correctly handle actions on the component', () => {
     const spyWillMount = sinon.spy(EditUser.prototype, 'componentWillMount');
-    const spyChangeDesc = sinon.spy(EditUser.prototype, 'changeUserDescription');
     const spyChangeLang = sinon.spy(EditUser.prototype, 'changeUserLanguage');
     const spyChangeName = sinon.spy(EditUser.prototype, 'changeUserName');
     const spyBtnSave = sinon.spy(EditUser.prototype, 'sendNewUserData');
@@ -58,13 +56,11 @@ describe('Testing EditUser Component.', () => {
     for (let i = 0; i < langLength; i++) {
       wrapper.find(inputLangId).at(i).simulate('change');
     }
-    wrapper.find(inputDescId).simulate('change', defaultEvent);
     wrapper.find(inputNameId).simulate('change', defaultEvent);
     wrapper.find(btnResetId).simulate('click', defaultEvent);
     wrapper.find(btnSaveId).simulate('click', defaultEvent);
 
     expect(spyChangeLang.callCount).equal(langLength);
-    expect(spyChangeDesc.calledOnce).equal(true);
     expect(spyChangeName.calledOnce).equal(true);
     expect(spyWillMount.calledOnce).equal(true);
     expect(spyBtnReset.calledOnce).equal(true);
@@ -98,16 +94,6 @@ describe('Testing EditUser Component.', () => {
       }
     });
     expect(wrapper.find(inputNameId).prop('value')).equal(editedName);
-
-    const editedDesc = defaultTranslator.description + ' new';
-    wrapper.setProps({...props,
-      editUser: {...props.editUser,
-        data: {...props.editUser.data,
-          description: editedDesc
-        }
-      }
-    });
-    expect(wrapper.find(inputDescId).prop('value')).equal(editedDesc);
 
     languages.forEach((lang, index) => {
       wrapper.setProps({...props,

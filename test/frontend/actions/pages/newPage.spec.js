@@ -137,13 +137,16 @@ describe('admin/newPage actions', () => {
     const testChangePageData = (key, value) => {
       let pageData = page;
 
-      const stateStart = {...initialState,
+      let stateStart = {...initialState,
         admin: {...initialState.admin,
           newPage: {...initialState.newPage,
             data: pageData
           }
         }
       };
+      if (key === 'bio') {
+        stateStart.admin.newPage.data.bio = !value
+      }
 
       const stateEnd = Object.assign({}, stateStart);
       stateEnd.admin.newPage.data[key] = value;
@@ -167,5 +170,7 @@ describe('admin/newPage actions', () => {
     testChangePageData('url', 'new url of page');
     testChangePageData('title', 'new title of page');
     testChangePageData('text', 'new text of page');
+    // testChangePageData('bio', true);
+    testChangePageData('bio', false);
   });
 });
