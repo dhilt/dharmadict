@@ -2,7 +2,7 @@ const config = require('../config.js');
 const { Pages } = require('./helpers/pages.js');
 
 // [pageId]: [userId]
-const pagesMap = {
+const bioPagesMap = {
   'TENGON': 'TENGON',
   'ZAG': 'ZAG',
   'MM': 'MM',
@@ -54,8 +54,8 @@ const script = {
         pages.forEach(page => {
           newPages.push({
             ...page['_source'],
-            author: pagesMap[page['_id']] || 'ADMIN',
-            bio: !!Object.keys(pagesMap).find(userId => userId === page['_id']),
+            author: bioPagesMap[page['_id']] || 'ADMIN',
+            bio: Object.keys(bioPagesMap).some(pageId => pageId === page['_id']),
             url: page['_id']
           })
         })

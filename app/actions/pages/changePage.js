@@ -1,3 +1,5 @@
+import {browserHistory} from 'react-router'
+
 import asyncRequest from '../../helpers/remote'
 import notifier from '../../helpers/notifier'
 
@@ -23,10 +25,11 @@ export function getPageForEditAsync(url) {
     dispatch({
       type: GET_PAGE_FOR_EDIT_START
     })
-    const { dataSource } = getState().admin.editPage
+    const state = getState()
+    const { dataSource } = state.admin.editPage
     const query = `pages?url=${url}`
     return asyncRequest(query, 'get', false, (data, error) => {
-      const currentUser = getState().auth.userInfo.data
+      const currentUser = state.auth.userInfo.data
       const noPermission = error ? true : !(currentUser.role === 'admin' || currentUser.id === data.author)
       dispatch({
         type: GET_PAGE_FOR_EDIT_END,
@@ -42,12 +45,17 @@ export function getPageForEditAsync(url) {
 
 export function changePageData(_data) {
   return (dispatch, getState) => {
-    const {data} = getState().admin.editPage
+    const state = getState()
+    const {data} = state.admin.editPage
+    const user = state.auth.userInfo.data
     const payload = {
       author: _data.hasOwnProperty('author') ? _data.author : data.author,
       title: _data.hasOwnProperty('title') ? _data.title : data.title,
       text: _data.hasOwnProperty('text') ? _data.text : data.text,
       bio: _data.hasOwnProperty('bio') ? _data.bio : data.bio
+    }
+    if (user && user.role === 'admin' && payload.author === user.id) {
+      payload.bio = false
     }
     dispatch({
       type: CHANGE_PAGE_DATA,
@@ -95,6 +103,7 @@ export function removePageAsync() {
         type: DELETE_PAGE_END
       })
       dispatch(notifier.onResponse('EditPage.successful_remove', error))
+      browserHistory.push('/pages')
     })
   }
 }

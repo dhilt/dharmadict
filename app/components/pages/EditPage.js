@@ -23,9 +23,6 @@ class EditPage extends Component {
   componentWillMount () {
     this.props.userInfo.promise.then(() => {
       this.props.dispatch(getPageForEditAsync(this.props.params.pageUrl))
-      if (this.props.userInfo.data.role === 'admin' && this.props.usersList.data.length === 0) {
-        this.props.dispatch(getAllUsersAsync())
-      }
     })
   }
 
@@ -61,9 +58,11 @@ class EditPage extends Component {
   }
 
   render () {
-    const { userInfo, usersList } = this.props
+    const { userInfo, userList } = this.props
     const { noPermission, sourcePending, removePending, pending } = this.props.pageInfo
     const { author, title, text, bio } = this.props.pageInfo.data
+    const authorUser = userList.find(u => u.id === author)
+    const authorName = authorUser ? authorUser.name : ''
     return !sourcePending && !noPermission && (
       <div data-test-id="EditPage">
         <form className="col-md-6">
@@ -77,28 +76,6 @@ class EditPage extends Component {
               type="text"
             />
           </div>
-          <div className="form-check">
-            <input data-test-id="input-bio"
-              onChange={this.changePageBio}
-              checked={bio || false}
-              type="checkbox"
-            />
-            <label><FormattedMessage id="EditPage.its_biography_page" /></label>
-          </div>
-          {
-            userInfo.data && userInfo.data.role === 'admin' && (
-              <ButtonToolbar>
-                <SplitButton id="authorId" title={author}>
-                  {usersList.data.map((user, i) =>
-                    <MenuItem data-test-id={`input-author-${i}`} key={i}
-                      onSelect={() => this.changePageAuthor(user.id)}
-                    >{user.name}, id: {user.id}
-                    </MenuItem>
-                  )}
-                </SplitButton>
-              </ButtonToolbar>
-            )
-          }
           <div className="form-group">
             <label><FormattedMessage id="EditPage.edit_text" /></label>
             <textarea data-test-id="input-text"
@@ -107,6 +84,35 @@ class EditPage extends Component {
               value={text || ''}
               type="text"
             />
+          </div>
+          <div className="form-group">
+            <label><FormattedMessage id="EditPage.page_author" /></label>
+            {
+              userList.length && userInfo.data.role === 'admin' && (
+                <ButtonToolbar>
+                  <SplitButton id="authorId" title={authorName}>
+                    {userList.map((user, i) =>
+                      <MenuItem data-test-id={`input-author-${i}`} key={i}
+                                onSelect={() => this.changePageAuthor(user.id)}
+                      >{user.name} ({user.id})
+                      </MenuItem>
+                    )}
+                  </SplitButton>
+                </ButtonToolbar>
+              )
+            }
+          </div>
+          <div className="form-group">
+            <label><FormattedMessage id="EditPage.biography_page" /></label>
+            <div>
+              <input data-test-id="input-bio"
+                     className="bio-checkbox"
+                     onChange={this.changePageBio}
+                     checked={bio}
+                     type="checkbox"
+                     disabled={authorUser && authorUser.role === 'admin'}
+              />
+            </div>
           </div>
           <div className="form-group">
             <button data-test-id="btn-save"
@@ -137,11 +143,15 @@ class EditPage extends Component {
   }
 }
 
-function select (state, ownProps) {
+function select (state) {
+  const userInfo = state.auth.userInfo
   return {
-    usersList: state.admin.usersList,
+    userList: [
+      ...(userInfo.data && userInfo.data.role === 'admin' ? [userInfo.data] : []),
+      ...(state.common.translators || [])
+    ],
     pageInfo: state.admin.editPage,
-    userInfo: state.auth.userInfo
+    userInfo
   }
 }
 

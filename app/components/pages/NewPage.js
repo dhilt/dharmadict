@@ -12,7 +12,6 @@ class NewPage extends Component {
     this.sendNewPageData = this.sendNewPageData.bind(this)
     this.changePageTitle = this.changePageTitle.bind(this)
     this.changePageText = this.changePageText.bind(this)
-    this.changePageBio = this.changePageBio.bind(this)
     this.changePageUrl = this.changePageUrl.bind(this)
   }
 
@@ -27,10 +26,6 @@ class NewPage extends Component {
 
   changePageTitle (event) {
     this.props.dispatch(changePageData({title: event.target.value}))
-  }
-
-  changePageBio () {
-    this.props.dispatch(changePageData({bio: !this.props.pageInfo.data.bio}))
   }
 
   changePageText (event) {
@@ -61,14 +56,6 @@ class NewPage extends Component {
               value={title || ''}
               type="text"
             />
-          </div>
-          <div className="form-check">
-            <input data-test-id="input-bio"
-              onChange={this.changePageBio}
-              checked={bio || false}
-              type="checkbox"
-            />
-            <label>It's biography page</label>
           </div>
           <div className="form-group">
             <label><FormattedMessage id="NewPage.edit_text" /></label>

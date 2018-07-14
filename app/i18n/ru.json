@@ -90,7 +90,8 @@
   "EditPage.edit_title": "Заголовок страницы",
   "EditPage.edit_text": "Текст страницы",
   "EditPage.title_of_page": "Редактирование страницы",
-  "EditPage.its_biography_page": "Страница биографии",
+  "EditPage.page_author": "Автор страницы",
+  "EditPage.biography_page": "Страница биографии автора",
   "EditPage.successful_remove": "Страница была успешно удалена",
 
   "NewPage.success": "Новая страница была успешно создана",
@@ -100,5 +101,6 @@
   "NewPage.edit_text": "Текст страницы",
 
   "Pages.title": "Страницы",
+  "Pages.biography": "(биография)",
   "Pages.link_to_create": "Создать страницу"
 }

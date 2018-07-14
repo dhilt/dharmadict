@@ -1,3 +1,5 @@
+import {browserHistory} from 'react-router'
+
 import asyncRequest from '../../helpers/remote'
 import notifier from '../../helpers/notifier'
 
@@ -20,6 +22,9 @@ export function createPageAsync() {
         type: CREATE_PAGE_END
       })
       dispatch(notifier.onResponse('NewPage.success', error))
+      if (data && data.page && data.page.url) {
+        browserHistory.push('/pages/' + data.page.url + '/edit')
+      }
     })
   }
 }
