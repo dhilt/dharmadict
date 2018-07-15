@@ -8,7 +8,17 @@ const findAll = () => new Promise((resolve, reject) => {
   elasticClient.search({
     index: config.db.index,
     size: config.db.size.max,
-    type: 'pages'
+    type: 'pages',
+    body: {
+      sort: [
+        {
+          'title': {
+            'order': 'asc'
+          }
+        }
+      ],
+      query: { match_all: {} }
+    }
   }).then(result => {
     let pages = result.hits.hits;
     if (!pages.length) {
