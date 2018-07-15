@@ -203,32 +203,6 @@ const script = {
         throw new Error('Wrong data length!')
       }
     })
-    .then(() =>
-      client.indices.putMapping({
-        index: config.index,
-        type: 'pages',
-        body: {
-          "properties": {
-            "url": {
-              "type": "keyword"
-            },
-            "title": {
-              "type": "text",
-              "fielddata": true
-            },
-            "text": {
-              "type": "text"
-            },
-            "author": {
-              "type": "text"
-            },
-            "bio": {
-              "type": "boolean"
-            }
-          }
-        }
-      })
-    )
 };
 
 module.exports = script;
