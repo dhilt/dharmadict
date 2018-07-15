@@ -15,9 +15,7 @@ const userInfo = (req, res) =>
 
 const getAll = (req, res) =>
   doAuthorize(req)
-    .then(user => usersController.checkPermissionByIdAndRole(user, [
-      { role: 'admin' }
-    ]))
+    .then(user => usersController.isAdmin(user))
     .then(() => usersController.findAll())
     .then(users => res.json({success: true, users}))
     .catch(error => sendApiError(res, 'Can\'t find users.', error));

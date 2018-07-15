@@ -20,9 +20,6 @@ const create = (user) => new Promise(resolve => {
   if (!user.password) {
     throw new ApiError('Invalid password')
   }
-  if (!user.description) {
-    throw new ApiError('Invalid description')
-  }
   resolve(user)
 });
 
@@ -47,12 +44,6 @@ const update = (userId, payload) => new Promise(resolve => {
     if (payload.language !== languages.getLang(payload.language).id) {
       throw new ApiError('Invalid language')
     }
-  }
-  if (payload.hasOwnProperty('description')) {
-    if (typeof payload.description !== 'string') {
-      throw new ApiError('Invalid description')
-    }
-    payload.description = payload.description.trim();
   }
 
   if (payload.hasOwnProperty('password')) {

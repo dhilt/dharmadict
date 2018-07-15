@@ -5,8 +5,7 @@ const { testAdmin, testTranslator } = require('./_shared.js');
 const requestObj = {
   payload: {
     name: 'Name of test-translator',
-    language: 'en',
-    description: 'New description written by admin'
+    language: 'en'
   }
 };
 
@@ -156,21 +155,6 @@ describe('Update user API', () => {
       )
   });
 
-  it('should not update user description (invalid description)', (done) => {
-    let _requestObj = JSON.parse(JSON.stringify(requestObj));
-    _requestObj.payload['description'] = false;
-    request.patch(queryUpdateUser)
-      .set('Authorization', 'Bearer ' + testAdmin.token)
-      .send(_requestObj)
-      .end(
-        (err, res) => {
-          assert.notEqual(res.body.success, true);
-          assert.equal(res.body.message, "Can't update user data. Invalid description");
-          done();
-        }
-      )
-  });
-
   it('should update user data', (done) => {
     request.patch(queryUpdateUser)
       .set('Authorization', 'Bearer ' + testAdmin.token)
@@ -180,7 +164,6 @@ describe('Update user API', () => {
           assert.equal(res.body.success, true);
           assert.equal(res.body.user.name, requestObj.payload.name);
           assert.equal(res.body.user.language, requestObj.payload.language);
-          assert.equal(res.body.user.description, requestObj.payload.description);
           done();
         }
       )
@@ -196,21 +179,6 @@ describe('Update user API', () => {
         (err, res) => {
           assert.notEqual(res.body.success, true);
           assert.equal(res.body.message, "Can't update user data. Invalid name");
-          done();
-        }
-      )
-  });
-
-  it('should cleanup user description', (done) => {
-    let _requestObj = JSON.parse(JSON.stringify(requestObj));
-    _requestObj.payload['description'] = '  ';
-    request.patch(queryUpdateUser)
-      .set('Authorization', 'Bearer ' + testAdmin.token)
-      .send(_requestObj)
-      .end(
-        (err, res) => {
-          assert.equal(res.body.success, true);
-          assert.equal(res.body.user.description, '');
           done();
         }
       )

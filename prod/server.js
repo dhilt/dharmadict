@@ -23,7 +23,6 @@ app.get('/api/test', apiTest);
 
 app.patch('/api/translators/:id', apiUsers.editPassword);
 app.get('/api/userInfo', apiUsers.userInfo);
-app.get('/api/users/all', apiUsers.getAll);
 app.get('/api/users/:id', apiUsers.getById);
 app.patch('/api/users/:id', apiUsers.edit);
 app.post('/api/users', apiUsers.create);

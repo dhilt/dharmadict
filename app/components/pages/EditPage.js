@@ -5,7 +5,6 @@ import {FormattedMessage} from 'react-intl'
 import {ButtonToolbar, SplitButton, MenuItem} from 'react-bootstrap'
 
 import {changePageData, resetPage, getPageForEditAsync, updatePageAsync, removePageAsync} from '../../actions/pages/changePage'
-import {getAllUsersAsync} from '../../actions/admin/usersInfo'
 
 class EditPage extends Component {
 

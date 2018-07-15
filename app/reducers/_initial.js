@@ -83,11 +83,6 @@ let initialState = {
     }
   },
   admin: {
-    usersList: {
-      data: [],
-      error: null,
-      pending: false
-    },
     editPage: {
       url: '',
       author: '',

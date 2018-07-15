@@ -19,7 +19,6 @@ const testAdmin = {
   role: "admin",
   login: "test-admin",
   name: "Test Admin",
-  description: "...",
   password: "test-admin-pass"
 };
 
@@ -29,7 +28,6 @@ const testTranslator = {
   login: "test-translator",
   name: "Test Translator",
   language: "en",
-  description: "...",
   password: "test-translator-pass"
 };
 
@@ -39,7 +37,6 @@ const testTranslator2 = {
   login: "test-translator-2",
   name: "Тестовый переводчик 2",
   language: "ru",
-  description: "...",
   password: "test-translator-pass-2"
 };
 
