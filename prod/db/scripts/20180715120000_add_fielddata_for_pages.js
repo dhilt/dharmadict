@@ -1,7 +1,7 @@
 const config = require('../config.js');
 
 const script = {
-  title: `Remove description from users`,
+  title: `Add fielddata for pages`,
   run: (client) =>
     client.indices.putMapping({
       index: config.index,

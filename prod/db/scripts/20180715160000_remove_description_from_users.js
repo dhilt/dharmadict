@@ -90,7 +90,8 @@ const newMapping = {
           "type": "keyword"
         },
         "title": {
-          "type": "text"
+          "type": "text",
+          "fielddata": true
         },
         "text": {
           "type": "text"
