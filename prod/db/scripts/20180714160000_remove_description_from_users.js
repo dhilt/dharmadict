@@ -153,8 +153,9 @@ const script = {
       return Promise.resolve(users)
     })
     .then(users => {
-      users.forEach(user => // Maybe, problem here
-        client.index({
+      let result = Promise.resolve();
+      users.forEach(user =>
+        result = client.index({
           refresh: true,
           index: tempIndex,
           type: 'users',
@@ -162,7 +163,7 @@ const script = {
           body: user.body
         })
       )
-      return Promise.resolve()
+      return result
     })
     .then(() =>
       client.indices.delete({
