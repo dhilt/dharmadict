@@ -13,7 +13,17 @@ class TranslatorPage extends Component {
   }
 
   componentWillMount () {
-    this.props.dispatch(getTranslatorInfoAsync(this.props.params.id))
+    this.getTranslatorInfo(this.props.params.id)
+  }
+
+  componentWillReceiveProps (nextProps) {
+    if(nextProps.params.id !== this.props.params.id) {
+      this.getTranslatorInfo(nextProps.params.id)
+    }
+  }
+
+  getTranslatorInfo(id) {
+    this.props.dispatch(getTranslatorInfoAsync(id))
   }
 
   getTranslatorContent (translatorInfo) {
