@@ -1,3 +1,5 @@
+import {browserHistory} from 'react-router'
+
 import asyncRequest from '../../helpers/remote'
 import notifier from '../../helpers/notifier'
 
@@ -12,13 +14,17 @@ export function createPageAsync() {
     dispatch({
       type: CREATE_PAGE_START
     })
-    const {data} = getState().admin.newPage
+    const author = getState().auth.userInfo.data.id
+    const data = {...getState().admin.newPage.data, author}
     const query = 'pages'
     return asyncRequest(query, 'post', {payload: data}, (data, error) => {
       dispatch({
         type: CREATE_PAGE_END
       })
       dispatch(notifier.onResponse('NewPage.success', error))
+      if (data && data.page && data.page.url) {
+        browserHistory.push('/pages/' + data.page.url + '/edit')
+      }
     })
   }
 }
@@ -28,6 +34,7 @@ export function changePageData(_data) {
     const {data} = getState().admin.newPage
     const payload = {
       url: _data.hasOwnProperty('url') ? _data.url : data.url,
+      bio: _data.hasOwnProperty('bio') ? _data.bio : data.bio,
       title: _data.hasOwnProperty('title') ? _data.title : data.title,
       text: _data.hasOwnProperty('text') ? _data.text : data.text
     }

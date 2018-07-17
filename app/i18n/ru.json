@@ -11,8 +11,10 @@
   "Home.search_title_em": "Буддийская терминология",
   "Home.search_title_h1": " в русских переводах",
 
-  "TranslatorPage.link_to_desc_page": "Страница переводчика",
-  "TranslatorPage.translations_language": "Язык переводов: {translatorLanguage}",
+  "TranslatorPage.translator_biography_title": "Биография переводчика",
+  "TranslatorPage.no_info": "нет информации",
+  "TranslatorPage.articles_of_translator": "Статьи переводчика",
+  "TranslatorPage.translations_language": "Язык переводов",
   "TranslatorPage.button_edit": "Редактировать",
   "TranslatorPage.loading_text": "Идет загрузка...",
   "TranslatorPage.request_error": "Ошибка запроса",
@@ -47,6 +49,7 @@
   "LoadingIndicator.main_text": "Идет загрузка...",
 
   "Header.create_new_term": "Создать новый термин",
+  "Header.create_new_page": "Создать новую страницу",
   "Header.about_project": "О проекте",
   "Header.home_link": "На главную",
   "Header.change_language": "Сменить язык",
@@ -66,8 +69,6 @@
   "EditUser.title_edit_user": "Редактирование пользователя {id}",
   "EditUser.name_of_translator": "Имя переводчика",
   "EditUser.language_of_translations": "Язык переводов",
-  "EditUser.description_of_translator": "Страница переводчика",
-  "EditUser.description_of_translator_help": "(например /pages/DON)",
   "EditUser.link_reset_password": "Изменить пароль",
   "EditUser.success": "Информация о пользователе была успешно изменена",
 
@@ -89,6 +90,8 @@
   "EditPage.edit_title": "Заголовок страницы",
   "EditPage.edit_text": "Текст страницы",
   "EditPage.title_of_page": "Редактирование страницы",
+  "EditPage.page_author": "Автор страницы",
+  "EditPage.biography_page": "Страница биографии автора",
   "EditPage.successful_remove": "Страница была успешно удалена",
 
   "NewPage.success": "Новая страница была успешно создана",
@@ -98,5 +101,6 @@
   "NewPage.edit_text": "Текст страницы",
 
   "Pages.title": "Страницы",
+  "Pages.biography": "(биография)",
   "Pages.link_to_create": "Создать страницу"
 }

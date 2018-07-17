@@ -2,22 +2,27 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Link} from 'react-router'
 import {FormattedMessage} from 'react-intl'
+import {ButtonToolbar, SplitButton, MenuItem} from 'react-bootstrap'
 
-import {changePageData, resetPage, getPageAdminAsync, updatePageAsync, removePageAsync} from '../../actions/admin/changePage'
+import {changePageData, resetPage, getPageForEditAsync, updatePageAsync, removePageAsync} from '../../actions/pages/changePage'
 
 class EditPage extends Component {
 
   constructor(props) {
     super(props)
     this.sendNewPageData = this.sendNewPageData.bind(this)
+    this.changePageAuthor = this.changePageAuthor.bind(this)
     this.changePageTitle = this.changePageTitle.bind(this)
     this.changePageText = this.changePageText.bind(this)
+    this.changePageBio = this.changePageBio.bind(this)
     this.resetChanges = this.resetChanges.bind(this)
     this.deletePage = this.deletePage.bind(this)
   }
 
   componentWillMount () {
-    this.props.dispatch(getPageAdminAsync(this.props.params.pageUrl))
+    this.props.userInfo.promise.then(() => {
+      this.props.dispatch(getPageForEditAsync(this.props.params.pageUrl))
+    })
   }
 
   resetChanges (event) {
@@ -39,14 +44,25 @@ class EditPage extends Component {
     this.props.dispatch(changePageData({title: event.target.value}))
   }
 
+  changePageBio () {
+    this.props.dispatch(changePageData({bio: !this.props.pageInfo.data.bio}))
+  }
+
+  changePageAuthor (userId) {
+    this.props.dispatch(changePageData({author: userId}))
+  }
+
   changePageText (event) {
     this.props.dispatch(changePageData({text: event.target.value}))
   }
 
   render () {
-    const { sourcePending, removePending, pending } = this.props.pageInfo
-    const { title, text } = this.props.pageInfo.data
-    return !sourcePending && (
+    const { userInfo, userList } = this.props
+    const { noPermission, sourcePending, removePending, pending } = this.props.pageInfo
+    const { author, title, text, bio } = this.props.pageInfo.data
+    const authorUser = userList.find(u => u.id === author)
+    const authorName = authorUser ? authorUser.name : ''
+    return !sourcePending && !noPermission && (
       <div data-test-id="EditPage">
         <form className="col-md-6">
           <h3><FormattedMessage id="EditPage.title_of_page" /></h3>
@@ -67,6 +83,35 @@ class EditPage extends Component {
               value={text || ''}
               type="text"
             />
+          </div>
+            {
+              userList.length && userInfo.data.role === 'admin' && (
+                <div className="form-group">
+                  <label><FormattedMessage id="EditPage.page_author" /></label>
+                  <ButtonToolbar>
+                    <SplitButton id="authorId" title={authorName}>
+                      {userList.map((user, i) =>
+                        <MenuItem data-test-id={`input-author-${i}`} key={i}
+                                  onSelect={() => this.changePageAuthor(user.id)}
+                        >{user.name} ({user.id})
+                        </MenuItem>
+                      )}
+                    </SplitButton>
+                  </ButtonToolbar>
+                </div>
+              )
+            }
+          <div className="form-group">
+            <label><FormattedMessage id="EditPage.biography_page" /></label>
+            <div>
+              <input data-test-id="input-bio"
+                     className="bio-checkbox"
+                     onChange={this.changePageBio}
+                     checked={bio}
+                     type="checkbox"
+                     disabled={authorUser && authorUser.role === 'admin'}
+              />
+            </div>
           </div>
           <div className="form-group">
             <button data-test-id="btn-save"
@@ -97,9 +142,15 @@ class EditPage extends Component {
   }
 }
 
-function select (state, ownProps) {
+function select (state) {
+  const userInfo = state.auth.userInfo
   return {
-    pageInfo: state.admin.editPage
+    userList: [
+      ...(userInfo.data && userInfo.data.role === 'admin' ? [userInfo.data] : []),
+      ...(state.common.translators || [])
+    ],
+    pageInfo: state.admin.editPage,
+    userInfo
   }
 }
 

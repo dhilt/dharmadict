@@ -6,14 +6,15 @@ import Home from './components/Home'
 import NotFound from './components/NotFound'
 import Edit from './components/Edit'
 import TranslatorPage from './components/TranslatorPage'
-import Pages from './components/Pages'
-import Page from './components/Page'
 
 import NewTerm from './components/admin/NewTerm'
 import EditUser from './components/admin/EditUser'
 import EditUserPassword from './components/admin/EditUserPassword'
-import EditPage from './components/admin/EditPage'
-import NewPage from './components/admin/NewPage'
+
+import EditPage from './components/pages/EditPage'
+import NewPage from './components/pages/NewPage'
+import Pages from './components/pages/Pages'
+import Page from './components/pages/Page'
 
 import EditPasswordByTranslator from './components/translator/EditPasswordByTranslator'
 
@@ -27,21 +28,21 @@ function unpermittedAccess (replace) {
   browserHistory.replace('/not_permitted')
 }
 
-function hasAccess(auth, role, userId) {
+function hasAccess(auth, roles, userId) {
   return auth.loggedIn
-    && (!role || (auth.userInfo.data && auth.userInfo.data.role === role))
+    && (!roles || (auth.userInfo.data && roles.find(e => e === auth.userInfo.data.role)))
     && (!userId || (userId === auth.userInfo.data.id))
 }
 
-function checkAccess (nextState, replace, callback, store, role, userId) {
+function checkAccess (nextState, replace, callback, store, roles, userId) {
   let auth = store.getState().auth
-  if(hasAccess(auth, role, userId)) {
+  if(hasAccess(auth, roles, userId)) {
     callback()
     return
   }
   if(auth.userInfo.promise) {
     auth.userInfo.promise.then(() => {
-      if(!hasAccess(store.getState().auth, role, userId)) {
+      if(!hasAccess(store.getState().auth, roles, userId)) {
         unauthorizedAccess(replace)
       }
       callback()
@@ -61,40 +62,40 @@ const getRoutes = (store) => ({
       path: '/newTerm',
       exactly: true,
       component: NewTerm,
-      onEnter: (...args) => checkAccess(...args, store, 'admin')
+      onEnter: (...args) => checkAccess(...args, store, ['admin'])
     },
     { path: '/translator/:id', exactly: true, component: TranslatorPage },
     {
       path: '/translator/:id/edit',
       exactly: true,
       component: EditUser,
-      onEnter: (...args) => checkAccess(...args, store, 'admin')
+      onEnter: (...args) => checkAccess(...args, store, ['admin'])
     },
     {
       path: '/translator/:id/edit/password',
       exactly: true,
       component: EditUserPassword,
-      onEnter: (...args) => checkAccess(...args, store, 'admin')
+      onEnter: (...args) => checkAccess(...args, store, ['admin'])
     },
     {
       path: '/translator/:id/password',
       exactly: true,
       component: EditPasswordByTranslator,
-      onEnter: (...args) => checkAccess(...args, store, 'translator', args[0].params.id)
+      onEnter: (...args) => checkAccess(...args, store, ['translator'], args[0].params.id)
     },
     { path: '/pages', exactly: true, component: Pages },
     {
       path: '/pages/new',
       exactly: true,
       component: NewPage,
-      onEnter: (...args) => checkAccess(...args, store, 'admin')
+      onEnter: (...args) => checkAccess(...args, store, ['admin', 'translator'])
     },
     { path: '/pages/:pageUrl', exactly: true, component: Page },
     {
       path: '/pages/:pageUrl/edit',
       exactly: true,
       component: EditPage,
-      onEnter: (...args) => checkAccess(...args, store, 'admin')
+      onEnter: (...args) => checkAccess(...args, store, ['admin', 'translator'])
     },
     { path: '/not_authorized', exactly: true, component: NotFound },
     { path: '/not_permitted', exactly: true, component: NotFound },

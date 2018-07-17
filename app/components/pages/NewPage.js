@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {Link} from 'react-router'
 import {FormattedMessage} from 'react-intl'
 
-import {changePageData, createPageAsync} from '../../actions/admin/newPage'
+import {changePageData, createPageAsync} from '../../actions/pages/newPage'
 
 class NewPage extends Component {
 
@@ -34,7 +34,7 @@ class NewPage extends Component {
 
   render () {
     const { pending } = this.props.pageInfo
-    const { url, title, text } = this.props.pageInfo.data
+    const { url, title, bio, text } = this.props.pageInfo.data
     return (
       <div data-test-id="NewPage">
         <form className="col-md-6">

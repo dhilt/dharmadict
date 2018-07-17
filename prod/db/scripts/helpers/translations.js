@@ -78,9 +78,7 @@ class Translations {
         });
       });
 
-      parser.on('error', (err) => {
-        reject(err);
-      });
+      parser.on('error', (err) => reject(err));
 
       inputStream.pipe(parser);
     });
@@ -99,7 +97,7 @@ class Translations {
         }
       };
 
-      list.forEach((item, i) => {
+      list.forEach((item, i) =>
         item.run = () =>
           Translations.processListItem(client, item).then(() => {
             count++;
@@ -120,8 +118,8 @@ class Translations {
             else {
               _done();
             }
-          });
-      });
+          })
+      );
 
       list[0].run();
     });

@@ -11,7 +11,10 @@ export function setStartLocation(location) {
     if(location.query.term) {
       dispatch(selectTermAsync(location.query.term))
     }
-    else if (location.pathname.indexOf('/pages/') === 0 && excludeAdminRoutes(location.pathname)) {
+    else if (
+      location.pathname.indexOf('/pages/') === 0 && excludeAdminRoutes(location.pathname) &&
+      location.pathname !== '/pages/'
+    ) {
       dispatch(getPageAsync(location.pathname.replace('/pages/', '')))
     }
   }

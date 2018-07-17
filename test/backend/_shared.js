@@ -19,7 +19,6 @@ const testAdmin = {
   role: "admin",
   login: "test-admin",
   name: "Test Admin",
-  description: "...",
   password: "test-admin-pass"
 };
 
@@ -29,7 +28,6 @@ const testTranslator = {
   login: "test-translator",
   name: "Test Translator",
   language: "en",
-  description: "...",
   password: "test-translator-pass"
 };
 
@@ -39,7 +37,6 @@ const testTranslator2 = {
   login: "test-translator-2",
   name: "Тестовый переводчик 2",
   language: "ru",
-  description: "...",
   password: "test-translator-pass-2"
 };
 
@@ -62,21 +59,27 @@ const testTerm2 = {
 };
 
 const testPage = {
+  // author: testAdmin.id, /* This is set in database through createPageSpec.js */
   url: 'test_page_url',
   title: 'test page title',
-  text: 'test page text'
+  text: 'test page text',
+  bio: false
 };
 
 const testPage2 = {
+  /* author: testTranslator.id, */
   url: 'test_page_url_two',
   title: 'test page title two',
-  text: 'test page text two'
+  text: 'test page text two',
+  bio: false
 };
 
 const testPage3 = {
+  /* author: testTranslator2.id, */
   url: 'test   page   url   three',
   title: 'test page title three',
-  text: 'test page text three'
+  text: 'test page text three',
+  bio: false
 };
 
 const testTermTranslation = {

@@ -32,17 +32,20 @@ describe('translators actions', () => {
 
     const userId = translators[0].id;
     const user = translators.find(elem => elem.id === userId);
+    const pages = ['page 1', 'page 2', 'page 3'];
 
     const responseSuccess = {
       success: true,
-      user
+      pages: pages,
+      user: user
     };
     const actions = [
       { type: types.GET_TRANSLATOR_INFO_START },
       {
         type: types.GET_TRANSLATOR_INFO_END,
         error: null,
-        result: user
+        translator: user,
+        pages: pages
       }
     ];
     const states = [
@@ -53,8 +56,9 @@ describe('translators actions', () => {
       },
       { ...initialState,
         translatorInfo: {...initialState.translatorInfo,
+          translator: user,
+          pages: pages,
           pending: false,
-          data: user,
           error: null
         }
       }
@@ -70,7 +74,8 @@ describe('translators actions', () => {
       {
         type: types.GET_TRANSLATOR_INFO_END,
         error: responseFail,
-        result: null
+        translator: null,
+        pages: []
       },
       getNotificationAction(null, 'TranslatorPage.request_error')
     ];
@@ -78,9 +83,10 @@ describe('translators actions', () => {
       states[0],
       { ...initialState,
         translatorInfo: {...initialState.translatorInfo,
+          error: responseFail,
           pending: false,
-          data: null,
-          error: responseFail
+          translator: null,
+          pages: []
         }
       }
     ];

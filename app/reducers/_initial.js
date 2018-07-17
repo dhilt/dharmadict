@@ -65,12 +65,13 @@ let initialState = {
   translatorInfo: {
     pending: false,
     error: null,
-    data: {
+    translator: {
       name: '',
       role: '',
       language: '',
       description: ''
-    }
+    },
+    pages: []
   },
   translator: {
     editPassword: {
@@ -84,14 +85,20 @@ let initialState = {
   admin: {
     editPage: {
       url: '',
+      author: '',
       dataSource: {
+        author: '',
         title: '',
+        bio: false,
         text: ''
       },
       data: {
+        author: '',
         title: '',
+        bio: false,
         text: ''
       },
+      noPermission: true,
       sourcePending: false,
       pending: false,
       removePending: false
@@ -99,6 +106,7 @@ let initialState = {
     newPage: {
       data: {
         url: '',
+        bio: false,
         title: '',
         text: ''
       },
@@ -115,13 +123,11 @@ let initialState = {
       id: '',
       dataSource: {
         name: '',
-        language: '',
-        description: ''
+        language: ''
       },
       data: {
         name: '',
-        language: '',
-        description: ''
+        language: ''
       },
       sourcePending: false,
       pending: false,

@@ -2,9 +2,9 @@ const React = require('react');
 const {expect} = require('chai');
 const sinon = require('sinon');
 
-const {initialState, appPath, shallow, pages, admin} = require('../_shared.js');
+const {initialState, getAppPath, shallow, pages, admin} = require('../../_shared.js');
 
-const Pages = require(appPath + 'components/Pages').default.WrappedComponent;
+const Pages = require(getAppPath(2) + 'components/pages/Pages').default.WrappedComponent;
 
 describe('Testing Pages Component.', () => {
 

@@ -8,7 +8,17 @@ const findAll = () => new Promise((resolve, reject) => {
   elasticClient.search({
     index: config.db.index,
     size: config.db.size.max,
-    type: 'pages'
+    type: 'pages',
+    body: {
+      sort: [
+        {
+          'title': {
+            'order': 'asc'
+          }
+        }
+      ],
+      query: { match_all: {} }
+    }
   }).then(result => {
     let pages = result.hits.hits;
     if (!pages.length) {
@@ -16,7 +26,9 @@ const findAll = () => new Promise((resolve, reject) => {
     } else {
       pages = pages.map(page => ({
         url: page._id,
-        title: page._source.title
+        bio: page._source.bio,
+        title: page._source.title,
+        author: page._source.author
       }));
       resolve(pages)
     }
@@ -56,8 +68,44 @@ const findByUrl = pageUrl => new Promise((resolve, reject) => {
   })
 });
 
-const create = (payload) => validator.create(payload)
+const findByAuthorId = author => new Promise((resolve, reject) => {
+  logger.info(`Find page by authorId ${author}`);
+  if (!author || typeof author !== 'string') {
+    return reject(new ApiError('Invalid author id'))
+  }
+  elasticClient.search({
+    index: config.db.index,
+    type: 'pages',
+    body: {
+      query: {
+        match: {
+          author: author
+        }
+      }
+    }
+  }).then(response => {
+    let pages = response.hits.hits;
+    if (!pages && !Array.isArray(pages)) {
+      reject(new ApiError('Database error', 404))
+    } else {
+      pages = pages.map(page => ({
+        url: page._id,
+        bio: page._source.bio,
+        author: page._source.author,
+        title: page._source.title
+      }));
+      resolve(pages)
+    }
+  },
+  error => {
+    logger.error(error);
+    reject(new ApiError('Database error'))
+  })
+});
+
+const create = (payload, userId) => validator.create(payload)
   .then(page => {
+    page.author = userId;
     page.url = page.url.replace(/ /g, '_');
     logger.info(`Page adding: url "${page.url}"`);
     return page
@@ -91,9 +139,12 @@ const create = (payload) => validator.create(payload)
   })
   .then(pageUrl => findByUrl(pageUrl));
 
-const update = (pageUrl, payload) => validator.update(pageUrl, payload)
+const update = (pageUrl, payload, userRole) => validator.update(pageUrl, payload)
   .then(() => findByUrl(pageUrl))
   .then(page => {
+    if (userRole !== 'admin') {
+      delete payload.author
+    }
     let result = Object.assign({}, page, payload);
     delete result.url;
     return result
@@ -132,6 +183,7 @@ const removeByUrl = pageUrl => findByUrl(pageUrl)
 
 module.exports = {
   removeByUrl,
+  findByAuthorId,
   findByUrl,
   findAll,
   create,

@@ -5,7 +5,7 @@ const expect = require('expect');
 
 const {initialState, pages, getNotificationAction, getAppPath} = require('../../_shared.js');
 
-const actionsCreators = require(getAppPath(2) + 'actions/admin/newPage');
+const actionsCreators = require(getAppPath(2) + 'actions/pages/newPage');
 const types = require(getAppPath(2) + 'actions/_constants');
 const reducer = require(getAppPath(2) + 'reducers').default;
 
@@ -30,32 +30,42 @@ describe('admin/newPage actions', () => {
 
   describe('function createPageAsync', () => {
 
-    const page = pages[0];
+    const initPage = pages[0];
+    delete initPage.author;
+    const authorId = 'author-id';
+
     const startState = {...initialState,
+      auth: {...initialState.auth,
+        userInfo: {...initialState.auth.userInfo,
+          data: {...initialState.auth.userInfo.data,
+            id: authorId
+          }
+        }
+      },
       admin: {...initialState.admin,
         newPage: {...initialState.admin.newPage,
-          data: page
+          data: initPage
         }
       }
     };
 
-    const responseSuccess = page;
+    const responseSuccess = {...initPage, author: authorId };
     const actions = [
       { type: types.CREATE_PAGE_START },
       { type: types.CREATE_PAGE_END },
       getNotificationAction('NewPage.success', null)
     ];
     const states = [
-      {...initialState,
-        admin: {...initialState.admin,
-          newPage: {...initialState.admin.newPage,
+      {...startState,
+        admin: {...startState.admin,
+          newPage: {...startState.admin.newPage,
             pending: true
           }
         }
       },
-      {...initialState,
-        admin: {...initialState.admin,
-          newPage: {...initialState.admin.newPage,
+      {...startState,
+        admin: {...startState.admin,
+          newPage: {...startState.admin.newPage,
             pending: false
           }
         }
@@ -75,8 +85,8 @@ describe('admin/newPage actions', () => {
     const statesFail = states;
 
     it('should work, reducer', () => {
-      expect(reducer(initialState, actions[0])).toEqual(states[0]);
-      expect(reducer(initialState, actions[1])).toEqual(states[1]);
+      expect(reducer(startState, actions[0])).toEqual(states[0]);
+      expect(reducer(startState, actions[1])).toEqual(states[1]);
     });
 
     it('should work, action', () => {
@@ -84,7 +94,10 @@ describe('admin/newPage actions', () => {
 
       nock('http://localhost')
         .post('/api/pages', {
-          payload: page
+          payload: {
+            ...initPage,
+            author: authorId
+          }
         })
         .reply(200, responseSuccess);
 
@@ -94,8 +107,8 @@ describe('admin/newPage actions', () => {
     });
 
     it('should handle error, reducer', () => {
-      expect(reducer(initialState, actionsFail[0])).toEqual(statesFail[0]);
-      expect(reducer(initialState, actionsFail[1])).toEqual(statesFail[1]);
+      expect(reducer(startState, actionsFail[0])).toEqual(statesFail[0]);
+      expect(reducer(startState, actionsFail[1])).toEqual(statesFail[1]);
     });
 
     it('should handle error, action', () => {
@@ -103,7 +116,10 @@ describe('admin/newPage actions', () => {
 
       nock('http://localhost')
         .post('/api/pages', {
-          payload: page
+          payload: {
+            ...initPage,
+            author: authorId
+          }
         })
         .reply(200, responseFail);
 
@@ -116,17 +132,21 @@ describe('admin/newPage actions', () => {
   describe('function changePageData', () => {
 
     let page = Object.assign({}, pages[0]);
+    delete page.author;
 
     const testChangePageData = (key, value) => {
       let pageData = page;
 
-      const stateStart = {...initialState,
+      let stateStart = {...initialState,
         admin: {...initialState.admin,
           newPage: {...initialState.newPage,
             data: pageData
           }
         }
       };
+      if (key === 'bio') {
+        stateStart.admin.newPage.data.bio = !value
+      }
 
       const stateEnd = Object.assign({}, stateStart);
       stateEnd.admin.newPage.data[key] = value;
@@ -150,5 +170,7 @@ describe('admin/newPage actions', () => {
     testChangePageData('url', 'new url of page');
     testChangePageData('title', 'new title of page');
     testChangePageData('text', 'new text of page');
+    // testChangePageData('bio', true);
+    testChangePageData('bio', false);
   });
 });

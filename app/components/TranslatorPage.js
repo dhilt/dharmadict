@@ -13,10 +13,23 @@ class TranslatorPage extends Component {
   }
 
   componentWillMount () {
-    this.props.dispatch(getTranslatorInfoAsync(this.props.params.id))
+    this.getTranslatorInfo(this.props.params.id)
   }
 
-  getTranslatorContent (translator) {
+  componentWillReceiveProps (nextProps) {
+    if(nextProps.params.id !== this.props.params.id) {
+      this.getTranslatorInfo(nextProps.params.id)
+    }
+  }
+
+  getTranslatorInfo(id) {
+    this.props.dispatch(getTranslatorInfoAsync(id))
+  }
+
+  getTranslatorContent (translatorInfo) {
+    const translator = translatorInfo.translator
+    const bioPages = translatorInfo.pages.filter(e => e.bio)
+    const defaultPages = translatorInfo.pages.filter(e => !e.bio)
     const translatorId = this.props.params.id // translator.id ??
     const userData = this.props.userInfo.data
     const {languages, userLanguage} = this.props.common
@@ -24,14 +37,55 @@ class TranslatorPage extends Component {
     return (
       <div data-test-id="translatorContent">
         <h3 data-test-id="name">{translator.name}</h3>
-        <h4><FormattedMessage id="TranslatorPage.translations_language"
-          values={{translatorLanguage: translatorLang ? translatorLang['name_' + lang.get(userLanguage)] : ''}} />
+
+        <h4><FormattedMessage id="TranslatorPage.translations_language" /></h4>
+        <h5>
+          <ul>
+            <li>
+              {
+                translatorLang ?
+                  translatorLang['name_' + lang.get(userLanguage)] :
+                  <FormattedMessage id="TranslatorPage.no_info" />
+              }
+            </li>
+          </ul>
+        </h5>
+
+        <h4><FormattedMessage id="TranslatorPage.translator_biography_title" /></h4>
+        {
+          !bioPages.length ? (
+            <h5>
+              <ul>
+                <li><FormattedMessage id="TranslatorPage.no_info" /></li>
+              </ul>
+            </h5>
+          ) : (
+            <ul data-test-id="listOfBioPages">
+              {bioPages.map((page, i) =>
+                <li key={i}><Link to={`/pages/${page.url}`}>{page.title}</Link></li>
+              )}
+            </ul>
+          )
+        }
+        <h4>
+          <FormattedMessage id="TranslatorPage.articles_of_translator" />
         </h4>
         {
-          translator.description &&
-          <Link data-test-id="desc" to={translator.description}>
-            <FormattedMessage id="TranslatorPage.link_to_desc_page" />
-          </Link>
+          !defaultPages.length ? (
+            <h5>
+              <ul>
+                <li><FormattedMessage id="TranslatorPage.no_info" /></li>
+              </ul>
+            </h5>
+          ) : (
+            <ul data-test-id="listOfDefaultPages">
+              {
+                defaultPages.map((page, i) =>
+                  <li key={i}><Link to={`/pages/${page.url}`}>{page.title}</Link></li>
+                )
+              }
+            </ul>
+          )
         }
         {
           userData && userData.role === 'admin' &&
@@ -64,7 +118,7 @@ class TranslatorPage extends Component {
       translatorInfo.error ? (
         <h3 data-test-id="error">{translatorInfo.error.message}</h3>
       ) :
-        this.getTranslatorContent(translatorInfo.data)
+        this.getTranslatorContent(translatorInfo)
     )
     return (
       <div data-test-id="TranslatorPage">{content}</div>

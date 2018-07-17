@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {Link} from 'react-router'
 import {FormattedMessage} from 'react-intl'
 
-import {getAllPagesAsync} from '../actions/pages'
+import {getAllPagesAsync} from '../../actions/pages'
 
 class Pages extends Component {
 
@@ -24,7 +24,13 @@ class Pages extends Component {
         {
           !pending &&
           <ul data-test-id="list-pages">
-            { list.map((page, i) => <li key={i}><Link to={`/pages/${page.url}`}>{page.title}</Link></li>) }
+            { list.map((page, i) =>
+              <li key={i}>
+                <Link to={`/pages/${page.url}`}>
+                  {page.title} {page.bio ? <FormattedMessage id="Pages.biography" /> : null}
+                </Link>
+              </li>
+            )}
           </ul>
         }
         {
@@ -40,7 +46,7 @@ class Pages extends Component {
   }
 }
 
-function select (state, ownProps) {
+function select (state) {
   return {
     pages: state.pages,
     userData: state.auth.userInfo.data

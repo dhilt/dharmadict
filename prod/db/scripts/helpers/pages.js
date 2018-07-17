@@ -12,7 +12,9 @@ class Pages {
           id: page.url,
           body: {
             title: page.title,
-            text: page.text
+            text: page.text,
+            author: page.hasOwnProperty('author') ? page.author : 'ADMIN',
+            bio: page.hasOwnProperty('bio') ? page.bio : false
           }
         })
         .then(() => process.done(), error => process.done(error || true))
@@ -24,4 +26,3 @@ class Pages {
 module.exports = {
   Pages
 };
-

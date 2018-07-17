@@ -28,6 +28,15 @@ const isAdmin = (user) => {
   return Promise.resolve(user)
 };
 
+const checkPermissionByIdAndRole = (user, permissions) => {
+  if (permissions.some(p =>
+    user.role === p.role && (!p.requiredId || p.requiredId === user.id)
+  )) {
+    return Promise.resolve(user)
+  }
+  return Promise.reject(new ApiError('Unpermitted success', 302));
+};
+
 const isSameUser = (reqId, user) => {
   if (reqId !== user.id) {
     return Promise.reject(new ApiError('Unpermitted success'));
@@ -269,6 +278,7 @@ const removeById = userId => new Promise(resolve => {
 
 module.exports = {
   getUserInfo,
+  checkPermissionByIdAndRole,
   isAdmin,
   isSameUser,
   canLogin,

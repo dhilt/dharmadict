@@ -5,7 +5,7 @@ const expect = require('expect');
 
 const {initialState, pages, getNotificationAction, getAppPath} = require('../../_shared.js');
 
-const actionsCreators = require(getAppPath(2) + 'actions/admin/changePage');
+const actionsCreators = require(getAppPath(2) + 'actions/pages/changePage');
 const types = require(getAppPath(2) + 'actions/_constants');
 const reducer = require(getAppPath(2) + 'reducers').default;
 
@@ -28,126 +28,161 @@ describe('admin/changePage actions', () => {
     expect(reducer()).toEqual(initialState);
   });
 
-  describe('function getPageAdminAsync', () => {
+  const cutPageForEdit = page => ({
+    author: page.author,
+    title: page.title,
+    text: page.text,
+    bio: page.bio
+  })
 
-    const pageUrl = pages[0].url;
-    const pageSource = Object.assign({}, pages[0], { text: 'some old text' });
-    const newPage = pages[0];
+  describe('function getPageForEditAsync', () => {
+    const getTest = (page, role, id, noPermission) => {
+      const pageUrl = page.url;
+      const pageSource = Object.assign({}, page, { text: 'some old text' });
+      const newPage = page;
+      const authState = {...initialState.auth,
+        userInfo: {...initialState.auth.userInfo,
+          data: {
+            role: role,
+            id: id
+          }
+        }
+      };
 
-    const startState = {...initialState,
-      admin: {...initialState.admin,
-        editPage: {...initialState.admin.editPage,
-          dataSource: pageSource,
+      const startState = {...initialState,
+        auth: authState,
+        admin: {...initialState.admin,
+          editPage: {...initialState.admin.editPage,
+            dataSource: pageSource,
+            data: cutPageForEdit(pageSource),
+            url: pageUrl
+          }
+        }
+      };
+
+      const responseSuccess = newPage;
+      let actions = [
+        { type: types.GET_PAGE_FOR_EDIT_START },
+        {
+          type: types.GET_PAGE_FOR_EDIT_END,
+          noPermission: noPermission,
+          data: cutPageForEdit(newPage),
           url: pageUrl
         }
-      }
+      ];
+      const states = [
+        {...startState,
+          admin: {...startState.admin,
+            editPage: {...startState.admin.editPage,
+              sourcePending: true
+            }
+          }
+        },
+        {...startState,
+          admin: {...startState.admin,
+            editPage: {...startState.admin.editPage,
+              noPermission: noPermission,
+              sourcePending: false,
+              dataSource: cutPageForEdit(newPage),
+              data: cutPageForEdit(newPage),
+              url: pageUrl
+            }
+          }
+        }
+      ];
+
+      const responseFail = {
+        error: true,
+        code: 500,
+        message: 'Can\'t delete page. Database error'
+      };
+      let actionsFail = [
+        actions[0],
+        {
+          type: types.GET_PAGE_FOR_EDIT_END,
+          data: pageSource,
+          noPermission: true,
+          url: pageUrl
+        },
+        getNotificationAction(null, responseFail)
+      ];
+      const statesFail = [
+        states[0],
+        {...startState,
+          admin: {...startState.admin,
+            editPage: {...startState.admin.editPage,
+              noPermission: true,
+              sourcePending: false,
+              dataSource: pageSource,
+              data: pageSource,
+              url: pageUrl
+            }
+          }
+        }
+      ];
+
+      it('should work, reducer', () => {
+        expect(reducer(startState, actions[0])).toEqual(states[0]);
+        expect(reducer(startState, actions[1])).toEqual(states[1]);
+      });
+
+      it('should work, action', () => {
+        const store = mockStore(startState);
+        if (noPermission) {
+          actions = [
+            ...actions,
+            getNotificationAction(null, { message: 'You can\'t edit this page' })
+          ]
+        }
+
+        nock('http://localhost')
+          .get('/api/pages?url=' + pageUrl)
+          .reply(200, responseSuccess);
+
+        return store
+          .dispatch(actionsCreators.getPageForEditAsync(pageUrl))
+          .then(() => expect(store.getActions()).toEqual(actions));
+      });
+
+      it('should handle error, reducer', () => {
+        expect(reducer(startState, actionsFail[0])).toEqual(statesFail[0]);
+        expect(reducer(startState, actionsFail[1])).toEqual(statesFail[1]);
+      });
+
+      it('should handle error, action', () => {
+        const store = mockStore(startState);
+
+        nock('http://localhost')
+          .get('/api/pages?url=' + pageUrl)
+          .reply(200, responseFail);
+
+        return store
+          .dispatch(actionsCreators.getPageForEditAsync(pageUrl))
+          .then(() => expect(store.getActions()).toEqual(actionsFail));
+      });
     };
 
-    const responseSuccess = newPage;
-    const actions = [
-      { type: types.GET_PAGE_ADMIN_START },
-      {
-        type: types.GET_PAGE_ADMIN_END,
-        data: newPage,
-        url: pageUrl
-      }
-    ];
-    const states = [
-      {...initialState,
-        admin: {...initialState.admin,
-          editPage: {...initialState.admin.editPage,
-            sourcePending: true
-          }
-        }
-      },
-      {...initialState,
-        admin: {...initialState.admin,
-          editPage: {...initialState.admin.editPage,
-            sourcePending: false,
-            dataSource: newPage,
-            data: newPage,
-            url: pageUrl
-          }
-        }
-      }
-    ];
+    let page = Object.assign({}, pages[0], { author: 'somebody' });
+    getTest(page, 'admin', 'ADMIN', false);
+    getTest(page, 'admin', 'SOME-ID', false);
 
-    const responseFail = {
-      error: true,
-      code: 500,
-      message: 'Can\'t delete page. Database error'
-    };
-    const actionsFail = [
-      actions[0],
-      {
-        type: types.GET_PAGE_ADMIN_END,
-        data: pageSource,
-        url: pageUrl
-      },
-      getNotificationAction(null, responseFail)
-    ];
-    const statesFail = [
-      states[0],
-      {...initialState,
-        admin: {...initialState.admin,
-          editPage: {...initialState.admin.editPage,
-            sourcePending: false,
-            dataSource: pageSource,
-            data: pageSource,
-            url: pageUrl
-          }
-        }
-      }
-    ];
-
-    it('should work, reducer', () => {
-      expect(reducer(initialState, actions[0])).toEqual(states[0]);
-      expect(reducer(initialState, actions[1])).toEqual(states[1]);
-    });
-
-    it('should work, action', () => {
-      const store = mockStore(startState);
-
-      nock('http://localhost')
-        .get('/api/pages?url=' + pageUrl)
-        .reply(200, responseSuccess);
-
-      return store
-        .dispatch(actionsCreators.getPageAdminAsync(pageUrl))
-        .then(() => expect(store.getActions()).toEqual(actions));
-    });
-
-    it('should handle error, reducer', () => {
-      expect(reducer(initialState, actionsFail[0])).toEqual(statesFail[0]);
-      expect(reducer(initialState, actionsFail[1])).toEqual(statesFail[1]);
-    });
-
-    it('should handle error, action', () => {
-      const store = mockStore(startState);
-
-      nock('http://localhost')
-        .get('/api/pages?url=' + pageUrl)
-        .reply(200, responseFail);
-
-      return store
-        .dispatch(actionsCreators.getPageAdminAsync(pageUrl))
-        .then(() => expect(store.getActions()).toEqual(actionsFail));
-    });
+    page = Object.assign({}, pages[0], { author: 'our-translator' });
+    getTest(page, 'translator', 'our-translator', false);
+    getTest(page, 'translator', 'not-our-translator', true);
+    getTest(page, 'some-user', 'user-id', true);
   });
 
   describe('function updatePageAsync', () => {
 
     const pageUrl = pages[0].url;
-    const pageSource = pages[0];
-    const newPage = Object.assign({}, pages[0], { text: 'some new text' });
-    let _cutPage = Object.assign({}, newPage);
-    delete _cutPage.url;
+    const initPage = Object.assign({}, cutPageForEdit(pages[0]));
+    const newPage = Object.assign({}, cutPageForEdit(pages[0]), { text: 'new-new text' });
 
     const startState = {...initialState,
       admin: {...initialState.admin,
         editPage: {...initialState.admin.editPage,
-          dataSource: pageSource,
-          data: _cutPage,
+          dataSource: initPage,
+          data: newPage,
           url: pageUrl
         }
       }
@@ -158,26 +193,27 @@ describe('admin/changePage actions', () => {
       page: newPage
     };
     const actions = [
-      { type: types.UPDATE_ADMIN_PAGE_START },
+      { type: types.UPDATE_PAGE_START },
       {
-        type: types.UPDATE_ADMIN_PAGE_END,
-        data: _cutPage
+        type: types.UPDATE_PAGE_END,
+        dataSource: newPage,
+        data: newPage
       },
       getNotificationAction('EditPage.success', null)
     ];
     const states = [
-      {...initialState,
-        admin: {...initialState.admin,
-          editPage: {...initialState.admin.editPage,
+      {...startState,
+        admin: {...startState.admin,
+          editPage: {...startState.admin.editPage,
             pending: true
           }
         }
       },
-      {...initialState,
-        admin: {...initialState.admin,
-          editPage: {...initialState.admin.editPage,
+      {...startState,
+        admin: {...startState.admin,
+          editPage: {...startState.admin.editPage,
             pending: false,
-            dataSource: _cutPage
+            dataSource: newPage
           }
         }
       }
@@ -191,26 +227,27 @@ describe('admin/changePage actions', () => {
     const actionsFail = [
       actions[0],
       {
-        type: types.UPDATE_ADMIN_PAGE_END,
-        data: pageSource
+        type: types.UPDATE_PAGE_END,
+        dataSource: initPage,
+        data: newPage
       },
       getNotificationAction(null, responseFail)
     ];
     const statesFail = [
       states[0],
-      {...initialState,
-        admin: {...initialState.admin,
-          editPage: {...initialState.admin.editPage,
+      {...startState,
+        admin: {...startState.admin,
+          editPage: {...startState.admin.editPage,
             pending: false,
-            dataSource: pageSource
+            data: newPage
           }
         }
       }
     ];
 
     it('should work, reducer', () => {
-      expect(reducer(initialState, actions[0])).toEqual(states[0]);
-      expect(reducer(initialState, actions[1])).toEqual(states[1]);
+      expect(reducer(startState, actions[0])).toEqual(states[0]);
+      expect(reducer(startState, actions[1])).toEqual(states[1]);
     });
 
     it('should work, action', () => {
@@ -226,8 +263,8 @@ describe('admin/changePage actions', () => {
     });
 
     it('should handle error, reducer', () => {
-      expect(reducer(initialState, actionsFail[0])).toEqual(statesFail[0]);
-      expect(reducer(initialState, actionsFail[1])).toEqual(statesFail[1]);
+      expect(reducer(startState, actionsFail[0])).toEqual(statesFail[0]);
+      expect(reducer(startState, actionsFail[1])).toEqual(statesFail[1]);
     });
 
     it('should handle error, action', () => {
@@ -245,22 +282,28 @@ describe('admin/changePage actions', () => {
 
   describe('function changePageData', () => {
 
-    let page = Object.assign({}, pages[0]);
-    delete page.url;
-
     const testChangePageData = (key, value) => {
-      let pageData = page;
+      const pageSource = Object.assign({}, pages[0]);
+      const page = Object.assign({}, cutPageForEdit(pageSource));
 
       const stateStart = {...initialState,
         admin: {...initialState.admin,
           editPage: {...initialState.admin.editPage,
-            data: pageData
+            dataSource: pageSource,
+            data: page
           }
         }
       };
 
-      const stateEnd = Object.assign({}, stateStart);
-      stateEnd.admin.editPage.data[key] = value;
+      const stateEnd = {...stateStart,
+        admin: {...stateStart.admin,
+          editPage: {...stateStart.admin.editPage,
+            data: {...stateStart.admin.editPage.data,
+              [key]: value
+            }
+          }
+        }
+      };
 
       const action = {
         type: types.CHANGE_PAGE_DATA,

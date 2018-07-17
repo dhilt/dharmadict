@@ -11,8 +11,10 @@
   "Home.search_title_em": "Buddhist terminology",
   "Home.search_title_h1": " in russian translations",
 
-  "TranslatorPage.link_to_desc_page": "Translator's Page",
-  "TranslatorPage.translations_language": "Translations language: {translatorLanguage}",
+  "TranslatorPage.translator_biography_title": "Translator's biography",
+  "TranslatorPage.no_info": "no information",
+  "TranslatorPage.articles_of_translator": "Translator's articles",
+  "TranslatorPage.translations_language": "Translations language",
   "TranslatorPage.button_edit": "Edit",
   "TranslatorPage.loading_text": "Loading...",
   "TranslatorPage.request_error": "The request failed",
@@ -47,6 +49,7 @@
   "LoadingIndicator.main_text": "Loading...",
 
   "Header.create_new_term": "Create new term",
+  "Header.create_new_page": "Create new page",
   "Header.about_project": "About",
   "Header.home_link": "Home",
   "Header.change_language": "Change language",
@@ -66,8 +69,6 @@
   "EditUser.title_edit_user": "Editing a user {id}",
   "EditUser.name_of_translator": "Name of the translator",
   "EditUser.language_of_translations": "Language of translations",
-  "EditUser.description_of_translator": "Translator's Page",
-  "EditUser.description_of_translator_help": "(for example /pages/DON)",
   "EditUser.link_reset_password": "Change password",
   "EditUser.success": "User information was successfully changed",
 
@@ -89,6 +90,8 @@
   "EditPage.edit_title": "Title of page",
   "EditPage.edit_text": "Text of page",
   "EditPage.title_of_page": "Edit page",
+  "EditPage.page_author": "Author of page",
+  "EditPage.biography_page": "Author's biography page",
   "EditPage.successful_remove": "The page was successfully deleted",
 
   "NewPage.success": "New page was successfully created",
@@ -98,5 +101,6 @@
   "NewPage.edit_text": "Text of page",
 
   "Pages.title": "Pages",
+  "Pages.biography": "(biography)",
   "Pages.link_to_create": "Create page"
 }

@@ -38,18 +38,22 @@ class Header extends Component {
       <div data-test-id="Header" className="nav">
         <div className="nav__wrapper">
           <div className="nav__wrapper-left">
-            <Link to={'/'}>
-              <FormattedMessage id="Header.home_link" />
-            </Link>
-            <Link to={'/pages/about'}>
-              <FormattedMessage id="Header.about_project" />
-            </Link>
-            <Link to={'/pages/translation_features'}>
-              <FormattedMessage id="Header.translation_features" />
-            </Link>
-            <Link to={'/pages/parallel_texts'}>
-              <FormattedMessage id="Header.parallel_texts" />
-            </Link>
+            <div>
+              <Link to={'/'}>
+                <FormattedMessage id="Header.home_link" />
+              </Link>
+              <Link to={'/pages/about'}>
+                <FormattedMessage id="Header.about_project" />
+              </Link>
+            </div>
+            <div>
+              <Link to={'/pages/translation_features'}>
+                <FormattedMessage id="Header.translation_features" />
+              </Link>
+              <Link to={'/pages/parallel_texts'}>
+                <FormattedMessage id="Header.parallel_texts" />
+              </Link>
+            </div>
           </div>
           <AuthLinks
             data={authData}

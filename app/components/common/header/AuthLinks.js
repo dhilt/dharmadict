@@ -12,17 +12,28 @@ function AuthLinks ({
   const userInfo = !data.userInfo.pending ? data.userInfo.data : {}
   return data.loggedIn ? (
     <div data-test-id="Header.navButtons-loggedIn">
-      <Link data-test-id="Header.link_to_user"
-            to={`/translator/${userInfo.id}`}>
-        {userInfo.name}
-      </Link>
-      <Logout data-test-id="Header.Logout" doLogout={doLogout} />
+      <div>
+        <Link data-test-id="Header.link_to_user"
+              to={`/translator/${userInfo.id}`}>
+          {userInfo.name}
+        </Link>
+        <Logout data-test-id="Header.Logout" doLogout={doLogout} />
+      </div>
+      <div>
       {
         userInfo.role === 'admin' ?
           <Link data-test-id="Header.link_create_term" to={`/newTerm`}>
             <FormattedMessage id="Header.create_new_term" />
           </Link> : null
       }
+      {
+        ['admin', 'translator'].find(e => e === userInfo.role) && (
+          <Link data-test-id="Header.link_create_page" to={`/pages/new`}>
+            <FormattedMessage id="Header.create_new_page" />
+          </Link>
+        )
+      }
+      </div>
     </div>
   ) : (
     <div data-test-id="Header.navButtons-notLoggedIn">
