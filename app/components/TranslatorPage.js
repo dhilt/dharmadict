@@ -29,13 +29,25 @@ class TranslatorPage extends Component {
         <h3 data-test-id="name">{translator.name}</h3>
 
         <h4><FormattedMessage id="TranslatorPage.translations_language" /></h4>
-        <h5>{translatorLang ? translatorLang['name_' + lang.get(userLanguage)] : ''}</h5>
+        <h5>
+          <ul>
+            <li>
+              {
+                translatorLang ?
+                  translatorLang['name_' + lang.get(userLanguage)] :
+                  <FormattedMessage id="TranslatorPage.no_info" />
+              }
+            </li>
+          </ul>
+        </h5>
 
         <h4><FormattedMessage id="TranslatorPage.translator_biography_title" /></h4>
         {
-          bioPages.length === 0 ? (
+          !bioPages.length ? (
             <h5>
-              <FormattedMessage id="TranslatorPage.no_info" />
+              <ul>
+                <li><FormattedMessage id="TranslatorPage.no_info" /></li>
+              </ul>
             </h5>
           ) : (
             <ul data-test-id="listOfBioPages">
@@ -49,9 +61,11 @@ class TranslatorPage extends Component {
           <FormattedMessage id="TranslatorPage.articles_of_translator" />
         </h4>
         {
-          defaultPages.length === 0 ? (
+          !defaultPages.length ? (
             <h5>
-              <FormattedMessage id="TranslatorPage.no_info" />
+              <ul>
+                <li><FormattedMessage id="TranslatorPage.no_info" /></li>
+              </ul>
             </h5>
           ) : (
             <ul data-test-id="listOfDefaultPages">

@@ -19,6 +19,7 @@ class Page extends Component {
         {
           userData && (userData.role === 'admin' || (userData.role === 'translator' && userData.id === page.author)) &&
           <div data-test-id="link-to-edit">
+            <br />
             <Link className="btn btn-default" to={`/pages/${page.url}/edit`}>
               <span><FormattedMessage id="EditPage.link_to_edit" /></span>
             </Link>

@@ -84,23 +84,23 @@ class EditPage extends Component {
               type="text"
             />
           </div>
-          <div className="form-group">
-            <label><FormattedMessage id="EditPage.page_author" /></label>
             {
               userList.length && userInfo.data.role === 'admin' && (
-                <ButtonToolbar>
-                  <SplitButton id="authorId" title={authorName}>
-                    {userList.map((user, i) =>
-                      <MenuItem data-test-id={`input-author-${i}`} key={i}
-                                onSelect={() => this.changePageAuthor(user.id)}
-                      >{user.name} ({user.id})
-                      </MenuItem>
-                    )}
-                  </SplitButton>
-                </ButtonToolbar>
+                <div className="form-group">
+                  <label><FormattedMessage id="EditPage.page_author" /></label>
+                  <ButtonToolbar>
+                    <SplitButton id="authorId" title={authorName}>
+                      {userList.map((user, i) =>
+                        <MenuItem data-test-id={`input-author-${i}`} key={i}
+                                  onSelect={() => this.changePageAuthor(user.id)}
+                        >{user.name} ({user.id})
+                        </MenuItem>
+                      )}
+                    </SplitButton>
+                  </ButtonToolbar>
+                </div>
               )
             }
-          </div>
           <div className="form-group">
             <label><FormattedMessage id="EditPage.biography_page" /></label>
             <div>

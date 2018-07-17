@@ -19,7 +19,7 @@ export function getTranslatorInfoAsync(userId) {
       dispatch({
         type: GET_TRANSLATOR_INFO_END,
         translator: !error ? data.user : null,
-        pages: error ? [] : data.pages.filter(p => p.url !== userId),
+        pages: error ? [] : data.pages,
         error
       })
       error && dispatch(notifier.onErrorResponse('TranslatorPage.request_error'))

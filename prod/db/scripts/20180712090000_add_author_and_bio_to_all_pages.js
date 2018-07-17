@@ -7,7 +7,6 @@ const bioPagesMap = {
   'ZAG': 'ZAG',
   'MM': 'MM',
   'AK': 'AKT',
-  'AKT': 'AKT',
   'RAG': 'RAG',
   'BEM': 'BEM',
   'HOP': 'HOP',
