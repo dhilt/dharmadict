@@ -11,7 +11,7 @@ function AuthLinks ({
 }) {
   const userInfo = !data.userInfo.pending ? data.userInfo.data : {}
   return data.loggedIn ? (
-    <div data-test-id="Header.navButtons-loggedIn">
+    <div data-test-id="Header.navButtons-loggedIn" className="nav--auth">
       <div>
         <Link data-test-id="Header.link_to_user"
               to={`/translator/${userInfo.id}`}>
@@ -36,7 +36,7 @@ function AuthLinks ({
       </div>
     </div>
   ) : (
-    <div data-test-id="Header.navButtons-notLoggedIn">
+    <div data-test-id="Header.navButtons-notLoggedIn" className="nav--auth">
       {data.userInfo.pending ?
         <LoadingButton data-test-id="Header.LoadingButton" className="btn--nav" />
         :

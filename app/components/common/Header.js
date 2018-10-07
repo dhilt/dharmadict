@@ -45,6 +45,9 @@ class Header extends Component {
               <Link to={'/pages/about'}>
                 <FormattedMessage id="Header.about_project" />
               </Link>
+              <Link to={'/pages/translators'}>
+                <FormattedMessage id="Header.translators" />
+              </Link>
             </div>
             <div>
               <Link to={'/pages/translation_features'}>
@@ -52,6 +55,9 @@ class Header extends Component {
               </Link>
               <Link to={'/pages/parallel_texts'}>
                 <FormattedMessage id="Header.parallel_texts" />
+              </Link>
+              <Link to={'/pages/history'}>
+                <FormattedMessage id="Header.history" />
               </Link>
             </div>
           </div>

@@ -53,8 +53,10 @@
   "Header.about_project": "О проекте",
   "Header.home_link": "На главную",
   "Header.change_language": "Сменить язык",
-  "Header.translation_features": "Особенности переводов",
-  "Header.parallel_texts": "Параллельные тексты",
+  "Header.translation_features": "О переводе буддийских текстов",
+  "Header.parallel_texts": "Версии переводов текстов",
+  "Header.translators": "Переводчики",
+  "Header.history": "История буддийских текстов в России",
 
   "Logout.button_logout": "Выйти",
 

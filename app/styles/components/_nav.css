@@ -32,6 +32,10 @@
   text-decoration: none;
 }
 
+.nav--auth {
+  min-width: 200px;
+}
+
 .btn--nav {
   font-size: 0.8em;
   text-transform: uppercase;
