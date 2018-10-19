@@ -1,6 +1,6 @@
 const client = require('./client.js');
 
-let scripts = [
+const scripts = [
   /*'20170908160000_cleanup',
   '20170908161900_create_index',
   '20170908174900_add_terms',
@@ -15,9 +15,9 @@ let scripts = [
   '20180710110000_add_pages_translation_features_and_parallel_texts.js',
   '20180712090000_add_author_and_bio_to_all_pages.js',
   '20180715120000_add_fielddata_for_pages.js',
-  // '20180715160000_remove_description_from_users.js' // don't use this migration*/
-  '20181008030000_add_pages_translators_and_history.js',
-  '20181019030000_add_mongush_translations.js'
+  // '20180715160000_remove_description_from_users.js' // don't use this migration
+  '20181008030000_add_pages_translators_and_history.js',*/
+  '20181019030000_add_mongush_user_and_page.js'
 ];
 
 console.log('DB migration scripts running');

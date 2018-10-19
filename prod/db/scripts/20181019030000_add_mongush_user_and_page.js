@@ -14,8 +14,10 @@ const users = [{
 }];
 
 const pages = [{
-  url: 'MNG',
+  url: 'MongushChechenbai',
   title: 'Монгуш Чеченбай Викторович',
+  author: 'MNG',
+  bio: true,
   text: `
 <p>
 С 2006 по 2008 гг. изучал тибетский язык в Колледже Сара (Дхарамсала).
@@ -28,7 +30,7 @@ const pages = [{
 
 
 const script = {
-  title: `Add Mongush data`,
+  title: `Add Mongush user and page`,
   run: (client) =>
     Users.run(client, users)
     .then(Pages.run(client, pages))
