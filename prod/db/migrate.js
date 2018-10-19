@@ -1,6 +1,6 @@
 const client = require('./client.js');
 
-const scripts = [
+let scripts = [
   /*'20170908160000_cleanup',
   '20170908161900_create_index',
   '20170908174900_add_terms',
