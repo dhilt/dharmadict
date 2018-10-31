@@ -15,7 +15,7 @@ const apiTerms = require('./api/apiTerms');
 const apiPages = require('./api/apiPages');
 
 const app = express();
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: `${config.app.maxPayloadSize}mb`}));
 
 app.get('/api/common', apiCommon);
 app.post('/api/login', apiLogin);

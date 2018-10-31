@@ -2,7 +2,8 @@ const dbConfig = require('./db/config.js');
 
 const config = {
   app: {
-    port: 3000
+    port: 3000,
+    maxPayloadSize: 10 //Mb
   },
   db: dbConfig,
   token: {
