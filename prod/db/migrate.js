@@ -16,8 +16,9 @@ let scripts = [
   '20180712090000_add_author_and_bio_to_all_pages.js',
   '20180715120000_add_fielddata_for_pages.js',
   // '20180715160000_remove_description_from_users.js' // don't use this migration
-  '20181008030000_add_pages_translators_and_history.js',*/
-  '20181019030000_add_mongush_user_and_page.js'
+  '20181008030000_add_pages_translators_and_history.js',
+  '20181019030000_add_mongush_user_and_page.js',*/
+  '20181107071500_add_ustyantsev_user_and_page.js'
 ];
 
 console.log('DB migration scripts running');
