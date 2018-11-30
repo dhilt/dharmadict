@@ -7,6 +7,12 @@
   "Common.delete": "Удалить",
 
   "App.get_common_error": "Ошибка получения данных",
+  "App.get_terms_error": "Ошибка получения терминов",
+
+  "Terms.heading": "Термины",
+  "Terms.wylie": "wylie",
+  "Terms.sanskrit_ru": "Санскрит на русском",
+  "Terms.sanskrit_en": "Санскрит на английском",
 
   "Home.search_title_em": "Буддийская терминология",
   "Home.search_title_h1": " в русских переводах",

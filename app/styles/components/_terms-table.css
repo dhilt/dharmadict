@@ -1,0 +1,25 @@
+.terms-table {
+  width: 80%;
+  font-size: 16px;
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+
+.terms-table > thead,
+.terms-table > thead > tr,
+.terms-table > thead > tr > td,
+.terms-table > tbody,
+.terms-table > tbody > tr,
+.terms-table > tbody > tr > td {
+  border: 1px solid #D3D3D3;
+}
+
+.terms-table > thead > tr > td,
+.terms-table > tbody > tr > td {
+  padding: 2px;
+  padding-left: 10px;
+}
+
+.terms-table > tbody > tr:nth-child(2n) {
+  background-color: #F5F5F5;
+}

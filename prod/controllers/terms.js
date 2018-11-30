@@ -4,6 +4,29 @@ const logger = require('../log/logger');
 const config = require('../config.js');
 const validator = require('./validators/terms.js');
 
+const findAll = () => new Promise((resolve, reject) => {
+  elasticClient.search({
+    index: config.db.index,
+    size: config.db.size.max,
+    type: 'terms'
+  }).then(result => {
+    let terms = result.hits.hits;
+    if (!terms.length) {
+      reject(new ApiError(`No terms found`, 404))
+    } else {
+      terms = terms.map(term => ({
+        wylie: term._source.wylie,
+        sanskrit_ru: term._source.sanskrit_ru,
+        sanskrit_en: term._source.sanskrit_en
+      }));
+      resolve(terms)
+    }
+  }, error => {
+    logger.error(error.message);
+    reject(new ApiError('Database error'))
+  });
+});
+
 const findById = termId => new Promise((resolve, reject) => {
   if (!termId) {
     return reject(new ApiError('Invalid params.'))
@@ -185,6 +208,7 @@ const removeById = termId => validator.remove(termId)
   );
 
 module.exports = {
+  findAll,
   findById,
   findTranslations,
   searchByPattern,

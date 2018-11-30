@@ -27,6 +27,7 @@ app.get('/api/users/:id', apiUsers.getById);
 app.patch('/api/users/:id', apiUsers.edit);
 app.post('/api/users', apiUsers.create);
 
+app.get('/api/terms/all', apiTerms.searchAll);
 app.get('/api/terms/translation', apiTranslation.get);
 app.delete('/api/terms/:id', apiTerms.remove);
 app.post('/api/terms', apiTerms.create);
