@@ -48,6 +48,9 @@ class Header extends Component {
               <Link to={'/pages/translators'}>
                 <FormattedMessage id="Header.translators" />
               </Link>
+              <Link to={'/terms'}>
+                <FormattedMessage id="Header.terms" />
+              </Link>
             </div>
             <div>
               <Link to={'/pages/translation_features'}>
