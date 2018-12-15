@@ -33,7 +33,7 @@ class Term extends Component {
           }
         </div>
         <ul className="translation-list">
-        {term.translations.map((translation, translationIndex) =>
+        {term.translations && term.translations.map((translation, translationIndex) =>
           <li data-test-id="translation" key={translationIndex} className="translation">
             <div className="wrap-translator-ref">
               <Link data-test-id="link-translator"
@@ -51,9 +51,9 @@ class Term extends Component {
             </div>
             <ol data-test-id="list-meanings"
               className={"meanings" + (translation.meanings.length === 1 ? " single-item" : "")}>
-            {translation.meanings.map((meaning, meaningIndex) =>
+            {translation.meanings && translation.meanings.map((meaning, meaningIndex) =>
               <li data-test-id="meaning" key={meaningIndex} className="meaning">
-                {meaning.versions.map((version, versionIndex) =>
+                {meaning.versions && meaning.versions.map((version, versionIndex) =>
                   <span data-test-id="version" key={versionIndex}>
                     {version + (versionIndex < meaning.versions.length - 1 ? '; ' : '')}
                   </span>

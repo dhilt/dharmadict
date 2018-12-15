@@ -87,7 +87,9 @@ function reducer(state = initialState, action = {}) {
     case GET_ALL_TERMS_END:
       return {...state,
         terms: {...state.terms,
-          list: action.terms,
+          list: action.terms.sort((a, b) =>
+            a.wylie.replace('‘', 'zzz').localeCompare(b.wylie.replace('‘', 'zzz')) // too ugly...
+          ),
           pending: false
         }
       }
