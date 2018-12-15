@@ -39,6 +39,10 @@ let initialState = {
       pending: false
     }
   },
+  terms: {
+    list: [],
+    pending: false
+  },
   search: {
     searchString: '',
     started: false,

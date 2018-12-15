@@ -7,6 +7,39 @@ const testTerm2 = require('./_shared.js').testTerm2;
 const testTermTranslation = require('./_shared.js').testTermTranslation;
 const testTermTranslation2 = require('./_shared.js').testTermTranslation2;
 
+describe('Search terms API (find all terms)', () => {
+
+  it('should work', (done) => {
+    request.get('/api/terms/all').end(
+      (err, res) => {
+        res.should.have.status(200);
+        done();
+      }
+    )
+  });
+
+  it('should find all terms (at minimum 2 testTerms)', (done) => {
+    request.get('/api/terms/all').end(
+      (err, res) => {
+        const terms = res.body.terms;
+        const testedTerms = [testTerm, testTerm2];
+        assert.equal(terms.length > testedTerms.length, true);
+        testedTerms.forEach(term => {
+          const foundTerm = terms.find(e => e.wylie === term.name);
+          assert.equal(!!foundTerm, true);
+          assert.equal(foundTerm.hasOwnProperty('wylie'), true);
+          assert.equal(foundTerm.hasOwnProperty('sanskrit_ru'), true);
+          assert.equal(foundTerm.hasOwnProperty('sanskrit_en'), true);
+          assert.equal(foundTerm['wylie'], term['name']);
+          assert.equal(foundTerm['sanskrit_ru'], term.sanskrit['sanskrit_ru']);
+          assert.equal(foundTerm['sanskrit_en'], term.sanskrit['sanskrit_en']);
+        });
+        done();
+      }
+    )
+  });
+});
+
 describe('Search term API', () => {
 
   it('should work', (done) => {

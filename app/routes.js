@@ -5,6 +5,7 @@ import App from './components/App'
 import Home from './components/Home'
 import NotFound from './components/NotFound'
 import Edit from './components/Edit'
+import Terms from './components/Terms'
 import TranslatorPage from './components/TranslatorPage'
 
 import NewTerm from './components/admin/NewTerm'
@@ -64,6 +65,7 @@ const getRoutes = (store) => ({
       component: NewTerm,
       onEnter: (...args) => checkAccess(...args, store, ['admin'])
     },
+    { path: '/terms', exactly: true, component: Terms },
     { path: '/translator/:id', exactly: true, component: TranslatorPage },
     {
       path: '/translator/:id/edit',

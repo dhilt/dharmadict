@@ -7,6 +7,12 @@
   "Common.delete": "Delete",
 
   "App.get_common_error": "Error getting data",
+  "App.get_terms_error": "Error getting terms",
+
+  "Terms.heading": "Terms",
+  "Terms.wylie": "wylie",
+  "Terms.sanskrit_ru": "Sanskrit in Russian",
+  "Terms.sanskrit_en": "Sanskrit in English",
 
   "Home.search_title_em": "Buddhist terminology",
   "Home.search_title_h1": " in russian translations",

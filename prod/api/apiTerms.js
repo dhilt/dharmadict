@@ -5,6 +5,11 @@ const logger = require('../log/logger');
 const isAdmin = require('../controllers/users').isAdmin;
 const termsController = require('../controllers/terms');
 
+const searchAll = (req, res) =>
+  termsController.findAll()
+    .then(result => res.json({success: true, terms: result}))
+    .catch(error => sendApiError(res, 'Search error.', error));
+
 const search = (req, res) =>
   termsController.searchByPattern(req.query.pattern)
     .then(result => res.json(result))
@@ -33,6 +38,7 @@ const remove = (req, res) =>
     .catch(error => sendApiError(res, 'Can\'t delete term.', error));
 
 module.exports = {
+  searchAll,
   search,
   edit,
   create,

@@ -41,6 +41,8 @@ import {
   CHANGE_NEW_PAGE_DATA,
   GET_COMMON_DATA_START,
   GET_COMMON_DATA_END,
+  GET_ALL_TERMS_START,
+  GET_ALL_TERMS_END,
   SET_LANGUAGE,
   GET_TRANSLATOR_INFO_START,
   GET_TRANSLATOR_INFO_END,
@@ -73,6 +75,22 @@ function reducer(state = initialState, action = {}) {
         common: {...state.common,
           translators: action.translators,
           languages: action.languages
+        }
+      }
+    case GET_ALL_TERMS_START:
+      return {...state,
+        terms: {...state.terms,
+          pending: true,
+          list: []
+        }
+      }
+    case GET_ALL_TERMS_END:
+      return {...state,
+        terms: {...state.terms,
+          list: action.terms.sort((a, b) =>
+            a.wylie.replace('‘', 'zzz').localeCompare(b.wylie.replace('‘', 'zzz')) // too ugly...
+          ),
+          pending: false
         }
       }
     case GET_ALL_PAGES_START:
