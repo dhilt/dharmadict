@@ -1,0 +1,305 @@
+{
+	"info": {
+		"_postman_id": "8e3a235e-a37a-47ac-a394-ae338143bf5f",
+		"name": "dharmadict",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "get common data",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{dharmadictURL}}api/common",
+					"host": [
+						"{{dharmadictURL}}api"
+					],
+					"path": [
+						"common"
+					]
+				},
+				"description": "http://dharmadict.ru/api/common"
+			},
+			"response": []
+		},
+		{
+			"name": "login admin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1143528e-16c5-4ce3-b4ce-7ae7a2758ba0",
+						"exec": [
+							"const jsonData = pm.response.json();",
+							"",
+							"pm.test(\"should return token\", () => { ",
+							"    pm.expect(!!jsonData.token).to.equal(true);",
+							"    pm.environment.set(\"token\", jsonData.token);",
+							"    pm.expect(pm.environment.get(\"token\")).to.equal(jsonData.token);",
+							"});",
+							"",
+							"pm.test(\"should be admin\", () => { ",
+							"    pm.expect(!!jsonData.user).to.equal(true);",
+							"    pm.expect(jsonData.user.role).to.equal(\"admin\");",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"login\": \"xxx\", \n  \"password\": \"yyy\"\n}"
+				},
+				"url": {
+					"raw": "{{dharmadictURL}}api/login?",
+					"host": [
+						"{{dharmadictURL}}api"
+					],
+					"path": [
+						"login"
+					],
+					"query": [
+						{
+							"key": "login",
+							"value": "admin",
+							"disabled": true
+						},
+						{
+							"key": "password",
+							"value": "superpass",
+							"disabled": true
+						}
+					]
+				},
+				"description": "http://dharmadict.ru/api/login"
+			},
+			"response": [
+				{
+					"name": "login admin",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"login\": \"admin\", \n  \"password\": \"superpass\"\n}"
+						},
+						"url": {
+							"raw": "{{dharmadictURL}}api/login?",
+							"host": [
+								"{{dharmadictURL}}api"
+							],
+							"path": [
+								"login"
+							],
+							"query": [
+								{
+									"key": "login",
+									"value": "admin",
+									"disabled": true
+								},
+								{
+									"key": "password",
+									"value": "superpass",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "413"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"19d-zwleKCrvzARSoYI2U3rXhL4EpaM\""
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 30 Oct 2018 15:36:08 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"user\": {\n        \"id\": \"ADMIN\",\n        \"name\": \"Администратор\",\n        \"login\": \"admin\",\n        \"role\": \"admin\",\n        \"description\": \"\",\n        \"language\": \"ru\"\n    },\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IkFETUlOIiwibmFtZSI6ItCQ0LTQvNC40L3QuNGB0YLRgNCw0YLQvtGAIiwibG9naW4iOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImRlc2NyaXB0aW9uIjoiIiwibGFuZ3VhZ2UiOiJydSIsImlhdCI6MTU0MDkxMzc2OCwiZXhwIjoxNTQzNTkyMTY4fQ.JuodxIgwIKozq2CKv7Raj1Blokg49YZudthxRF3dQlc\"\n}"
+				}
+			]
+		},
+		{
+			"name": "edit page (cleanup)",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"payload\": {\n\t\t\"author\": \"ADMIN\",\n\t\t\"title\": \"История буддийских текстов в России\", \n\t\t\"text\": \"\", \n\t\t\"bio\": false\n\t}\n}"
+				},
+				"url": {
+					"raw": "{{dharmadictURL}}api/pages?url=temp",
+					"host": [
+						"{{dharmadictURL}}api"
+					],
+					"path": [
+						"pages"
+					],
+					"query": [
+						{
+							"key": "url",
+							"value": "temp"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create user",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \n\t\"user\":\n\t{\n    \t\"role\": \"administrator\",\n\t\t\"login\": \"temp\",\n\t\t\"id\": \"TEMP\",\n    \t\"name\": \"Temp\",\n    \t\"password\": \"temppass\"\n\t\t\n\t}\n}"
+				},
+				"url": {
+					"raw": "{{dharmadictURL}}api/users",
+					"host": [
+						"{{dharmadictURL}}api"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "edit user",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \n\t\"payload\":\t{\n    \t\"role\": \"admin\",\n\t\t\"login\": \"temp\",\n\t\t\"id\": \"TEMP\",\n    \t\"name\": \"Temp\"\n\t}\n}"
+				},
+				"url": {
+					"raw": "{{dharmadictURL}}api/users/TEMP",
+					"host": [
+						"{{dharmadictURL}}api"
+					],
+					"path": [
+						"users",
+						"TEMP"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete term",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{dharmadictURL}}api/terms/TEMP",
+					"host": [
+						"{{dharmadictURL}}api"
+					],
+					"path": [
+						"terms",
+						"TEMP"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
