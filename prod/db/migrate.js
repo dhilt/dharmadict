@@ -1,7 +1,7 @@
 const client = require('./client.js');
 
 let scripts = [
-  /*'20170908160000_cleanup',
+  '20170908160000_cleanup',
   '20170908161900_create_index',
   '20170908174900_add_terms',
   '20170908184600_add_users',
@@ -18,7 +18,7 @@ let scripts = [
   // '20180715160000_remove_description_from_users.js' // don't use this migration
   '20181008030000_add_pages_translators_and_history.js',
   '20181019030000_add_mongush_user_and_page.js',
-  '20181107071500_add_ustyantsev_user_and_page.js'*/
+  '20181107071500_add_ustyantsev_user_and_page.js'
 ];
 
 console.log('DB migration scripts running');
@@ -50,4 +50,8 @@ for (let i = 0; i < scripts.length; i++) {
   };
 }
 
-scripts[0]._run();
+console.log('There are ' + scripts.length + ' scripts to run.');
+
+if (scripts[0] && scripts[0]._run) {
+  scripts[0]._run();
+}

@@ -60,7 +60,7 @@
   },
   "dependencies": {
     "babel-polyfill": "^6.9.1",
-    "prop-types": "^15.6.0",
+    "prop-types": "^15.7.2",
     "react": "^15.6.2",
     "react-bootstrap": "^0.31.5",
     "react-dom": "^15.6.2",

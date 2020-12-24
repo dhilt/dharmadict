@@ -13,17 +13,17 @@ services:
     volumes:
       - type: bind # repo
         source: ./
-        target: /home/dharmadict/
+        target: /home/dharmadict
       - type: bind # for save frontend dependencies
         source: ./node_modules
         target: /home/dharmadict/node_modules
-        bind:
-          propagation: rshared
+        # bind:
+          # propagation: rshared
       - type: bind # for save backend dependencies
         source: ./prod/node_modules
         target: /home/dharmadict/prod/node_modules
-        bind:
-          propagation: rshared
+        # bind:
+          # propagation: rshared
   database:
     image: elasticsearch:5.5
     network_mode: "service:server"

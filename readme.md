@@ -1,34 +1,62 @@
 Dharma Dictionary
 ==============
 
-### Prerequisites
+## Prerequisites
 * install [Git](http://git-scm.com/)
-* install [node.js](http://nodejs.org/) with npm (Node Package Manager)
+* install [Node.js](http://nodejs.org/)
+* install [Docker](https://www.docker.com/)
 
-### Scripts
-* `npm run dev-server` -- run development server on 5000 port
-* `npm run prod-server` -- run production server on 3000 port
-* `npm run build` -- build client side sources for the production
-* `npm start` -- run both development and production servers concurrently
+## Production Server via Docker
 
-### Development
-* install nodejs dependencies `npm install`  (`sudo npm install` for mac)
-* install nodejs dependencies for api-server (see "Production" section)
-* run the app within the local memory via webpack `npm run dev-server`
-* run the app in the prod mode to make /api requests work `npm run prod-server`
-* or run both servers concurrently `npm start`
-* go to http://localhost:5000/
-* build client side for the prod via webpack `npm run build`
+Docker setup encapsulates all necessary server side infrastructure, including Elasticsearch DB setup & migrations. The following commands provide all-included setup:
 
-### Production
-* `cd ./prod`
-* install nodejs dependencies `npm install`  (`sudo npm install` for mac)
+* `docker-compose build` to make an image
+* `docker-compose up` to create and run the end container
+
+Commands should be run in the project root folder. And this folder should be a Docker shared resource. Also, Elasticsearch DB requires > 2Gb RAM, a Docker memory limit setting should satisfy this requirement (4Gb seem to be enough).
+
+If this is done without errors, the result should be available on http://localhost:3000/.
+
+## Production Server "as is"
+
+As an alternative, the production server can be installed and run "as is", without Docker. This is the way the production server runs in the remote environment. And this can be used for the server application development. The following instructions should be accomplished once:
+
+* install and run Elasticsearch DB (see below, "Database Setup")
+* `npm install` - install client app dependencies
+* `npm run build` - build client app
+* `cd ./prod` - go to server folder
+* `npm install` - install nodejs dependencies
+* `cd ../` - go to the project root folder
+* `npm run db-migrate` - reset the database
+
+Now the server can work locally:
+
+* `cd ./prod` - go to server folder
 * run the app `node server.js`
 * go to http://localhost:3000/
 
-### Database
+## Client App Development
 
-#### Java
+The following should be accomplished once:
+
+* `npm install` - install client app dependencies
+
+Production server must be accessible on 3000 port. If it works, the client application can be run via
+
+* `npm run dev-server` - run the client app in the development mode on 5000 port
+* go to http://localhost:5000/
+
+If the production server is expected to be run "as is" (without Docker), the following command allows to join both processes in a single one:
+
+* `npm start` -- run both development (5000) and production (3000) servers concurrently (instead of `npm run dev-server` and `node server.js` in the "prod" folder)
+
+After the development is done, the production version of the client app should be built via `npm run build`.
+
+_______
+
+## Database Setup
+
+### Java
 
 * sudo apt-get update
 * sudo apt-get install openjdk-7-jre
@@ -41,13 +69,13 @@ OR
 * sudo apt-get -y install oracle-java8-installer
 * java -version
 
-#### Elasticsearch
+### Elasticsearch
 
 * wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.5.2.deb
 * sudo dpkg -i elasticsearch-5.5.2.deb
 * sudo update-rc.d elasticsearch defaults
 
-#### Configuration
+### Configuration
 
 Need to set some options
 
@@ -59,13 +87,13 @@ script.engine.groovy.inline.aggs: on
 path.repo: ["/path_to_backups"]
 ```
 
-#### Run
+### Run
 
 * sudo service elasticsearch start
 * sudo service elasticsearch stop
 * sudo service elasticsearch status
 
-#### Making a snapshot (export data)
+### Making a snapshot (export data)
 
 Following https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-snapshots.html
 
@@ -108,7 +136,7 @@ This will create "/path_to_backups/my_backup/snap1" folder and fill it up with e
 curl -XGET 'http://localhost:9200/_snapshot/my_backup/snap1'
 ```
 
-#### Restoring the snapshot (import data)
+### Restoring the snapshot (import data)
 
 1. Before restore we need to block "dharmadict" index
 
